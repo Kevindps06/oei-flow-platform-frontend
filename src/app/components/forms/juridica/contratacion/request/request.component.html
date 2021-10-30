@@ -1,0 +1,1014 @@
+<form>
+  <div class="row g-3">
+    <div class="col-sm-6">
+      <div class="form-floating">
+        <select
+          [(ngModel)]="tipoDePersona"
+          name="floatingSelectGridTipoDePersona"
+          class="form-select"
+          id="floatingSelectGridTipoDePersona"
+          required
+          [ngClass]="{
+            'is-valid': tipoDePersona,
+            'is-invalid': !tipoDePersona
+          }"
+        >
+          <option selected disabled></option>
+          <option value="Natural">Natural</option>
+          <option value="Juridica">Juridica</option>
+        </select>
+        <label for="floatingSelectGridTipoDePersona"
+          >Tipo de persona<span class="text-danger">*</span></label
+        >
+        <div class="invalid-feedback">
+          Este campo es (*) obligatorio, seleccione una opcion.
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="form-floating">
+        <select
+          [(ngModel)]="tipoDeRelacion"
+          name="floatingSelectGridTipoDeRelacion"
+          class="form-select"
+          id="floatingSelectGridTipoDeRelacion"
+          required
+          [ngClass]="{
+            'is-valid': tipoDeRelacion,
+            'is-invalid': !tipoDeRelacion
+          }"
+        >
+          <option selected disabled></option>
+          <option value="Contratista">Contratista</option>
+          <option value="Proveedor">Proveedor</option>
+        </select>
+        <label for="floatingSelectGridTipoDeRelacion"
+          >Tipo de relacion<span class="text-danger">*</span></label
+        >
+        <div class="invalid-feedback">
+          Este campo es (*) obligatorio, seleccione una opcion.
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-floating">
+        <select
+          [(ngModel)]="convenio"
+          name="floatingSelectGridConvenio"
+          class="form-select"
+          id="floatingSelectGridConvenio"
+          required
+          [ngClass]="{
+            'is-valid': convenio,
+            'is-invalid': !convenio
+          }"
+        >
+          <option selected disabled></option>
+          <option
+            *ngFor="let convenio of convenios"
+            [value]="convenio.Aliado + ' | ' + convenio.Numero"
+          >
+            {{ convenio.Aliado }} | {{ convenio.Numero }}
+          </option>
+        </select>
+        <label for="floatingSelectGridTipoDeRelacion"
+          >Convenio<span class="text-danger">*</span></label
+        >
+        <div class="invalid-feedback">
+          Este campo es (*) obligatorio, seleccione una opcion.
+        </div>
+      </div>
+    </div>
+    <div *ngIf="tipoDePersona !== undefined" class="col-12">
+      <div *ngIf="tipoDePersona === 'Natural'" class="form-floating">
+        <input
+          [(ngModel)]="identificacion"
+          type="text"
+          class="form-control"
+          name="floatingInputIdentificacion"
+          id="floatingInputIdentificacion"
+          placeholder="x"
+          required
+          [ngClass]="{
+            'is-valid':
+              identificacion?.length === 8 || identificacion?.length === 10,
+            'is-invalid':
+              identificacion?.length !== 8 && identificacion?.length !== 10
+          }"
+          maxlength="10"
+          [OnlyNumbers]="true"
+        />
+        <label for="floatingInputIdentificacion"
+          >Numero de cedula de ciudadania<span class="text-danger"
+            >*</span
+          ></label
+        >
+        <div class="invalid-feedback">
+          Este campo es (*) obligatorio, rellenelo.
+        </div>
+      </div>
+      <label
+        *ngIf="tipoDePersona === 'Juridica'"
+        for="formFileMultipleRUT"
+        class="form-label"
+        >NIT (Con digito de verificacion) Ej. 890507890-4<span
+          class="text-danger"
+          >*</span
+        ></label
+      >
+      <div
+        *ngIf="tipoDePersona === 'Juridica'"
+        class="input-group input-group-lg has-validation"
+      >
+        <input
+          [(ngModel)]="identificacion"
+          type="text"
+          class="form-control"
+          placeholder="NIT Ej. 890507890-4"
+          aria-label="NIT Ej. 890507890-4"
+          [ngClass]="{
+            'is-valid': identificacion,
+            'is-invalid': !identificacion
+          }"
+          maxlength="9"
+          [OnlyNumbers]="true"
+        />
+        <span class="input-group-text">-</span>
+        <input
+          [(ngModel)]="identificacion"
+          type="text"
+          class="form-control"
+          placeholder="Digito de verificacion Ej. 890507890-4"
+          aria-label="Digito de verificacion Ej. 890507890-4"
+          [ngClass]="{
+            'is-valid': identificacion,
+            'is-invalid': !identificacion
+          }"
+          maxlength="1"
+          [OnlyNumbers]="true"
+        />
+      </div>
+      <div class="invalid-feedback">
+        Este campo es (*) obligatorio, rellenelo.
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header text-center">
+          Datos del contratista
+        </div>
+        <div class="card-body">
+          <div class="col-12">
+            <div class="form-floating mb-3">
+              <input [(ngModel)]="nombresApellidos" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+              <label for="floatingInput">Nombre y Apellidos del contratista</label>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-floating mb-3">
+              <input [(ngModel)]="direccion" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+              <label for="floatingInput">Dirección</label>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-floating mb-3">
+              <input [(ngModel)]="telefono" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+              <label for="floatingInput">Telefono</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header text-center">
+          Documentos
+        </div>
+
+        <div class="card-body">
+          <!-- FOTOCOPIA CEDULA -->
+          <div class="col-12">
+            <label for="formFileMultipleFotocopiaCedula" class="form-label"
+              >Fotocopia cedula<span class="text-danger">*</span></label
+            >
+            <input
+              (change)="whenFileFotocopiaCedulaChange($event)"
+              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+              class="form-control"
+              type="file"
+              id="formFileMultipleFotocopiaCedula"
+              multiple
+              [ngClass]="{
+                'is-valid': fotocopiaCedulaFiles.length > 0,
+                'is-invalid': fotocopiaCedulaFiles.length === 0
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            </div>
+            <div *ngIf="fotocopiaCedulaFiles.length > 0" class="container">
+              <div
+                *ngFor="let fotocopiaCedulaFile of fotocopiaCedulaFiles"
+                class="
+                  row
+                  justify-content-center
+                  align-items-center
+                  mt-3
+                  border-start border-top border-primary border-1
+                "
+              >
+                <div class="col-11">
+                  <h5 class="mb-0">
+                    {{ fotocopiaCedulaFile.Index }}.
+                    {{ fotocopiaCedulaFile.Name }}
+                  </h5>
+                </div>
+                <div class="col-1 gx-0">
+                  <a href="javascript:;">
+                    <img
+                      (click)="onDeleteFileFotocopiaCedulaClick(
+                          fotocopiaCedulaFile.Index
+                        )"
+                      width="50px"
+                      height="50px"
+                      src="{{
+                        fotocopiaCedulaFile.Uploaded
+                          ? '../../../../assets/delete.png'
+                          : '../../../../assets/loading.svg'
+                      }}"
+                      class="img-fluid"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- RUT -->
+          <div class="col-12">
+            <label for="formFileMultipleRUT" class="form-label"
+              >RUT<span class="text-danger">*</span></label
+            >
+            <input
+              (change)="whenFileRUTChange($event)"
+              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+              class="form-control"
+              type="file"
+              id="formFileMultipleRUT"
+              multiple
+              [ngClass]="{
+                'is-valid': rutFiles.length > 0,
+                'is-invalid': rutFiles.length === 0
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            </div>
+            <div *ngIf="rutFiles.length > 0" class="container">
+              <div
+                *ngFor="let rutFile of rutFiles"
+                class="
+                  row
+                  justify-content-center
+                  align-items-center
+                  mt-3
+                  border-start border-top border-primary border-1
+                "
+              >
+                <div *ngIf="false" class="col-1">
+                  <img
+                    width="50px"
+                    height="50px"
+                    src="{{
+                      rutFile.Uploaded
+                        ? '../../../../assets/delete.png'
+                        : '../../../../assets/loading.svg'
+                    }}"
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="col-11">
+                  <h5 class="mb-0">{{ rutFile.Index }}. {{ rutFile.Name }}</h5>
+                </div>
+                <div class="col-1 gx-0">
+                  <a href="javascript:;">
+                    <img
+                      (click)="onDeleteFileRUTClick(rutFile.Index)"
+                      width="50px"
+                      height="50px"
+                      src="{{
+                        rutFile.Uploaded
+                          ? '../../../../assets/delete.png'
+                          : '../../../../assets/loading.svg'
+                      }}"
+                      class="img-fluid"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- CERTIFICACION BANCARIA -->
+          <div class="col-12">
+            <label for="formFileMultipleCertificacionBancaria" class="form-label"
+              >Certificacion bancaria<span class="text-danger">*</span></label
+            >
+            <input
+              (change)="whenFileCertificacionBancariaChange($event)"
+              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+              class="form-control"
+              type="file"
+              id="formFileMultipleCertificacionBancaria"
+              multiple
+              [ngClass]="{
+                'is-valid': certificacionBancariaFiles.length > 0,
+                'is-invalid': certificacionBancariaFiles.length === 0
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            </div>
+            <div *ngIf="certificacionBancariaFiles.length > 0" class="container">
+              <div
+                *ngFor="let certificacionBancariaFile of certificacionBancariaFiles"
+                class="
+                  row
+                  justify-content-center
+                  align-items-center
+                  mt-3
+                  border-start border-top border-primary border-1
+                "
+              >
+                <div class="col-11">
+                  <h5 class="mb-0">
+                    {{ certificacionBancariaFile.Index }}.
+                    {{ certificacionBancariaFile.Name }}
+                  </h5>
+                </div>
+                <div class="col-1 gx-0">
+                  <a href="javascript:;">
+                    <img
+                      (click)="
+                        onDeleteFileCertificacionBancariaClick(
+                          certificacionBancariaFile.Index
+                        )
+                      "
+                      width="50px"
+                      height="50px"
+                      src="{{
+                        certificacionBancariaFile.Uploaded
+                          ? '../../../../assets/delete.png'
+                          : '../../../../assets/loading.svg'
+                      }}"
+                      class="img-fluid"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- CONSTANCIA DE AFILIACIÓN A SALUD -->
+          <div class="col-12">
+            <label for="formFileMultipleAfiliacionSalud" class="form-label"
+              >Constacia de afiliación a salud<span class="text-danger">*</span></label
+            >
+            <input
+              (change)="whenFileAfiliacionSaludChange($event)"
+              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+              class="form-control"
+              type="file"
+              id="formFileMultipleafiliacionSalud"
+              multiple
+              [ngClass]="{
+                'is-valid': afiliacionSaludFiles.length > 0,
+                'is-invalid': afiliacionSaludFiles.length === 0
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            </div>
+            <div *ngIf="afiliacionSaludFiles.length > 0" class="container">
+              <div
+                *ngFor="let afiliacionSaludFile of afiliacionSaludFiles"
+                class="
+                  row
+                  justify-content-center
+                  align-items-center
+                  mt-3
+                  border-start border-top border-primary border-1
+                "
+              >
+                <div *ngIf="false" class="col-1">
+                  <img
+                    width="50px"
+                    height="50px"
+                    src="{{
+                      afiliacionSaludFile.Uploaded
+                        ? '../../../../assets/delete.png'
+                        : '../../../../assets/loading.svg'
+                    }}"
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="col-11">
+                  <h5 class="mb-0">{{ afiliacionSaludFile.Index }}. {{ afiliacionSaludFile.Name }}</h5>
+                </div>
+                <div class="col-1 gx-0">
+                  <a href="javascript:;">
+                    <img
+                      (click)="onDeleteFileAfiliacionSaludClick(afiliacionSaludFile.Index)"
+                      width="50px"
+                      height="50px"
+                      src="{{
+                        afiliacionSaludFile.Uploaded
+                          ? '../../../../assets/delete.png'
+                          : '../../../../assets/loading.svg'
+                      }}"
+                      class="img-fluid"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- CONSTANCIA DE AFILIACIÓN PENSIÓN -->
+          <div class="col-12">
+            <label for="formFileMultipleAfiliacionPension" class="form-label"
+              >Constancia de afiliación a pensión<span class="text-danger">*</span></label
+            >
+            <input
+              (change)="whenFileAfiliacionPensionChange($event)"
+              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+              class="form-control"
+              type="file"
+              id="formFileMultipleAfiliacionPension"
+              multiple
+              [ngClass]="{
+                'is-valid': afiliacionPensionFiles.length > 0,
+                'is-invalid': afiliacionPensionFiles.length === 0
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            </div>
+            <div *ngIf="afiliacionPensionFiles.length > 0" class="container">
+              <div
+                *ngFor="let afiliacionPensionFile of afiliacionPensionFiles"
+                class="
+                  row
+                  justify-content-center
+                  align-items-center
+                  mt-3
+                  border-start border-top border-primary border-1
+                "
+              >
+                <div *ngIf="false" class="col-1">
+                  <img
+                    width="50px"
+                    height="50px"
+                    src="{{
+                      afiliacionPensionFile.Uploaded
+                        ? '../../../../assets/delete.png'
+                        : '../../../../assets/loading.svg'
+                    }}"
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="col-11">
+                  <h5 class="mb-0">{{ afiliacionPensionFile.Index }}. {{ afiliacionPensionFile.Name }}</h5>
+                </div>
+                <div class="col-1 gx-0">
+                  <a href="javascript:;">
+                    <img
+                      (click)="onDeleteFileAfiliacionPensionClick(afiliacionPensionFile.Index)"
+                      width="50px"
+                      height="50px"
+                      src="{{
+                        afiliacionPensionFile.Uploaded
+                          ? '../../../../assets/delete.png'
+                          : '../../../../assets/loading.svg'
+                      }}"
+                      class="img-fluid"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- CONSTANCIA AFILIACIÓN ARL  PARA CONTRATOS SUPERIOR DE UN MES  -->
+          <div class="col-12">
+            <label for="formFileMultipleARL" class="form-label"
+              >Constancia de afiliación ARL para contratos superior de un mes<span class="text-danger">*</span></label
+            >
+            <input
+              (change)="whenFileARLChange($event)"
+              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+              class="form-control"
+              type="file"
+              id="formFileMultipleARL"
+              multiple
+              [ngClass]="{
+                'is-valid': ARLFiles.length > 0,
+                'is-invalid': ARLFiles.length === 0
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            </div>
+            <div *ngIf="ARLFiles.length > 0" class="container">
+              <div
+                *ngFor="let ARLFile of ARLFiles"
+                class="
+                  row
+                  justify-content-center
+                  align-items-center
+                  mt-3
+                  border-start border-top border-primary border-1
+                "
+              >
+                <div *ngIf="false" class="col-1">
+                  <img
+                    width="50px"
+                    height="50px"
+                    src="{{
+                      ARLFile.Uploaded
+                        ? '../../../../assets/delete.png'
+                        : '../../../../assets/loading.svg'
+                    }}"
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="col-11">
+                  <h5 class="mb-0">{{ ARLFile.Index }}. {{ ARLFile.Name }}</h5>
+                </div>
+                <div class="col-1 gx-0">
+                  <a href="javascript:;">
+                    <img
+                      (click)="onDeleteFileARLClick(ARLFile.Index)"
+                      width="50px"
+                      height="50px"
+                      src="{{
+                        ARLFile.Uploaded
+                          ? '../../../../assets/delete.png'
+                          : '../../../../assets/loading.svg'
+                      }}"
+                      class="img-fluid"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- TARJETA PROFESIONAL (CUANDO APLIQUE)  -->
+          <div class="col-12">
+            <label for="formFileMultipleTarjetaProfesional" class="form-label"
+              >Tarjeta Profesional<span class="text-danger">*</span></label
+            >
+            <input
+              (change)="whenFileTarjetaProfesionalChange($event)"
+              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+              class="form-control"
+              type="file"
+              id="formFileMultipletarjetaProfesional"
+              multiple
+              [ngClass]="{
+                'is-valid': tarjetaProfesionalFiles.length > 0,
+                'is-invalid': tarjetaProfesionalFiles.length === 0
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            </div>
+            <div *ngIf="tarjetaProfesionalFiles.length > 0" class="container">
+              <div
+                *ngFor="let tarjetaProfesionalFile of tarjetaProfesionalFiles"
+                class="
+                  row
+                  justify-content-center
+                  align-items-center
+                  mt-3
+                  border-start border-top border-primary border-1
+                "
+              >
+                <div *ngIf="false" class="col-1">
+                  <img
+                    width="50px"
+                    height="50px"
+                    src="{{
+                      tarjetaProfesionalFile.Uploaded
+                        ? '../../../../assets/delete.png'
+                        : '../../../../assets/loading.svg'
+                    }}"
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="col-11">
+                  <h5 class="mb-0">{{ tarjetaProfesionalFile.Index }}. {{ tarjetaProfesionalFile.Name }}</h5>
+                </div>
+                <div class="col-1 gx-0">
+                  <a href="javascript:;">
+                    <img
+                      (click)="onDeleteFileTarjetaProfesionalClick(tarjetaProfesionalFile.Index)"
+                      width="50px"
+                      height="50px"
+                      src="{{
+                        tarjetaProfesionalFile.Uploaded
+                          ? '../../../../assets/delete.png'
+                          : '../../../../assets/loading.svg'
+                      }}"
+                      class="img-fluid"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- HOJA DE VIDA -->
+          <div class="col-12">
+            <label for="formFileMultipHojaDeVida" class="form-label"
+              >Hoja de vida<span class="text-danger">*</span></label
+            >
+            <input
+              (change)="whenFileHojaDeVidaChange($event)"
+              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+              class="form-control"
+              type="file"
+              id="formFileMultiplehojaDeVida"
+              multiple
+              [ngClass]="{
+                'is-valid': hojaDeVidaFiles.length > 0,
+                'is-invalid': hojaDeVidaFiles.length === 0
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            </div>
+            <div *ngIf="hojaDeVidaFiles.length > 0" class="container">
+              <div
+                *ngFor="let hojaDeVidaFile of hojaDeVidaFiles"
+                class="
+                  row
+                  justify-content-center
+                  align-items-center
+                  mt-3
+                  border-start border-top border-primary border-1
+                "
+              >
+                <div *ngIf="false" class="col-1">
+                  <img
+                    width="50px"
+                    height="50px"
+                    src="{{
+                      hojaDeVidaFile.Uploaded
+                        ? '../../../../assets/delete.png'
+                        : '../../../../assets/loading.svg'
+                    }}"
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="col-11">
+                  <h5 class="mb-0">{{ hojaDeVidaFile.Index }}. {{ hojaDeVidaFile.Name }}</h5>
+                </div>
+                <div class="col-1 gx-0">
+                  <a href="javascript:;">
+                    <img
+                      (click)="onDeleteFileHojaDeVidaClick(hojaDeVidaFile.Index)"
+                      width="50px"
+                      height="50px"
+                      src="{{
+                        hojaDeVidaFile.Uploaded
+                          ? '../../../../assets/delete.png'
+                          : '../../../../assets/loading.svg'
+                      }}"
+                      class="img-fluid"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- SOPORTES HOJA DE VIDA (Estudio, Laborales) -->
+          <div class="col-12">
+            <label for="formFileMultipleSoportesHojaDeVida" class="form-label"
+              >Soportes hoja de vida (Estudio, Laborales)<span class="text-danger">*</span></label
+            >
+            <input
+              (change)="whenFileSoportesHojaDeVidaChange($event)"
+              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+              class="form-control"
+              type="file"
+              id="formFileMultiplesoportesHojaDeVida"
+              multiple
+              [ngClass]="{
+                'is-valid': soportesHojaDeVidaFiles.length > 0,
+                'is-invalid': soportesHojaDeVidaFiles.length === 0
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            </div>
+            <div *ngIf="soportesHojaDeVidaFiles.length > 0" class="container">
+              <div
+                *ngFor="let soportesHojaDeVidaFile of soportesHojaDeVidaFiles"
+                class="
+                  row
+                  justify-content-center
+                  align-items-center
+                  mt-3
+                  border-start border-top border-primary border-1
+                "
+              >
+                <div *ngIf="false" class="col-1">
+                  <img
+                    width="50px"
+                    height="50px"
+                    src="{{
+                      soportesHojaDeVidaFile.Uploaded
+                        ? '../../../../assets/delete.png'
+                        : '../../../../assets/loading.svg'
+                    }}"
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="col-11">
+                  <h5 class="mb-0">{{ soportesHojaDeVidaFile.Index }}. {{ soportesHojaDeVidaFile.Name }}</h5>
+                </div>
+                <div class="col-1 gx-0">
+                  <a href="javascript:;">
+                    <img
+                      (click)="onDeleteFileSoportesHojaDeVidaClick(soportesHojaDeVidaFile.Index)"
+                      width="50px"
+                      height="50px"
+                      src="{{
+                        soportesHojaDeVidaFile.Uploaded
+                          ? '../../../../assets/delete.png'
+                          : '../../../../assets/loading.svg'
+                      }}"
+                      class="img-fluid"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- TERMINOS DE REFERENCIA FIRMADOS -->
+          <div class="col-12">
+            <label for="formFileMultipleTerminosDeReferencia" class="form-label"
+              >Terminos de referencia Firmados<span class="text-danger">*</span></label
+            >
+            <input
+              (change)="whenFileTerminosDeReferenciaChange($event)"
+              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+              class="form-control"
+              type="file"
+              id="formFileMultipleterminosDeReferencia"
+              multiple
+              [ngClass]="{
+                'is-valid': terminosDeReferenciaFiles.length > 0,
+                'is-invalid': terminosDeReferenciaFiles.length === 0
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            </div>
+            <div *ngIf="terminosDeReferenciaFiles.length > 0" class="container">
+              <div
+                *ngFor="let terminosDeReferenciaFile of terminosDeReferenciaFiles"
+                class="
+                  row
+                  justify-content-center
+                  align-items-center
+                  mt-3
+                  border-start border-top border-primary border-1
+                "
+              >
+                <div *ngIf="false" class="col-1">
+                  <img
+                    width="50px"
+                    height="50px"
+                    src="{{
+                      terminosDeReferenciaFile.Uploaded
+                        ? '../../../../assets/delete.png'
+                        : '../../../../assets/loading.svg'
+                    }}"
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="col-11">
+                  <h5 class="mb-0">{{ terminosDeReferenciaFile.Index }}. {{ terminosDeReferenciaFile.Name }}</h5>
+                </div>
+                <div class="col-1 gx-0">
+                  <a href="javascript:;">
+                    <img
+                      (click)="onDeleteFileTerminosDeReferenciaClick(terminosDeReferenciaFile.Index)"
+                      width="50px"
+                      height="50px"
+                      src="{{
+                        terminosDeReferenciaFile.Uploaded
+                          ? '../../../../assets/delete.png'
+                          : '../../../../assets/loading.svg'
+                      }}"
+                      class="img-fluid"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- SOPORTE JUSTIFICACIÓN DE LA SELECCIÓN DEL CONTRATISTA -->
+          <div class="col-12">
+            <label for="formFileMultipleJustificacionContratista" class="form-label"
+              >Soporte justificación de la selección del contratista<span class="text-danger">*</span></label
+            >
+            <input
+              (change)="whenFileJustificacionContratistaChange($event)"
+              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+              class="form-control"
+              type="file"
+              id="formFileMultiplejustificacionContratista"
+              multiple
+              [ngClass]="{
+                'is-valid': justificacionContratistaFiles.length > 0,
+                'is-invalid': justificacionContratistaFiles.length === 0
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            </div>
+            <div *ngIf="justificacionContratistaFiles.length > 0" class="container">
+              <div
+                *ngFor="let justificacionContratistaFile of justificacionContratistaFiles"
+                class="
+                  row
+                  justify-content-center
+                  align-items-center
+                  mt-3
+                  border-start border-top border-primary border-1
+                "
+              >
+                <div *ngIf="false" class="col-1">
+                  <img
+                    width="50px"
+                    height="50px"
+                    src="{{
+                      justificacionContratistaFile.Uploaded
+                        ? '../../../../assets/delete.png'
+                        : '../../../../assets/loading.svg'
+                    }}"
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="col-11">
+                  <h5 class="mb-0">{{ justificacionContratistaFile.Index }}. {{ justificacionContratistaFile.Name }}</h5>
+                </div>
+                <div class="col-1 gx-0">
+                  <a href="javascript:;">
+                    <img
+                      (click)="onDeleteFileJustificacionContratistaClick(justificacionContratistaFile.Index)"
+                      width="50px"
+                      height="50px"
+                      src="{{
+                        justificacionContratistaFile.Uploaded
+                          ? '../../../../assets/delete.png'
+                          : '../../../../assets/loading.svg'
+                      }}"
+                      class="img-fluid"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- EXMANEN SALUD OCUPACIONAL -->
+          <div class="col-12">
+            <label for="formFileMultipleExamenSaludOcupacional" class="form-label"
+              >Examen salud ocupacional<span class="text-danger">*</span></label
+            >
+            <input
+              (change)="whenFileExamenSaludOcupacionalChange($event)"
+              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+              class="form-control"
+              type="file"
+              id="formFileMultipleexamenSaludOcupacional"
+              multiple
+              [ngClass]="{
+                'is-valid': examenSaludOcupacionalFiles.length > 0,
+                'is-invalid': examenSaludOcupacionalFiles.length === 0
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            </div>
+            <div *ngIf="examenSaludOcupacionalFiles.length > 0" class="container">
+              <div
+                *ngFor="let examenSaludOcupacionalFile of examenSaludOcupacionalFiles"
+                class="
+                  row
+                  justify-content-center
+                  align-items-center
+                  mt-3
+                  border-start border-top border-primary border-1
+                "
+              >
+                <div *ngIf="false" class="col-1">
+                  <img
+                    width="50px"
+                    height="50px"
+                    src="{{
+                      examenSaludOcupacionalFile.Uploaded
+                        ? '../../../../assets/delete.png'
+                        : '../../../../assets/loading.svg'
+                    }}"
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="col-11">
+                  <h5 class="mb-0">{{ examenSaludOcupacionalFile.Index }}. {{ examenSaludOcupacionalFile.Name }}</h5>
+                </div>
+                <div class="col-1 gx-0">
+                  <a href="javascript:;">
+                    <img
+                      (click)="onDeleteFileExamenSaludOcupacionalClick(examenSaludOcupacionalFile.Index)"
+                      width="50px"
+                      height="50px"
+                      src="{{
+                        examenSaludOcupacionalFile.Uploaded
+                          ? '../../../../assets/delete.png'
+                          : '../../../../assets/loading.svg'
+                      }}"
+                      class="img-fluid"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- FORMATO ACTA DE CUMPLIMIENTO Y CONOCIMIENTO DEL SG-SST -->
+          <div class="col-12">
+            <label for="formFileMultipleActaCumplimientoYConocimiento" class="form-label"
+              >Formato acta de cumplimiento y conocimiento del SG-SST<span class="text-danger">*</span></label
+            >
+            <input
+              (change)="whenFileActaCumplimientoYConocimientoChange($event)"
+              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+              class="form-control"
+              type="file"
+              id="formFileMultipleactaCumplimientoYConocimiento"
+              multiple
+              [ngClass]="{
+                'is-valid': actaCumplimientoYConocimientoFiles.length > 0,
+                'is-invalid': actaCumplimientoYConocimientoFiles.length === 0
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            </div>
+            <div *ngIf="actaCumplimientoYConocimientoFiles.length > 0" class="container">
+              <div
+                *ngFor="let actaCumplimientoYConocimientoFile of actaCumplimientoYConocimientoFiles"
+                class="
+                  row
+                  justify-content-center
+                  align-items-center
+                  mt-3
+                  border-start border-top border-primary border-1
+                "
+              >
+                <div *ngIf="false" class="col-1">
+                  <img
+                    width="50px"
+                    height="50px"
+                    src="{{
+                      actaCumplimientoYConocimientoFile.Uploaded
+                        ? '../../../../assets/delete.png'
+                        : '../../../../assets/loading.svg'
+                    }}"
+                    class="img-fluid"
+                  />
+                </div>
+                <div class="col-11">
+                  <h5 class="mb-0">{{ actaCumplimientoYConocimientoFile.Index }}. {{ actaCumplimientoYConocimientoFile.Name }}</h5>
+                </div>
+                <div class="col-1 gx-0">
+                  <a href="javascript:;">
+                    <img
+                      (click)="onDeleteFileActaCumplimientoYConocimientoClick(actaCumplimientoYConocimientoFile.Index)"
+                      width="50px"
+                      height="50px"
+                      src="{{
+                        actaCumplimientoYConocimientoFile.Uploaded
+                          ? '../../../../assets/delete.png'
+                          : '../../../../assets/loading.svg'
+                      }}"
+                      class="img-fluid"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+</form>

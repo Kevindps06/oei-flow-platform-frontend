@@ -1,0 +1,454 @@
+<form (ngSubmit)="whenSubmit()">
+  <div class="row g-3">
+    <div class="col-xl-6">
+      <div class="form-floating">
+        <select
+          [(ngModel)]="tipoDePersona"
+          name="floatingSelectGridTipoDePersona"
+          class="form-select"
+          id="floatingSelectGridTipoDePersona"
+          required
+          [ngClass]="{
+            'is-valid': tipoDePersona,
+            'is-invalid': !tipoDePersona
+          }"
+        >
+          <option selected disabled></option>
+          <option value="Natural">Natural</option>
+          <option value="Juridica">Juridica</option>
+        </select>
+        <label for="floatingSelectGridTipoDePersona"
+          >Tipo de persona<span class="text-danger">*</span></label
+        >
+        <div class="invalid-feedback">
+          Este campo es (*) obligatorio, seleccione una opcion.
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-6">
+      <div class="form-floating">
+        <select
+          [(ngModel)]="tipoDeRelacion"
+          name="floatingSelectGridTipoDeRelacion"
+          class="form-select"
+          id="floatingSelectGridTipoDeRelacion"
+          required
+          [ngClass]="{
+            'is-valid': tipoDeRelacion,
+            'is-invalid': !tipoDeRelacion
+          }"
+        >
+          <option selected disabled></option>
+          <option value="Contratista">Contratista</option>
+          <option value="Proveedor">Proveedor</option>
+        </select>
+        <label for="floatingSelectGridTipoDeRelacion"
+          >Tipo de relacion<span class="text-danger">*</span></label
+        >
+        <div class="invalid-feedback">
+          Este campo es (*) obligatorio, seleccione una opcion.
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-floating">
+        <select
+          [(ngModel)]="convenio"
+          name="floatingSelectGridConvenio"
+          class="form-select"
+          id="floatingSelectGridConvenio"
+          required
+          [ngClass]="{
+            'is-valid': convenio,
+            'is-invalid': !convenio
+          }"
+        >
+          <option selected disabled></option>
+          <option
+            *ngFor="let convenio of convenios"
+            [value]="convenio.Aliado + ' | ' + convenio.Numero"
+          >
+            {{ convenio.Aliado }} | {{ convenio.Numero }}
+          </option>
+        </select>
+        <label for="floatingSelectGridTipoDeRelacion"
+          >Convenio<span class="text-danger">*</span></label
+        >
+        <div class="invalid-feedback">
+          Este campo es (*) obligatorio, seleccione una opcion.
+        </div>
+      </div>
+    </div>
+    <div *ngIf="tipoDePersona !== undefined" class="col-12">
+      <div *ngIf="tipoDePersona === 'Natural'" class="form-floating">
+        <input
+          [(ngModel)]="identificacion"
+          type="text"
+          class="form-control"
+          name="floatingInputIdentificacion"
+          id="floatingInputIdentificacion"
+          placeholder="x"
+          required
+          [ngClass]="{
+            'is-valid':
+              identificacion?.length === 8 || identificacion?.length === 10,
+            'is-invalid':
+              identificacion?.length !== 8 && identificacion?.length !== 10
+          }"
+          maxlength="10"
+          [OnlyNumbers]="true"
+        />
+        <label for="floatingInputIdentificacion"
+          >Numero de cedula de ciudadania<span class="text-danger"
+            >*</span
+          ></label
+        >
+        <div class="invalid-feedback">
+          Este campo es (*) obligatorio, rellenelo.
+        </div>
+      </div>
+      <label
+        *ngIf="tipoDePersona === 'Juridica'"
+        for="formFileMultipleRUT"
+        class="form-label"
+        >NIT (Con digito de verificacion) Ej. 890507890-4<span
+          class="text-danger"
+          >*</span
+        ></label
+      >
+      <div
+        *ngIf="tipoDePersona === 'Juridica'"
+        class="input-group input-group-lg has-validation"
+      >
+        <input
+          [(ngModel)]="identificacion"
+          type="text"
+          class="form-control"
+          placeholder="NIT Ej. 890507890-4"
+          aria-label="NIT Ej. 890507890-4"
+          [ngClass]="{
+            'is-valid': identificacion,
+            'is-invalid': !identificacion
+          }"
+          maxlength="9"
+          [OnlyNumbers]="true"
+        />
+        <span class="input-group-text">-</span>
+        <input
+          [(ngModel)]="identificacion"
+          type="text"
+          class="form-control"
+          placeholder="Digito de verificacion Ej. 890507890-4"
+          aria-label="Digito de verificacion Ej. 890507890-4"
+          [ngClass]="{
+            'is-valid': identificacion,
+            'is-invalid': !identificacion
+          }"
+          maxlength="1"
+          [OnlyNumbers]="true"
+        />
+      </div>
+      <div class="invalid-feedback">
+        Este campo es (*) obligatorio, rellenelo.
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-floating">
+        <input
+          [(ngModel)]="nombre"
+          type="text"
+          class="form-control is-invalid"
+          name="floatingInputNombre"
+          id="floatingInputNombre"
+          placeholder="x"
+          [ngClass]="{
+            'is-valid': nombre,
+            'is-invalid': !nombre
+          }"
+          maxlength="256"
+        />
+        <label for="floatingInputNombre"
+          >Nombre o razon social <span class="text-danger">*</span></label
+        >
+        <div class="invalid-feedback">
+          Este campo es (*) obligatorio, rellenelo.
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <label for="formFileMultipleRUT" class="form-label"
+        >RUT<span class="text-danger">*</span></label
+      >
+      <input
+        (change)="whenFileRUTChange($event)"
+        accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+        class="form-control"
+        type="file"
+        id="formFileMultipleRUT"
+        multiple
+        [ngClass]="{
+          'is-valid': rutFiles.length > 0,
+          'is-invalid': rutFiles.length === 0
+        }"
+      />
+      <div class="invalid-feedback">
+        Este campo es (*) obligatorio, cargue almenos 1 archivo.
+      </div>
+      <div *ngIf="rutFiles.length > 0" class="container">
+        <div
+          *ngFor="let rutFile of rutFiles"
+          class="
+            row
+            justify-content-center
+            align-items-center
+            mt-3
+            border-start border-top border-primary border-1
+          "
+        >
+          <div *ngIf="false" class="col-1">
+            <img
+              width="50px"
+              height="50px"
+              src="{{
+                rutFile.Uploaded
+                  ? '../../../../assets/delete.png'
+                  : '../../../../assets/loading.svg'
+              }}"
+              class="img-fluid"
+            />
+          </div>
+          <div class="col-11">
+            <h5 class="mb-0">{{ rutFile.Index }}. {{ rutFile.Name }}</h5>
+          </div>
+          <div class="col-1 gx-0">
+            <a href="javascript:;">
+              <img
+                (click)="onDeleteFileRUTClick(rutFile.Index)"
+                width="50px"
+                height="50px"
+                src="{{
+                  rutFile.Uploaded
+                    ? '../../../../assets/delete.png'
+                    : '../../../../assets/loading.svg'
+                }}"
+                class="img-fluid"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <label for="formFileMultipleCedula" class="form-label"
+        >{{
+          tipoDePersona === "Natural"
+            ? "Cedula"
+            : "Cedula del representante legal"
+        }}<span class="text-danger">*</span></label
+      >
+      <input
+        (change)="whenFileCedulaChange($event)"
+        accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+        class="form-control"
+        type="file"
+        id="formFileMultipleCedula"
+        multiple
+        [ngClass]="{
+          'is-valid': cedulaFiles.length > 0,
+          'is-invalid': cedulaFiles.length === 0
+        }"
+      />
+      <div class="invalid-feedback">
+        Este campo es (*) obligatorio, cargue almenos 1 archivo.
+      </div>
+      <div *ngIf="cedulaFiles.length > 0" class="container">
+        <div
+          *ngFor="let cedulaFile of cedulaFiles"
+          class="
+            row
+            justify-content-center
+            align-items-center
+            mt-3
+            border-start border-top border-primary border-1
+          "
+        >
+          <div class="col-11">
+            <h5 class="mb-0">{{ cedulaFile.Index }}. {{ cedulaFile.Name }}</h5>
+          </div>
+          <div class="col-1 gx-0">
+            <a href="javascript:;"
+              ><img
+                (click)="onDeleteFileCedulaClick(cedulaFile.Index)"
+                width="50px"
+                height="50px"
+                src="{{
+                  cedulaFile.Uploaded
+                    ? '../../../../assets/delete.png'
+                    : '../../../../assets/loading.svg'
+                }}"
+                class="img-fluid"
+            /></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <label for="formFileMultipleCertificacionBancaria" class="form-label"
+        >Certificacion bancaria<span class="text-danger">*</span></label
+      >
+      <input
+        (change)="whenFileCertificacionBancariaChange($event)"
+        accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+        class="form-control"
+        type="file"
+        id="formFileMultipleCertificacionBancaria"
+        multiple
+        [ngClass]="{
+          'is-valid': certificacionBancariaFiles.length > 0,
+          'is-invalid': certificacionBancariaFiles.length === 0
+        }"
+      />
+      <div class="invalid-feedback">
+        Este campo es (*) obligatorio, cargue almenos 1 archivo.
+      </div>
+      <div *ngIf="certificacionBancariaFiles.length > 0" class="container">
+        <div
+          *ngFor="let certificacionBancariaFile of certificacionBancariaFiles"
+          class="
+            row
+            justify-content-center
+            align-items-center
+            mt-3
+            border-start border-top border-primary border-1
+          "
+        >
+          <div class="col-11">
+            <h5 class="mb-0">
+              {{ certificacionBancariaFile.Index }}.
+              {{ certificacionBancariaFile.Name }}
+            </h5>
+          </div>
+          <div class="col-1 gx-0">
+            <a href="javascript:;">
+              <img
+                (click)="
+                  onDeleteFileCertificacionBancariaClick(
+                    certificacionBancariaFile.Index
+                  )
+                "
+                width="50px"
+                height="50px"
+                src="{{
+                  certificacionBancariaFile.Uploaded
+                    ? '../../../../assets/delete.png'
+                    : '../../../../assets/loading.svg'
+                }}"
+                class="img-fluid"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-floating">
+        <input
+          [(ngModel)]="email"
+          type="text"
+          class="form-control"
+          name="floatingInputEmail"
+          id="floatingInputEmail"
+          placeholder="x"
+          required
+          [ngClass]="{
+            'is-valid': email,
+            'is-invalid': !email
+          }"
+          maxlength="256"
+        />
+        <label for="floatingInputEmail"
+          >Email de contacto<span class="text-danger">*</span></label
+        >
+        <div class="invalid-feedback">
+          Este campo es (*) obligatorio, rellenelo.
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-floating">
+        <input
+          [(ngModel)]="informacionAdicional"
+          type="text"
+          class="form-control"
+          name="floatingInputInformacionAdicional"
+          id="floatingInputInformacionAdicional"
+          placeholder="x"
+          maxlength="256"
+        />
+        <label for="floatingInputInformacionAdicional"
+          >Informacion adicional</label
+        >
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          Manejo de datos<span class="text-danger">*</span>
+        </div>
+        <div class="card-body">
+          <p class="card-text">
+            Lorem Ipsum has been the industry's standard dummy text ever since
+            the 1500s, when an unknown printer took a galley of type and
+            scrambled it to make a type specimen book. It has survived not only
+            five centuries, but also the leap into electronic typesetting,
+            remaining essentially unchanged.
+          </p>
+          <div class="form-check">
+            <input
+              [(ngModel)]="manejoDeDatos"
+              class="form-check-input"
+              type="checkbox"
+              name="CheckManejoDeDatos"
+              id="CheckManejoDeDatos"
+              required
+              [ngClass]="{
+                'is-valid': manejoDeDatos,
+                'is-invalid': !manejoDeDatos
+              }"
+            />
+            <label class="form-check-label" for="CheckManejoDeDatos">
+              Aceptar manejo de datos
+            </label>
+            <div class="invalid-feedback">
+              Debes aceptar el manejo de datos para poder enviar el formulario.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row-12">
+      <div class="d-grid gap-2 col-xl-6 mx-auto">
+        <button
+          [disabled]="
+            !(
+              tipoDePersona &&
+              tipoDeRelacion &&
+              convenio &&
+              identificacion &&
+              nombre &&
+              rutFiles.length > 0 &&
+              cedulaFiles.length > 0 &&
+              certificacionBancariaFiles.length > 0 &&
+              email &&
+              manejoDeDatos
+            )
+          "
+          type="submit"
+          class="btn btn-primary"
+        >
+          Enviar
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
