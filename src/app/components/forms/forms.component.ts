@@ -126,7 +126,7 @@ export class FormsComponent implements OnInit {
   ) {
     var taskId: string;
     this.formsService
-      .createFinancieraRegistrationRequest(financieraRegistrationForm)
+      .postFormsFinancieraRegistration(financieraRegistrationForm)
       .subscribe((event) => {
         switch (event.type) {
           case HttpEventType.Sent:

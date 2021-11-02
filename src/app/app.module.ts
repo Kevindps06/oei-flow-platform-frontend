@@ -12,7 +12,6 @@ import { OnlyNumbersDirective } from './directives/onlynumber.directive';
 import { DirectaComponent } from './components/forms/juridica/contratacion/directa/directa/directa.component';
 import { SimplificadaysupersimplificadaComponent } from './components/forms/juridica/contratacion/simplificadaysupersimplificada/simplificadaysupersimplificada.component';
 import { LicitacionComponent } from './components/forms/juridica/contratacion/licitacion/licitacion.component';
-import { ContratacionComponent } from './components/forms/juridica/contratacion/contratacion.component';
 import { ConsultoresComponent } from './components/forms/juridica/contratacion/directa/excepcion/consultores/consultores.component';
 import { SinlimiteComponent } from './components/forms/juridica/contratacion/directa/excepcion/sinlimite/sinlimite.component';
 import { FormsJuridicaContratacionConvenioRequestComponent } from './components/forms/juridica/contratacion/convenio/request/request.component';
@@ -23,6 +22,7 @@ import { FormsFinancieraInvoiceComponent } from './components/forms/financiera/i
 import { GlobalHttpInterceptorService } from './services/global-http-interceptor.service';
 import { UploadFilesComponent } from './components/upload-files/upload-files.component';
 import { HomeComponent } from './components/home/home.component';
+import { CoordinacionlogisticaComponent } from './components/forms/coordinacionlogistica/coordinacionlogistica.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,6 @@ import { HomeComponent } from './components/home/home.component';
     DirectaComponent,
     SimplificadaysupersimplificadaComponent,
     LicitacionComponent,
-    ContratacionComponent,
     ConsultoresComponent,
     SinlimiteComponent,
     FormsJuridicaContratacionRequestComponent,
@@ -44,6 +43,7 @@ import { HomeComponent } from './components/home/home.component';
     FormsFinancieraInvoiceComponent,
     UploadFilesComponent,
     HomeComponent,
+    CoordinacionlogisticaComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [

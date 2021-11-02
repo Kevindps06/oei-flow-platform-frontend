@@ -79,22 +79,26 @@
           <app-forms-financiera-registration
             *ngIf="isRoute('/forms/financiera/registration')"
             [convenios]="convenios"
-            (onSubmit)="onSubmitFinancieraRegistrationForm($event)"
           >
           </app-forms-financiera-registration>
           <app-forms-financiera-invoice
             *ngIf="isRoute('/forms/financiera/invoice')"
             (onWaitTasksChange)="setWaitTasks($event)"
           ></app-forms-financiera-invoice>
+          <app-forms-coordinacionlogistica
+            *ngIf="isRoute('/forms/coordinacionlogistica')"
+            (onWaitTasksChange)="setWaitTasks($event)"
+          >
+          </app-forms-coordinacionlogistica>
           <app-forms-juridica-contratacion-convenio-request
             *ngIf="isRoute('/forms/juridica/contratacion/convenio/request')"
             [convenios]="convenios"
             (onWaitTasksChange)="setWaitTasks($event)"
           ></app-forms-juridica-contratacion-convenio-request>
           <app-forms-juridica-contratacion-request
-            *ngIf="startWithRoute('/forms/juridica/contratacion/')"
+            *ngIf="isRoute('/forms/juridica/contratacion/request')"
             [convenios]="convenios"
-            (onSubmit)="onSubmitFormsJuridicaContratacionRequest($event)"
+            (onWaitTasksChange)="setWaitTasks($event)"
           ></app-forms-juridica-contratacion-request>
         </div>
       </li>

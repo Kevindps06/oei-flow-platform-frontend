@@ -1,0 +1,208 @@
+<form>
+  <div id="firstElement" class="row g-3">
+    <div *ngIf="formIndex === 0" class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <h5 class="card-title text-center">
+                {{ tipoPersona }} - {{ tipoRelacion }} -
+                {{ tipoSoporteContable === 'Cuenta de cobro' ? tipoSoporteContable + (tipoPersona === 'Juridica' ? ' o factura' : '') : tipoSoporteContable }}{{ tipoSoporteContable === 'Legalizacion' ? ' - ' + tipoLegalizacion : '' }}
+              </h5>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <select
+                  [(ngModel)]="convenio"
+                  class="form-select"
+                  id="convenio"
+                  name="convenio"
+                  [ngClass]="{
+                    'is-valid': convenio,
+                    'is-invalid': !convenio
+                  }"
+                >
+                  <option selected disabled></option>
+                  <option
+                    *ngFor="let convenio of convenios"
+                    value="{{ convenio.Aliado + ' | ' + convenio.Numero }}"
+                  >
+                    {{ convenio.Aliado + " | " + convenio.Numero }}
+                  </option>
+                </select>
+                <label for="convenio">Convenio</label>
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, seleccione una opcion.
+                </div>
+              </div>
+            </div>
+            <!-- Cuenta de cobro/Factura -->
+            <div *ngIf="tipoSoporteContable === 'Cuenta de cobro'">
+              <div class="col-12">
+                <label for="fieldCuentaCobroFacturaFiles" class="form-label"
+                  >{{
+                    tipoPersona === "Natural"
+                      ? "Cuenta de cobro"
+                      : "Cuenta de cobro o factura"
+                  }}<span class="text-danger">*</span>
+                </label>
+                <app-upload-files
+                  [requiredFeedback]="
+                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                  "
+                  (onFilesChange)="setCuentaCobroFacturaFiles($event)"
+                ></app-upload-files>
+              </div>
+              <div class="col-12">
+                <label for="fieldFacturaEquivalenteFiles" class="form-label"
+                  >Factura equivalente<span
+                    *ngIf="tipoRelacion === 'Contratista'"
+                    class="text-danger"
+                    >*</span
+                  ></label
+                >
+                <app-upload-files
+                  [requiredFeedback]="
+                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                  "
+                  (onFilesChange)="setFacturaEquivalenteFiles($event)"
+                ></app-upload-files>
+              </div>
+              <div class="col-12">
+                <label for="fieldPagoSeguridadSocialFiles" class="form-label"
+                  >{{
+                    tipoPersona === "Natural"
+                      ? "Pago de seguridad social vigente (pagado)"
+                      : "Certificado de
+                parafiscales"
+                  }}<span class="text-danger">*</span></label
+                >
+                <app-upload-files
+                  [requiredFeedback]="
+                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                  "
+                  (onFilesChange)="setSeguridadSocialParafiscalesFiles($event)"
+                ></app-upload-files>
+              </div>
+              <div class="col-12">
+                <label class="form-label"
+                  >Informe de actividades<span class="text-danger"
+                    >*</span
+                  ></label
+                >
+                <app-upload-files
+                  [requiredFeedback]="
+                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                  "
+                  (onFilesChange)="setInformeActividadesFiles($event)"
+                ></app-upload-files>
+              </div>
+            </div>
+            <!-- Anticipo -->
+            <div *ngIf="tipoSoporteContable === 'Anticipo'">
+              <div *ngIf="tipoPersona === 'Juridica'" class="col-12">
+                <label class="form-label">Camara de comercio (Si aplica)</label>
+                <app-upload-files
+                  (onFilesChange)="setCamaraDeComercioFiles($event)"
+                ></app-upload-files>
+              </div>
+              <div class="col-12">
+                <label class="form-label"
+                  >Formato de solicitud de avances<span class="text-danger"
+                    >*</span
+                  ></label
+                >
+                <app-upload-files
+                  [requiredFeedback]="
+                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                  "
+                  (onFilesChange)="setFormatoSolicitudAvancesFiles($event)"
+                ></app-upload-files>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Cotizaciones (Si es el caso)</label>
+                <app-upload-files
+                  (onFilesChange)="setCotizacionesFiles($event)"
+                ></app-upload-files>
+              </div>
+              <div class="col-12">
+                <label class="form-label"
+                  >Solicitudes de comision (Si es el caso)</label
+                >
+                <app-upload-files
+                  (onFilesChange)="setSolicitudesComisionFiles($event)"
+                ></app-upload-files>
+              </div>
+            </div>
+            <!-- Dieta -->
+            <div *ngIf="tipoSoporteContable === 'Dieta'">
+              <div class="col-12">
+                <label class="form-label"
+                  >Formato de solicitud de viajes<span class="text-danger"
+                    >*</span
+                  ></label
+                >
+                <app-upload-files
+                  [requiredFeedback]="
+                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                  "
+                  (onFilesChange)="setFormatoSolicitudViajesFiles($event)"
+                ></app-upload-files>
+              </div>
+            </div>
+            <!-- Legalizacion - Suministro y servicio -->
+            <div *ngIf="tipoLegalizacion === 'Suministro y servicio'">
+
+            </div>
+            <!-- | -->
+            <div class="col-12">
+              <div class="form-floating">
+                <input
+                  [(ngModel)]="infoAdicional"
+                  (input)="invalidateFlowUser()"
+                  type="text"
+                  class="form-control"
+                  name="floatingInputInfoAdicional"
+                  id="floatingInputInfoAdicional"
+                  placeholder="x"
+                  maxlength="255"
+                />
+                <label for="floatingInputInfoAdicional"
+                  >Informacion adicional</label
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="formIndex > 0" class="d-grid gap-2 col-6 mx-auto mb-2">
+      <button href="#firstElement" (click)="btnPreviousClick()" class="btn btn-primary">
+        Anterior
+      </button>
+    </div>
+    <div
+      *ngIf="formIndex !== 3"
+      [ngClass]="{ 'col-12': formIndex === 0 }"
+      class="d-grid gap-2 col-6 mx-auto mb-2"
+    >
+      <button
+        href="#firstElement"
+        [disabled]="!isValid()"
+        (click)="btnNextClick()"
+        class="btn btn-primary"
+      >
+        Siguiente
+      </button>
+    </div>
+    <div *ngIf="formIndex === 3" class="d-grid gap-2 col-6 mx-auto mb-2">
+      <button
+        [disabled]="!isValid()"
+        (click)="btnSubmitClick()"
+        class="btn btn-primary"
+      >
+        Enviar
+      </button>
+    </div>
+  </div>
+</form>

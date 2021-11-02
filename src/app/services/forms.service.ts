@@ -41,10 +41,12 @@ export class FormsService {
           }),
         }
       )
-    );  
+    );
   }
 
-  postFormsFinancieraInvoice(formsFinancieraInvoice: FormsFinancieraInvoice): Observable<any> {
+  postFormsFinancieraInvoice(
+    formsFinancieraInvoice: FormsFinancieraInvoice
+  ): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'POST',
@@ -54,7 +56,7 @@ export class FormsService {
           reportProgress: true,
         }
       )
-    );  
+    );
   }
 
   getConvenios(): Observable<any> {
@@ -83,41 +85,24 @@ export class FormsService {
     });
   }
 
-  createFinancieraRegistrationRequest(
+  postFormsFinancieraRegistration(
     financieraRegistrationForm: FormsFinancieraRegistration
   ): Observable<any> {
     financieraRegistrationForm.ID = Utils.makeRandomString(64);
 
-    return new Observable((success) => {
-      this.http
-        .request(
-          new HttpRequest(
-            'POST',
-            `https://prod-07.brazilsouth.logic.azure.com:443/workflows/0ada25ebf29e4a97ba30739737e286b7/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=cXyqc38D4zc_hDtzTFOrHmuJWJhcrdHczOi54FUtfQ8`,
-            [financieraRegistrationForm],
-            {
-              headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-              }),
-              reportProgress: true,
-            }
-          )
-        )
-        .pipe(
-          map((event) => {
-            success.next(event);
-            switch (event.type) {
-              case HttpEventType.Response:
-                success.complete();
-                break;
-            }
+    return this.http.request(
+      new HttpRequest(
+        'POST',
+        `https://prod-07.brazilsouth.logic.azure.com:443/workflows/0ada25ebf29e4a97ba30739737e286b7/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=cXyqc38D4zc_hDtzTFOrHmuJWJhcrdHczOi54FUtfQ8`,
+        [financieraRegistrationForm],
+        {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
           }),
-          catchError((err) => {
-            return throwError(err);
-          })
-        )
-        .subscribe();
-    });
+          reportProgress: true,
+        }
+      )
+    );
   }
 
   postFormsJuridicaContratacionConvenioRequest(

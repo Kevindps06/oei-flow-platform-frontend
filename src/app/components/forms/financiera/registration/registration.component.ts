@@ -1,7 +1,11 @@
+import { HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Utils } from 'src/app/classes/utils';
 import { Convenio } from 'src/app/interfaces/Convenio';
 import { FileItem } from 'src/app/interfaces/FileItem';
 import { FormsFinancieraRegistration } from 'src/app/interfaces/forms-financiera-registration';
+import { WaitTask } from 'src/app/interfaces/WaitTask';
+import { FormsService } from 'src/app/services/forms.service';
 
 @Component({
   selector: 'app-forms-financiera-registration',
@@ -10,6 +14,7 @@ import { FormsFinancieraRegistration } from 'src/app/interfaces/forms-financiera
 })
 export class FormsFinancieraRegistrationComponent implements OnInit {
   @Input() convenios: Convenio[] = [];
+  waitTasks: WaitTask[] = [];
 
   tipoDePersona!: string;
   tipoDeRelacion!: string;
@@ -23,11 +28,52 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
   informacionAdicional!: string;
   manejoDeDatos: boolean = false;
 
-  @Output() onSubmit = new EventEmitter<FormsFinancieraRegistration>();
+  @Output() onWaitTasksChange = new EventEmitter<WaitTask[]>();
 
-  constructor() {}
+  constructor(private formsService: FormsService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    var taskId: string;
+    this.formsService.getConvenios().subscribe((event) => {
+      switch (event.type) {
+        case HttpEventType.Sent:
+          taskId = Utils.makeRandomString(4);
+          this.waitTasks.push({
+            id: taskId,
+            description: 'Cargando convenios...',
+            total: 0,
+            current: 0,
+            progress: 0,
+          });
+          this.onWaitTasksChange.emit(this.waitTasks);
+          break;
+        case HttpEventType.ResponseHeader:
+          this.waitTasks[
+            this.waitTasks.findIndex((element) => element.id === taskId)
+          ].total = event.headers.get('contentLength');
+          this.onWaitTasksChange.emit(this.waitTasks);
+          break;
+        case HttpEventType.DownloadProgress:
+          let taskIndex = this.waitTasks.findIndex(
+            (element) => element.id === taskId
+          );
+          this.waitTasks[taskIndex].current = event.loaded;
+          this.waitTasks[taskIndex].progress = Math.round(
+            (event.loaded * 100) / this.waitTasks[taskIndex].total
+          );
+          this.onWaitTasksChange.emit(this.waitTasks);
+          break;
+        case HttpEventType.Response:
+          this.convenios = event.body;
+
+          this.waitTasks.splice(
+            this.waitTasks.findIndex((element) => element.id === taskId)
+          );
+          this.onWaitTasksChange.emit(this.waitTasks);
+          break;
+      }
+    });
+  }
 
   getBase64(file: File) {
     const reader = new FileReader();
@@ -148,6 +194,43 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
       'Manejo de datos': 'Acepto',
     };
 
-    this.onSubmit.emit(newFinancieraRegistrationForm);
+    /*var taskId: string;
+    this.formsService
+      .postFormsFinancieraRegistration(newFinancieraRegistrationForm)
+      .subscribe(
+        (event) => {
+          let taskIndex;
+          switch (event.type) {
+            case HttpEventType.Sent:
+              taskId = Utils.makeRandomString(4);
+              this.waitTasks.push({
+                id: taskId,
+                description: `Enviando registro...`,
+                total: 0,
+                current: 0,
+                progress: 0,
+              });
+              this.onWaitTasksChange.emit(this.waitTasks);
+              break;
+            case HttpEventType.UploadProgress:
+              taskIndex = this.waitTasks.findIndex(
+                (element) => element.id === taskId
+              );
+              this.waitTasks[taskIndex].current = event.loaded;
+              this.waitTasks[taskIndex].progress = Math.round(
+                (event.loaded * 100) / this.waitTasks[taskIndex].total
+              );
+              this.onWaitTasksChange.emit(this.waitTasks);
+              break;
+            case HttpEventType.ResponseHeader:
+              this.waitTasks.splice(
+                this.waitTasks.findIndex((element) => element.id === taskId)
+              );
+              this.onWaitTasksChange.emit(this.waitTasks);
+              break;
+          }
+        },
+        (err) => {}
+      );*/
   }
 }

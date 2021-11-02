@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Convenio } from 'src/app/interfaces/Convenio';
 import { FileItem } from 'src/app/interfaces/FileItem';
 import { FormsJuridicaContratacionRequest } from 'src/app/interfaces/forms-juridica-contratacion-request';
+import { WaitTask } from 'src/app/interfaces/WaitTask';
 
 @Component({
   selector: 'app-forms-juridica-contratacion-request',
@@ -10,6 +11,8 @@ import { FormsJuridicaContratacionRequest } from 'src/app/interfaces/forms-jurid
 })
 export class FormsJuridicaContratacionRequestComponent implements OnInit {
   @Input() convenios: Convenio[] = [];
+
+  waitTasks: WaitTask[] = [];
 
   tipoDePersona!: string;
   tipoDeRelacion!: string;
@@ -34,7 +37,7 @@ export class FormsJuridicaContratacionRequestComponent implements OnInit {
   examenSaludOcupacionalFiles: FileItem[] = [];
   actaCumplimientoYConocimientoFiles: FileItem[] = [];
 
-  @Output() onSubmit = new EventEmitter<FormsJuridicaContratacionRequest>();
+  @Output() onWaitTasksChange = new EventEmitter<WaitTask[]>();
 
   constructor() {}
 
@@ -158,7 +161,8 @@ export class FormsJuridicaContratacionRequestComponent implements OnInit {
       });
 
       this.getBase64(event.target.files[i]).then((result) => {
-        this.afiliacionSaludFiles[currentFilesLength + i].Bytes = result as string;
+        this.afiliacionSaludFiles[currentFilesLength + i].Bytes =
+          result as string;
         this.afiliacionSaludFiles[currentFilesLength + i].Uploaded = true;
       });
     }
@@ -189,7 +193,8 @@ export class FormsJuridicaContratacionRequestComponent implements OnInit {
       });
 
       this.getBase64(event.target.files[i]).then((result) => {
-        this.afiliacionPensionFiles[currentFilesLength + i].Bytes = result as string;
+        this.afiliacionPensionFiles[currentFilesLength + i].Bytes =
+          result as string;
         this.afiliacionPensionFiles[currentFilesLength + i].Uploaded = true;
       });
     }
@@ -251,7 +256,8 @@ export class FormsJuridicaContratacionRequestComponent implements OnInit {
       });
 
       this.getBase64(event.target.files[i]).then((result) => {
-        this.tarjetaProfesionalFiles[currentFilesLength + i].Bytes = result as string;
+        this.tarjetaProfesionalFiles[currentFilesLength + i].Bytes =
+          result as string;
         this.tarjetaProfesionalFiles[currentFilesLength + i].Uploaded = true;
       });
     }
@@ -299,7 +305,7 @@ export class FormsJuridicaContratacionRequestComponent implements OnInit {
       }
     }
   }
-  
+
   whenFileSoportesHojaDeVidaChange(event: any) {
     let currentFilesLength = this.soportesHojaDeVidaFiles.length;
 
@@ -313,7 +319,8 @@ export class FormsJuridicaContratacionRequestComponent implements OnInit {
       });
 
       this.getBase64(event.target.files[i]).then((result) => {
-        this.soportesHojaDeVidaFiles[currentFilesLength + i].Bytes = result as string;
+        this.soportesHojaDeVidaFiles[currentFilesLength + i].Bytes =
+          result as string;
         this.soportesHojaDeVidaFiles[currentFilesLength + i].Uploaded = true;
       });
     }
@@ -344,7 +351,8 @@ export class FormsJuridicaContratacionRequestComponent implements OnInit {
       });
 
       this.getBase64(event.target.files[i]).then((result) => {
-        this.terminosDeReferenciaFiles[currentFilesLength + i].Bytes = result as string;
+        this.terminosDeReferenciaFiles[currentFilesLength + i].Bytes =
+          result as string;
         this.terminosDeReferenciaFiles[currentFilesLength + i].Uploaded = true;
       });
     }
@@ -375,8 +383,10 @@ export class FormsJuridicaContratacionRequestComponent implements OnInit {
       });
 
       this.getBase64(event.target.files[i]).then((result) => {
-        this.justificacionContratistaFiles[currentFilesLength + i].Bytes = result as string;
-        this.justificacionContratistaFiles[currentFilesLength + i].Uploaded = true;
+        this.justificacionContratistaFiles[currentFilesLength + i].Bytes =
+          result as string;
+        this.justificacionContratistaFiles[currentFilesLength + i].Uploaded =
+          true;
       });
     }
 
@@ -406,8 +416,10 @@ export class FormsJuridicaContratacionRequestComponent implements OnInit {
       });
 
       this.getBase64(event.target.files[i]).then((result) => {
-        this.examenSaludOcupacionalFiles[currentFilesLength + i].Bytes = result as string;
-        this.examenSaludOcupacionalFiles[currentFilesLength + i].Uploaded = true;
+        this.examenSaludOcupacionalFiles[currentFilesLength + i].Bytes =
+          result as string;
+        this.examenSaludOcupacionalFiles[currentFilesLength + i].Uploaded =
+          true;
       });
     }
 
@@ -437,8 +449,11 @@ export class FormsJuridicaContratacionRequestComponent implements OnInit {
       });
 
       this.getBase64(event.target.files[i]).then((result) => {
-        this.actaCumplimientoYConocimientoFiles[currentFilesLength + i].Bytes = result as string;
-        this.actaCumplimientoYConocimientoFiles[currentFilesLength + i].Uploaded = true;
+        this.actaCumplimientoYConocimientoFiles[currentFilesLength + i].Bytes =
+          result as string;
+        this.actaCumplimientoYConocimientoFiles[
+          currentFilesLength + i
+        ].Uploaded = true;
       });
     }
 

@@ -7,15 +7,11 @@ import { LoginComponent } from './components/login/login.component';
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
   },
   {
     path: 'login',
-    component: LoginComponent
-  },
-  {
-    path: 'forms',
-    component: FormsComponent,
+    component: LoginComponent,
   },
   {
     path: 'forms/financiera/registration',
@@ -23,6 +19,10 @@ const routes: Routes = [
   },
   {
     path: 'forms/financiera/invoice',
+    component: FormsComponent,
+  },
+  {
+    path: 'forms/coordinacionlogistica',
     component: FormsComponent,
   },
   {
