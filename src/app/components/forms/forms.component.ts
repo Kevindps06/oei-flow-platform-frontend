@@ -5,7 +5,7 @@ import { Convenio } from 'src/app/interfaces/Convenio';
 import { FormsFinancieraRegistration } from 'src/app/interfaces/forms-financiera-registration';
 import { WaitTask } from 'src/app/interfaces/WaitTask';
 import { HttpEventType } from '@angular/common/http';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from 'src/app/classes/utils';
 import { FormsJuridicaContratacion } from 'src/app/interfaces/forms-juridica-contratacion';
 import { FormsJuridicaContratacionRequest } from 'src/app/interfaces/forms-juridica-contratacion-request';
 

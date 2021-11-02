@@ -9,10 +9,11 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { FormsFinancieraRegistration } from '../interfaces/forms-financiera-registration';
-import { Utils } from '../utils/utils';
+import { Utils } from '../classes/utils';
 import { FormsJuridicaContratacion } from '../interfaces/forms-juridica-contratacion';
 import { FormsJuridicaContratacionConvenioRequest } from '../interfaces/forms-juridica-contratacion-convenio-request';
 import { environment } from 'src/environments/environment';
+import { FormsFinancieraInvoice } from '../interfaces/forms-financiera-invoice';
 
 @Injectable({
   providedIn: 'root',
@@ -43,11 +44,12 @@ export class FormsService {
     );  
   }
 
-  postFormsFinancieraInvoice(object: any): Observable<any> {
+  postFormsFinancieraInvoice(formsFinancieraInvoice: FormsFinancieraInvoice): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'POST',
-        `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
+        `http://${environment.backendAddress}/api/forms/financiera/invoice`,
+        formsFinancieraInvoice,
         {
           reportProgress: true,
         }

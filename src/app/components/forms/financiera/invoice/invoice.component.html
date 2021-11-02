@@ -1,5 +1,5 @@
 <form>
-  <div class="row g-3">
+  <div id="firstElement" class="row g-3">
     <div *ngIf="formIndex === 0" class="col-12">
       <div class="card">
         <div class="card-body">
@@ -10,16 +10,16 @@
             <div class="col-12">
               <div class="form-check">
                 <input
-                  [(ngModel)]="tipoDePersona"
-                  (change)="onFieldChange()"
+                  [(ngModel)]="tipoPersona"
+                  (change)="invalidateFlowUser()"
                   class="form-check-input"
                   type="radio"
                   name="tipoPersonaNatural"
                   id="tipoPersonaNatural"
                   value="Natural"
                   [ngClass]="{
-                    'is-valid': tipoDePersona,
-                    'is-invalid': !tipoDePersona || validacionUsuarioError
+                    'is-valid': tipoPersona,
+                    'is-invalid': !tipoPersona || validacionUsuarioError
                   }"
                 />
                 <label class="form-check-label" for="tipoPersonaNatural">
@@ -28,16 +28,16 @@
               </div>
               <div class="form-check">
                 <input
-                  [(ngModel)]="tipoDePersona"
-                  (change)="onFieldChange()"
+                  [(ngModel)]="tipoPersona"
+                  (change)="invalidateFlowUser()"
                   class="form-check-input"
                   type="radio"
                   name="tipoPersonaJuridica"
                   id="tipoPersonaJuridica"
                   value="Juridica"
                   [ngClass]="{
-                    'is-valid': tipoDePersona,
-                    'is-invalid': !tipoDePersona || validacionUsuarioError
+                    'is-valid': tipoPersona,
+                    'is-invalid': !tipoPersona || validacionUsuarioError
                   }"
                 />
                 <label class="form-check-label" for="tipoPersonaJuridica">
@@ -60,24 +60,24 @@
       <div class="card">
         <div class="card-body">
           <div class="row g-3">
-            <div class="row-12">
+            <div class="col-12">
               <h5 class="card-title text-center">Tipo de relacion</h5>
             </div>
-            <div class="row-12">
+            <div class="col-12">
               <div class="form-check">
                 <input
-                  [(ngModel)]="tipoDeRelacion"
-                  (change)="onFieldChange()"
+                  [(ngModel)]="tipoRelacion"
+                  (change)="invalidateFlowUser()"
                   class="form-check-input"
                   type="radio"
                   name="tipoRelacionContratista"
                   id="tipoRelacionContratista"
                   value="Contratista"
                   [ngClass]="{
-                    'is-valid': tipoDeRelacion,
-                    'is-invalid': !tipoDeRelacion || validacionUsuarioError
+                    'is-valid': tipoRelacion,
+                    'is-invalid': !tipoRelacion || validacionUsuarioError
                   }"
-                  [disabled]="tipoDePersona === 'Juridica'"
+                  [disabled]="tipoPersona === 'Juridica'"
                 />
                 <label class="form-check-label" for="tipoRelacionContratista"
                   >Contratista</label
@@ -85,16 +85,16 @@
               </div>
               <div class="form-check">
                 <input
-                  [(ngModel)]="tipoDeRelacion"
-                  (change)="onFieldChange()"
+                  [(ngModel)]="tipoRelacion"
+                  (change)="invalidateFlowUser()"
                   class="form-check-input"
                   type="radio"
                   name="tipoRelacionProveedor"
                   id="tipoRelacionProveedor"
                   value="Proveedor"
                   [ngClass]="{
-                    'is-valid': tipoDeRelacion,
-                    'is-invalid': !tipoDeRelacion || validacionUsuarioError
+                    'is-valid': tipoRelacion,
+                    'is-invalid': !tipoRelacion || validacionUsuarioError
                   }"
                 />
                 <label class="form-check-label" for="tipoRelacionProveedor"
@@ -117,14 +117,14 @@
       <div class="card">
         <div class="card-body">
           <div class="row g-3">
-            <div class="row-12">
+            <div class="col-12">
               <h5 class="card-title text-center">Informacion de usuario</h5>
             </div>
-            <div *ngIf="tipoDePersona === 'Natural'" class="col-12">
+            <div *ngIf="tipoPersona === 'Natural'" class="col-12">
               <div class="form-floating">
                 <input
                   [(ngModel)]="identification"
-                  (input)="onFieldChange()"
+                  (input)="invalidateFlowUser()"
                   type="text"
                   class="form-control"
                   name="floatingInputIdentificacion"
@@ -156,7 +156,7 @@
                 </div>
               </div>
             </div>
-            <div *ngIf="tipoDePersona === 'Juridica'" class="col-12">
+            <div *ngIf="tipoPersona === 'Juridica'" class="col-12">
               <label for="inputNIT1" class="form-label"
                 >NIT (Con digito de verificacion) Ej. 890507890-4<span
                   class="text-danger"
@@ -166,7 +166,7 @@
               <div class="input-group">
                 <input
                   [(ngModel)]="identification"
-                  (input)="onFieldChange()"
+                  (input)="invalidateFlowUser()"
                   type="text"
                   class="form-control"
                   placeholder="NIT Ej. 890507890"
@@ -183,16 +183,16 @@
                 />
                 <span class="input-group-text">-</span>
                 <input
-                  [(ngModel)]="digitoDeVerificacion"
-                  (change)="onFieldChange()"
+                  [(ngModel)]="digitoVerificacion"
+                  (change)="invalidateFlowUser()"
                   type="text"
                   class="form-control"
                   placeholder="Digito de verificacion Ej. 4"
                   aria-label="Digito de verificacion Ej. 4"
                   [ngClass]="{
-                    'is-valid': digitoDeVerificacion.length === 1,
+                    'is-valid': digitoVerificacion.length === 1,
                     'is-invalid':
-                      digitoDeVerificacion.length !== 1 ||
+                      digitoVerificacion.length !== 1 ||
                       validacionUsuarioError
                   }"
                   style="z-index: 0"
@@ -217,7 +217,7 @@
                     'is-invalid':
                       !validateEmail(email) || validacionUsuarioError
                   }"
-                  (input)="onFieldChange()"
+                  (input)="invalidateFlowUser()"
                   [(ngModel)]="email"
                   type="email"
                   class="form-control"
@@ -238,10 +238,10 @@
             <div class="col-3 col-md-2 col-xl-1 d-grid grap-2 mx-auto">
               <button
                 [disabled]="
-                  !(tipoDePersona === 'Natural'
+                  !(tipoPersona === 'Natural'
                     ? identification && validateEmail(email)
                     : identification &&
-                      digitoDeVerificacion &&
+                      digitoVerificacion &&
                       validateEmail(email))
                 "
                 (click)="btnValidarUsuarioClick()"
@@ -296,14 +296,14 @@
       <div class="card">
         <div class="card-body">
           <div class="row g-3">
-            <div class="row-12">
+            <div class="col-12">
               <h5 class="card-title text-center">Tipo de gestion</h5>
             </div>
           </div>
           <div class="form-check">
             <input
               [(ngModel)]="tipoSoporteContable"
-              (change)="onFieldChange()"
+              (change)="invalidateFlowUser()"
               class="form-check-input"
               type="radio"
               name="tipoSoporteContable0"
@@ -312,16 +312,16 @@
             />
             <label class="form-check-label" for="tipoSoporteContable0">
               {{
-                tipoDeRelacion === "Proveedor"
-                  ? "Cuenta de cobro o factura"
-                  : "Cuenta de cobro"
+                tipoPersona === "Natural"
+                  ? "Cuenta de cobro"
+                  : "Cuenta de cobro o factura"
               }}
             </label>
           </div>
           <div class="form-check">
             <input
               [(ngModel)]="tipoSoporteContable"
-              (change)="onFieldChange()"
+              (change)="invalidateFlowUser()"
               class="form-check-input"
               type="radio"
               name="tipoSoporteContable1"
@@ -332,19 +332,57 @@
               Anticipo
             </label>
           </div>
-          <div class="form-check">
+          <div *ngIf="tipoRelacion === 'Contratista'" class="form-check">
             <input
               [(ngModel)]="tipoSoporteContable"
-              (change)="onFieldChange()"
+              (change)="invalidateFlowUser()"
               class="form-check-input"
               type="radio"
               name="tipoSoporteContable2"
               id="tipoSoporteContable2"
+              value="Dieta"
+            />
+            <label class="form-check-label" for="tipoSoporteContable2">
+              Dieta
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              [(ngModel)]="tipoSoporteContable"
+              (change)="invalidateFlowUser()"
+              class="form-check-input"
+              type="radio"
+              name="tipoSoporteContable3"
+              id="tipoSoporteContable3"
               value="Legalizacion"
               disabled
             />
-            <label class="form-check-label" for="tipoSoporteContable2">
+            <label class="form-check-label" for="tipoSoporteContable3">
               Legalizacion
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="formIndex === 2.1" class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <h5 class="card-title text-center">Tipo de legalizacion</h5>
+            </div>
+          </div>
+          <div class="form-check">
+            <input
+              [(ngModel)]="tipoLegalizacion"
+              class="form-check-input"
+              type="radio"
+              name="tipoLegalizacion0"
+              id="tipoLegalizacion0"
+              value="Suministro y servicio"
+            />
+            <label class="form-check-label" for="tipoLegalizacion0">
+              Suministro y servicio
             </label>
           </div>
         </div>
@@ -355,7 +393,10 @@
         <div class="card-body">
           <div class="row g-3">
             <div class="col-12">
-              <h5 class="card-title text-center">{{ tipoDePersona }} - {{ tipoDeRelacion }} - {{ tipoSoporteContable }}</h5>
+              <h5 class="card-title text-center">
+                {{ tipoPersona }} - {{ tipoRelacion }} -
+                {{ tipoSoporteContable === 'Cuenta de cobro' ? tipoSoporteContable + (tipoPersona === 'Juridica' ? ' o factura' : '') : tipoSoporteContable }}{{ tipoSoporteContable === 'Legalizacion' ? ' - ' + tipoLegalizacion : '' }}
+              </h5>
             </div>
             <div class="col-12">
               <div class="form-floating">
@@ -372,7 +413,7 @@
                   <option selected disabled></option>
                   <option
                     *ngFor="let convenio of convenios"
-                    value="convenio.Numero"
+                    value="{{ convenio.Aliado + ' | ' + convenio.Numero }}"
                   >
                     {{ convenio.Aliado + " | " + convenio.Numero }}
                   </option>
@@ -383,331 +424,140 @@
                 </div>
               </div>
             </div>
-            <div class="col-12">
-              <label
-                for="fieldCuentaCobroFacturaFiles"
-                class="form-label"
-                >Cuenta de cobro<span class="text-danger">*</span>
-              </label>
-              <input
-                (change)="whenCuentaCobroFacturaFilesChange($event)"
-                accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-                class="form-control"
-                type="file"
-                id="fieldCuentaCobroFacturaFiles"
-                name="fieldCuentaCobroFacturaFiles"
-                multiple
-                [ngClass]="{
-                  'is-valid': cuentaCobroFacturaFiles.length > 0,
-                  'is-invalid': cuentaCobroFacturaFiles.length === 0
-                }"
-              />
-              <div class="invalid-feedback">
-                Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            <!-- Cuenta de cobro/Factura -->
+            <div *ngIf="tipoSoporteContable === 'Cuenta de cobro'">
+              <div class="col-12">
+                <label for="fieldCuentaCobroFacturaFiles" class="form-label"
+                  >{{
+                    tipoPersona === "Natural"
+                      ? "Cuenta de cobro"
+                      : "Cuenta de cobro o factura"
+                  }}<span class="text-danger">*</span>
+                </label>
+                <app-upload-files
+                  [requiredFeedback]="
+                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                  "
+                  (onFilesChange)="setCuentaCobroFacturaFiles($event)"
+                ></app-upload-files>
               </div>
-              <div
-                *ngIf="cuentaCobroFacturaFiles.length > 0"
-                class="container"
-              >
-                <div
-                  *ngFor="
-                    let cuentaCobroFacturaFile of cuentaCobroFacturaFiles
-                  "
-                  class="
-                    row
-                    justify-content-center
-                    align-items-center
-                    mt-3
-                    border-start border-top border-primary border-1
-                  "
+              <div class="col-12">
+                <label for="fieldFacturaEquivalenteFiles" class="form-label"
+                  >Factura equivalente<span
+                    *ngIf="tipoRelacion === 'Contratista'"
+                    class="text-danger"
+                    >*</span
+                  ></label
                 >
-                  <div *ngIf="false" class="col-1">
-                    <img
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        cuentaCobroFacturaFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </div>
-                  <div class="col-11">
-                    <h5 class="mb-0">
-                      {{ cuentaCobroFacturaFile.Index }}.
-                      {{ cuentaCobroFacturaFile.Name }}
-                    </h5>
-                  </div>
-                  <div class="col-1 gx-0">
-                    <a href="javascript:;">
-                      <img
-                        (click)="
-                          onDeleteCobroFacturaFile(
-                            cuentaCobroFacturaFile.Index
-                          )
-                        "
-                        width="50px"
-                        height="50px"
-                        src="{{
-                          cuentaCobroFacturaFile.Uploaded
-                            ? '../../../../assets/delete.png'
-                            : '../../../../assets/loading.svg'
-                        }}"
-                        class="img-fluid"
-                      />
-                    </a>
-                  </div>
-                </div>
+                <app-upload-files
+                  [requiredFeedback]="
+                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                  "
+                  (onFilesChange)="setFacturaEquivalenteFiles($event)"
+                ></app-upload-files>
+              </div>
+              <div class="col-12">
+                <label for="fieldPagoSeguridadSocialFiles" class="form-label"
+                  >{{
+                    tipoPersona === "Natural"
+                      ? "Pago de seguridad social vigente (pagado)"
+                      : "Certificado de
+                parafiscales"
+                  }}<span class="text-danger">*</span></label
+                >
+                <app-upload-files
+                  [requiredFeedback]="
+                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                  "
+                  (onFilesChange)="setSeguridadSocialParafiscalesFiles($event)"
+                ></app-upload-files>
+              </div>
+              <div class="col-12">
+                <label class="form-label"
+                  >Informe de actividades<span class="text-danger"
+                    >*</span
+                  ></label
+                >
+                <app-upload-files
+                  [requiredFeedback]="
+                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                  "
+                  (onFilesChange)="setInformeActividadesFiles($event)"
+                ></app-upload-files>
               </div>
             </div>
-            <div class="col-12">
-              <label for="fieldFacturaEquivalenteFiles" class="form-label"
-                >Factura equivalente (Si aplica)<span class="text-danger"
-                  >*</span
-                ></label
-              >
-              <input
-                (change)="whenFacturaEquivalenteFilesChange($event)"
-                accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-                class="form-control"
-                type="file"
-                id="fieldFacturaEquivalenteFiles"
-                name="fieldFacturaEquivalenteFiles"
-                multiple
-                [ngClass]="{
-                  'is-valid': facturaEquivalenteFiles.length > 0,
-                  'is-invalid': facturaEquivalenteFiles.length === 0
-                }"
-              />
-              <div class="invalid-feedback">
-                Este campo es (*) obligatorio, cargue almenos 1 archivo.
+            <!-- Anticipo -->
+            <div *ngIf="tipoSoporteContable === 'Anticipo'">
+              <div *ngIf="tipoPersona === 'Juridica'" class="col-12">
+                <label class="form-label">Camara de comercio (Si aplica)</label>
+                <app-upload-files
+                  (onFilesChange)="setCamaraDeComercioFiles($event)"
+                ></app-upload-files>
               </div>
-              <div *ngIf="facturaEquivalenteFiles.length > 0" class="container">
-                <div
-                  *ngFor="let facturaEquivalenteFile of facturaEquivalenteFiles"
-                  class="
-                    row
-                    justify-content-center
-                    align-items-center
-                    mt-3
-                    border-start border-top border-primary border-1
-                  "
+              <div class="col-12">
+                <label class="form-label"
+                  >Formato de solicitud de avances<span class="text-danger"
+                    >*</span
+                  ></label
                 >
-                  <div *ngIf="false" class="col-1">
-                    <img
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        facturaEquivalenteFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </div>
-                  <div class="col-11">
-                    <h5 class="mb-0">
-                      {{ facturaEquivalenteFile.Index }}.
-                      {{ facturaEquivalenteFile.Name }}
-                    </h5>
-                  </div>
-                  <div class="col-1 gx-0">
-                    <a href="javascript:;">
-                      <img
-                        (click)="
-                          onDeleteFacturaEquivalenteFilesClick(
-                            facturaEquivalenteFile.Index
-                          )
-                        "
-                        width="50px"
-                        height="50px"
-                        src="{{
-                          facturaEquivalenteFile.Uploaded
-                            ? '../../../../assets/delete.png'
-                            : '../../../../assets/loading.svg'
-                        }}"
-                        class="img-fluid"
-                      />
-                    </a>
-                  </div>
-                </div>
+                <app-upload-files
+                  [requiredFeedback]="
+                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                  "
+                  (onFilesChange)="setFormatoSolicitudAvancesFiles($event)"
+                ></app-upload-files>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Cotizaciones (Si es el caso)</label>
+                <app-upload-files
+                  (onFilesChange)="setCotizacionesFiles($event)"
+                ></app-upload-files>
+              </div>
+              <div class="col-12">
+                <label class="form-label"
+                  >Solicitudes de comision (Si es el caso)</label
+                >
+                <app-upload-files
+                  (onFilesChange)="setSolicitudesComisionFiles($event)"
+                ></app-upload-files>
               </div>
             </div>
-            <div class="col-12">
-              <label
-                for="fieldPagoSeguridadSocialFiles"
-                class="form-label"
-                >{{ tipoDeRelacion === 'Proveedor' ? 'Pago de seguridad social vigente (pagado)' : 'Certificado de
-                parafiscales' }}<span class="text-danger">*</span></label
-              >
-              <input
-                (change)="whenSeguridadSocialParafiscalesFilesChange($event)"
-                accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-                class="form-control"
-                type="file"
-                id="formFileMultipleRUT"
-                multiple
-                [ngClass]="{
-                  'is-valid': seguridadSocialParafiscalesFiles.length > 0,
-                  'is-invalid': seguridadSocialParafiscalesFiles.length === 0
-                }"
-              />
-              <div class="invalid-feedback">
-                Este campo es (*) obligatorio, cargue almenos 1 archivo.
-              </div>
-              <div
-                *ngIf="seguridadSocialParafiscalesFiles.length > 0"
-                class="container"
-              >
-                <div
-                  *ngFor="
-                    let seguridadSocialParafiscalesFile of seguridadSocialParafiscalesFiles
-                  "
-                  class="
-                    row
-                    justify-content-center
-                    align-items-center
-                    mt-3
-                    border-start border-top border-primary border-1
-                  "
+            <!-- Dieta -->
+            <div *ngIf="tipoSoporteContable === 'Dieta'">
+              <div class="col-12">
+                <label class="form-label"
+                  >Formato de solicitud de viajes<span class="text-danger"
+                    >*</span
+                  ></label
                 >
-                  <div *ngIf="false" class="col-1">
-                    <img
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        seguridadSocialParafiscalesFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </div>
-                  <div class="col-11">
-                    <h5 class="mb-0">
-                      {{ seguridadSocialParafiscalesFile.Index }}.
-                      {{ seguridadSocialParafiscalesFile.Name }}
-                    </h5>
-                  </div>
-                  <div class="col-1 gx-0">
-                    <a href="javascript:;">
-                      <img
-                        (click)="
-                          onDeleteSeguridadSocialParafiscalesFilesClick(
-                            seguridadSocialParafiscalesFile.Index
-                          )
-                        "
-                        width="50px"
-                        height="50px"
-                        src="{{
-                          seguridadSocialParafiscalesFile.Uploaded
-                            ? '../../../../assets/delete.png'
-                            : '../../../../assets/loading.svg'
-                        }}"
-                        class="img-fluid"
-                      />
-                    </a>
-                  </div>
-                </div>
+                <app-upload-files
+                  [requiredFeedback]="
+                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                  "
+                  (onFilesChange)="setFormatoSolicitudViajesFiles($event)"
+                ></app-upload-files>
               </div>
             </div>
-            <div class="col-12">
-              <label
-                for="formFileMultipleinformeActividadesFiles"
-                class="form-label"
-                >Informe de actividades<span class="text-danger">*</span></label
-              >
-              <input
-                (change)="whenInformeActividadesFilesChange($event)"
-                accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-                class="form-control"
-                type="file"
-                id="formFileMultipleRUT"
-                multiple
-                [ngClass]="{
-                  'is-valid': informeActividadesFiles.length > 0,
-                  'is-invalid': informeActividadesFiles.length === 0
-                }"
-              />
-              <div class="invalid-feedback">
-                Este campo es (*) obligatorio, cargue almenos 1 archivo.
-              </div>
-              <div *ngIf="informeActividadesFiles.length > 0" class="container">
-                <div
-                  *ngFor="let informeActividadesFile of informeActividadesFiles"
-                  class="
-                    row
-                    justify-content-center
-                    align-items-center
-                    mt-3
-                    border-start border-top border-primary border-1
-                  "
-                >
-                  <div *ngIf="false" class="col-1">
-                    <img
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        informeActividadesFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </div>
-                  <div class="col-11">
-                    <h5 class="mb-0">
-                      {{ informeActividadesFile.Index }}.
-                      {{ informeActividadesFile.Name }}
-                    </h5>
-                  </div>
-                  <div class="col-1 gx-0">
-                    <a href="javascript:;">
-                      <img
-                        (click)="
-                          onDeleteInformeActividadesFilesClick(
-                            informeActividadesFile.Index
-                          )
-                        "
-                        width="50px"
-                        height="50px"
-                        src="{{
-                          informeActividadesFile.Uploaded
-                            ? '../../../../assets/delete.png'
-                            : '../../../../assets/loading.svg'
-                        }}"
-                        class="img-fluid"
-                      />
-                    </a>
-                  </div>
-                </div>
-              </div>
+            <!-- Legalizacion - Suministro y servicio -->
+            <div *ngIf="tipoLegalizacion === 'Suministro y servicio'">
+
             </div>
+            <!-- | -->
             <div class="col-12">
               <div class="form-floating">
                 <input
                   [(ngModel)]="infoAdicional"
-                  (input)="onFieldChange()"
+                  (input)="invalidateFlowUser()"
                   type="text"
                   class="form-control"
                   name="floatingInputInfoAdicional"
                   id="floatingInputInfoAdicional"
                   placeholder="x"
-                  [ngClass]="{
-                    'is-valid': infoAdicional,
-                    'is-invalid': !infoAdicional
-                  }"
                   maxlength="255"
                 />
                 <label for="floatingInputInfoAdicional"
-                  >Informacion adicional<span class="text-danger"
-                    >*</span
-                  ></label
+                  >Informacion adicional</label
                 >
-                <div class="invalid-feedback">
-                  Este campo es (*) obligatorio, rellenelo.
-                </div>
               </div>
             </div>
           </div>
@@ -715,21 +565,18 @@
       </div>
     </div>
     <div *ngIf="formIndex > 0" class="d-grid gap-2 col-6 mx-auto mb-2">
-      <button
-        [disabled]="!btnPrevious"
-        (click)="btnPreviousClick()"
-        class="btn btn-primary"
-      >
+      <button href="#firstElement" (click)="btnPreviousClick()" class="btn btn-primary">
         Anterior
       </button>
     </div>
     <div
       *ngIf="formIndex !== 3"
-      [ngClass]="{ 'col-12': formIndex === 0, 'col-6': formIndex !== 0 }"
-      class="d-grid gap-2 mx-auto mb-2"
+      [ngClass]="{ 'col-12': formIndex === 0 }"
+      class="d-grid gap-2 col-6 mx-auto mb-2"
     >
       <button
-        [disabled]="!btnNext"
+        href="#firstElement"
+        [disabled]="!isValid()"
         (click)="btnNextClick()"
         class="btn btn-primary"
       >
@@ -737,7 +584,13 @@
       </button>
     </div>
     <div *ngIf="formIndex === 3" class="d-grid gap-2 col-6 mx-auto mb-2">
-      <button (click)="btnSubmitClick()" class="btn btn-primary">Enviar</button>
+      <button
+        [disabled]="!isValid()"
+        (click)="btnSubmitClick()"
+        class="btn btn-primary"
+      >
+        Enviar
+      </button>
     </div>
   </div>
 </form>

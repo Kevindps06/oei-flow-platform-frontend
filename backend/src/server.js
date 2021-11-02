@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const bytes = require("bytes");
 const path = require("path");
 const express = require("express");
 const cors = require("cors");
@@ -16,9 +17,11 @@ app.use(
   })
 );
 
-app.use(express.json());
+app.use(express.json({ limit: bytes(1024 * 1024 * 512) }));
 
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.urlencoded({ limit: bytes(1024 * 1024 * 512), extended: true })
+);
 
 app.use(morgan("tiny"));
 

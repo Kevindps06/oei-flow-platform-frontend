@@ -21,6 +21,8 @@ import { LoginComponent } from './components/login/login.component';
 import { FormsFinancieraRegistrationComponent } from './components/forms/financiera/registration/registration.component';
 import { FormsFinancieraInvoiceComponent } from './components/forms/financiera/invoice/invoice.component';
 import { GlobalHttpInterceptorService } from './services/global-http-interceptor.service';
+import { UploadFilesComponent } from './components/upload-files/upload-files.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +42,8 @@ import { GlobalHttpInterceptorService } from './services/global-http-interceptor
     LoginComponent,
     FormsFinancieraRegistrationComponent,
     FormsFinancieraInvoiceComponent,
+    UploadFilesComponent,
+    HomeComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [

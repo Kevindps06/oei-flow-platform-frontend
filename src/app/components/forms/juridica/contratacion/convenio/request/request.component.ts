@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Convenio } from 'src/app/interfaces/Convenio';
 import { FileItem } from 'src/app/interfaces/FileItem';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from 'src/app/classes/utils';
 import { FormsJuridicaContratacionConvenioRequest } from 'src/app/interfaces/forms-juridica-contratacion-convenio-request'
 import { FormsService } from 'src/app/services/forms.service';
 import { HttpEventType } from '@angular/common/http';

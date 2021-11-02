@@ -1,3 +1,5 @@
+import { FileItem } from "../interfaces/FileItem";
+
 export class Utils {
   static makeRandomString(length: number) {
     var result = '';
@@ -26,5 +28,19 @@ export class Utils {
     const re =
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
+  }
+
+  static validateFiles(fileItems: FileItem[]): boolean {
+    if (fileItems.length > 0) {
+      for (let i = 0; fileItems.length > i; i++) {
+        if (!fileItems[i].Uploaded) {
+          return false
+        }
+      }
+
+      return true
+    } else {
+      return false
+    }
   }
 }

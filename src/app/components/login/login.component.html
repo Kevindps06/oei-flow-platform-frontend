@@ -1,12 +1,19 @@
 <div
-  *ngIf="waitTasks.length > 0"
+  *ngIf="waitTasks.length > 0 || loading"
+  [ngClass]="{
+    'fade-in': waitTasks.length > 0,
+    'fade-out': waitTasks.length === 0,
+    'd-none': waitTasks.length === 0 && loading === false
+  }"
   class="position-fixed top-0"
   style="
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1;
+    z-index: 11;
   "
+  (animationstart)="animationstart($event)"
+  (animationend)="animationend($event)"
 >
   <div
     class="position-absolute top-50 start-50 translate-middle"
@@ -24,16 +31,23 @@
       <div class="col-12">
         <div class="progress">
           <div
-            class="progress-bar progress-bar-striped progress-bar-animated"
+            class="
+              progress-bar progress-bar-striped progress-bar-animated
+              text-dark
+            "
             role="progressbar"
-            [ngStyle]="{ width: waitTasks[0].progress + '%' }"
+            [ngStyle]="{
+              width: (waitTasks.length > 0 ? waitTasks[0].progress : 100) + '%'
+            }"
           >
-            {{ waitTasks[0].progress }}%
+            {{ waitTasks.length > 0 ? waitTasks[0].progress : "" }}%
           </div>
         </div>
       </div>
       <div class="col-12 text-center">
-        <p class="fs-4 text-light">{{ waitTasks[0].description }}</p>
+        <p class="fs-4 text-light">
+          {{ waitTasks.length > 0 ? waitTasks[0].description : "" }}
+        </p>
       </div>
     </div>
   </div>
@@ -41,7 +55,7 @@
 <div class="page-holder align-items-center py-4 bg-gray-100 vh-100">
   <div class="container">
     <div class="row align-items-center">
-      <div class="col-lg-6 px-lg-4" *ngIf="userlogin">
+      <div class="col-lg-6 px-lg-4">
         <div class="card">
           <div class="card-header px-lg-5">
             <div class="card-heading text-primary">OEI Colombia</div>
@@ -55,23 +69,53 @@
             <form id="loginForm" action="index.html">
               <div class="form-floating mb-3">
                 <input
+                  (input)="invalidateUser()"
+                  [(ngModel)]="email"
+                  [ngClass]="{
+                    'is-valid': validateEmail(),
+                    'is-invalid': !validateEmail() || invalidUser
+                  }"
                   class="form-control"
-                  id="floatingInput"
+                  id="email"
+                  name="email"
                   type="email"
-                  placeholder="name@example.com"
-                  required
+                  placeholder="x"
                 />
-                <label for="floatingInput">Direccion de email</label>
+                <label for="email"
+                  >Direccion de email<span class="text-danger">*</span></label
+                >
+                <div class="invalid-feedback">
+                  {{
+                    !invalidUser
+                      ? "Este campo es (*) obligatorio, rellenelo."
+                      : "No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo."
+                  }}
+                </div>
               </div>
               <div class="form-floating mb-3">
                 <input
+                  (input)="invalidateUser()"
+                  [(ngModel)]="password"
+                  [ngClass]="{
+                    'is-valid': password,
+                    'is-invalid': !password || invalidUser
+                  }"
                   class="form-control"
-                  id="floatingPassword"
+                  id="password"
+                  name="password"
                   type="password"
-                  placeholder="Password"
-                  required
+                  placeholder="x"
                 />
-                <label for="floatingPassword">Contraseña</label>
+                <label for="password"
+                  >Contraseña<span class="text-danger">*</span></label
+                >
+                <div class="invalid-feedback">
+                  {{
+                    !invalidUser
+                      ? "Este campo es (*) obligatorio, rellenelo."
+                      : "No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo."
+                  }}
+                </div>
               </div>
               <!--<div class="form-check mb-3">
                 <input
@@ -84,7 +128,14 @@
                   >Recordarme</label
                 >
               </div>-->
-              <button class="btn btn-primary" type="button">Enviar</button>
+              <button
+                class="btn btn-primary"
+                (click)="validateUser()"
+                [disabled]="!isValid()"
+                type="button"
+              >
+                Iniciar sesion
+              </button>
             </form>
           </div>
           <!--<div class="card-footer px-lg-5 py-lg-4">
@@ -92,79 +143,6 @@
               Don't have an account? <a (click)="user_register()">Register</a>.
             </div>
           </div>-->
-        </div>
-      </div>
-      <!-- register -->
-      <div class="col-lg-6 px-lg-4" *ngIf="userregister">
-        <div class="card">
-          <div class="card-header px-lg-5">
-            <div class="card-heading text-primary">Jassa Register</div>
-          </div>
-          <div class="card-body p-lg-5">
-            <h3 class="mb-4">Get started with Chamkila</h3>
-            <p class="text-muted text-sm mb-5">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore.
-            </p>
-            <form action="index.html">
-              <div class="form-floating mb-3">
-                <input
-                  class="form-control"
-                  id="username"
-                  type="email"
-                  placeholder="name@example.com"
-                  required
-                />
-                <label for="username">Username</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input
-                  class="form-control"
-                  id="floatingInput"
-                  type="email"
-                  placeholder="name@example.com"
-                  required
-                />
-                <label for="floatingInput">Email address</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input
-                  class="form-control"
-                  id="floatingPassword"
-                  type="password"
-                  placeholder="Password"
-                  required
-                />
-                <label for="floatingPassword">Password</label>
-              </div>
-              <div class="form-check mb-3">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  name="agree"
-                  id="agree"
-                />
-                <label class="form-check-label" for="agree"
-                  >I agree with the <a href="#">Terms & Conditions</a>.</label
-                >
-              </div>
-              <div class="form-group">
-                <button
-                  class="btn btn-primary"
-                  id="regidter"
-                  type="button"
-                  name="registerSubmit"
-                >
-                  Register
-                </button>
-              </div>
-            </form>
-          </div>
-          <div class="card-footer px-lg-5 py-lg-4">
-            <div class="text-sm text-muted">
-              Already have an account? <a (click)="user_login()">Login</a>.
-            </div>
-          </div>
         </div>
       </div>
       <div
