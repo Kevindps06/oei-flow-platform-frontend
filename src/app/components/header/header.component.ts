@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'app-header',
@@ -8,6 +7,8 @@ import { LoginComponent } from '../login/login.component';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
+  @Input() loggedUser: any;
+
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {}
@@ -21,6 +22,16 @@ export class HeaderComponent implements OnInit {
   }
 
   ifLogeedIn() {
-    return LoginComponent.user
+    return this.loggedUser;
+  }
+
+  mouseOverLoginButton: boolean = false;
+
+  onMouseOverLoginButton() {
+    this.mouseOverLoginButton = true;
+  }
+
+  onMouseOutLoginButton() {
+    this.mouseOverLoginButton = false;
   }
 }

@@ -54,111 +54,113 @@
 </div>
 <div class="page-holder align-items-center py-4 bg-gray-100 vh-100">
   <div class="container">
-    <div class="row align-items-center">
-      <div class="col-lg-6 px-lg-4">
+    <div class="row g-3 align-items-center">
+      <div class="col-lg-6">
         <div class="card">
-          <div class="card-header px-lg-5">
-            <div class="card-heading text-primary">OEI Colombia</div>
-          </div>
-          <div class="card-body p-lg-5">
-            <h3 class="mb-4">Hola, bienvenido! 👋👋</h3>
-            <p class="text-muted text-sm mb-5">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore.
-            </p>
-            <form id="loginForm" action="index.html">
-              <div class="form-floating mb-3">
-                <input
-                  (input)="invalidateUser()"
-                  [(ngModel)]="email"
-                  [ngClass]="{
-                    'is-valid': validateEmail(),
-                    'is-invalid': !validateEmail() || invalidUser
-                  }"
-                  class="form-control"
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="x"
-                />
-                <label for="email"
-                  >Direccion de email<span class="text-danger">*</span></label
-                >
-                <div class="invalid-feedback">
-                  {{
-                    !invalidUser
-                      ? "Este campo es (*) obligatorio, rellenelo."
-                      : "No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo."
-                  }}
-                </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-12">
+                <h5 class="card-title text-center text-primary mt-3">
+                  Inicio de sesion
+                </h5>
               </div>
-              <div class="form-floating mb-3">
-                <input
-                  (input)="invalidateUser()"
-                  [(ngModel)]="password"
-                  [ngClass]="{
-                    'is-valid': password,
-                    'is-invalid': !password || invalidUser
-                  }"
-                  class="form-control"
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="x"
-                />
-                <label for="password"
-                  >Contraseña<span class="text-danger">*</span></label
-                >
-                <div class="invalid-feedback">
-                  {{
-                    !invalidUser
-                      ? "Este campo es (*) obligatorio, rellenelo."
-                      : "No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo."
-                  }}
-                </div>
+              <div class="col-12">
+                <h3 class="my-3">Hola, bienvenido! 👋👋</h3>
+                <p class="text-muted text-sm mb-5">
+                  Ingrese con sus credenciales asignadas para realizar procesos
+                  y gestiones que necesiten de una autorización.
+                </p>
+                <form id="loginForm">
+                  <div class="form-floating mb-3">
+                    <input
+                      (input)="invalidateUser()"
+                      [(ngModel)]="email"
+                      [ngClass]="{
+                        'is-valid': validateEmail(),
+                        'is-invalid': !validateEmail() || invalidUser
+                      }"
+                      class="form-control"
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="x"
+                    />
+                    <label for="email"
+                      >Direccion de email<span class="text-danger"
+                        >*</span
+                      ></label
+                    >
+                    <div class="invalid-feedback">
+                      {{
+                        !invalidUser
+                          ? "Este campo es (*) obligatorio, rellenelo."
+                          : "No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo."
+                      }}
+                    </div>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input
+                      (input)="invalidateUser()"
+                      [(ngModel)]="password"
+                      [ngClass]="{
+                        'is-valid': password,
+                        'is-invalid': !password || invalidUser
+                      }"
+                      class="form-control"
+                      id="password"
+                      name="password"
+                      type="password"
+                      placeholder="x"
+                    />
+                    <label for="password"
+                      >Contraseña<span class="text-danger">*</span></label
+                    >
+                    <div class="invalid-feedback">
+                      {{
+                        !invalidUser
+                          ? "Este campo es (*) obligatorio, rellenelo."
+                          : "No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo."
+                      }}
+                    </div>
+                  </div>
+                  <!--<div class="form-check mb-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      name="remember"
+                      id="remember"
+                    />
+                    <label class="form-check-label" for="remember"
+                      >Recordarme</label
+                    >
+                  </div>-->
+                  <button
+                    class="btn btn-primary"
+                    (click)="validateUser()"
+                    [disabled]="!isValid()"
+                    type="button"
+                  >
+                    Iniciar sesion
+                  </button>
+                </form>
               </div>
-              <!--<div class="form-check mb-3">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  name="remember"
-                  id="remember"
-                />
-                <label class="form-check-label" for="remember"
-                  >Recordarme</label
-                >
-              </div>-->
-              <button
-                class="btn btn-primary"
-                (click)="validateUser()"
-                [disabled]="!isValid()"
-                type="button"
-              >
-                Iniciar sesion
-              </button>
-            </form>
-          </div>
-          <!--<div class="card-footer px-lg-5 py-lg-4">
-            <div class="text-sm text-muted">
-              Don't have an account? <a (click)="user_register()">Register</a>.
             </div>
-          </div>-->
+          </div>
         </div>
       </div>
       <div
-        class="col-lg-6 col-xl-5 ms-xl-auto px-lg-4 text-center text-primary"
+        class="col-lg-6 text-center text-primary"
       >
         <img
-          class="img-fluid mb-4"
+          class="img-fluid my-5"
           width="300"
           src="https://therichpost.com/wp-content/uploads/2021/06/login_page_image.png"
           alt=""
           style="transform: rotate(10deg)"
         />
-        <h1 class="mb-4">OEI<br class="d-none d-lg-inline" />Code</h1>
+        <h1>OEI<br class="d-inline"/>Code</h1>
         <p class="lead text-muted">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-          eiusmod tempor incididunt ut labore.
+          Aumentamos la eficiencia con tranformacion digital.
         </p>
       </div>
     </div>

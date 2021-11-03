@@ -23,6 +23,7 @@ import { GlobalHttpInterceptorService } from './services/global-http-interceptor
 import { UploadFilesComponent } from './components/upload-files/upload-files.component';
 import { HomeComponent } from './components/home/home.component';
 import { CoordinacionlogisticaComponent } from './components/forms/coordinacionlogistica/coordinacionlogistica.component';
+import { DatePickerComponent } from './components/date-picker/date-picker.component';
 
 @NgModule({
   declarations: [
@@ -44,8 +45,14 @@ import { CoordinacionlogisticaComponent } from './components/forms/coordinacionl
     UploadFilesComponent,
     HomeComponent,
     CoordinacionlogisticaComponent,
+    DatePickerComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+  ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

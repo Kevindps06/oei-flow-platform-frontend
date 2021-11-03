@@ -14,6 +14,7 @@ import { FormsJuridicaContratacion } from '../interfaces/forms-juridica-contrata
 import { FormsJuridicaContratacionConvenioRequest } from '../interfaces/forms-juridica-contratacion-convenio-request';
 import { environment } from 'src/environments/environment';
 import { FormsFinancieraInvoice } from '../interfaces/forms-financiera-invoice';
+import { FormsCoordinacionLogistica } from '../interfaces/forms-coordinacionlogistica';
 
 @Injectable({
   providedIn: 'root',
@@ -44,6 +45,26 @@ export class FormsService {
     );
   }
 
+  postFormsFinancieraRegistration(
+    financieraRegistrationForm: FormsFinancieraRegistration
+  ): Observable<any> {
+    financieraRegistrationForm.ID = Utils.makeRandomString(64);
+
+    return this.http.request(
+      new HttpRequest(
+        'POST',
+        `https://prod-07.brazilsouth.logic.azure.com:443/workflows/0ada25ebf29e4a97ba30739737e286b7/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=cXyqc38D4zc_hDtzTFOrHmuJWJhcrdHczOi54FUtfQ8`,
+        [financieraRegistrationForm],
+        {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
   postFormsFinancieraInvoice(
     formsFinancieraInvoice: FormsFinancieraInvoice
   ): Observable<any> {
@@ -59,46 +80,27 @@ export class FormsService {
     );
   }
 
-  getConvenios(): Observable<any> {
-    return new Observable((success) => {
-      this.http
-        .request(
-          new HttpRequest(
-            'GET',
-            `https://prod-07.brazilsouth.logic.azure.com:443/workflows/179a2473fa83434c96cd3dda5d33d06f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=GLvPEJ9YQpqEyAYjYAa3lkDl8Wnn_2BejGfLWoyz74Q`,
-            {
-              reportProgress: true,
-            }
-          )
-        )
-        .pipe(
-          map((event) => {
-            success.next(event);
-            switch (event.type) {
-              case HttpEventType.Response:
-                success.complete();
-                break;
-            }
-          })
-        )
-        .subscribe();
-    });
-  }
-
-  postFormsFinancieraRegistration(
-    financieraRegistrationForm: FormsFinancieraRegistration
+  postFormsCoordinacionLogistica(
+    formsCoordinacionLogistica: FormsCoordinacionLogistica
   ): Observable<any> {
-    financieraRegistrationForm.ID = Utils.makeRandomString(64);
-
     return this.http.request(
       new HttpRequest(
         'POST',
-        `https://prod-07.brazilsouth.logic.azure.com:443/workflows/0ada25ebf29e4a97ba30739737e286b7/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=cXyqc38D4zc_hDtzTFOrHmuJWJhcrdHczOi54FUtfQ8`,
-        [financieraRegistrationForm],
+        `http://${environment.backendAddress}/api/forms/financiera/invoice`,
+        formsCoordinacionLogistica,
         {
-          headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  getConvenios(): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `http://${environment.backendAddress}/api/convenios`,
+        {
           reportProgress: true,
         }
       )

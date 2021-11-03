@@ -1,22 +1,44 @@
 <form>
   <div id="firstElement" class="row g-3">
-    <div *ngIf="formIndex === 0" class="col-12">
+    <div class="col-12">
       <div class="card">
         <div class="card-body">
           <div class="row g-3">
             <div class="col-12">
-              <h5 class="card-title text-center">
-                {{ tipoPersona }} - {{ tipoRelacion }} -
-                {{ tipoSoporteContable === 'Cuenta de cobro' ? tipoSoporteContable + (tipoPersona === 'Juridica' ? ' o factura' : '') : tipoSoporteContable }}{{ tipoSoporteContable === 'Legalizacion' ? ' - ' + tipoLegalizacion : '' }}
-              </h5>
+              <h5 class="card-title text-center">Coordinacion Logistica</h5>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <input
+                  [(ngModel)]="nombre"
+                  type="text"
+                  class="form-control"
+                  name="inputNombre"
+                  id="inputNombre"
+                  placeholder="x"
+                  [ngClass]="{
+                    'is-valid': nombre,
+                    'is-invalid': !nombre
+                  }"
+                  maxlength="255"
+                />
+                <label for="inputNombre"
+                  >Nombre completo del viajante<span class="text-danger"
+                    >*</span
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
             </div>
             <div class="col-12">
               <div class="form-floating">
                 <select
                   [(ngModel)]="convenio"
                   class="form-select"
-                  id="convenio"
-                  name="convenio"
+                  id="selectConvenio"
+                  name="selectConvenio"
                   [ngClass]="{
                     'is-valid': convenio,
                     'is-invalid': !convenio
@@ -30,172 +52,187 @@
                     {{ convenio.Aliado + " | " + convenio.Numero }}
                   </option>
                 </select>
-                <label for="convenio">Convenio</label>
+                <label for="selectConvenio">Convenio</label>
                 <div class="invalid-feedback">
                   Este campo es (*) obligatorio, seleccione una opcion.
                 </div>
               </div>
             </div>
-            <!-- Cuenta de cobro/Factura -->
-            <div *ngIf="tipoSoporteContable === 'Cuenta de cobro'">
-              <div class="col-12">
-                <label for="fieldCuentaCobroFacturaFiles" class="form-label"
-                  >{{
-                    tipoPersona === "Natural"
-                      ? "Cuenta de cobro"
-                      : "Cuenta de cobro o factura"
-                  }}<span class="text-danger">*</span>
-                </label>
-                <app-upload-files
-                  [requiredFeedback]="
-                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
-                  "
-                  (onFilesChange)="setCuentaCobroFacturaFiles($event)"
-                ></app-upload-files>
-              </div>
-              <div class="col-12">
-                <label for="fieldFacturaEquivalenteFiles" class="form-label"
-                  >Factura equivalente<span
-                    *ngIf="tipoRelacion === 'Contratista'"
-                    class="text-danger"
-                    >*</span
-                  ></label
-                >
-                <app-upload-files
-                  [requiredFeedback]="
-                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
-                  "
-                  (onFilesChange)="setFacturaEquivalenteFiles($event)"
-                ></app-upload-files>
-              </div>
-              <div class="col-12">
-                <label for="fieldPagoSeguridadSocialFiles" class="form-label"
-                  >{{
-                    tipoPersona === "Natural"
-                      ? "Pago de seguridad social vigente (pagado)"
-                      : "Certificado de
-                parafiscales"
-                  }}<span class="text-danger">*</span></label
-                >
-                <app-upload-files
-                  [requiredFeedback]="
-                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
-                  "
-                  (onFilesChange)="setSeguridadSocialParafiscalesFiles($event)"
-                ></app-upload-files>
-              </div>
-              <div class="col-12">
-                <label class="form-label"
-                  >Informe de actividades<span class="text-danger"
-                    >*</span
-                  ></label
-                >
-                <app-upload-files
-                  [requiredFeedback]="
-                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
-                  "
-                  (onFilesChange)="setInformeActividadesFiles($event)"
-                ></app-upload-files>
-              </div>
+            <div class="col-12">
+              <label for="fieldFechaIda" class="form-label"
+                >Fecha ida<span class="text-danger">*</span></label
+              >
+              <app-date-picker
+                [allowPass]="false"
+                (onDateChange)="setFechaIda($event)"
+                name="fieldFechaIda"
+                id="fieldFechaIda"
+                requiredFeedbackDay="Este campo es (*) obligatorio, seleccione el dia de ida."
+                requiredFeedbackMonth="Este campo es (*) obligatorio, seleccione el mes de ida."
+                requiredFeedbackYear="Este campo es (*) obligatorio, seleccione el año de ida."
+              ></app-date-picker>
             </div>
-            <!-- Anticipo -->
-            <div *ngIf="tipoSoporteContable === 'Anticipo'">
-              <div *ngIf="tipoPersona === 'Juridica'" class="col-12">
-                <label class="form-label">Camara de comercio (Si aplica)</label>
-                <app-upload-files
-                  (onFilesChange)="setCamaraDeComercioFiles($event)"
-                ></app-upload-files>
-              </div>
-              <div class="col-12">
-                <label class="form-label"
-                  >Formato de solicitud de avances<span class="text-danger"
-                    >*</span
-                  ></label
-                >
-                <app-upload-files
-                  [requiredFeedback]="
-                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
-                  "
-                  (onFilesChange)="setFormatoSolicitudAvancesFiles($event)"
-                ></app-upload-files>
-              </div>
-              <div class="col-12">
-                <label class="form-label">Cotizaciones (Si es el caso)</label>
-                <app-upload-files
-                  (onFilesChange)="setCotizacionesFiles($event)"
-                ></app-upload-files>
-              </div>
-              <div class="col-12">
-                <label class="form-label"
-                  >Solicitudes de comision (Si es el caso)</label
-                >
-                <app-upload-files
-                  (onFilesChange)="setSolicitudesComisionFiles($event)"
-                ></app-upload-files>
-              </div>
+            <div class="col-12">
+              <label for="fieldFechaVuelta" class="form-label"
+                >Fecha vuelta</label
+              >
+              <app-date-picker
+                [allowPass]="false"
+                (onDateChange)="setFechaVuelta($event)"
+                name="fieldFechaVuelta"
+                id="fieldFechaVuelta"
+              ></app-date-picker>
             </div>
-            <!-- Dieta -->
-            <div *ngIf="tipoSoporteContable === 'Dieta'">
-              <div class="col-12">
-                <label class="form-label"
-                  >Formato de solicitud de viajes<span class="text-danger"
-                    >*</span
-                  ></label
-                >
-                <app-upload-files
-                  [requiredFeedback]="
-                    'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
-                  "
-                  (onFilesChange)="setFormatoSolicitudViajesFiles($event)"
-                ></app-upload-files>
-              </div>
-            </div>
-            <!-- Legalizacion - Suministro y servicio -->
-            <div *ngIf="tipoLegalizacion === 'Suministro y servicio'">
-
-            </div>
-            <!-- | -->
             <div class="col-12">
               <div class="form-floating">
                 <input
-                  [(ngModel)]="infoAdicional"
-                  (input)="invalidateFlowUser()"
+                  [(ngModel)]="identification"
                   type="text"
                   class="form-control"
-                  name="floatingInputInfoAdicional"
-                  id="floatingInputInfoAdicional"
-                  placeholder="x"
-                  maxlength="255"
+                  name="inputIdentification"
+                  id="inputIdentification"
+                  placeholder="\0"
+                  maxlength="10"
+                  [OnlyNumbers]="true"
+                  [ngClass]="{
+                    'is-valid':
+                      identification.length === 8 ||
+                      identification.length === 10,
+                    'is-invalid':
+                      identification.length !== 8 &&
+                      identification.length !== 10
+                  }"
                 />
-                <label for="floatingInputInfoAdicional"
-                  >Informacion adicional</label
+                <label for="inputIdentification"
+                  >Documento de identidad<span class="text-danger"
+                    >*</span
+                  ></label
                 >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
               </div>
+            </div>
+            <div class="col-12">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="inputEquipajeAdicional"
+                    >¿Cuenta con equipaje adicional?<span class="text-danger"
+                      >*</span
+                    ></label
+                  >
+                </div>
+                <div
+                  id="inputEquipajeAdicional"
+                  name="inputEquipajeAdicional"
+                  class="col-12"
+                >
+                  <div class="form-check">
+                    <input
+                      [(ngModel)]="equipajeAdicional"
+                      class="form-check-input"
+                      type="radio"
+                      name="radioSiEquipajeAdicional"
+                      id="radioSiEquipajeAdicional"
+                      value="true"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="radioSiEquipajeAdicional"
+                      >Si</label
+                    >
+                  </div>
+                  <div class="form-check">
+                    <input
+                      [(ngModel)]="equipajeAdicional"
+                      class="form-check-input"
+                      type="radio"
+                      name="radioNoEquipajeAdicional"
+                      id="radioNoEquipajeAdicional"
+                      value="false"
+                      checked
+                    />
+                    <label
+                      class="form-check-label"
+                      for="radioNoEquipajeAdicional"
+                      >No</label
+                    >
+                    <div class="invalid-feedback">
+                      Este campo es (*) obligatorio, seleccione una opcion.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <input
+                  [(ngModel)]="email"
+                  type="email"
+                  class="form-control"
+                  name="inputEmail"
+                  id="inputEmail"
+                  placeholder="\0"
+                  maxlength="255"
+                  [ngClass]="{
+                    'is-valid': validateEmail(),
+                    'is-invalid': !validateEmail()
+                  }"
+                />
+                <label for="inputEmail"
+                  >Correo electronico del viajante<span class="text-danger"
+                    >*</span
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <input
+                  [(ngModel)]="telefono"
+                  type="text"
+                  class="form-control"
+                  name="inputTelefono"
+                  id="inputTelefono"
+                  placeholder="\0"
+                  maxlength="10"
+                  [OnlyNumbers]="true"
+                  [ngClass]="{
+                    'is-valid': telefono.length === 10,
+                    'is-invalid': telefono.length !== 10
+                  }"
+                />
+                <label for="inputTelefono"
+                  >Telefono del viajante<span class="text-danger"
+                    >*</span
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <label for="uploadFilesPasaporte" class="form-label"
+                >Pasaporte<span class="text-danger">*</span></label
+              >
+              <app-upload-files
+                id="uploadFilesPasaporte"
+                name="uploadFilesPasaporte"
+                requiredFeedback="
+                  Este campo es (*) obligatorio, cargue almenos 1 archivo.
+                "
+                (onFilesChange)="setPasaporteFiles($event)"
+              ></app-upload-files>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div *ngIf="formIndex > 0" class="d-grid gap-2 col-6 mx-auto mb-2">
-      <button href="#firstElement" (click)="btnPreviousClick()" class="btn btn-primary">
-        Anterior
-      </button>
-    </div>
-    <div
-      *ngIf="formIndex !== 3"
-      [ngClass]="{ 'col-12': formIndex === 0 }"
-      class="d-grid gap-2 col-6 mx-auto mb-2"
-    >
-      <button
-        href="#firstElement"
-        [disabled]="!isValid()"
-        (click)="btnNextClick()"
-        class="btn btn-primary"
-      >
-        Siguiente
-      </button>
-    </div>
-    <div *ngIf="formIndex === 3" class="d-grid gap-2 col-6 mx-auto mb-2">
+    <div class="d-grid gap-2 col-6 mx-auto mb-2">
       <button
         [disabled]="!isValid()"
         (click)="btnSubmitClick()"

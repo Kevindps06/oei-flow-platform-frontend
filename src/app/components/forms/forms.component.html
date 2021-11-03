@@ -19,7 +19,7 @@
     class="position-absolute top-50 start-50 translate-middle"
     style="width: 50vw"
   >
-    <div class="row">
+    <div class="row g-3">
       <div class="col-12 text-center">
         <img
           src="../../../assets/loading.svg"
@@ -60,17 +60,22 @@
       bg-body
       rounded
       border-primary border-0 border border-5
-      mt-3
-      mb-3
+      my-3
       border-start
     "
   >
     <img src="../../../assets/banner.png" class="card-img-top" />
     <div class="card-body">
-      <h4 class="card-title text-center" style="white-space: pre-wrap">
-        {{ title }}
-      </h4>
-      <p class="card-text" style="white-space: pre-wrap">{{ description }}</p>
+      <div class="row g-3">
+        <div class="col-12">
+          <h4 class="card-title text-center" style="white-space: pre-wrap">
+            {{ title }}
+          </h4>
+        </div>
+        <div class="col-12">
+          <p class="card-text" style="white-space: pre-wrap">{{ description }}</p>
+        </div>
+      </div>
     </div>
     <ul class="list-group list-group-flush">
       <li class="list-group-item"></li>

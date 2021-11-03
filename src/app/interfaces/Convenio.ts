@@ -1,5 +1,5 @@
 export interface Convenio {
-    ID: number,
+    Id: number,
     Aliado: string,
     Numero: string,
     Mostrar: boolean

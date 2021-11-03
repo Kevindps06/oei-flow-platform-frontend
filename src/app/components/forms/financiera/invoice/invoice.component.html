@@ -129,7 +129,7 @@
                   class="form-control"
                   name="floatingInputIdentificacion"
                   id="floatingInputIdentificacion"
-                  placeholder="x"
+                  placeholder="\0"
                   [ngClass]="{
                     'is-valid':
                       identification.length === 8 ||
@@ -192,8 +192,7 @@
                   [ngClass]="{
                     'is-valid': digitoVerificacion.length === 1,
                     'is-invalid':
-                      digitoVerificacion.length !== 1 ||
-                      validacionUsuarioError
+                      digitoVerificacion.length !== 1 || validacionUsuarioError
                   }"
                   style="z-index: 0"
                   name="inputNIT2"
@@ -395,7 +394,16 @@
             <div class="col-12">
               <h5 class="card-title text-center">
                 {{ tipoPersona }} - {{ tipoRelacion }} -
-                {{ tipoSoporteContable === 'Cuenta de cobro' ? tipoSoporteContable + (tipoPersona === 'Juridica' ? ' o factura' : '') : tipoSoporteContable }}{{ tipoSoporteContable === 'Legalizacion' ? ' - ' + tipoLegalizacion : '' }}
+                {{
+                  tipoSoporteContable === "Cuenta de cobro"
+                    ? tipoSoporteContable +
+                      (tipoPersona === "Juridica" ? " o factura" : "")
+                    : tipoSoporteContable
+                }}{{
+                  tipoSoporteContable === "Legalizacion"
+                    ? " - " + tipoLegalizacion
+                    : ""
+                }}
               </h5>
             </div>
             <div class="col-12">
@@ -473,12 +481,14 @@
                 ></app-upload-files>
               </div>
               <div class="col-12">
-                <label class="form-label"
+                <label for="uploadFilesInformeActividades" class="form-label"
                   >Informe de actividades<span class="text-danger"
                     >*</span
                   ></label
                 >
                 <app-upload-files
+                  name="uploadFilesInformeActividades"
+                  id="uploadFilesInformeActividades"
                   [requiredFeedback]="
                     'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
                   "
@@ -539,9 +549,7 @@
               </div>
             </div>
             <!-- Legalizacion - Suministro y servicio -->
-            <div *ngIf="tipoLegalizacion === 'Suministro y servicio'">
-
-            </div>
+            <div *ngIf="tipoLegalizacion === 'Suministro y servicio'"></div>
             <!-- | -->
             <div class="col-12">
               <div class="form-floating">
@@ -565,7 +573,11 @@
       </div>
     </div>
     <div *ngIf="formIndex > 0" class="d-grid gap-2 col-6 mx-auto mb-2">
-      <button href="#firstElement" (click)="btnPreviousClick()" class="btn btn-primary">
+      <button
+        href="#firstElement"
+        (click)="btnPreviousClick()"
+        class="btn btn-primary"
+      >
         Anterior
       </button>
     </div>

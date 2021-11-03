@@ -3,6 +3,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Utils } from 'src/app/classes/utils';
 import { WaitTask } from 'src/app/interfaces/WaitTask';
 import { LoginService } from 'src/app/services/login.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-login',
@@ -23,17 +24,19 @@ export class LoginComponent implements OnInit {
   email: string = '';
   password: string = '';
 
+  user: any
   invalidUser: boolean = false;
 
-  public static user: any | undefined;
+  @Output() onLogin = new EventEmitter<any>() 
 
-  constructor(private loginServie: LoginService) {}
+  constructor(private loginService: LoginService, private sharedService: SharedService) {}
 
   ngOnInit(): void {}
 
   invalidateUser() {
-    LoginComponent.user = undefined;
+    this.user = undefined
     this.invalidUser = false;
+    this.sharedService.emitUserChange(undefined);
   }
 
   validateEmail(email: string = this.email) {
@@ -42,7 +45,7 @@ export class LoginComponent implements OnInit {
 
   validateUser() {
     var taskId: string;
-    this.loginServie.validateUser(this.email, this.password).subscribe(
+    this.loginService.validateUser(this.email, this.password).subscribe(
       (event) => {
         switch (event.type) {
           case HttpEventType.Sent:
@@ -65,7 +68,9 @@ export class LoginComponent implements OnInit {
             );
             break;
           case HttpEventType.Response:
-            LoginComponent.user = event.body.userInfo.value[0];
+            this.user = event.body.userInfo;
+
+            this.sharedService.emitUserChange(this.user);
 
             this.waitTasks.splice(
               this.waitTasks.findIndex((element) => element.id === taskId)
@@ -75,7 +80,7 @@ export class LoginComponent implements OnInit {
       },
       (err) => {
         if (err.status === 404) {
-          LoginComponent.user = undefined;
+          this.user = undefined;
           this.invalidUser = true;
 
           this.waitTasks.splice(

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { SharedService } from './services/shared.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,15 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'OEI';
+  loggedUser: any
+
+  constructor(
+    private sharedService: SharedService
+  ) {}
+
+  ngOnInit(): void {
+    this.sharedService.userChangeEmitted.subscribe(user => {
+      this.loggedUser = user;
+    })
+  }
 }

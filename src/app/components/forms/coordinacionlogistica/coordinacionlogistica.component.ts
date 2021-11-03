@@ -1,8 +1,12 @@
+import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { stringify } from 'querystring';
+import { Router } from '@angular/router';
 import { Utils } from 'src/app/classes/utils';
-import { FormsCoordinacionLogistica } from 'src/app/interfaces/forms-coordinacion-logistica';
+import { Convenio } from 'src/app/interfaces/Convenio';
+import { FileItem } from 'src/app/interfaces/FileItem';
+import { FormsCoordinacionLogistica } from 'src/app/interfaces/forms-coordinacionlogistica';
 import { WaitTask } from 'src/app/interfaces/WaitTask';
+import { FormsService } from 'src/app/services/forms.service';
 
 @Component({
   selector: 'app-forms-coordinacionlogistica',
@@ -10,117 +14,70 @@ import { WaitTask } from 'src/app/interfaces/WaitTask';
   styleUrls: ['./coordinacionlogistica.component.css'],
 })
 export class CoordinacionlogisticaComponent implements OnInit {
-  nombre: string = ''
-  convenio: string = ''
-  ida: string = ''
-  vuelta: string | undefined
-  cc: string = ''
-  equipajeAdicional: string = ''
-  email: string = ''
-  telefono: string = ''
-  pasaporte: string = ''
+  waitTasks: WaitTask[] = [];
+  convenios: Convenio[] = [];
+
+  nombre: string = '';
+  convenio: string = '';
+
+  fechaIda!: Date;
+
+  setFechaIda(fechaIda: Date) {
+    this.fechaIda = fechaIda;
+  }
+
+  fechaVuelta: Date | undefined;
+
+  setFechaVuelta(fechaVuelta: Date) {
+    this.fechaVuelta = fechaVuelta;
+  }
+
+  identification: string = '';
+  equipajeAdicional: boolean = false;
+  email: string = '';
+  telefono: string = '';
+  pasaporteFiles: FileItem[] = [];
+
+  setPasaporteFiles(pasaporteFiles: FileItem[]) {
+    this.pasaporteFiles = pasaporteFiles;
+  }
 
   @Output() onWaitTasksChange = new EventEmitter<WaitTask[]>();
 
-  constructor() {}
+  constructor(private router: Router, private formsService: FormsService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (!history.state.Convenios) {
+      this.router.navigateByUrl('/login');
+    }
 
-  async btnSubmitClick() {
-    let formsCoordinacionLogistica: FormsCoordinacionLogistica = {
+    for (let i = 0; history.state.Convenios.length > i; i++) {
+      this.convenios.push({
+        Id: history.state.Convenios[i].id,
+        Aliado: history.state.Convenios[i].fields.field_Aliado,
+        Numero: history.state.Convenios[i].fields.field_Numero,
+        Mostrar: history.state.Convenios[i].fields.field_Mostrar,
+      });
+    }
+  }
+
+  btnSubmitClick() {
+    const formsCoordinacionLogistica: FormsCoordinacionLogistica = {
       Id: Utils.makeRandomString(32),
       Nombre: this.nombre,
       Convenio: this.convenio,
-      Ida: this.ida,
-      Vuelta: this.vuelta,
-      CC: this.cc,
+      Ida: this.fechaIda,
+      Vuelta: this.fechaVuelta,
+      Identification: this.identification,
       EquipajeAdicional: this.equipajeAdicional,
       Email: this.email,
       Telefono: this.telefono,
-      Pasaporte: this.pasaporte
+      PasaporteFiles: this.pasaporteFiles,
     };
 
-    if (this.tipoPersona === 'Natural') {
-      switch (this.tipoSoporteContable) {
-        case 'Cuenta de cobro':
-          formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-            0: this.cuentaCobroFacturaFiles,
-            1: this.facturaEquivalenteFiles,
-            2: this.seguridadSocialParafiscalesFiles,
-            3: this.informeActividadesFiles,
-          });
-          // Cleaning fields because information has been saved
-          this.informeActividadesFiles = [];
-          this.seguridadSocialParafiscalesFiles = [];
-          this.facturaEquivalenteFiles = [];
-          this.cuentaCobroFacturaFiles = [];
-          break;
-        case 'Anticipo':
-          formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-            0: this.formatoSolicitudAvancesFiles,
-            1: this.cotizaciones,
-            2: this.solicitudesComision,
-          });
-          // Cleaning fields because information has been saved
-          this.solicitudesComision = [];
-          this.cotizaciones = [];
-          this.formatoSolicitudAvancesFiles = [];
-          break;
-        case 'Dieta':
-          formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-            0: this.formatoSolicitudViajesFiles,
-          });
-          // Cleaning fields because information has been saved
-          this.formatoSolicitudViajesFiles = [];
-          break;
-      }
-    } else {
-      switch (this.tipoSoporteContable) {
-        case 'Cuenta de cobro':
-          formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-            0: this.cuentaCobroFacturaFiles,
-            1: this.facturaEquivalenteFiles,
-            2: this.seguridadSocialParafiscalesFiles,
-            3: this.informeActividadesFiles,
-          });
-          // Cleaning fields because information has been saved
-          this.informeActividadesFiles = [];
-          this.seguridadSocialParafiscalesFiles = [];
-          this.facturaEquivalenteFiles = [];
-          this.cuentaCobroFacturaFiles = [];
-          break;
-        case 'Anticipo':
-          formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-            0: this.formatoSolicitudAvancesFiles,
-            1: this.camaraComercioFiles,
-            2: this.cotizaciones,
-            3: this.solicitudesComision,
-          });
-          // Cleaning fields because information has been saved
-          this.solicitudesComision = [];
-          this.cotizaciones = [];
-          this.camaraComercioFiles = [];
-          this.formatoSolicitudAvancesFiles = [];
-          break;
-      }
-    }
-
-    // Cleaning fields because information has been saved
-    this.infoAdicional = '';
-    this.convenio = '';
-    this.tipoLegalizacion = '';
-    this.tipoSoporteContable = '';
-    this.email = '';
-    this.digitoVerificacion = '';
-    this.identification = '';
-    this.tipoRelacion = '';
-    this.tipoPersona = '';
-
-    this.formIndex = 0;
-
-    var taskId: string;
+    /*var taskId: string;
     this.formsService
-      .postFormsFinancieraInvoice(formsFinancieraInvoice)
+      .postFormsCoordinacionLogistica(formsCoordinacionLogistica)
       .subscribe(
         (event) => {
           let taskIndex;
@@ -129,11 +86,7 @@ export class CoordinacionlogisticaComponent implements OnInit {
               taskId = Utils.makeRandomString(4);
               this.waitTasks.push({
                 id: taskId,
-                description: `Enviando ${
-                  formsFinancieraInvoice.TipoSoporteContable === 'Legalizacion'
-                    ? `${formsFinancieraInvoice.TipoSoporteContable} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-                    : formsFinancieraInvoice.TipoSoporteContable
-                }...`,
+                description: `Enviando coordinacion logistica...`,
                 total: 0,
                 current: 0,
                 progress: 0,
@@ -159,6 +112,22 @@ export class CoordinacionlogisticaComponent implements OnInit {
           }
         },
         (err) => {}
-      );
+      );*/
+  }
+
+  validateEmail(email: string = this.email): boolean {
+    return Utils.validateEmail(email);
+  }
+
+  isValid() {
+    return (
+      this.nombre &&
+      this.convenio &&
+      this.fechaIda &&
+      (this.identification.length === 8 || this.identification.length === 10) &&
+      Utils.validateEmail(this.email) &&
+      this.telefono.length === 10 &&
+      this.pasaporteFiles.length > 0
+    );
   }
 }

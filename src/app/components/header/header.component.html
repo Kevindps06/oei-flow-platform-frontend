@@ -1,10 +1,10 @@
 <nav
-  class="navbar navbar-expand-lg navbar-light"
-  style="background-color: #e3f2fd"
+  class="navbar navbar-expand-lg sticky-top navbar-dark"
+  style="background-color: rgb(0, 92, 230, 0.95)"
 >
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
-      <img src="../../../assets/logo.svg" alt="" height="60px" />
+      <img src="../../../assets/logo.png" alt="" height="40px" />
     </a>
     <button
       class="navbar-toggler"
@@ -25,16 +25,16 @@
         <li class="nav-item">
           <a
             [ngClass]="{ active: isRoute('/') }"
-            class="nav-link"
+            class="nav-link text-white"
             aria-current="page"
-            href="/"
+            [routerLink]="['/']"
             >Inicio</a
           >
         </li>
         <li class="nav-item dropdown">
           <a
             [ngClass]="{ active: startWithRoute('/forms/financiera/') }"
-            class="nav-link dropdown-toggle"
+            class="nav-link dropdown-toggle text-white"
             id="navbarScrollingDropdown"
             role="button"
             data-bs-toggle="dropdown"
@@ -42,14 +42,21 @@
           >
             Colaborador o proveedor
           </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+          <ul
+            class="dropdown-menu text-white"
+            aria-labelledby="navbarScrollingDropdown"
+          >
             <li>
-              <a class="dropdown-item" href="/forms/financiera/registration"
+              <a
+                class="dropdown-item"
+                [routerLink]="['/forms/financiera/registration']"
                 >Registro colaborador o proveedor</a
               >
             </li>
             <li>
-              <a class="dropdown-item" href="/forms/financiera/invoice"
+              <a
+                class="dropdown-item"
+                [routerLink]="['/forms/financiera/invoice']"
                 >Gestion de cuentas colaborador o proveedor
               </a>
             </li>
@@ -57,17 +64,18 @@
         </li>
         <li *ngIf="ifLogeedIn()" class="nav-item">
           <a
-            [ngClass]="{ active: isRoute('/forms/solicitudtiquetes') }"
-            class="nav-link"
+            [ngClass]="{ active: isRoute('/forms/coordinacionlogistica') }"
+            class="nav-link text-white"
             aria-current="page"
-            href="/forms/solicitudtiquetes"
-            >Solicitud de tiquetes</a
+            [routerLink]="['/forms/coordinacionlogistica']"
+            [state]="loggedUser.fields"
+            >Coordinacion logistica</a
           >
         </li>
         <li *ngIf="ifLogeedIn()" class="nav-item dropdown">
           <a
             [ngClass]="{ active: startWithRoute('/forms/juridica/') }"
-            class="nav-link dropdown-toggle"
+            class="nav-link dropdown-toggle text-white"
             id="navbarScrollingDropdown"
             role="button"
             data-bs-toggle="dropdown"
@@ -77,12 +85,16 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
             <li>
-              <a class="dropdown-item" href="/forms/juridica/contratacion/convenio/request"
+              <a
+                class="dropdown-item"
+                [routerLink]="['/forms/juridica/contratacion/convenio/request']"
                 >Subscripcion convenio</a
               >
             </li>
             <li>
-              <a class="dropdown-item" href="/forms/juridica/contratacion/request"
+              <a
+                class="dropdown-item"
+                [routerLink]="['/forms/juridica/contratacion/request']"
                 >Contratacion
               </a>
             </li>
@@ -90,8 +102,16 @@
         </li>
       </ul>
       <div class="d-flex">
-        <a href="/login" class="btn btn-outline-success text-dark"
-          >Iniciar sesion</a
+        <a
+          (mouseover)="onMouseOverLoginButton()"
+          (mouseout)="onMouseOutLoginButton()"
+          [routerLink]="['/login']"
+          [ngClass]="{
+            'text-light': !mouseOverLoginButton,
+            'text-dark': mouseOverLoginButton
+          }"
+          class="btn btn-outline-light"
+          >{{ loggedUser ? "Cerrar sesion" : "Iniciar sesion" }}</a
         >
       </div>
     </div>

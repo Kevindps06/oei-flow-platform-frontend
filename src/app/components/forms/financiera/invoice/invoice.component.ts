@@ -296,12 +296,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               });
               this.onWaitTasksChange.emit(this.waitTasks);
               break;
-            case HttpEventType.ResponseHeader:
-              this.waitTasks[
-                this.waitTasks.findIndex((element) => element.id === taskId)
-              ].total = event.headers.get('contentLength');
-              this.onWaitTasksChange.emit(this.waitTasks);
-              break;
             case HttpEventType.DownloadProgress:
               let taskIndex = this.waitTasks.findIndex(
                 (element) => element.id === taskId
@@ -313,7 +307,14 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               this.onWaitTasksChange.emit(this.waitTasks);
               break;
             case HttpEventType.Response:
-              this.convenios = event.body;
+              event.body.value.forEach((convenio: any) => {
+                this.convenios.push({
+                  Id: convenio.id,
+                  Aliado: convenio.fields.Aliado,
+                  Numero: convenio.fields.Numero,
+                  Mostrar: convenio.fields.Mostrar,
+                });
+              });
 
               this.waitTasks.splice(
                 this.waitTasks.findIndex((element) => element.id === taskId)

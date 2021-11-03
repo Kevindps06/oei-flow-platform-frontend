@@ -38,18 +38,23 @@ export class FormsComponent implements OnInit {
 
   ngOnInit(): void {
     switch (this.router.url) {
+      case '/forms/coordinacionlogistica':
+        this.title = 'Coordinacion logistica';
+        this.description =
+          'Coordinacion logistica descripcion';
+        break;
       case '/forms/financiera/registration':
-        this.title = 'Registro colaborador o proveedor OEI';
+        this.title = 'Registro colaborador o proveedor';
         this.description =
           'El registro es necesario para los procesos:\n- Envio de cuentas de cobro\n- Facturas\n- Anticipos\n- Pagos directos\n- Legalizaciones';
         break;
       case '/forms/financiera/invoice':
-        this.title = 'Gestion de cuentas colaborador o proveedor OEI';
+        this.title = 'Gestion de cuentas colaborador o proveedor';
         this.description =
           'Aqui podra realizar los siguientes procesos:\n- Envio de cuentas de cobro\n- Facturas\n- Anticipos\n- Pagos directos\n- Legalizaciones';
         break;
       case '/forms/juridica/contratacion/convenio/request':
-        this.title = 'Subscripcion de convenio OEI';
+        this.title = 'Subscripcion de convenio';
         this.description = 'Subscription request';
         break;
       case '/forms/juridica/contratacion/request':

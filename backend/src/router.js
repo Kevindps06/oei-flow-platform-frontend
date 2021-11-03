@@ -5,6 +5,46 @@ const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
 
+router.get("/request", async (req, res) => {
+  const authResponse = await auth.getToken(auth.tokenRequest);
+
+  try {
+    const response = await axios.default.get(
+      "https://graph.microsoft.com/beta/search/query",
+      {
+        headers: {
+          Authorization: "Bearer " + authResponse.accessToken,
+          Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (err) {
+    res.status(500).json(err);
+  }
+
+  res.json(response.data);
+});
+
+router.get("/convenios", async (req, res) => {
+  const authResponse = await auth.getToken(auth.tokenRequest);
+
+  let query = `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items?$select=id&$expand=fields($select=Aliado,Numero,Mostrar)`;
+
+  if (!req.query.showAll) {
+    query = query.concat("&filter=fields/Mostrar eq 1");
+  }
+
+  const response = await axios.default.get(query, {
+    headers: {
+      Authorization: "Bearer " + authResponse.accessToken,
+      Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+    },
+  });
+
+  res.json(response.data);
+});
+
 router.get("/sites/:siteName", async (req, res) => {
   const authResponse = await auth.getToken(auth.tokenRequest);
   const response = await axios.default.get(
@@ -60,7 +100,7 @@ router.get("/sites/:siteId/lists/:listId/:operation", async (req, res) => {
 router.get("/workflow/validateUser", async (req, res) => {
   const authResponse = await auth.getToken(auth.tokenRequest);
   const response = await axios.default.get(
-    `https://graph.microsoft.com/v1.0/sites/oei1.sharepoint.com,5e7221db-a5ae-4438-9c74-d08eb7f48e71,68eef6d6-87e5-4dc2-986a-6f3487e5393b/lists/41d33ce1-ce71-4e59-b1d0-8c23b74ead1d/items?$expand=fields&$filter=fields/Tipo_x0020_de_x0020_persona eq '${req.query.tipoDePersona}' and fields/Tipo_x0020_de_x0020_relacion eq '${req.query.tipoDeRelacion}' and fields/CC_x002f_NIT eq '${req.query.identification}' and fields/Emaildecontacto eq '${req.query.email}'`,
+    `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONTRATISTASPROVEEDORES_LIST_ID}/items?$select=id,fields&$expand=fields&$filter=fields/Tipo_x0020_de_x0020_persona eq '${req.query.tipoDePersona}' and fields/Tipo_x0020_de_x0020_relacion eq '${req.query.tipoDeRelacion}' and fields/CC_x002f_NIT eq '${req.query.identification}' and fields/Emaildecontacto eq '${req.query.email}'`,
     {
       headers: {
         Authorization: "Bearer " + authResponse.accessToken,
@@ -103,7 +143,7 @@ router.get("/workflow/validateUser", async (req, res) => {
 router.get("/platform/validateUser", async (req, res) => {
   const authResponse = await auth.getToken(auth.tokenRequest);
   const response = await axios.default.get(
-    `https://graph.microsoft.com/v1.0/sites/oei1.sharepoint.com,5e7221db-a5ae-4438-9c74-d08eb7f48e71,68eef6d6-87e5-4dc2-986a-6f3487e5393b/lists/41d33ce1-ce71-4e59-b1d0-8c23b74ead1d/items?$expand=fields&$filter=fields/Emaildecontacto eq '${req.query.email}'`,
+    `https://graph.microsoft.com/v1.0/sites/${process.env.WORKFLOW_OEI_SITE_ID}/lists/${process.env.WORKFLOW_OEI_SITE_USERINFORMATION_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/EMail eq '${req.query.email}'`,
     {
       headers: {
         Authorization: "Bearer " + authResponse.accessToken,
@@ -113,31 +153,45 @@ router.get("/platform/validateUser", async (req, res) => {
   );
 
   if (response.data.value.length > 0) {
-    /*let transporter = nodemailer.createTransport({
-      host: "smtp.office365.com",
-      port: 587,
-      auth: {
-        user: "soportecontable@contratista.oei.org.co",
-        pass: "Oei2018*",
-      },
-    });
+    const authResponse2 = await auth.getToken(auth.tokenRequest);
+    const response2 = await axios.default.get(
+      `https://graph.microsoft.com/v1.0/sites/${process.env.WORKFLOW_OEI_SITE_ID}/lists/${process.env.WORKFLOW_OEI_SITE_PLATFORMUSERS_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/UserLookupId eq '${response.data.value[0].id}' and fields/Password eq '${req.query.password}'`,
+      {
+        headers: {
+          Authorization: "Bearer " + authResponse2.accessToken,
+          Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+        },
+      }
+    );
 
-    transporter
-      .sendMail({
-        from: "soportecontable@contratista.oei.org.co",
-        to: "kevindps@jjk.com.co",
-        subject: "Hello ✔",
-        text: `Hello world? ${generatedCode}`,
-      })
-      .catch((err) => {
-        res.status(404).json(err);
-      });*/
+    if (response2.data.value.length > 0) {
+      convenios = [];
+      for (
+        let i = 0;
+        response2.data.value[0].fields.Convenios.length > i;
+        i++
+      ) {
+        if (response2.data.value[0].fields.Convenios[i] !== undefined) {
+          const authResponse3 = await auth.getToken(auth.tokenRequest);
+          const response3 = await axios.default.get(
+            `https://graph.microsoft.com/v1.0/sites/${process.env.WORKFLOW_OEI_SITE_ID}/lists/${process.env.WORKFLOW_OEI_SITE_CONVENIOS_LIST_ID}/items/${response2.data.value[0].fields.Convenios[i].LookupId}?$select=id&$expand=fields`,
+            {
+              headers: {
+                Authorization: "Bearer " + authResponse3.accessToken,
+                Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+              },
+            }
+          );
 
-    var generatedCode = utils.makeRandomString(4);
+          convenios.push(response3.data);
+        }
+      }
+      response2.data.value[0].fields.Convenios = convenios;
 
-    res
-      .status(200)
-      .json({ userInfo: response.data, generatedCode: generatedCode });
+      res.status(200).json({ userInfo: response2.data.value[0] });
+    } else {
+      res.status(404).send();
+    }
   } else {
     res.status(404).send();
   }
