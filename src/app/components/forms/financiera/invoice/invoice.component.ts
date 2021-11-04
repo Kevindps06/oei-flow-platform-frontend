@@ -360,12 +360,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               });
               this.onWaitTasksChange.emit(this.waitTasks);
               break;
-            case HttpEventType.ResponseHeader:
-              this.waitTasks[
-                this.waitTasks.findIndex((element) => element.id === taskId)
-              ].total = event.headers.get('contentLength');
-              this.onWaitTasksChange.emit(this.waitTasks);
-              break;
             case HttpEventType.DownloadProgress:
               let taskIndex = this.waitTasks.findIndex(
                 (element) => element.id === taskId

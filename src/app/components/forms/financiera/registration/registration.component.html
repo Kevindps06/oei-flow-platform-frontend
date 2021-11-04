@@ -54,10 +54,9 @@
       <div class="form-floating">
         <select
           [(ngModel)]="convenio"
-          name="floatingSelectGridConvenio"
           class="form-select"
-          id="floatingSelectGridConvenio"
-          required
+          id="convenio"
+          name="convenio"
           [ngClass]="{
             'is-valid': convenio,
             'is-invalid': !convenio
@@ -66,14 +65,12 @@
           <option selected disabled></option>
           <option
             *ngFor="let convenio of convenios"
-            [value]="convenio.Aliado + ' | ' + convenio.Numero"
+            value="{{ convenio.Aliado + ' | ' + convenio.Numero }}"
           >
-            {{ convenio.Aliado }} | {{ convenio.Numero }}
+            {{ convenio.Aliado + " | " + convenio.Numero }}
           </option>
         </select>
-        <label for="floatingSelectGridTipoDeRelacion"
-          >Convenio<span class="text-danger">*</span></label
-        >
+        <label for="convenio">Convenio</label>
         <div class="invalid-feedback">
           Este campo es (*) obligatorio, seleccione una opcion.
         </div>
@@ -176,67 +173,17 @@
       </div>
     </div>
     <div class="col-12">
-      <label for="formFileMultipleRUT" class="form-label"
+      <label for="fieldRUT" class="form-label"
         >RUT<span class="text-danger">*</span></label
       >
-      <input
-        (change)="whenFileRUTChange($event)"
-        accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-        class="form-control"
-        type="file"
-        id="formFileMultipleRUT"
-        multiple
-        [ngClass]="{
-          'is-valid': rutFiles.length > 0,
-          'is-invalid': rutFiles.length === 0
-        }"
-      />
-      <div class="invalid-feedback">
-        Este campo es (*) obligatorio, cargue almenos 1 archivo.
-      </div>
-      <div *ngIf="rutFiles.length > 0" class="container">
-        <div
-          *ngFor="let rutFile of rutFiles"
-          class="
-            row
-            justify-content-center
-            align-items-center
-            mt-3
-            border-start border-top border-primary border-1
-          "
-        >
-          <div *ngIf="false" class="col-1">
-            <img
-              width="50px"
-              height="50px"
-              src="{{
-                rutFile.Uploaded
-                  ? '../../../../assets/delete.png'
-                  : '../../../../assets/loading.svg'
-              }}"
-              class="img-fluid"
-            />
-          </div>
-          <div class="col-11">
-            <h5 class="mb-0">{{ rutFile.Index }}. {{ rutFile.Name }}</h5>
-          </div>
-          <div class="col-1 gx-0">
-            <a href="javascript:;">
-              <img
-                (click)="onDeleteFileRUTClick(rutFile.Index)"
-                width="50px"
-                height="50px"
-                src="{{
-                  rutFile.Uploaded
-                    ? '../../../../assets/delete.png'
-                    : '../../../../assets/loading.svg'
-                }}"
-                class="img-fluid"
-              />
-            </a>
-          </div>
-        </div>
-      </div>
+      <app-upload-files
+        id="fieldRUT"
+        name="fieldRUT"
+        [requiredFeedback]="
+          'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+        "
+        (onFilesChange)="setRutFiles($event)"
+      ></app-upload-files>
     </div>
     <div class="col-12">
       <label for="formFileMultipleCedula" class="form-label"
@@ -451,11 +398,7 @@
       </div>
     </div>
     <div class="d-grid gap-2 col-6 mx-auto mb-2">
-      <button
-        class="btn btn-primary"
-      >
-        Enviar
-      </button>
+      <button class="btn btn-primary">Enviar</button>
     </div>
   </div>
 </form>

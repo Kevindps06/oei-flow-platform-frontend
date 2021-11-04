@@ -1,4 +1,5 @@
 import { HttpEventType } from '@angular/common/http';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Utils } from 'src/app/classes/utils';
 import { Convenio } from 'src/app/interfaces/Convenio';
@@ -13,16 +14,23 @@ import { FormsService } from 'src/app/services/forms.service';
   styleUrls: ['./registration.component.css'],
 })
 export class FormsFinancieraRegistrationComponent implements OnInit {
-  @Input() convenios: Convenio[] = [];
   waitTasks: WaitTask[] = [];
+  convenios: Convenio[] = [];
 
-  tipoDePersona!: string;
-  tipoDeRelacion!: string;
-  convenio!: string;
-  identificacion!: string;
-  nombre!: string;
+  tipoDePersona: string = '';
+  tipoDeRelacion: string = '';
+  convenio: string = '';
+  identificacion: string = '';
+  nombre: string = '';
+
   rutFiles: FileItem[] = [];
+
+  setRutFiles(rutFiles: FileItem[]) {
+    this.rutFiles = rutFiles;
+  }
+
   cedulaFiles: FileItem[] = [];
+
   certificacionBancariaFiles: FileItem[] = [];
   email!: string;
   informacionAdicional!: string;
@@ -33,7 +41,7 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
   constructor(private formsService: FormsService) {}
 
   ngOnInit(): void {
-    var taskId: string;
+    var taskId: string
     this.formsService.getConvenios().subscribe((event) => {
       switch (event.type) {
         case HttpEventType.Sent:
@@ -45,12 +53,6 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
             current: 0,
             progress: 0,
           });
-          this.onWaitTasksChange.emit(this.waitTasks);
-          break;
-        case HttpEventType.ResponseHeader:
-          this.waitTasks[
-            this.waitTasks.findIndex((element) => element.id === taskId)
-          ].total = event.headers.get('contentLength');
           this.onWaitTasksChange.emit(this.waitTasks);
           break;
         case HttpEventType.DownloadProgress:
@@ -83,37 +85,6 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     });
-  }
-
-  whenFileRUTChange(event: any) {
-    let currentFilesLength = this.rutFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.rutFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.rutFiles[currentFilesLength + i].Bytes = result as string;
-        this.rutFiles[currentFilesLength + i].Uploaded = true;
-      });
-    }
-
-    event.target.value = null;
-  }
-
-  onDeleteFileRUTClick(index: number) {
-    if (this.rutFiles[index].Uploaded === true) {
-      this.rutFiles.splice(index, 1);
-
-      for (let i = 0; this.rutFiles.length > i; i++) {
-        this.rutFiles[i].Index = i;
-      }
-    }
   }
 
   whenFileCedulaChange(event: any) {
