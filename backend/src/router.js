@@ -4,26 +4,47 @@ const router = express.Router();
 const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
+const fs = require("fs");
 
 router.get("/request", async (req, res) => {
-  const authResponse = await auth.getToken(auth.tokenRequest);
+  const data = Uint8Array.from(fs.readFileSync(`${__dirname}/largeFile.rar`));
+  const dataLength = data.length;
+  const chunkSize = 327680; // 320 KiB
+  const chunks = Math.ceil(dataLength / 26, dataLength) - 1;
 
-  try {
-    const response = await axios.default.get(
-      "https://graph.microsoft.com/beta/search/query",
-      {
-        headers: {
-          Authorization: "Bearer " + authResponse.accessToken,
-          Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
-          "Content-Type": "application/json",
-        },
-      }
-    );
-  } catch (err) {
-    res.status(500).json(err);
+  responses = [];
+
+  var chunk = 0;
+  while (chunks >= chunk) {
+    const chunkOffset = chunk * chunkSize;
+    const chunkData = data.slice(chunkOffset, chunkOffset + chunkSize);
+    const chunkDataLength = chunkData.length;
+    const chunkEndRange = chunkOffset + chunkDataLength;
+
+    try {
+      responses.push(
+        await axios.default.put(
+          "https://oei1.sharepoint.com/sites/Workflow_OEI/_api/v2.0/drive/items/01CD2I3QD3ZLGMZUGMYZELOJ2YSHQZGVFW/uploadSession?guid='fcd15fca-d463-42fc-b2ca-6ad9a55fc9c5'&overwrite=True&rename=False&dc=0&tempauth=eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvb2VpMS5zaGFyZXBvaW50LmNvbUA1NDcxMDA4ZC0wZjZmLTQ2ZjUtODIxYy04YTJmN2VkNzBhY2YiLCJpc3MiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAiLCJuYmYiOiIxNjM2MDYzMjE4IiwiZXhwIjoiMTYzNjE0OTYxOCIsImVuZHBvaW50dXJsIjoiVFRrbkVLV1ZxV29lUUJzV0RuZmRxYlMzVFJVZ291cDRzcUxDcGJqbzJXQT0iLCJlbmRwb2ludHVybExlbmd0aCI6IjE5NCIsImlzbG9vcGJhY2siOiJUcnVlIiwiY2lkIjoiWmprM1lXRTROREV0TkRneU5pMHhNVEZrTFRabE9UVXRNVE5pTm1KaVpUa3dORFl6IiwidmVyIjoiaGFzaGVkcHJvb2Z0b2tlbiIsInNpdGVpZCI6IlltSTNNalppTldRdE5XUmxOeTAwWkRjMUxXSmhORFl0WTJFM016aGpZV0UxWVdFNSIsImFwcF9kaXNwbGF5bmFtZSI6IkdyYXBoIEV4cGxvcmVyIiwiZ2l2ZW5fbmFtZSI6IkFkb2xmbyIsImZhbWlseV9uYW1lIjoiRXNjb2JhciIsImFwcGlkIjoiZGU4YmM4YjUtZDlmOS00OGIxLWE4YWQtYjc0OGRhNzI1MDY0IiwidGlkIjoiNTQ3MTAwOGQtMGY2Zi00NmY1LTgyMWMtOGEyZjdlZDcwYWNmIiwidXBuIjoiYWVzY29iYXJAY29udHJhdGlzdGEub2VpLm9yZy5jbyIsInB1aWQiOiIxMDAzMjAwMTMzNzhEMzg3IiwiY2FjaGVrZXkiOiIwaC5mfG1lbWJlcnNoaXB8MTAwMzIwMDEzMzc4ZDM4N0BsaXZlLmNvbSIsInNjcCI6ImFsbGZpbGVzLnJlYWQgYWxsc2l0ZXMucmVhZCBhbGxzaXRlcy53cml0ZSBhbGxwcm9maWxlcy5yZWFkIiwidHQiOiIyIiwidXNlUGVyc2lzdGVudENvb2tpZSI6bnVsbCwiaXBhZGRyIjoiMjAuMTkwLjE1Ny4zMCJ9.bDU5UUlpZ1lDaUlZZjJoTVRxL25xcDlnc3RvYWd0UHQ1K053ZVFSM3pOTT0",
+          chunkData,
+          {
+            headers: {
+              "Content-Length": chunkDataLength,
+              "Content-Range": `bytes ${chunkOffset}-${
+                chunkEndRange - 1
+              }/${dataLength}`,
+            },
+          }
+        )
+      );
+    } catch (err) {
+      res.status(500).json(err);
+      return;
+    }
+
+    chunk++;
   }
 
-  res.json(response.data);
+  res.status(200).json(JSON.stringify(responses));
 });
 
 router.get("/convenios", async (req, res) => {
@@ -195,6 +216,47 @@ router.get("/platform/validateUser", async (req, res) => {
   } else {
     res.status(404).send();
   }
+});
+
+router.post("/forms/financiera/registration", async (req, res) => {
+  let formsFinancieraRegistration = {
+    ID: req.body.Id,
+    "Tipo de persona": req.body.TipoPersona,
+    "Tipo de relacion": req.body.TipoRelacion,
+    "Tipo de soporte contable": req.body.TipoSoporteContable,
+    Email: req.body.Email,
+    Convenio: req.body.Convenio,
+    Nombre: req.body.Nombre,
+  };
+
+  if (req.body.TipoPersona === "Natural") {
+    formsFinancieraRegistration = Object.assign(formsFinancieraRegistration, {
+      "Numero de cedula de ciudadania": req.body.Identificator,
+      RUT: req.body["RutFiles"],
+      Cedula: req.body["CedulaFiles"],
+      "Certificacion bancaria": req.body["CertificacionBancariaFiles"],
+    });
+  } else {
+    formsFinancieraRegistration = Object.assign(formsFinancieraRegistration, {
+      "NIT (Con digito de verificacion y previamente registrado) Ej. 890507890-4":
+        req.body.Identificator,
+      RUT: req.body["RutFiles"],
+      "Cedula representante legal": req.body["CedulaFiles"],
+      "Certificacion bancaria": req.body["CertificacionBancariaFiles"],
+    });
+  }
+
+  formsFinancieraRegistration = Object.assign(formsFinancieraRegistration, {
+    "Informacion adicional": req.body.InformacionAdicional,
+    Keys: Object.keys(formsFinancieraRegistration),
+  });
+
+  const response = await axios.default.post(
+    `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
+    [formsFinancieraRegistration]
+  );
+
+  res.status(200).send();
 });
 
 router.post("/forms/financiera/invoice", async (req, res) => {
