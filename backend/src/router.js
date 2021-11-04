@@ -12,7 +12,7 @@ router.get("/request", async (req, res) => {
   const chunkSize = 327680; // 320 KiB
   const chunks = Math.ceil(dataLength / 26, dataLength) - 1;
 
-  responses = [];
+  var responses = [];
 
   var chunk = 0;
   while (chunks >= chunk) {
