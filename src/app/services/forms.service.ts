@@ -46,19 +46,14 @@ export class FormsService {
   }
 
   postFormsFinancieraRegistration(
-    financieraRegistrationForm: FormsFinancieraRegistration
+    formsFinancieraRegistration: FormsFinancieraRegistration
   ): Observable<any> {
-    financieraRegistrationForm.ID = Utils.makeRandomString(64);
-
     return this.http.request(
       new HttpRequest(
         'POST',
-        `https://prod-07.brazilsouth.logic.azure.com:443/workflows/0ada25ebf29e4a97ba30739737e286b7/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=cXyqc38D4zc_hDtzTFOrHmuJWJhcrdHczOi54FUtfQ8`,
-        [financieraRegistrationForm],
+        `http://${environment.backendAddress}/api/forms/financiera/registration`,
+        formsFinancieraRegistration,
         {
-          headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-          }),
           reportProgress: true,
         }
       )

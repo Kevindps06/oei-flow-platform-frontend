@@ -15,13 +15,29 @@ import { FormsService } from 'src/app/services/forms.service';
 })
 export class FormsFinancieraRegistrationComponent implements OnInit {
   waitTasks: WaitTask[] = [];
-  convenios: Convenio[] = [];
+  formIndex: number = 0;
 
-  tipoDePersona: string = '';
-  tipoDeRelacion: string = '';
+  // 0
+  tipoPersona: string = '';
+
+  tipoRelacion: string = '';
+
+  setTipoRelacion(tipoRelacion: string) {
+    this.tipoRelacion = tipoRelacion;
+  }
+
+  // 1
+  identification: string = '';
+  digitoVerificacion: string = '';
+  email: string = '';
+
+  // 2
+  convenios: Convenio[] = [];
   convenio: string = '';
-  identificacion: string = '';
+
   nombre: string = '';
+
+  // Natural
 
   rutFiles: FileItem[] = [];
 
@@ -31,143 +47,144 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
 
   cedulaFiles: FileItem[] = [];
 
+  setCedulaFiles(cedulaFiles: FileItem[]) {
+    this.cedulaFiles = cedulaFiles;
+  }
+
   certificacionBancariaFiles: FileItem[] = [];
-  email!: string;
-  informacionAdicional!: string;
-  manejoDeDatos: boolean = false;
+
+  setCertificacionBancariaFiles(certificacionBancariaFiles: FileItem[]) {
+    this.certificacionBancariaFiles = certificacionBancariaFiles;
+  }
+
+  informacionAdicional: string = '';
+  manejoDatos: boolean = false;
 
   @Output() onWaitTasksChange = new EventEmitter<WaitTask[]>();
 
   constructor(private formsService: FormsService) {}
 
-  ngOnInit(): void {
-    var taskId: string
-    this.formsService.getConvenios().subscribe((event) => {
-      switch (event.type) {
-        case HttpEventType.Sent:
-          taskId = Utils.makeRandomString(4);
-          this.waitTasks.push({
-            id: taskId,
-            description: 'Cargando convenios...',
-            total: 0,
-            current: 0,
-            progress: 0,
-          });
-          this.onWaitTasksChange.emit(this.waitTasks);
-          break;
-        case HttpEventType.DownloadProgress:
-          let taskIndex = this.waitTasks.findIndex(
-            (element) => element.id === taskId
-          );
-          this.waitTasks[taskIndex].current = event.loaded;
-          this.waitTasks[taskIndex].progress = Math.round(
-            (event.loaded * 100) / this.waitTasks[taskIndex].total
-          );
-          this.onWaitTasksChange.emit(this.waitTasks);
-          break;
-        case HttpEventType.Response:
-          this.convenios = event.body;
+  ngOnInit(): void {}
 
-          this.waitTasks.splice(
-            this.waitTasks.findIndex((element) => element.id === taskId)
-          );
-          this.onWaitTasksChange.emit(this.waitTasks);
-          break;
-      }
-    });
-  }
-
-  getBase64(file: File) {
-    const reader = new FileReader();
-    return new Promise((resolve) => {
-      reader.onload = function (e) {
-        resolve((reader.result as string).split(',')[1]);
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  whenFileCedulaChange(event: any) {
-    let currentFilesLength = this.cedulaFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.cedulaFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.cedulaFiles[currentFilesLength + i].Bytes = result as string;
-        this.cedulaFiles[currentFilesLength + i].Uploaded = true;
-      });
+  btnPreviousClick() {
+    switch (this.formIndex) {
+      case 1:
+        // Reset form index 0 values
+        this.tipoPersona = '';
+        this.tipoRelacion = '';
+        break;
+      case 2:
+        // Reset form index 1 values
+        this.identification = '';
+        this.digitoVerificacion = '';
+        this.email = '';
+        break;
     }
 
-    event.target.value = null;
+    // Reduce form index by 1
+    this.formIndex--;
   }
 
-  onDeleteFileCedulaClick(index: number) {
-    if (this.cedulaFiles[index].Uploaded === true) {
-      this.cedulaFiles.splice(index, 1);
+  btnNextClick() {
+    switch (this.formIndex) {
+      case 0:
+        // Reset form index 1 values
+        this.identification = '';
+        this.digitoVerificacion = '';
+        this.email = '';
+        break;
+      case 1:
+        // Reset form index 2 values
+        this.convenio = '';
+        this.nombre = '';
+        this.rutFiles = [];
+        this.cedulaFiles = [];
+        this.certificacionBancariaFiles = [];
 
-      for (let i = 0; this.cedulaFiles.length > i; i++) {
-        this.cedulaFiles[i].Index = i;
-      }
+        // Load form index 2 values
+        var taskId: string;
+        this.formsService.getConvenios().subscribe((event) => {
+          switch (event.type) {
+            case HttpEventType.Sent:
+              taskId = Utils.makeRandomString(4);
+              this.waitTasks.push({
+                id: taskId,
+                description: 'Cargando convenios...',
+                total: 0,
+                current: 0,
+                progress: 0,
+              });
+              this.onWaitTasksChange.emit(this.waitTasks);
+              break;
+            case HttpEventType.DownloadProgress:
+              let taskIndex = this.waitTasks.findIndex(
+                (element) => element.id === taskId
+              );
+              this.waitTasks[taskIndex].current = event.loaded;
+              this.waitTasks[taskIndex].progress = Math.round(
+                (event.loaded * 100) / this.waitTasks[taskIndex].total
+              );
+              this.onWaitTasksChange.emit(this.waitTasks);
+              break;
+            case HttpEventType.Response:
+              event.body.value.forEach((convenio: any) => {
+                this.convenios.push({
+                  Id: convenio.id,
+                  Aliado: convenio.fields.Aliado,
+                  Numero: convenio.fields.Numero,
+                  Mostrar: convenio.fields.Mostrar,
+                });
+              });
+
+              this.waitTasks.splice(
+                this.waitTasks.findIndex((element) => element.id === taskId)
+              );
+              this.onWaitTasksChange.emit(this.waitTasks);
+              break;
+          }
+        });
+        break;
     }
+
+    this.formIndex++;
   }
 
-  whenFileCertificacionBancariaChange(event: any) {
-    let currentFilesLength = this.certificacionBancariaFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.certificacionBancariaFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.certificacionBancariaFiles[currentFilesLength + i].Bytes =
-          result as string;
-        this.certificacionBancariaFiles[currentFilesLength + i].Uploaded = true;
-      });
-    }
-
-    event.target.value = null;
-  }
-
-  onDeleteFileCertificacionBancariaClick(index: number) {
-    if (this.certificacionBancariaFiles[index].Uploaded === true) {
-      this.certificacionBancariaFiles.splice(index, 1);
-
-      for (let i = 0; this.certificacionBancariaFiles.length > i; i++) {
-        this.certificacionBancariaFiles[i].Index = i;
-      }
-    }
-  }
-
-  whenSubmit() {
-    const newFinancieraRegistrationForm: FormsFinancieraRegistration = {
-      'Tipo de persona': this.tipoDePersona,
-      'Tipo de relacion': this.tipoDeRelacion,
-      'CC/NIT': this.identificacion,
+  btnSubmitClick() {
+    let formsFinancieraRegistration: FormsFinancieraRegistration = {
+      Id: Utils.makeRandomString(32),
+      TipoPersona: this.tipoPersona,
+      TipoRelacion: this.tipoRelacion,
+      Identificator:
+        this.tipoPersona === 'Natural'
+          ? this.identification
+          : `${this.identification}-${this.digitoVerificacion}`,
+      Email: this.email,
       Convenio: this.convenio,
-      'Nombre o razon social': this.nombre,
-      RUT: this.rutFiles,
-      Cedula: this.cedulaFiles,
-      'Certificacion bancaria': this.certificacionBancariaFiles,
-      'Email de contacto': this.email,
-      'Informacion adicional': this.informacionAdicional,
-      'Manejo de datos': 'Acepto',
+      Nombre: this.nombre,
+      RutFiles: this.rutFiles,
+      CedulaFiles: this.cedulaFiles,
+      CertificacionBancariaFiles: this.certificacionBancariaFiles,
+      InformacionAdicional: this.informacionAdicional,
     };
 
-    /*var taskId: string;
+    // Cleaning fields because information has been saved
+    this.informacionAdicional = '';
+    this.certificacionBancariaFiles = [];
+    this.cedulaFiles = [];
+    this.rutFiles = [];
+    this.nombre = '';
+    this.convenio = '';
+    this.email = '';
+    this.digitoVerificacion = ''
+    this.identification = ''
+    this.tipoRelacion = '';
+    this.tipoPersona = '';
+
+    this.formIndex = 0;
+
+    var taskId: string;
     this.formsService
-      .postFormsFinancieraRegistration(newFinancieraRegistrationForm)
+      .postFormsFinancieraRegistration(formsFinancieraRegistration)
       .subscribe(
         (event) => {
           let taskIndex;
@@ -202,6 +219,37 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
           }
         },
         (err) => {}
-      );*/
+      );
+  }
+
+  validateEmail(email: string): boolean {
+    return Utils.validateEmail(email);
+  }
+
+  isValid(formIndex: number = this.formIndex) {
+    switch (formIndex) {
+      case 0:
+        return this.tipoPersona && this.tipoRelacion;
+      case 1:
+        return (
+          (this.tipoPersona === 'Natural'
+            ? this.identification.length === 8 ||
+              this.identification.length === 10
+            : this.identification.length === 9 &&
+              this.digitoVerificacion.length === 1) &&
+          Utils.validateEmail(this.email)
+        );
+      case 2:
+        return (
+          this.convenio &&
+          this.nombre &&
+          Utils.validateFiles(this.rutFiles) &&
+          Utils.validateFiles(this.cedulaFiles) &&
+          Utils.validateFiles(this.certificacionBancariaFiles) &&
+          this.manejoDatos
+        );
+      default:
+        return false;
+    }
   }
 }

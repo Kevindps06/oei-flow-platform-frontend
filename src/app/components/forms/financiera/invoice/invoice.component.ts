@@ -396,7 +396,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
     return isDevMode();
   }
 
-  async btnSubmitClick() {
+  btnSubmitClick() {
     let formsFinancieraInvoice: FormsFinancieraInvoice = {
       Id: Utils.makeRandomString(32),
       TipoPersona: this.tipoPersona,
