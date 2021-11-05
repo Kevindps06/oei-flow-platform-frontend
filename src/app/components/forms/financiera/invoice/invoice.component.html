@@ -123,7 +123,7 @@
             <div *ngIf="tipoPersona === 'Natural'" class="col-12">
               <div class="form-floating">
                 <input
-                  [(ngModel)]="identification"
+                  [(ngModel)]="identificator"
                   (input)="invalidateFlowUser()"
                   type="text"
                   class="form-control"
@@ -132,11 +132,10 @@
                   placeholder="\0"
                   [ngClass]="{
                     'is-valid':
-                      identification.length === 8 ||
-                      identification.length === 10,
+                      identificator.length === 8 || identificator.length === 10,
                     'is-invalid':
-                      (identification.length !== 8 &&
-                        identification.length !== 10) ||
+                      (identificator.length !== 8 &&
+                        identificator.length !== 10) ||
                       validacionUsuarioError
                   }"
                   maxlength="10"
@@ -165,16 +164,16 @@
               >
               <div class="input-group">
                 <input
-                  [(ngModel)]="identification"
+                  [(ngModel)]="identificator"
                   (input)="invalidateFlowUser()"
                   type="text"
                   class="form-control"
                   placeholder="NIT Ej. 890507890"
                   aria-label="NIT Ej. 890507890"
                   [ngClass]="{
-                    'is-valid': identification.length === 9,
+                    'is-valid': identificator.length === 9,
                     'is-invalid':
-                      identification.length !== 9 || validacionUsuarioError
+                      identificator.length !== 9 || validacionUsuarioError
                   }"
                   style="z-index: 0"
                   name="inputNIT1"
@@ -238,8 +237,8 @@
               <button
                 [disabled]="
                   !(tipoPersona === 'Natural'
-                    ? identification && validateEmail(email)
-                    : identification &&
+                    ? identificator && validateEmail(email)
+                    : identificator &&
                       digitoVerificacion &&
                       validateEmail(email))
                 "
@@ -301,7 +300,7 @@
           </div>
           <div class="form-check">
             <input
-              [(ngModel)]="tipoSoporteContable"
+              [(ngModel)]="tipoGestion"
               (change)="invalidateFlowUser()"
               class="form-check-input"
               type="radio"
@@ -319,7 +318,7 @@
           </div>
           <div class="form-check">
             <input
-              [(ngModel)]="tipoSoporteContable"
+              [(ngModel)]="tipoGestion"
               (change)="invalidateFlowUser()"
               class="form-check-input"
               type="radio"
@@ -333,7 +332,7 @@
           </div>
           <div *ngIf="tipoRelacion === 'Contratista'" class="form-check">
             <input
-              [(ngModel)]="tipoSoporteContable"
+              [(ngModel)]="tipoGestion"
               (change)="invalidateFlowUser()"
               class="form-check-input"
               type="radio"
@@ -347,7 +346,7 @@
           </div>
           <div class="form-check">
             <input
-              [(ngModel)]="tipoSoporteContable"
+              [(ngModel)]="tipoGestion"
               (change)="invalidateFlowUser()"
               class="form-check-input"
               type="radio"
@@ -395,12 +394,12 @@
               <h5 class="card-title text-center">
                 {{ tipoPersona }} - {{ tipoRelacion }} -
                 {{
-                  tipoSoporteContable === "Cuenta de cobro"
-                    ? tipoSoporteContable +
+                  tipoGestion === "Cuenta de cobro"
+                    ? tipoGestion +
                       (tipoPersona === "Juridica" ? " o factura" : "")
-                    : tipoSoporteContable
+                    : tipoGestion
                 }}{{
-                  tipoSoporteContable === "Legalizacion"
+                  tipoGestion === "Legalizacion"
                     ? " - " + tipoLegalizacion
                     : ""
                 }}
@@ -421,7 +420,7 @@
                   <option selected disabled></option>
                   <option
                     *ngFor="let convenio of convenios"
-                    value="{{ convenio.Aliado + ' | ' + convenio.Numero }}"
+                    [value]="convenio.Numero"
                   >
                     {{ convenio.Aliado + " | " + convenio.Numero }}
                   </option>
@@ -433,7 +432,7 @@
               </div>
             </div>
             <!-- Cuenta de cobro/Factura -->
-            <div *ngIf="tipoSoporteContable === 'Cuenta de cobro'">
+            <div *ngIf="tipoGestion === 'Cuenta de cobro'">
               <div class="col-12">
                 <label for="fieldCuentaCobroFacturaFiles" class="form-label"
                   >{{
@@ -497,20 +496,28 @@
               </div>
             </div>
             <!-- Anticipo -->
-            <div *ngIf="tipoSoporteContable === 'Anticipo'">
+            <div *ngIf="tipoGestion === 'Anticipo'">
               <div *ngIf="tipoPersona === 'Juridica'" class="col-12">
-                <label class="form-label">Camara de comercio (Si aplica)</label>
+                <label class="form-label" for="uploadFilesCamaraComercio"
+                  >Camara de comercio (Si aplica)</label
+                >
                 <app-upload-files
+                  id="uploadFilesCamaraComercio"
+                  name="uploadFilesCamaraComercio"
                   (onFilesChange)="setCamaraDeComercioFiles($event)"
                 ></app-upload-files>
               </div>
               <div class="col-12">
-                <label class="form-label"
+                <label
+                  class="form-label"
+                  for="uploadFilesFormatoSolicitudAvances"
                   >Formato de solicitud de avances<span class="text-danger"
                     >*</span
                   ></label
                 >
                 <app-upload-files
+                  id="uploadFilesFormatoSolicitudAvances"
+                  name="uploadFilesFormatoSolicitudAvances"
                   [requiredFeedback]="
                     'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
                   "
@@ -518,22 +525,28 @@
                 ></app-upload-files>
               </div>
               <div class="col-12">
-                <label class="form-label">Cotizaciones (Si es el caso)</label>
+                <label class="form-label" for="uploadFilesCotizaciones"
+                  >Cotizaciones (Si es el caso)</label
+                >
                 <app-upload-files
+                  id="uploadFilesCotizaciones"
+                  name="uploadFilesCotizaciones"
                   (onFilesChange)="setCotizacionesFiles($event)"
                 ></app-upload-files>
               </div>
               <div class="col-12">
-                <label class="form-label"
+                <label class="form-label" for="uploadFilesSolicitudComisiones"
                   >Solicitudes de comision (Si es el caso)</label
                 >
                 <app-upload-files
+                  id="uploadFilesSolicitudComisiones"
+                  name="uploadFilesSolicitudComisiones"
                   (onFilesChange)="setSolicitudesComisionFiles($event)"
                 ></app-upload-files>
               </div>
             </div>
             <!-- Dieta -->
-            <div *ngIf="tipoSoporteContable === 'Dieta'">
+            <div *ngIf="tipoGestion === 'Dieta'">
               <div class="col-12">
                 <label class="form-label"
                   >Formato de solicitud de viajes<span class="text-danger"

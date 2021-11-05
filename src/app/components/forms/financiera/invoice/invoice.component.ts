@@ -27,7 +27,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   tipoRelacion: string = '';
 
   // 1
-  identification: string = '';
+  identificator: string = '';
   digitoVerificacion: string = '';
   email: string = '';
   flowUser: any;
@@ -37,7 +37,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   authValidation: boolean = false;
 
   // 2
-  tipoSoporteContable: string = '';
+  tipoGestion: string = '';
 
   // 2.1
   tipoLegalizacion: string | undefined;
@@ -88,16 +88,16 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
     this.formatoSolicitudAvancesFiles = formatoSolicitudAvancesFiles;
   }
 
-  cotizaciones: FileItem[] = [];
+  cotizacionesFiles: FileItem[] = [];
 
-  setCotizacionesFiles(formatoSolicitudAvancesFiles: FileItem[]) {
-    this.formatoSolicitudAvancesFiles = formatoSolicitudAvancesFiles;
+  setCotizacionesFiles(cotizacionesFiles: FileItem[]) {
+    this.cotizacionesFiles = cotizacionesFiles;
   }
 
-  solicitudesComision: FileItem[] = [];
+  solicitudesComisionFiles: FileItem[] = [];
 
-  setSolicitudesComisionFiles(formatoSolicitudAvancesFiles: FileItem[]) {
-    this.formatoSolicitudAvancesFiles = formatoSolicitudAvancesFiles;
+  setSolicitudesComisionFiles(solicitudesComisionFiles: FileItem[]) {
+    this.solicitudesComisionFiles = solicitudesComisionFiles;
   }
 
   // Dieta
@@ -128,8 +128,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         this.tipoPersona,
         this.tipoRelacion,
         this.tipoPersona === 'Juridica'
-          ? `${this.identification}-${this.digitoVerificacion}`
-          : this.identification,
+          ? `${this.identificator}-${this.digitoVerificacion}`
+          : this.identificator,
         this.email
       )
       .subscribe(
@@ -202,7 +202,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         break;
       case 2:
         // Reset form index 1 values
-        this.identification = '';
+        this.identificator = '';
         this.digitoVerificacion = '';
         this.email = '';
         this.flowUser = undefined;
@@ -213,12 +213,12 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         break;
       case 2.1:
         // Reset form index 2 values
-        this.tipoSoporteContable = '';
+        this.tipoGestion = '';
 
         this.formIndex = 2;
         return;
       case 3:
-        if (this.tipoSoporteContable === 'Legalizacion') {
+        if (this.tipoGestion === 'Legalizacion') {
           // Reset form index 2.1 values
           this.tipoLegalizacion = '';
 
@@ -227,7 +227,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         }
 
         // Reset form index 2 values
-        this.tipoSoporteContable = '';
+        this.tipoGestion = '';
         break;
     }
 
@@ -239,7 +239,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
     switch (this.formIndex) {
       case 0:
         // Reset form index 1 values
-        this.identification = '';
+        this.identificator = '';
         this.digitoVerificacion = '';
         this.email = '';
         this.flowUser = undefined;
@@ -250,10 +250,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         break;
       case 1:
         // Reset form index 2 values
-        this.tipoSoporteContable = '';
+        this.tipoGestion = '';
         break;
       case 2:
-        if (this.tipoSoporteContable === 'Legalizacion') {
+        if (this.tipoGestion === 'Legalizacion') {
           // Reset form index 2.1 values
           this.tipoLegalizacion = '';
 
@@ -263,7 +263,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
 
         // Reset form index 3 values
         this.convenio = '';
-        switch (this.tipoSoporteContable) {
+        switch (this.tipoGestion) {
           case 'Cuenta de cobro':
             this.cuentaCobroFacturaFiles = [];
             this.facturaEquivalenteFiles = [];
@@ -327,7 +327,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
       case 2.1:
         // Reset form index 3 values
         this.convenio = '';
-        switch (this.tipoSoporteContable) {
+        switch (this.tipoGestion) {
           case 'Cuenta de cobro':
             this.cuentaCobroFacturaFiles = [];
             this.facturaEquivalenteFiles = [];
@@ -347,7 +347,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         }
         // Load form index 3 values
         var taskId: string;
-        this.formsService.getConvenios().subscribe((event) => {
+        this.formsService.getConvenios(true).subscribe((event) => {
           switch (event.type) {
             case HttpEventType.Sent:
               taskId = Utils.makeRandomString(4);
@@ -401,24 +401,25 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
       Id: Utils.makeRandomString(32),
       TipoPersona: this.tipoPersona,
       TipoRelacion: this.tipoRelacion,
-      Identificador:
+      Identificator:
         this.tipoPersona === 'Natural'
-          ? this.identification
-          : `${this.identification}-${this.digitoVerificacion}`,
-      TipoSoporteContable: this.tipoSoporteContable,
+          ? this.identificator
+          : `${this.identificator}-${this.digitoVerificacion}`,
+      Email: this.email,
+      TipoGestion: this.tipoGestion,
       TipoLegalizacion: this.tipoLegalizacion,
       Convenio: this.convenio,
       InformacionAdicional: this.infoAdicional,
     };
 
     if (this.tipoPersona === 'Natural') {
-      switch (this.tipoSoporteContable) {
+      switch (this.tipoGestion) {
         case 'Cuenta de cobro':
           formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-            0: this.cuentaCobroFacturaFiles,
-            1: this.facturaEquivalenteFiles,
-            2: this.seguridadSocialParafiscalesFiles,
-            3: this.informeActividadesFiles,
+            CuentaCobroFiles: this.cuentaCobroFacturaFiles,
+            FacturaEquivalenteFiles: this.facturaEquivalenteFiles,
+            SeguridadSocialFiles: this.seguridadSocialParafiscalesFiles,
+            InformeActividadesFiles: this.informeActividadesFiles,
           });
           // Cleaning fields because information has been saved
           this.informeActividadesFiles = [];
@@ -428,31 +429,31 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           break;
         case 'Anticipo':
           formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-            0: this.formatoSolicitudAvancesFiles,
-            1: this.cotizaciones,
-            2: this.solicitudesComision,
+            FormatoSolicitudAvancesFiles: this.formatoSolicitudAvancesFiles,
+            CotizacionesFiles: this.cotizacionesFiles,
+            SolicitudesComisionFiles: this.solicitudesComisionFiles,
           });
           // Cleaning fields because information has been saved
-          this.solicitudesComision = [];
-          this.cotizaciones = [];
+          this.solicitudesComisionFiles = [];
+          this.cotizacionesFiles = [];
           this.formatoSolicitudAvancesFiles = [];
           break;
         case 'Dieta':
           formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-            0: this.formatoSolicitudViajesFiles,
+            FormatoSolicitudViajesFiles: this.formatoSolicitudViajesFiles,
           });
           // Cleaning fields because information has been saved
           this.formatoSolicitudViajesFiles = [];
           break;
       }
     } else {
-      switch (this.tipoSoporteContable) {
+      switch (this.tipoGestion) {
         case 'Cuenta de cobro':
           formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-            0: this.cuentaCobroFacturaFiles,
-            1: this.facturaEquivalenteFiles,
-            2: this.seguridadSocialParafiscalesFiles,
-            3: this.informeActividadesFiles,
+            CuentaCobroFiles: this.cuentaCobroFacturaFiles,
+            FacturaEquivalenteFiles: this.facturaEquivalenteFiles,
+            SeguridadSocialFiles: this.seguridadSocialParafiscalesFiles,
+            CertificadoParafiscales: this.informeActividadesFiles,
           });
           // Cleaning fields because information has been saved
           this.informeActividadesFiles = [];
@@ -462,14 +463,14 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           break;
         case 'Anticipo':
           formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-            0: this.formatoSolicitudAvancesFiles,
-            1: this.camaraComercioFiles,
-            2: this.cotizaciones,
-            3: this.solicitudesComision,
+            CamaraComercioFiles: this.camaraComercioFiles,
+            FormatoSolicitudAvancesFiles: this.formatoSolicitudAvancesFiles,
+            CotizacionesFiles: this.cotizacionesFiles,
+            SolicitudesComisionFiles: this.solicitudesComisionFiles,
           });
           // Cleaning fields because information has been saved
-          this.solicitudesComision = [];
-          this.cotizaciones = [];
+          this.solicitudesComisionFiles = [];
+          this.cotizacionesFiles = [];
           this.camaraComercioFiles = [];
           this.formatoSolicitudAvancesFiles = [];
           break;
@@ -480,10 +481,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
     this.infoAdicional = '';
     this.convenio = '';
     this.tipoLegalizacion = '';
-    this.tipoSoporteContable = '';
+    this.tipoGestion = '';
     this.email = '';
     this.digitoVerificacion = '';
-    this.identification = '';
+    this.identificator = '';
     this.tipoRelacion = '';
     this.tipoPersona = '';
 
@@ -501,9 +502,9 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               this.waitTasks.push({
                 id: taskId,
                 description: `Enviando ${
-                  formsFinancieraInvoice.TipoSoporteContable === 'Legalizacion'
-                    ? `${formsFinancieraInvoice.TipoSoporteContable} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-                    : formsFinancieraInvoice.TipoSoporteContable
+                  formsFinancieraInvoice.TipoGestion === 'Legalizacion'
+                    ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
+                    : formsFinancieraInvoice.TipoGestion
                 }...`,
                 total: 0,
                 current: 0,
@@ -544,12 +545,12 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
       case 1:
         return this.flowUser;
       case 2:
-        return this.tipoSoporteContable;
+        return this.tipoGestion;
       case 2.1:
         return this.tipoLegalizacion;
       case 3:
         if (this.convenio) {
-          switch (this.tipoSoporteContable) {
+          switch (this.tipoGestion) {
             case 'Cuenta de cobro':
               return (
                 Utils.validateFiles(this.cuentaCobroFacturaFiles) &&
@@ -558,7 +559,14 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 Utils.validateFiles(this.informeActividadesFiles)
               );
             case 'Anticipo':
-              return Utils.validateFiles(this.formatoSolicitudAvancesFiles);
+              return (
+                (this.tipoPersona === 'Juridica'
+                  ? Utils.validateFiles(this.camaraComercioFiles)
+                  : true) &&
+                Utils.validateFiles(this.formatoSolicitudAvancesFiles) &&
+                Utils.validateFiles(this.cotizacionesFiles) &&
+                Utils.validateFiles(this.solicitudesComisionFiles)
+              );
             case 'Dieta':
               return Utils.validateFiles(this.formatoSolicitudViajesFiles);
             case 'Legalizacion':

@@ -4,48 +4,32 @@ const router = express.Router();
 const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
-const fs = require("fs");
+const Convenio = require("./schemas/information/Convenio");
 
-router.get("/request", async (req, res) => {
-  const data = Uint8Array.from(fs.readFileSync(`${__dirname}/largeFile.rar`));
-  const dataLength = data.length;
-  const chunkSize = 327680; // 320 KiB
-  const chunks = Math.ceil(dataLength / 26, dataLength) - 1;
-
-  var responses = [];
-
-  var chunk = 0;
-  while (chunks >= chunk) {
-    const chunkOffset = chunk * chunkSize;
-    const chunkData = data.slice(chunkOffset, chunkOffset + chunkSize);
-    const chunkDataLength = chunkData.length;
-    const chunkEndRange = chunkOffset + chunkDataLength;
-
-    try {
-      responses.push(
-        await axios.default.put(
-          "https://oei1.sharepoint.com/sites/Workflow_OEI/_api/v2.0/drive/items/01CD2I3QD3ZLGMZUGMYZELOJ2YSHQZGVFW/uploadSession?guid='fcd15fca-d463-42fc-b2ca-6ad9a55fc9c5'&overwrite=True&rename=False&dc=0&tempauth=eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvb2VpMS5zaGFyZXBvaW50LmNvbUA1NDcxMDA4ZC0wZjZmLTQ2ZjUtODIxYy04YTJmN2VkNzBhY2YiLCJpc3MiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAiLCJuYmYiOiIxNjM2MDYzMjE4IiwiZXhwIjoiMTYzNjE0OTYxOCIsImVuZHBvaW50dXJsIjoiVFRrbkVLV1ZxV29lUUJzV0RuZmRxYlMzVFJVZ291cDRzcUxDcGJqbzJXQT0iLCJlbmRwb2ludHVybExlbmd0aCI6IjE5NCIsImlzbG9vcGJhY2siOiJUcnVlIiwiY2lkIjoiWmprM1lXRTROREV0TkRneU5pMHhNVEZrTFRabE9UVXRNVE5pTm1KaVpUa3dORFl6IiwidmVyIjoiaGFzaGVkcHJvb2Z0b2tlbiIsInNpdGVpZCI6IlltSTNNalppTldRdE5XUmxOeTAwWkRjMUxXSmhORFl0WTJFM016aGpZV0UxWVdFNSIsImFwcF9kaXNwbGF5bmFtZSI6IkdyYXBoIEV4cGxvcmVyIiwiZ2l2ZW5fbmFtZSI6IkFkb2xmbyIsImZhbWlseV9uYW1lIjoiRXNjb2JhciIsImFwcGlkIjoiZGU4YmM4YjUtZDlmOS00OGIxLWE4YWQtYjc0OGRhNzI1MDY0IiwidGlkIjoiNTQ3MTAwOGQtMGY2Zi00NmY1LTgyMWMtOGEyZjdlZDcwYWNmIiwidXBuIjoiYWVzY29iYXJAY29udHJhdGlzdGEub2VpLm9yZy5jbyIsInB1aWQiOiIxMDAzMjAwMTMzNzhEMzg3IiwiY2FjaGVrZXkiOiIwaC5mfG1lbWJlcnNoaXB8MTAwMzIwMDEzMzc4ZDM4N0BsaXZlLmNvbSIsInNjcCI6ImFsbGZpbGVzLnJlYWQgYWxsc2l0ZXMucmVhZCBhbGxzaXRlcy53cml0ZSBhbGxwcm9maWxlcy5yZWFkIiwidHQiOiIyIiwidXNlUGVyc2lzdGVudENvb2tpZSI6bnVsbCwiaXBhZGRyIjoiMjAuMTkwLjE1Ny4zMCJ9.bDU5UUlpZ1lDaUlZZjJoTVRxL25xcDlnc3RvYWd0UHQ1K053ZVFSM3pOTT0",
-          chunkData,
-          {
-            headers: {
-              "Content-Length": chunkDataLength,
-              "Content-Range": `bytes ${chunkOffset}-${
-                chunkEndRange - 1
-              }/${dataLength}`,
-            },
-          }
-        )
-      );
-    } catch (err) {
-      res.status(500).json(err);
-      return;
-    }
-
-    chunk++;
+router.post("/request", async (req, res) => {
+  var response;
+  try {
+    response = await utils.uploadFileToSharePointWorkflowOEI(
+      `/${req.body.filename}`,
+      req.body.bytes
+    );
+  } catch (err) {
+    res.status(500).json(err);
+    return;
   }
 
-  res.status(200).json(JSON.stringify(responses));
+  res.status(response.status).json(response.data);
 });
+
+router.post("/convenios", async (req, res) => {
+  const convenio = new Convenio(
+    req.body
+  );
+
+  await convenio.save();
+
+  res.status(201).json(convenio);
+})
 
 router.get("/convenios", async (req, res) => {
   const authResponse = await auth.getToken(auth.tokenRequest);
@@ -63,7 +47,7 @@ router.get("/convenios", async (req, res) => {
     },
   });
 
-  res.json(response.data);
+  res.status(response.status).json(response.data);
 });
 
 router.get("/sites/:siteName", async (req, res) => {
@@ -76,7 +60,8 @@ router.get("/sites/:siteName", async (req, res) => {
       },
     }
   );
-  res.json(response.data);
+
+  res.status(response.status).json(response.data);
 });
 
 router.get("/sites/:siteId/lists", async (req, res) => {
@@ -89,7 +74,7 @@ router.get("/sites/:siteId/lists", async (req, res) => {
       },
     }
   );
-  res.json(response.data);
+  res.status(response.status).json(response.data);
 });
 
 router.get("/sites/:siteId/lists/:listId/items/:itemId", async (req, res) => {
@@ -102,7 +87,7 @@ router.get("/sites/:siteId/lists/:listId/items/:itemId", async (req, res) => {
       },
     }
   );
-  res.json(response.data);
+  res.status(response.status).json(response.data);
 });
 
 router.get("/sites/:siteId/lists/:listId/:operation", async (req, res) => {
@@ -115,7 +100,8 @@ router.get("/sites/:siteId/lists/:listId/:operation", async (req, res) => {
       },
     }
   );
-  res.json(response.data);
+
+  res.status(response.status).json(response.data);
 });
 
 router.get("/workflow/validateUser", async (req, res) => {
@@ -154,7 +140,7 @@ router.get("/workflow/validateUser", async (req, res) => {
     var generatedCode = utils.makeRandomString(4);
 
     res
-      .status(200)
+      .status(response.status)
       .json({ userInfo: response.data, generatedCode: generatedCode });
   } else {
     res.status(404).send();
@@ -209,7 +195,7 @@ router.get("/platform/validateUser", async (req, res) => {
       }
       response2.data.value[0].fields.Convenios = convenios;
 
-      res.status(200).json({ userInfo: response2.data.value[0] });
+      res.status(response2.status).json({ userInfo: response2.data.value[0] });
     } else {
       res.status(404).send();
     }
@@ -256,84 +242,504 @@ router.post("/forms/financiera/registration", async (req, res) => {
     [formsFinancieraRegistration]
   );
 
-  res.status(200).send();
+  res.status(response.status).json(response.data);
 });
 
 router.post("/forms/financiera/invoice", async (req, res) => {
   let formsFinancieraInvoice = {
-    ID: req.body.Id,
-    "Tipo de persona": req.body.TipoPersona,
-    "Tipo de relacion": req.body.TipoRelacion,
-    "Tipo de soporte contable": req.body.TipoSoporteContable,
+    Id: req.body.Id,
+    TipoPersona: req.body.TipoPersona,
+    TipoRelacion: req.body.TipoRelacion,
+    Identificator: req.body.Identificator,
+    Email: req.body.Email,
+    TipoGestion: req.body.TipoGestion,
+    TipoLegalizacion: req.body.TipoLegalizacion,
     Convenio: req.body.Convenio,
+    InformacionAdicional: req.body.InformacionAdicional,
   };
 
-  if (req.body.TipoPersona === "Natural") {
-    formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-      "Numero de cedula de ciudadania": req.body.Identificador,
-    });
-  } else {
-    formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-      "NIT (Con digito de verificacion y previamente registrado) Ej. 890507890-4":
-        req.body.Identificador,
-    });
-  }
+  const gestionPath = `/Gestion/${req.body.TipoPersona}/${req.body.TipoRelacion}/${req.body.TipoGestion}`;
 
   if (req.body.TipoPersona === "Natural") {
-    switch (req.body.TipoSoporteContable) {
+    switch (req.body.TipoGestion) {
       case "Cuenta de cobro":
+        var cuentaCobroFilesPromises = [];
+        for (let i = 0; req.body.CuentaCobroFiles.length > i; i++) {
+          cuentaCobroFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Cuenta de cobro/${i}. ${req.body.CuentaCobroFiles[i].Name}`,
+              req.body.CuentaCobroFiles[i].Bytes
+            )
+          );
+        }
+
+        var facturaEquivalenteFilesPromises = [];
+        for (let i = 0; req.body.FacturaEquivalenteFiles.length > i; i++) {
+          facturaEquivalenteFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Factura equivalente/${i}. ${req.body.FacturaEquivalenteFiles[i].Name}`,
+              req.body.FacturaEquivalenteFiles[i].Bytes
+            )
+          );
+        }
+
+        var seguridadSocialFilesPromises = [];
+        for (let i = 0; req.body.SeguridadSocialFiles.length > i; i++) {
+          seguridadSocialFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Seguridad Social/${i}. ${req.body.SeguridadSocialFiles[i].Name}`,
+              req.body.SeguridadSocialFiles[i].Bytes
+            )
+          );
+        }
+
+        var informeActividadesFilesPromises = [];
+        for (let i = 0; req.body.InformeActividadesFiles.length > i; i++) {
+          informeActividadesFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Informe de actividades/${i}. ${req.body.InformeActividadesFiles[i].Name}`,
+              req.body.InformeActividadesFiles[i].Bytes
+            )
+          );
+        }
+
+        var promiseResponses = await Promise.all([
+          ...cuentaCobroFilesPromises,
+          ...facturaEquivalenteFilesPromises,
+          ...seguridadSocialFilesPromises,
+          ...informeActividadesFilesPromises,
+        ]);
+
+        CuentaCobroSharePointFiles = [];
+        FacturaEquivalenteSharePointFiles = [];
+        SeguridadSocialSharePointFiles = [];
+        InformeActividadesSharePointFiles = [];
+
+        var promiseResponsesOffSet = 0;
+        for (
+          let i = promiseResponsesOffSet;
+          cuentaCobroFilesPromises.length > i;
+          i++
+        ) {
+          CuentaCobroSharePointFiles.push(promiseResponses[i].data);
+        }
+
+        promiseResponsesOffSet =
+          promiseResponsesOffSet + facturaEquivalenteFilesPromises.length;
+        for (
+          let i = promiseResponsesOffSet;
+          promiseResponsesOffSet + facturaEquivalenteFilesPromises.length > i;
+          i++
+        ) {
+          FacturaEquivalenteSharePointFiles.push(promiseResponses[i].data);
+        }
+
+        promiseResponsesOffSet =
+          promiseResponsesOffSet + seguridadSocialFilesPromises.length;
+        for (
+          let i = promiseResponsesOffSet;
+          promiseResponsesOffSet + seguridadSocialFilesPromises.length > i;
+          i++
+        ) {
+          SeguridadSocialSharePointFiles.push(promiseResponses[i].data);
+        }
+
+        promiseResponsesOffSet =
+          promiseResponsesOffSet + informeActividadesFilesPromises.length;
+        for (
+          let i = promiseResponsesOffSet;
+          promiseResponsesOffSet + informeActividadesFilesPromises.length > i;
+          i++
+        ) {
+          InformeActividadesSharePointFiles.push(promiseResponses[i].data);
+        }
+
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-          "Cuenta de cobro": req.body["0"],
-          "Factura equivalente": req.body["1"],
-          "Seguridad social": req.body["2"],
-          "Informe de actividades": req.body["3"],
+          SharePointFiles: [
+            {
+              Name: "Cuenta de cobro",
+              Files: CuentaCobroSharePointFiles,
+            },
+            {
+              Name: "Factura equivalente",
+              Files: FacturaEquivalenteSharePointFiles,
+            },
+            {
+              Name: "Seguridad social",
+              Files: SeguridadSocialSharePointFiles,
+            },
+            {
+              Name: "Informe de actividades",
+              Files: InformeActividadesSharePointFiles,
+            },
+          ],
         });
         break;
       case "Anticipo":
+        var formatoSolicitudAvancesFilesPromises = [];
+        for (let i = 0; req.body.FormatoSolicitudAvancesFiles.length > i; i++) {
+          formatoSolicitudAvancesFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Formato de solicitud de avances/${i}. ${req.body.FormatoSolicitudAvancesFiles[i].Name}`,
+              req.body.FormatoSolicitudAvancesFiles[i].Bytes
+            )
+          );
+        }
+
+        var cotizacionesFilesPromises = [];
+        for (let i = 0; req.body.CotizacionesFiles.length > i; i++) {
+          cotizacionesFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Cotizaciones/${i}. ${req.body.CotizacionesFiles[i].Name}`,
+              req.body.CotizacionesFiles[i].Bytes
+            )
+          );
+        }
+
+        var solicitudesComisionFilesPromises = [];
+        for (let i = 0; req.body.SolicitudesComisionFiles.length > i; i++) {
+          solicitudesComisionFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Solicitudes de comision/${i}. ${req.body.SolicitudesComisionFiles[i].Name}`,
+              req.body.SolicitudesComisionFiles[i].Bytes
+            )
+          );
+        }
+
+        var promiseResponses = await Promise.all([
+          ...formatoSolicitudAvancesFilesPromises,
+          ...cotizacionesFilesPromises,
+          ...solicitudesComisionFilesPromises,
+        ]);
+
+        FormatoSolicitudAvancesSharePointFiles = [];
+        CotizacionesSharePointFiles = [];
+        SolicitudesComisionSharePointFiles = [];
+
+        var promiseResponsesOffSet = 0;
+        for (
+          let i = promiseResponsesOffSet;
+          formatoSolicitudAvancesFilesPromises.length > i;
+          i++
+        ) {
+          FormatoSolicitudAvancesSharePointFiles.push(promiseResponses[i].data);
+        }
+
+        promiseResponsesOffSet =
+          promiseResponsesOffSet + cotizacionesFilesPromises.length;
+        for (
+          let i = promiseResponsesOffSet;
+          promiseResponsesOffSet + cotizacionesFilesPromises.length > i;
+          i++
+        ) {
+          CotizacionesSharePointFiles.push(promiseResponses[i].data);
+        }
+
+        promiseResponsesOffSet =
+          promiseResponsesOffSet + solicitudesComisionFilesPromises.length;
+        for (
+          let i = promiseResponsesOffSet;
+          promiseResponsesOffSet + solicitudesComisionFilesPromises.length > i;
+          i++
+        ) {
+          SolicitudesComisionSharePointFiles.push(promiseResponses[i].data);
+        }
+
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-          "Formato de solicitud de avances": req.body["0"],
-          Cotizaciones: req.body["1"],
-          "Solicitudes de comision": req.body["2"],
+          SharePointFiles: [
+            {
+              Name: "Formato de solicitud de avances",
+              Files: FormatoSolicitudAvancesSharePointFiles,
+            },
+            {
+              Name: "Cotizaciones",
+              Files: CotizacionesSharePointFiles,
+            },
+            {
+              Name: "Solicitudes de comision",
+              Files: SolicitudesComisionSharePointFiles,
+            },
+          ],
         });
         break;
       case "Dieta":
+        var formatoSolicitudViajesFilesPromises = [];
+        for (let i = 0; req.body.FormatoSolicitudViajes.length > i; i++) {
+          formatoSolicitudViajesFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Dieta/${i}. ${req.body.FormatoSolicitudViajes[i].Name}`,
+              req.body.FormatoSolicitudViajes[i].Bytes
+            )
+          );
+        }
+
+        var promiseResponses = await Promise.all(
+          formatoSolicitudViajesFilesPromises
+        );
+
+        FormatoSolicitudViajesSharePointFiles = [];
+
+        var promiseResponsesOffSet = 0;
+        for (
+          let i = promiseResponsesOffSet;
+          formatoSolicitudViajesFilesPromises.length > i;
+          i++
+        ) {
+          FormatoSolicitudViajesSharePointFiles.push(promiseResponses[i].data);
+        }
+
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-          "Formato de solicitud de viajes": req.body["0"],
+          SharePointFiles: [
+            {
+              Name: "Formato de solicitud de viajes",
+              Files: FormatoSolicitudViajesSharePointFiles,
+            },
+          ],
         });
         break;
     }
   } else {
     switch (req.body.TipoSoporteContable) {
       case "Cuenta de cobro":
+        var cuentaCobroFilesPromises = [];
+        for (let i = 0; req.body.CuentaCobroFiles.length > i; i++) {
+          cuentaCobroFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Cuenta de cobro o factura/${i}. ${req.body.CuentaCobroFiles[i].Name}`,
+              req.body.CuentaCobroFiles[i].Bytes
+            )
+          );
+        }
+
+        var facturaEquivalenteFilesPromises = [];
+        for (let i = 0; req.body.FacturaEquivalenteFiles.length > i; i++) {
+          facturaEquivalenteFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Factura equivalente/${i}. ${req.body.FacturaEquivalenteFiles[i].Name}`,
+              req.body.FacturaEquivalenteFiles[i].Bytes
+            )
+          );
+        }
+
+        var certificadoParafiscalesFilesPromises = [];
+        for (let i = 0; req.body.CertificadoParafiscalesFiles.length > i; i++) {
+          certificadoParafiscalesFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Certificado de parafiscales/${i}. ${req.body.CertificadoParafiscalesFiles[i].Name}`,
+              req.body.CertificadoParafiscalesFiles[i].Bytes
+            )
+          );
+        }
+
+        var informeActividadesFilesPromises = [];
+        for (let i = 0; req.body.InformeActividadesFiles.length > i; i++) {
+          informeActividadesFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Informe de actividades/${i}. ${req.body.InformeActividadesFiles[i].Name}`,
+              req.body.InformeActividadesFiles[i].Bytes
+            )
+          );
+        }
+
+        var promiseResponses = await Promise.all([
+          ...cuentaCobroFilesPromises,
+          ...facturaEquivalenteFilesPromises,
+          ...certificadoParafiscalesFilesPromises,
+          ...informeActividadesFilesPromises,
+        ]);
+
+        CuentaCobroSharePointFiles = [];
+        FacturaEquivalenteSharePointFiles = [];
+        CertificadoParafiscalesSharePointFiles = [];
+        InformeActividadesSharePointFiles = [];
+
+        var promiseResponsesOffSet = 0;
+        for (
+          let i = promiseResponsesOffSet;
+          cuentaCobroFilesPromises.length > i;
+          i++
+        ) {
+          CuentaCobroSharePointFiles.push(promiseResponses[i].data);
+        }
+
+        promiseResponsesOffSet =
+          promiseResponsesOffSet + cuentaCobroFilesPromises.length;
+        for (
+          let i = promiseResponsesOffSet;
+          promiseResponsesOffSet + facturaEquivalenteFilesPromises.length > i;
+          i++
+        ) {
+          FacturaEquivalenteSharePointFiles.push(promiseResponses[i].data);
+        }
+
+        promiseResponsesOffSet =
+          promiseResponsesOffSet + facturaEquivalenteFilesPromises.length;
+        for (
+          let i = promiseResponsesOffSet;
+          promiseResponsesOffSet + certificadoParafiscalesFilesPromises.length >
+          i;
+          i++
+        ) {
+          CertificadoParafiscalesSharePointFiles.push(promiseResponses[i].data);
+        }
+
+        promiseResponsesOffSet =
+          promiseResponsesOffSet + certificadoParafiscalesFilesPromises.length;
+        for (
+          let i = promiseResponsesOffSet;
+          promiseResponsesOffSet + informeActividadesFilesPromises.length > i;
+          i++
+        ) {
+          InformeActividadesSharePointFiles.push(promiseResponses[i].data);
+        }
+
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-          "Cuenta de cobro o factura": req.body["0"],
-          "Factura equivalente": req.body["1"],
-          Parafiscales: req.body["2"],
-          "Informe de actividades": req.body["3"],
+          SharePointFiles: [
+            {
+              Name: "Cuenta de cobro",
+              Files: CuentaCobroSharePointFiles,
+            },
+            {
+              Name: "Factura equivalente",
+              Files: FacturaEquivalenteSharePointFiles,
+            },
+            {
+              Name: "Certificado de parafiscales",
+              Files: CertificadoParafiscalesSharePointFiles,
+            },
+            {
+              Name: "Informe de actividades",
+              Files: InformeActividadesSharePointFiles,
+            },
+          ],
         });
         break;
       case "Anticipo":
+        var camaraComercioFilesPromises = [];
+        for (let i = 0; req.body.CamaraComercioFiles.length > i; i++) {
+          camaraComercioFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Formato de solicitud de avances/${i}. ${req.body.CamaraComercioFiles[i].Name}`,
+              req.body.CamaraComercioFiles[i].Bytes
+            )
+          );
+        }
+
+        var formatoSolicitudAvancesFilesPromises = [];
+        for (let i = 0; req.body.FormatoSolicitudAvancesFiles.length > i; i++) {
+          formatoSolicitudAvancesFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Formato de solicitud de avances/${i}. ${req.body.FormatoSolicitudAvancesFiles[i].Name}`,
+              req.body.FormatoSolicitudAvancesFiles[i].Bytes
+            )
+          );
+        }
+
+        var cotizacionesFilesPromises = [];
+        for (let i = 0; req.body.CotizacionesFiles.length > i; i++) {
+          cotizacionesFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Anticipo/${i}. ${req.body.CotizacionesFiles[i].Name}`,
+              req.body.CotizacionesFiles[i].Bytes
+            )
+          );
+        }
+
+        var solicitudesComisionFilesPromises = [];
+        for (let i = 0; req.body.SolicitudesComisionFiles.length > i; i++) {
+          solicitudesComisionFilesPromises.push(
+            utils.uploadFileToSharePointWorkflowOEI(
+              `${gestionPath}/${req.body.Id}/Anticipo/${i}. ${req.body.SolicitudesComisionFiles[i].Name}`,
+              req.body.SolicitudesComisionFiles[i].Bytes
+            )
+          );
+        }
+
+        var promiseResponses = await Promise.all([
+          ...camaraComercioFilesPromises,
+          ...formatoSolicitudAvancesFilesPromises,
+          ...cotizacionesFilesPromises,
+          ...solicitudesComisionFilesPromises,
+        ]);
+
+        CamaraComercioSharePointFiles = [];
+        FormatoSolicitudAvancesSharePointFiles = [];
+        CotizacionesSharePointFiles = [];
+        SolicitudesComisionSharePointFiles = [];
+
+        var promiseResponsesOffSet = 0;
+        for (
+          let i = promiseResponsesOffSet;
+          camaraComercioFilesPromises.length > i;
+          i++
+        ) {
+          CamaraComercioSharePointFiles.push(promiseResponses[i].data);
+        }
+
+        promiseResponsesOffSet =
+          promiseResponsesOffSet + camaraComercioFilesPromises.length;
+        for (
+          let i = promiseResponsesOffSet;
+          promiseResponsesOffSet + formatoSolicitudAvancesFilesPromises.length >
+          i;
+          i++
+        ) {
+          FormatoSolicitudAvancesSharePointFiles.push(promiseResponses[i].data);
+        }
+
+        promiseResponsesOffSet =
+          promiseResponsesOffSet + formatoSolicitudAvancesFilesPromises.length;
+        for (
+          let i = promiseResponsesOffSet;
+          promiseResponsesOffSet + cotizacionesFilesPromises.length > i;
+          i++
+        ) {
+          CotizacionesSharePointFiles.push(promiseResponses[i].data);
+        }
+
+        promiseResponsesOffSet =
+          promiseResponsesOffSet + cotizacionesFilesPromises.length;
+        for (
+          let i = promiseResponsesOffSet;
+          promiseResponsesOffSet + solicitudesComisionFilesPromises.length > i;
+          i++
+        ) {
+          SolicitudesComisionSharePointFiles.push(promiseResponses[i].data);
+        }
+
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-          "Formato de solicitud de avances": req.body["0"],
-          "Camara de comercio": req.body["1"],
-          Cotizaciones: req.body["2"],
-          "Solicitudes de comision": req.body["3"],
+          SharePointFiles: [
+            {
+              Name: "Camara de comercio",
+              Files: CamaraComercioSharePointFiles,
+            },
+            {
+              Name: "Formato de solicitud de avances",
+              Files: FormatoSolicitudAvancesSharePointFiles,
+            },
+            {
+              Name: "Cotizaciones",
+              Files: CotizacionesSharePointFiles,
+            },
+            {
+              Name: "Solicitudes de comision",
+              Files: SolicitudesComisionSharePointFiles,
+            },
+          ],
         });
         break;
     }
   }
 
-  formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-    "Informacion adicional": req.body.InformacionAdicional,
-    Keys: Object.keys(formsFinancieraInvoice),
-  });
+  res.status(201).json(formsFinancieraInvoice);
+  return;
 
-  const response = await axios.default.post(
+  await axios.default.post(
     `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
     [formsFinancieraInvoice]
   );
 
-  res.status(200).send();
+  res.status(201).json(formsFinancieraInvoice);
 });
 
 module.exports = router;
