@@ -37,6 +37,22 @@ router.get("/information/convenios", async (req, res) => {
         enabled: req.query.enabled,
       });*/
 
+      obj = {
+        aliado: req.query.aliado,
+        numero: req.query.numero,
+        administracion: req.query.administracion,
+        gerencia: req.query.gerencia,
+        direccionAdjunta: req.query.direccionAdjunta,
+        asistenciaContable: req.query.asistenciaContable,
+        tesoreriaDistribucion: req.query.tesoreriaDistribucion,
+        tesoreria: req.query.tesoreria,
+        tesoreriaConfirmacion: req.query.tesoreriaConfirmacion,
+        direccionFinanciera: req.query.direccionFinanciera,
+        enabled: req.query.enabled,
+      };
+
+      console.log(obj)
+
       convenios = await Convenio.find({});
     } catch (err) {
       res.status(404).json(err);
