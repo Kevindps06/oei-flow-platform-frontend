@@ -19,5 +19,8 @@ module.exports = mongoose
   .createConnection(process.env.MONGODB_INFORMATION_URI, {
     ssl: true,
     sslCA: fs.readFileSync(`/home/ubuntu/rds-combined-ca-bundle.pem`),
+    replicaSet: "rs0",
+    readPreference: "secondaryPreferred",
+    retryWrites: false
   })
   .model("Convenio", schema);
