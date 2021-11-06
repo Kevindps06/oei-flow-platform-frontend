@@ -20,44 +20,22 @@ router.post("/information/convenios", async (req, res) => {
 
 router.get("/information/convenios", async (req, res) => {
   try {
-    let convenios;
-
-    try {
-      /*convenios = await Convenio.find({
-        aliado: req.query.aliado,
-        numero: req.query.numero,
-        administracion: req.query.administracion,
-        gerencia: req.query.gerencia,
-        direccionAdjunta: req.query.direccionAdjunta,
-        asistenciaContable: req.query.asistenciaContable,
-        tesoreriaDistribucion: req.query.tesoreriaDistribucion,
-        tesoreria: req.query.tesoreria,
-        tesoreriaConfirmacion: req.query.tesoreriaConfirmacion,
-        direccionFinanciera: req.query.direccionFinanciera,
-        enabled: req.query.enabled,
-      });*/
-
-      var obj = {
-        aliado: req.query.aliado,
-        numero: req.query.numero,
-        administracion: req.query.administracion,
-        gerencia: req.query.gerencia,
-        direccionAdjunta: req.query.direccionAdjunta,
-        asistenciaContable: req.query.asistenciaContable,
-        tesoreriaDistribucion: req.query.tesoreriaDistribucion,
-        tesoreria: req.query.tesoreria,
-        tesoreriaConfirmacion: req.query.tesoreriaConfirmacion,
-        direccionFinanciera: req.query.direccionFinanciera,
-        enabled: req.query.enabled,
-      };
-
-      console.log(obj)
-
-      convenios = await Convenio.find({});
-    } catch (err) {
-      res.status(404).json(err);
-      return
-    }
+    const convenios = await Convenio.find(
+      utils.convenioObjectWithoutUndefined(
+        req.query._id,
+        req.query.aliado,
+        req.query.numero,
+        req.query.administracion,
+        req.query.gerencia,
+        req.query.direccionAdjunta,
+        req.query.asistenciaContable,
+        req.query.tesoreriaDistribucion,
+        req.query.tesoreria,
+        req.query.tesoreriaConfirmacion,
+        req.query.direccionFinanciera,
+        req.query.enabled
+      )
+    );
 
     res.status(200).json(convenios);
   } catch (err) {
@@ -67,19 +45,23 @@ router.get("/information/convenios", async (req, res) => {
 
 router.put("/information/convenios", async (req, res) => {
   try {
-    const convenio = await Convenio.updateMany({
-      aliado: req.query.aliado,
-      numero: req.query.numero,
-      administracion: req.query.administracion,
-      gerencia: req.query.gerencia,
-      direccionAdjunta: req.query.direccionAdjunta,
-      asistenciaContable: req.query.asistenciaContable,
-      tesoreriaDistribucion: req.query.tesoreriaDistribucion,
-      tesoreria: req.query.tesoreria,
-      tesoreriaConfirmacion: req.query.tesoreriaConfirmacion,
-      direccionFinanciera: req.query.direccionFinanciera,
-      enabled: req.query.enabled,
-    }, req.body);
+    const convenio = await Convenio.updateMany(
+      utils.convenioObjectWithoutUndefined(
+        req.query._id,
+        req.query.aliado,
+        req.query.numero,
+        req.query.administracion,
+        req.query.gerencia,
+        req.query.direccionAdjunta,
+        req.query.asistenciaContable,
+        req.query.tesoreriaDistribucion,
+        req.query.tesoreria,
+        req.query.tesoreriaConfirmacion,
+        req.query.direccionFinanciera,
+        req.query.enabled
+      ),
+      req.body
+    );
 
     res.status(200).json(convenio);
   } catch (err) {
@@ -89,19 +71,22 @@ router.put("/information/convenios", async (req, res) => {
 
 router.delete("/information/convenios", async (req, res) => {
   try {
-    const convenio = await Convenio.remove({
-      aliado: req.query.aliado,
-      numero: req.query.numero,
-      administracion: req.query.administracion,
-      gerencia: req.query.gerencia,
-      direccionAdjunta: req.query.direccionAdjunta,
-      asistenciaContable: req.query.asistenciaContable,
-      tesoreriaDistribucion: req.query.tesoreriaDistribucion,
-      tesoreria: req.query.tesoreria,
-      tesoreriaConfirmacion: req.query.tesoreriaConfirmacion,
-      direccionFinanciera: req.query.direccionFinanciera,
-      enabled: req.query.enabled,
-    });
+    const convenio = await Convenio.remove(
+      utils.convenioObjectWithoutUndefined(
+        req.query._id,
+        req.query.aliado,
+        req.query.numero,
+        req.query.administracion,
+        req.query.gerencia,
+        req.query.direccionAdjunta,
+        req.query.asistenciaContable,
+        req.query.tesoreriaDistribucion,
+        req.query.tesoreria,
+        req.query.tesoreriaConfirmacion,
+        req.query.direccionFinanciera,
+        req.query.enabled
+      )
+    );
 
     res.status(200).json(convenio);
   } catch (err) {

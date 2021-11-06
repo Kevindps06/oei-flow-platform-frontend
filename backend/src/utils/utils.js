@@ -71,7 +71,75 @@ async function uploadFileToSharePointWorkflowOEI(path, base64) {
   return uploadResponse;
 }
 
+function convenioObjectWithoutUndefined(
+  _id,
+  aliado,
+  numero,
+  administracion,
+  gerencia,
+  direccionAdjunta,
+  asistenciaContable,
+  tesoreriaDistribucion,
+  tesoreria,
+  tesoreriaConfirmacion,
+  direccionFinanciera,
+  enabled
+) {
+  var obj = {}
+
+  if (_id) {
+    obj._id = _id;
+  }
+
+  if (aliado) {
+    obj.aliado = aliado;
+  }
+
+  if (numero) {
+    obj.numero = numero;
+  }
+
+  if (administracion) {
+    obj.administracion = administracion;
+  }
+
+  if (gerencia) {
+    obj.gerencia = gerencia
+  }
+
+  if (direccionAdjunta) {
+    obj.direccionAdjunta = direccionAdjunta
+  }
+
+  if (asistenciaContable) {
+    obj.asistenciaContable = asistenciaContable
+  }
+
+  if (tesoreriaDistribucion) {
+    obj.tesoreriaDistribucion = tesoreriaDistribucion
+  }
+
+  if (tesoreria) {
+    obj.tesoreria = tesoreria
+  }
+
+  if (tesoreriaConfirmacion) {
+    obj.tesoreriaConfirmacion = tesoreriaConfirmacion
+  }
+
+  if (direccionFinanciera) {
+    obj.direccionFinanciera = direccionFinanciera
+  }
+
+  if (enabled) {
+    obj.enabled = enabled
+  }
+
+  return obj
+}
+
 module.exports = {
   uploadFileToSharePointWorkflowOEI: uploadFileToSharePointWorkflowOEI,
   makeRandomString: makeRandomString,
+  convenioObjectWithoutUndefined: convenioObjectWithoutUndefined,
 };
