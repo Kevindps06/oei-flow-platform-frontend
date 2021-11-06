@@ -19,7 +19,7 @@ const schema = mongoose.Schema({
 
 module.exports = mongoose
   .createConnection(process.env.MONGODB_INFORMATION_URI, {
-    ssl: true,
+    useNewUrlParser: true,
     sslValidate: true,
     sslCA: [fs.readFileSync(`${__dirname}/../rds-combined-ca-bundle.pem`)],
   })
