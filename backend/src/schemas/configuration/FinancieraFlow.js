@@ -11,7 +11,7 @@ const schema = mongoose.Schema({
 module.exports = mongoose
   .createConnection(process.env.MONGODB_CONFIGURATIONS_URI, {
     ssl: true,
-    sslCA: fs.readFileSync(`/home/ubuntu/rds-combined-ca-bundle.pem`),
+    sslCA: fs.readFileSync(`/home/ubuntu/rds-combined-ca-bundle.pem`, "utf8"),
     replicaSet: "rs0",
     readPreference: "secondaryPreferred",
     retryWrites: false,
