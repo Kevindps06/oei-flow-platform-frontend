@@ -179,4 +179,5 @@ module.exports = {
   uploadFileToSharePointWorkflowOEI: uploadFileToSharePointWorkflowOEI,
   makeRandomString: makeRandomString,
   convenioObjectWithoutUndefined: convenioObjectWithoutUndefined,
+  financieraFlowObjectWithoutUndefined: financieraFlowObjectWithoutUndefined,
 };
