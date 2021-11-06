@@ -19,7 +19,6 @@ const schema = mongoose.Schema({
 
 module.exports = mongoose
   .createConnection(process.env.MONGODB_INFORMATION_URI, {
-    useNewUrlParser: true,
     tlsCAFile: `${__dirname}/../rds-combined-ca-bundle.pem`,
   })
   .model("Convenio", schema);
