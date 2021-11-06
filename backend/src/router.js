@@ -23,7 +23,7 @@ router.get("/information/convenios", async (req, res) => {
     let convenios;
 
     try {
-      convenios = await Convenio.find({
+      /*convenios = await Convenio.find({
         aliado: req.query.aliado,
         numero: req.query.numero,
         administracion: req.query.administracion,
@@ -35,7 +35,9 @@ router.get("/information/convenios", async (req, res) => {
         tesoreriaConfirmacion: req.query.tesoreriaConfirmacion,
         direccionFinanciera: req.query.direccionFinanciera,
         enabled: req.query.enabled,
-      });
+      });*/
+
+      convenios = await Convenio.find({});
     } catch (err) {
       res.status(404).json(err);
       return
