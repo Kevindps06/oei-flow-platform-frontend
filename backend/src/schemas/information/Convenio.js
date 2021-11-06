@@ -1,5 +1,6 @@
 const { ObjectId } = require("bson");
 const mongoose = require("mongoose");
+const fs = require("fs");
 
 const schema = mongoose.Schema({
   _id: ObjectId,
@@ -13,15 +14,13 @@ const schema = mongoose.Schema({
   tesoreria: String,
   tesoreriaConfirmacion: String,
   direccionFinanciera: String,
-  enabled: Boolean
+  enabled: Boolean,
 });
-
-console.log(`${__dirname}/../rds-combined-ca-bundle.pem`);
 
 module.exports = mongoose
   .createConnection(process.env.MONGODB_INFORMATION_URI, {
     ssl: true,
     sslValidate: true,
-    sslCA: `${__dirname}/../rds-combined-ca-bundle.pem`,
+    sslCA: [fs.readFileSync(`${__dirname}/../rds-combined-ca-bundle.pem`)],
   })
   .model("Convenio", schema);
