@@ -85,7 +85,7 @@ function convenioObjectWithoutUndefined(
   direccionFinanciera,
   enabled
 ) {
-  var obj = {}
+  var obj = {};
 
   if (_id) {
     obj._id = _id;
@@ -104,38 +104,75 @@ function convenioObjectWithoutUndefined(
   }
 
   if (gerencia) {
-    obj.gerencia = gerencia
+    obj.gerencia = gerencia;
   }
 
   if (direccionAdjunta) {
-    obj.direccionAdjunta = direccionAdjunta
+    obj.direccionAdjunta = direccionAdjunta;
   }
 
   if (asistenciaContable) {
-    obj.asistenciaContable = asistenciaContable
+    obj.asistenciaContable = asistenciaContable;
   }
 
   if (tesoreriaDistribucion) {
-    obj.tesoreriaDistribucion = tesoreriaDistribucion
+    obj.tesoreriaDistribucion = tesoreriaDistribucion;
   }
 
   if (tesoreria) {
-    obj.tesoreria = tesoreria
+    obj.tesoreria = tesoreria;
   }
 
   if (tesoreriaConfirmacion) {
-    obj.tesoreriaConfirmacion = tesoreriaConfirmacion
+    obj.tesoreriaConfirmacion = tesoreriaConfirmacion;
   }
 
   if (direccionFinanciera) {
-    obj.direccionFinanciera = direccionFinanciera
+    obj.direccionFinanciera = direccionFinanciera;
   }
 
   if (enabled) {
-    obj.enabled = enabled
+    obj.enabled = enabled;
   }
 
-  return obj
+  return obj;
+}
+
+function financieraFlowObjectWithoutUndefined(
+  _id,
+  persona,
+  relacion,
+  gestion,
+  legalizacion,
+  steps
+) {
+  var obj = {};
+
+  if (_id) {
+    obj._id = _id;
+  }
+
+  if (persona) {
+    obj.persona = persona;
+  }
+
+  if (relacion) {
+    obj.relacion = relacion;
+  }
+
+  if (gestion) {
+    obj.gestion = gestion;
+  }
+
+  if (legalizacion) {
+    obj.legalizacion = legalizacion;
+  }
+
+  if (steps) {
+    obj.steps = steps;
+  }
+
+  return obj;
 }
 
 module.exports = {
