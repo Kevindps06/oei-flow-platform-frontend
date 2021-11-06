@@ -19,6 +19,7 @@ const schema = mongoose.Schema({
 
 module.exports = mongoose
   .createConnection(process.env.MONGODB_INFORMATION_URI, {
-    ssl_ca_certs: `${__dirname}/../rds-combined-ca-bundle.pem`,
+    ssl: true,
+    sslCA: [fs.readFileSync(`${__dirname}/../rds-combined-ca-bundle.pem`)],
   })
   .model("Convenio", schema);
