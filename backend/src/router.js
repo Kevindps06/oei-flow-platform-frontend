@@ -6,6 +6,91 @@ const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
 const Convenio = require("./schemas/information/Convenio");
 
+router.post("/information/convenios", async (req, res) => {
+  try {
+    const convenio = new Convenio(req.body);
+
+    await convenio.save();
+
+    res.status(201).json(convenio);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/information/convenios", async (req, res) => {
+  try {
+    let convenios;
+
+    try {
+      convenios = await Convenio.find({
+        aliado: req.query.aliado,
+        numero: req.query.numero,
+        administracion: req.query.administracion,
+        gerencia: req.query.gerencia,
+        direccionAdjunta: req.query.direccionAdjunta,
+        asistenciaContable: req.query.asistenciaContable,
+        tesoreriaDistribucion: req.query.tesoreriaDistribucion,
+        tesoreria: req.query.tesoreria,
+        tesoreriaConfirmacion: req.query.tesoreriaConfirmacion,
+        direccionFinanciera: req.query.direccionFinanciera,
+        enabled: req.query.enabled,
+      });
+    } catch (err) {
+      res.status(404).json(err);
+      return
+    }
+
+    res.status(200).json(convenios);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.put("/information/convenios", async (req, res) => {
+  try {
+    const convenio = await Convenio.updateMany({
+      aliado: req.query.aliado,
+      numero: req.query.numero,
+      administracion: req.query.administracion,
+      gerencia: req.query.gerencia,
+      direccionAdjunta: req.query.direccionAdjunta,
+      asistenciaContable: req.query.asistenciaContable,
+      tesoreriaDistribucion: req.query.tesoreriaDistribucion,
+      tesoreria: req.query.tesoreria,
+      tesoreriaConfirmacion: req.query.tesoreriaConfirmacion,
+      direccionFinanciera: req.query.direccionFinanciera,
+      enabled: req.query.enabled,
+    }, req.body);
+
+    res.status(200).json(convenio);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.delete("/information/convenios", async (req, res) => {
+  try {
+    const convenio = await Convenio.remove({
+      aliado: req.query.aliado,
+      numero: req.query.numero,
+      administracion: req.query.administracion,
+      gerencia: req.query.gerencia,
+      direccionAdjunta: req.query.direccionAdjunta,
+      asistenciaContable: req.query.asistenciaContable,
+      tesoreriaDistribucion: req.query.tesoreriaDistribucion,
+      tesoreria: req.query.tesoreria,
+      tesoreriaConfirmacion: req.query.tesoreriaConfirmacion,
+      direccionFinanciera: req.query.direccionFinanciera,
+      enabled: req.query.enabled,
+    });
+
+    res.status(200).json(convenio);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 router.post("/request", async (req, res) => {
   var response;
   try {
@@ -13,23 +98,12 @@ router.post("/request", async (req, res) => {
       `/${req.body.filename}`,
       req.body.bytes
     );
+
+    res.status(response.status).json(response.data);
   } catch (err) {
     res.status(500).json(err);
-    return;
   }
-
-  res.status(response.status).json(response.data);
 });
-
-router.post("/convenios", async (req, res) => {
-  const convenio = new Convenio(
-    req.body
-  );
-
-  await convenio.save();
-
-  res.status(201).json(convenio);
-})
 
 router.get("/convenios", async (req, res) => {
   const authResponse = await auth.getToken(auth.tokenRequest);
