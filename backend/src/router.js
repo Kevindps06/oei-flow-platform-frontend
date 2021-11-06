@@ -37,7 +37,7 @@ router.get("/information/convenios", async (req, res) => {
         enabled: req.query.enabled,
       });*/
 
-      obj = {
+      var obj = {
         aliado: req.query.aliado,
         numero: req.query.numero,
         administracion: req.query.administracion,
