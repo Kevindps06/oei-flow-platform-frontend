@@ -326,7 +326,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
     relacion: req.body.TipoRelacion,
     gestion: req.body.TipoGestion,
     legalizacion: req.body.TipoLegalizacion,
-  }).data[0].steps;
+  })[0].steps;
 
   const authResponseConvenio = await auth.getToken(auth.tokenRequest);
   const convenio = (
