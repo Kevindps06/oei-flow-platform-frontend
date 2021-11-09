@@ -7,96 +7,6 @@ const utils = require("./utils/utils");
 const Convenio = require("./schemas/information/Convenio");
 const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
 
-router.post("/information/convenios", async (req, res) => {
-  try {
-    const convenio = new Convenio(req.body);
-
-    await convenio.save();
-
-    res.status(201).json(convenio);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.get("/information/convenios", async (req, res) => {
-  try {
-    const convenios = await Convenio.find(
-      utils.convenioObjectWithoutUndefined(
-        req.query._id,
-        req.query.aliado,
-        req.query.numero,
-        req.query.administracion,
-        req.query.gerencia,
-        req.query.direccionAdjunta,
-        req.query.asistenciaContable,
-        req.query.tesoreriaDistribucion,
-        req.query.tesoreria,
-        req.query.tesoreriaConfirmacion,
-        req.query.direccionFinanciera,
-        req.query.enabled
-      )
-    );
-
-    res.status(200).json(convenios);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.put("/information/convenios", async (req, res) => {
-  try {
-    const convenio = await Convenio.updateMany(
-      utils.convenioObjectWithoutUndefined(
-        req.query._id,
-        req.query.aliado,
-        req.query.numero,
-        req.query.administracion,
-        req.query.gerencia,
-        req.query.direccionAdjunta,
-        req.query.asistenciaContable,
-        req.query.tesoreriaDistribucion,
-        req.query.tesoreria,
-        req.query.tesoreriaConfirmacion,
-        req.query.direccionFinanciera,
-        req.query.enabled
-      ),
-      req.body
-    );
-
-    res.status(200).json(convenio);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.delete("/information/convenios", async (req, res) => {
-  try {
-    const convenio = await Convenio.remove(
-      utils.convenioObjectWithoutUndefined(
-        req.query._id,
-        req.query.aliado,
-        req.query.numero,
-        req.query.administracion,
-        req.query.gerencia,
-        req.query.direccionAdjunta,
-        req.query.asistenciaContable,
-        req.query.tesoreriaDistribucion,
-        req.query.tesoreria,
-        req.query.tesoreriaConfirmacion,
-        req.query.direccionFinanciera,
-        req.query.enabled
-      )
-    );
-
-    res.status(200).json(convenio);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-//
-
 router.post("/configuration/financieraflow", async (req, res) => {
   try {
     const financieraFlow = new FinancieraFlow(req.body);
@@ -398,7 +308,7 @@ router.post("/forms/financiera/registration", async (req, res) => {
 router.post("/forms/financiera/invoice", async (req, res) => {
   let configuration = [];
 
-  let steps = (
+  /*let steps = (
     await axios.default.get(
       `http://35.171.49.111/api/configuration/financieraflow`,
       {
@@ -410,7 +320,14 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         },
       }
     )
-  ).data[0].steps;
+  ).data[0].steps;*/
+
+  const steps = await FinancieraFlow.find({
+    persona: req.body.TipoPersona,
+    relacion: req.body.TipoRelacion,
+    gestion: req.body.TipoGestion,
+    legalizacion: req.body.TipoLegalizacion,
+  }).data[0].steps;
 
   const authResponseConvenio = await auth.getToken(auth.tokenRequest);
   const convenio = (
@@ -972,7 +889,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
 
       break;
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   }
 
