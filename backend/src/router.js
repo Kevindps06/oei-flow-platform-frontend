@@ -4,7 +4,6 @@ const router = express.Router();
 const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
-const Convenio = require("./schemas/information/Convenio");
 const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
 
 router.post("/configuration/financieraflow", async (req, res) => {
