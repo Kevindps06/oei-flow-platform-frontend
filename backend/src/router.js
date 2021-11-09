@@ -321,12 +321,14 @@ router.post("/forms/financiera/invoice", async (req, res) => {
     )
   ).data[0].steps;*/
 
-  let steps = await FinancieraFlow.find({
-    persona: req.body.TipoPersona,
-    relacion: req.body.TipoRelacion,
-    gestion: req.body.TipoGestion,
-    legalizacion: req.body.TipoLegalizacion,
-  })[0].steps;
+  let steps = await FinancieraFlow.find(
+    utils.financieraFlowObjectWithoutUndefined(
+      req.body.TipoPersona,
+      req.body.TipoRelacion,
+      req.body.TipoGestion,
+      req.body.TipoLegalizacion
+    )
+  )[0].steps;
 
   const authResponseConvenio = await auth.getToken(auth.tokenRequest);
   const convenio = (
