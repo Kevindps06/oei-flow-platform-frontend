@@ -22,4 +22,4 @@ module.exports = mongoose
     readPreference: "secondaryPreferred",
     retryWrites: false,
   })
-  .model("Convenio", schema);
+  .model("Convenio", schema, "Convenios");

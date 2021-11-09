@@ -16,13 +16,10 @@ function makeRandomString(length) {
 }
 
 async function uploadFileToSharePointWorkflowOEI(path, base64) {
-  var authResponse;
-  while (!authResponse) {
-    authResponse = await auth.getToken(auth.tokenRequest);
-  }
+  const authResponse = await auth.getToken(auth.tokenRequest);
 
   var response = await axios.default.post(
-    `https://graph.microsoft.com/v1.0/sites/${process.env.WORKFLOW_OEI_SITE_ID}/drive/root:${path}:/createUploadSession`,
+    `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/drive/root:${path}:/createUploadSession`,
     {},
     {
       headers: {
@@ -175,9 +172,70 @@ function financieraFlowObjectWithoutUndefined(
   return obj;
 }
 
+function formsFinancieraInvoiceObjectWithoutUndefined(
+  Id,
+  TipoPersona,
+  TipoRelacion,
+  Identificator,
+  Email,
+  TipoGestion,
+  TipoLegalizacion,
+  Convenio,
+  InformacionAdicional,
+  Configuration,
+  GestionPath
+) {
+  var obj = {};
+
+  if (Id) {
+    obj.Id = Id;
+  }
+
+  if (TipoPersona) {
+    obj.TipoPersona = TipoPersona;
+  }
+
+  if (TipoRelacion) {
+    obj.TipoRelacion = TipoRelacion;
+  }
+
+  if (Identificator) {
+    obj.Identificator = Identificator;
+  }
+
+  if (Email) {
+    obj.Email = Email;
+  }
+
+  if (TipoGestion) {
+    obj.TipoGestion = TipoGestion;
+  }
+
+  if (TipoLegalizacion) {
+    obj.TipoLegalizacion = TipoLegalizacion;
+  }
+
+  if (Convenio) {
+    obj.Convenio = Convenio;
+  }
+
+  obj.InformacionAdicional = InformacionAdicional;
+
+  if (Configuration) {
+    obj.Configuration = Configuration;
+  }
+
+  if (GestionPath) {
+    obj.GestionPath = GestionPath;
+  }
+
+  return obj;
+}
+
 module.exports = {
   uploadFileToSharePointWorkflowOEI: uploadFileToSharePointWorkflowOEI,
   makeRandomString: makeRandomString,
   convenioObjectWithoutUndefined: convenioObjectWithoutUndefined,
   financieraFlowObjectWithoutUndefined: financieraFlowObjectWithoutUndefined,
+  formsFinancieraInvoiceObjectWithoutUndefined: formsFinancieraInvoiceObjectWithoutUndefined
 };

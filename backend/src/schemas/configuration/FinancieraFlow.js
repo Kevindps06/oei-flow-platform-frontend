@@ -16,4 +16,4 @@ module.exports = mongoose
     readPreference: "secondaryPreferred",
     retryWrites: false,
   })
-  .model("FinancieraFlow", schema);
+  .model("FinancieraFlow", schema, "FinancieraFlow");

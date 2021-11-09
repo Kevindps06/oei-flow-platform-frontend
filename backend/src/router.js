@@ -137,7 +137,7 @@ router.put("/configuration/financieraflow", async (req, res) => {
         req.query.relacion,
         req.query.gestion,
         req.query.legalizacion,
-        req.query.steps,
+        req.query.steps
       ),
       req.body
     );
@@ -396,19 +396,97 @@ router.post("/forms/financiera/registration", async (req, res) => {
 });
 
 router.post("/forms/financiera/invoice", async (req, res) => {
-  let formsFinancieraInvoice = {
-    Id: req.body.Id,
-    TipoPersona: req.body.TipoPersona,
-    TipoRelacion: req.body.TipoRelacion,
-    Identificator: req.body.Identificator,
-    Email: req.body.Email,
-    TipoGestion: req.body.TipoGestion,
-    TipoLegalizacion: req.body.TipoLegalizacion,
-    Convenio: req.body.Convenio,
-    InformacionAdicional: req.body.InformacionAdicional,
-  };
+  let configuration = [];
 
-  const gestionPath = `/Gestion/${req.body.TipoPersona}/${req.body.TipoRelacion}/${req.body.TipoGestion}`;
+  let steps = (
+    await axios.default.get(
+      `http://35.171.49.111/api/configuration/financieraflow`,
+      {
+        params: {
+          persona: req.body.TipoPersona,
+          relacion: req.body.TipoRelacion,
+          gestion: req.body.TipoGestion,
+          legalizacion: req.body.TipoLegalizacion,
+        },
+      }
+    )
+  ).data[0].steps;
+
+  const authResponseConvenio = await auth.getToken(auth.tokenRequest);
+  const convenio = (
+    await axios.default.get(
+      `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items`,
+      {
+        headers: {
+          Authorization: "Bearer " + authResponseConvenio.accessToken,
+          Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+        },
+        params: {
+          $select: "id",
+          $expand: "fields",
+          $filter: `fields/Numero eq '${req.body.Convenio}'`,
+        },
+      }
+    )
+  ).data.value[0].fields;
+
+  for (let i = 0; steps.length > i; i++) {
+    if (
+      steps[i].doWhen &&
+      steps[i].doWhen.length > 0 &&
+      steps[i].doWhen.findIndex((x) => x.convenio === req.body.Convenio) === -1
+    ) {
+      continue;
+    }
+
+    const exception = steps[i].exceptions?.find(
+      (x) => x.convenio === req.body.Convenio
+    );
+
+    const authResponseEncargado = await auth.getToken(auth.tokenRequest);
+    const encargado = (
+      await axios.default.get(
+        `https://graph.microsoft.com/v1.0/sites/${
+          process.env.FINANCIERA_OEI_SITE_ID
+        }/lists/${
+          process.env.FINANCIERA_OEI_SITE_USERINFORMATION_LIST_ID
+        }/items/${
+          convenio[steps[i].key][exception ? exception.encargado : 0].LookupId
+        }`,
+        {
+          headers: {
+            Authorization: "Bearer " + authResponseEncargado.accessToken,
+            Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+          },
+          params: {
+            $select: "id",
+            $expand: "fields",
+          },
+        }
+      )
+    ).data.fields;
+
+    steps[i].encargado = encargado;
+
+    configuration.push(steps[i]);
+  }
+
+  const gestionPath = `/Gestion/${req.body.TipoPersona}/${req.body.TipoRelacion}/${req.body.TipoGestion}/${req.body.Id}`;
+
+  let formsFinancieraInvoice =
+    utils.formsFinancieraInvoiceObjectWithoutUndefined(
+      req.body.Id,
+      req.body.TipoPersona,
+      req.body.TipoRelacion,
+      req.body.Identificator,
+      req.body.Email,
+      req.body.TipoGestion,
+      req.body.TipoLegalizacion,
+      req.body.Convenio,
+      req.body.InformacionAdicional,
+      configuration,
+      gestionPath
+    );
 
   if (req.body.TipoPersona === "Natural") {
     switch (req.body.TipoGestion) {
@@ -417,7 +495,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.CuentaCobroFiles.length > i; i++) {
           cuentaCobroFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Cuenta de cobro/${i}. ${req.body.CuentaCobroFiles[i].Name}`,
+              `${gestionPath}/Cuenta de cobro/${i}. ${req.body.CuentaCobroFiles[i].Name}`,
               req.body.CuentaCobroFiles[i].Bytes
             )
           );
@@ -427,7 +505,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.FacturaEquivalenteFiles.length > i; i++) {
           facturaEquivalenteFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Factura equivalente/${i}. ${req.body.FacturaEquivalenteFiles[i].Name}`,
+              `${gestionPath}/Factura equivalente/${i}. ${req.body.FacturaEquivalenteFiles[i].Name}`,
               req.body.FacturaEquivalenteFiles[i].Bytes
             )
           );
@@ -437,7 +515,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.SeguridadSocialFiles.length > i; i++) {
           seguridadSocialFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Seguridad Social/${i}. ${req.body.SeguridadSocialFiles[i].Name}`,
+              `${gestionPath}/Seguridad Social/${i}. ${req.body.SeguridadSocialFiles[i].Name}`,
               req.body.SeguridadSocialFiles[i].Bytes
             )
           );
@@ -447,7 +525,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.InformeActividadesFiles.length > i; i++) {
           informeActividadesFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Informe de actividades/${i}. ${req.body.InformeActividadesFiles[i].Name}`,
+              `${gestionPath}/Informe de actividades/${i}. ${req.body.InformeActividadesFiles[i].Name}`,
               req.body.InformeActividadesFiles[i].Bytes
             )
           );
@@ -475,7 +553,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         }
 
         promiseResponsesOffSet =
-          promiseResponsesOffSet + facturaEquivalenteFilesPromises.length;
+          promiseResponsesOffSet + cuentaCobroFilesPromises.length;
         for (
           let i = promiseResponsesOffSet;
           promiseResponsesOffSet + facturaEquivalenteFilesPromises.length > i;
@@ -485,7 +563,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         }
 
         promiseResponsesOffSet =
-          promiseResponsesOffSet + seguridadSocialFilesPromises.length;
+          promiseResponsesOffSet + facturaEquivalenteFilesPromises.length;
         for (
           let i = promiseResponsesOffSet;
           promiseResponsesOffSet + seguridadSocialFilesPromises.length > i;
@@ -495,7 +573,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         }
 
         promiseResponsesOffSet =
-          promiseResponsesOffSet + informeActividadesFilesPromises.length;
+          promiseResponsesOffSet + seguridadSocialFilesPromises.length;
         for (
           let i = promiseResponsesOffSet;
           promiseResponsesOffSet + informeActividadesFilesPromises.length > i;
@@ -530,7 +608,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.FormatoSolicitudAvancesFiles.length > i; i++) {
           formatoSolicitudAvancesFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Formato de solicitud de avances/${i}. ${req.body.FormatoSolicitudAvancesFiles[i].Name}`,
+              `${gestionPath}/Formato de solicitud de avances/${i}. ${req.body.FormatoSolicitudAvancesFiles[i].Name}`,
               req.body.FormatoSolicitudAvancesFiles[i].Bytes
             )
           );
@@ -540,7 +618,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.CotizacionesFiles.length > i; i++) {
           cotizacionesFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Cotizaciones/${i}. ${req.body.CotizacionesFiles[i].Name}`,
+              `${gestionPath}/Cotizaciones/${i}. ${req.body.CotizacionesFiles[i].Name}`,
               req.body.CotizacionesFiles[i].Bytes
             )
           );
@@ -550,7 +628,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.SolicitudesComisionFiles.length > i; i++) {
           solicitudesComisionFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Solicitudes de comision/${i}. ${req.body.SolicitudesComisionFiles[i].Name}`,
+              `${gestionPath}/Solicitudes de comision/${i}. ${req.body.SolicitudesComisionFiles[i].Name}`,
               req.body.SolicitudesComisionFiles[i].Bytes
             )
           );
@@ -576,7 +654,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         }
 
         promiseResponsesOffSet =
-          promiseResponsesOffSet + cotizacionesFilesPromises.length;
+          promiseResponsesOffSet + formatoSolicitudAvancesFilesPromises.length;
         for (
           let i = promiseResponsesOffSet;
           promiseResponsesOffSet + cotizacionesFilesPromises.length > i;
@@ -586,7 +664,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         }
 
         promiseResponsesOffSet =
-          promiseResponsesOffSet + solicitudesComisionFilesPromises.length;
+          promiseResponsesOffSet + cotizacionesFilesPromises.length;
         for (
           let i = promiseResponsesOffSet;
           promiseResponsesOffSet + solicitudesComisionFilesPromises.length > i;
@@ -617,7 +695,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.FormatoSolicitudViajes.length > i; i++) {
           formatoSolicitudViajesFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Dieta/${i}. ${req.body.FormatoSolicitudViajes[i].Name}`,
+              `${gestionPath}/Dieta/${i}. ${req.body.FormatoSolicitudViajes[i].Name}`,
               req.body.FormatoSolicitudViajes[i].Bytes
             )
           );
@@ -655,7 +733,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.CuentaCobroFiles.length > i; i++) {
           cuentaCobroFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Cuenta de cobro o factura/${i}. ${req.body.CuentaCobroFiles[i].Name}`,
+              `${gestionPath}/Cuenta de cobro o factura/${i}. ${req.body.CuentaCobroFiles[i].Name}`,
               req.body.CuentaCobroFiles[i].Bytes
             )
           );
@@ -665,7 +743,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.FacturaEquivalenteFiles.length > i; i++) {
           facturaEquivalenteFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Factura equivalente/${i}. ${req.body.FacturaEquivalenteFiles[i].Name}`,
+              `${gestionPath}/Factura equivalente/${i}. ${req.body.FacturaEquivalenteFiles[i].Name}`,
               req.body.FacturaEquivalenteFiles[i].Bytes
             )
           );
@@ -675,7 +753,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.CertificadoParafiscalesFiles.length > i; i++) {
           certificadoParafiscalesFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Certificado de parafiscales/${i}. ${req.body.CertificadoParafiscalesFiles[i].Name}`,
+              `${gestionPath}/Certificado de parafiscales/${i}. ${req.body.CertificadoParafiscalesFiles[i].Name}`,
               req.body.CertificadoParafiscalesFiles[i].Bytes
             )
           );
@@ -685,7 +763,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.InformeActividadesFiles.length > i; i++) {
           informeActividadesFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Informe de actividades/${i}. ${req.body.InformeActividadesFiles[i].Name}`,
+              `${gestionPath}/Informe de actividades/${i}. ${req.body.InformeActividadesFiles[i].Name}`,
               req.body.InformeActividadesFiles[i].Bytes
             )
           );
@@ -769,7 +847,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.CamaraComercioFiles.length > i; i++) {
           camaraComercioFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Formato de solicitud de avances/${i}. ${req.body.CamaraComercioFiles[i].Name}`,
+              `${gestionPath}/Camara de comercio/${i}. ${req.body.CamaraComercioFiles[i].Name}`,
               req.body.CamaraComercioFiles[i].Bytes
             )
           );
@@ -779,7 +857,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.FormatoSolicitudAvancesFiles.length > i; i++) {
           formatoSolicitudAvancesFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Formato de solicitud de avances/${i}. ${req.body.FormatoSolicitudAvancesFiles[i].Name}`,
+              `${gestionPath}/Formato de solicitud de avances/${i}. ${req.body.FormatoSolicitudAvancesFiles[i].Name}`,
               req.body.FormatoSolicitudAvancesFiles[i].Bytes
             )
           );
@@ -789,7 +867,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.CotizacionesFiles.length > i; i++) {
           cotizacionesFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Anticipo/${i}. ${req.body.CotizacionesFiles[i].Name}`,
+              `${gestionPath}/Cotizaciones/${i}. ${req.body.CotizacionesFiles[i].Name}`,
               req.body.CotizacionesFiles[i].Bytes
             )
           );
@@ -799,7 +877,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.SolicitudesComisionFiles.length > i; i++) {
           solicitudesComisionFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/${req.body.Id}/Anticipo/${i}. ${req.body.SolicitudesComisionFiles[i].Name}`,
+              `${gestionPath}/Solicitudes de comision/${i}. ${req.body.SolicitudesComisionFiles[i].Name}`,
               req.body.SolicitudesComisionFiles[i].Bytes
             )
           );
@@ -881,13 +959,22 @@ router.post("/forms/financiera/invoice", async (req, res) => {
     }
   }
 
-  res.status(201).json(formsFinancieraInvoice);
-  return;
+  formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
+    Keys: Object.keys(formsFinancieraInvoice),
+  });
 
-  await axios.default.post(
-    `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
-    [formsFinancieraInvoice]
-  );
+  while (true) {
+    try {
+      await axios.default.post(
+        `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
+        [formsFinancieraInvoice]
+      );
+
+      break;
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   res.status(201).json(formsFinancieraInvoice);
 });
