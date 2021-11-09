@@ -322,7 +322,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
     )
   ).data[0].steps;*/
 
-  const steps = await FinancieraFlow.find({
+  let steps = await FinancieraFlow.find({
     persona: req.body.TipoPersona,
     relacion: req.body.TipoRelacion,
     gestion: req.body.TipoGestion,
