@@ -37,8 +37,8 @@
                 <select
                   [(ngModel)]="convenio"
                   class="form-select"
-                  id="selectConvenio"
-                  name="selectConvenio"
+                  id="convenio"
+                  name="convenio"
                   [ngClass]="{
                     'is-valid': convenio,
                     'is-invalid': !convenio
@@ -47,12 +47,12 @@
                   <option selected disabled></option>
                   <option
                     *ngFor="let convenio of convenios"
-                    value="{{ convenio.Aliado + ' | ' + convenio.Numero }}"
+                    [value]="convenio.Numero"
                   >
                     {{ convenio.Aliado + " | " + convenio.Numero }}
                   </option>
                 </select>
-                <label for="selectConvenio">Convenio</label>
+                <label for="convenio">Convenio</label>
                 <div class="invalid-feedback">
                   Este campo es (*) obligatorio, seleccione una opcion.
                 </div>
@@ -228,12 +228,29 @@
                 (onFilesChange)="setPasaporteFiles($event)"
               ></app-upload-files>
             </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <input
+                  [(ngModel)]="infoAdicional"
+                  type="text"
+                  class="form-control"
+                  name="inputInformacionAdicional"
+                  id="inputInformacionAdicional"
+                  placeholder="\0"
+                  maxlength="255"
+                />
+                <label for="inputInformacionAdicional"
+                  >Informacion adicional</label
+                >
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="d-grid gap-2 col-6 mx-auto mb-2">
       <button
+        href="#firstElement"
         [disabled]="!isValid()"
         (click)="btnSubmitClick()"
         class="btn btn-primary"

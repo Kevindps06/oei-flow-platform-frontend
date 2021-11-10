@@ -184,16 +184,16 @@ function formsFinancieraInvoiceObjectWithoutUndefined(
 
 function formsCoordinacionLogisticaObjectWithoutUndefined(
   Id,
-  TipoPersona,
-  TipoRelacion,
-  Identificator,
-  Email,
-  TipoGestion,
-  TipoLegalizacion,
+  Nombre,
   Convenio,
+  Ida,
+  Vuelta,
+  Identificator,
+  EquipajeAdicional,
+  Email,
   InformacionAdicional,
   Configuration,
-  GestionPath
+  CoordinacionLogisticaPath
 ) {
   var obj = {};
 
@@ -201,32 +201,32 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
     obj.Id = Id;
   }
 
-  if (TipoPersona) {
-    obj.TipoPersona = TipoPersona;
+  if (Nombre) {
+    obj.Nombre = Nombre;
   }
 
-  if (TipoRelacion) {
-    obj.TipoRelacion = TipoRelacion;
+  if (Convenio) {
+    obj.Convenio = Convenio;
+  }
+
+  if (Ida) {
+    obj.Ida = Ida;
+  }
+
+  if (Vuelta) {
+    obj.Vuelta = Vuelta;
   }
 
   if (Identificator) {
     obj.Identificator = Identificator;
   }
 
+  if (EquipajeAdicional) {
+    obj.EquipajeAdicional = EquipajeAdicional;
+  }
+
   if (Email) {
     obj.Email = Email;
-  }
-
-  if (TipoGestion) {
-    obj.TipoGestion = TipoGestion;
-  }
-
-  if (TipoLegalizacion) {
-    obj.TipoLegalizacion = TipoLegalizacion;
-  }
-
-  if (Convenio) {
-    obj.Convenio = Convenio;
   }
 
   obj.InformacionAdicional = InformacionAdicional;
@@ -235,8 +235,8 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
     obj.Configuration = Configuration;
   }
 
-  if (GestionPath) {
-    obj.GestionPath = GestionPath;
+  if (CoordinacionLogisticaPath) {
+    obj.CoordinacionLogisticaPath = CoordinacionLogisticaPath;
   }
 
   return obj;

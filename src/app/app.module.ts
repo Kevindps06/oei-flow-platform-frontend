@@ -22,7 +22,7 @@ import { FormsFinancieraInvoiceComponent } from './components/forms/financiera/i
 import { GlobalHttpInterceptorService } from './services/global-http-interceptor.service';
 import { UploadFilesComponent } from './components/upload-files/upload-files.component';
 import { HomeComponent } from './components/home/home.component';
-import { CoordinacionlogisticaComponent } from './components/forms/coordinacionlogistica/coordinacionlogistica.component';
+import { CoordinacionLogisticaComponent } from './components/forms/coordinacionlogistica/coordinacionlogistica.component';
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
 
 @NgModule({
@@ -44,15 +44,10 @@ import { DatePickerComponent } from './components/date-picker/date-picker.compon
     FormsFinancieraInvoiceComponent,
     UploadFilesComponent,
     HomeComponent,
-    CoordinacionlogisticaComponent,
+    CoordinacionLogisticaComponent,
     DatePickerComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    HttpClientModule,
-  ],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

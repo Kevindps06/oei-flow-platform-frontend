@@ -13,8 +13,9 @@ import { FormsService } from 'src/app/services/forms.service';
   templateUrl: './coordinacionlogistica.component.html',
   styleUrls: ['./coordinacionlogistica.component.css'],
 })
-export class CoordinacionlogisticaComponent implements OnInit {
+export class CoordinacionLogisticaComponent implements OnInit {
   waitTasks: WaitTask[] = [];
+
   convenios: Convenio[] = [];
 
   nombre: string = '';
@@ -36,11 +37,14 @@ export class CoordinacionlogisticaComponent implements OnInit {
   equipajeAdicional: boolean = false;
   email: string = '';
   telefono: string = '';
+
   pasaporteFiles: FileItem[] = [];
 
   setPasaporteFiles(pasaporteFiles: FileItem[]) {
     this.pasaporteFiles = pasaporteFiles;
   }
+
+  infoAdicional: string = '';
 
   @Output() onWaitTasksChange = new EventEmitter<WaitTask[]>();
 
@@ -49,6 +53,7 @@ export class CoordinacionlogisticaComponent implements OnInit {
   ngOnInit(): void {
     if (!history.state.Convenios) {
       this.router.navigateByUrl('/login');
+      return;
     }
 
     for (let i = 0; history.state.Convenios.length > i; i++) {
@@ -68,14 +73,15 @@ export class CoordinacionlogisticaComponent implements OnInit {
       Convenio: this.convenio,
       Ida: this.fechaIda,
       Vuelta: this.fechaVuelta,
-      Identification: this.identification,
+      Identificator: this.identification,
       EquipajeAdicional: this.equipajeAdicional,
       Email: this.email,
       Telefono: this.telefono,
       PasaporteFiles: this.pasaporteFiles,
+      InformacionAdicional: this.infoAdicional,
     };
 
-    /*var taskId: string;
+    var taskId: string;
     this.formsService
       .postFormsCoordinacionLogistica(formsCoordinacionLogistica)
       .subscribe(
@@ -99,7 +105,7 @@ export class CoordinacionlogisticaComponent implements OnInit {
               );
               this.waitTasks[taskIndex].current = event.loaded;
               this.waitTasks[taskIndex].progress = Math.round(
-                (event.loaded * 100) / this.waitTasks[taskIndex].total
+                (event.loaded * 100) / event.total
               );
               this.onWaitTasksChange.emit(this.waitTasks);
               break;
@@ -108,11 +114,13 @@ export class CoordinacionlogisticaComponent implements OnInit {
                 this.waitTasks.findIndex((element) => element.id === taskId)
               );
               this.onWaitTasksChange.emit(this.waitTasks);
+
+              this.router.navigateByUrl('/');
               break;
           }
         },
         (err) => {}
-      );*/
+      );
   }
 
   validateEmail(email: string = this.email): boolean {

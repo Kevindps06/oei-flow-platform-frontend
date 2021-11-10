@@ -24,7 +24,7 @@ export class UploadFilesComponent implements OnInit {
     for (let i = 0; event.target.files.length > i; i++) {
       this.Files.push({
         Index: currentFilesLength + i,
-        Name: event.target.files[i].name.replace(/[^a-zA-Z0-9]/g, ''),
+        Name: event.target.files[i].name.replace(/[^a-zA-Z0-9\.]/g, ''),
         Size: event.target.files[i].size,
         Type: event.target.files[i].type,
         Uploaded: false,

@@ -1,4 +1,4 @@
-import { FileItem } from "./FileItem";
+import { FileItem } from './FileItem';
 
 export interface FormsCoordinacionLogistica {
   Id: string;
@@ -6,9 +6,10 @@ export interface FormsCoordinacionLogistica {
   Convenio: string;
   Ida: Date;
   Vuelta?: Date;
-  Identification: string;
+  Identificator: string;
   EquipajeAdicional: boolean;
   Email: string;
   Telefono: string;
   PasaporteFiles: FileItem[];
+  InformacionAdicional: string;
 }

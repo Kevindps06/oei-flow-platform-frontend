@@ -370,9 +370,11 @@ router.post("/forms/financiera/registration", async (req, res) => {
 });
 
 router.post("/forms/financiera/invoice", async (req, res) => {
+  res.status(201).send();
+
   let configuration = [];
 
-  let steps = (
+  /*let steps = (
     await axios.default.get(
       `http://35.171.49.111/api/configuration/financieraflow`,
       {
@@ -384,9 +386,9 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         },
       }
     )
-  ).data[0].steps;
+  ).data[0].steps;*/
 
-  /*let steps = (
+  let steps = (
     await FinancieraFlow.find(
       utils.financieraFlowObjectWithoutUndefined(
         req.query._id,
@@ -397,7 +399,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         req.query.steps
       )
     )
-  )[0].steps;*/
+  )[0].steps;
 
   const authResponseConvenio = await auth.getToken(auth.tokenRequest);
   const convenio = (
@@ -962,8 +964,151 @@ router.post("/forms/financiera/invoice", async (req, res) => {
       console.log(err);
     }
   }
+});
 
-  res.status(201).json(formsFinancieraInvoice);
+router.post("/forms/coordinacionlogistica", async (req, res) => {
+  res.status(201).send();
+
+  let configuration = [];
+
+  /*let steps = (
+    await axios.default.get(
+      `http://35.171.49.111/api/configuration/coordinacionlogisticaflow`,
+      {
+        params: {},
+      }
+    )
+  ).data[0].steps;*/
+
+  let steps = (
+    await CoordinacionLogisticaFlow.find(
+      utils.coordinacionLogisticaFlowObjectWithoutUndefined(
+        req.query._id,
+        req.query.steps
+      )
+    )
+  )[0].steps;
+
+  const authResponseConvenio = await auth.getToken(auth.tokenRequest);
+  const convenio = (
+    await axios.default.get(
+      `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items`,
+      {
+        headers: {
+          Authorization: "Bearer " + authResponseConvenio.accessToken,
+          Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+        },
+        params: {
+          $select: "id",
+          $expand: "fields",
+          $filter: `fields/Numero eq '${req.body.Convenio}'`,
+        },
+      }
+    )
+  ).data.value[0].fields;
+
+  for (let i = 0; steps.length > i; i++) {
+    if (
+      steps[i].doWhen &&
+      steps[i].doWhen.length > 0 &&
+      steps[i].doWhen.findIndex((x) => x.convenio === req.body.Convenio) === -1
+    ) {
+      continue;
+    }
+
+    const exception = steps[i].exceptions?.find(
+      (x) => x.convenio === req.body.Convenio
+    );
+
+    const authResponseEncargado = await auth.getToken(auth.tokenRequest);
+    const encargado = (
+      await axios.default.get(
+        `https://graph.microsoft.com/v1.0/sites/${
+          process.env.FINANCIERA_OEI_SITE_ID
+        }/lists/${
+          process.env.FINANCIERA_OEI_SITE_USERINFORMATION_LIST_ID
+        }/items/${
+          convenio[steps[i].key][exception ? exception.encargado : 0].LookupId
+        }`,
+        {
+          headers: {
+            Authorization: "Bearer " + authResponseEncargado.accessToken,
+            Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+          },
+          params: {
+            $select: "id",
+            $expand: "fields",
+          },
+        }
+      )
+    ).data.fields;
+
+    steps[i].encargado = encargado;
+
+    configuration.push(steps[i]);
+  }
+
+  const coordinacionLogisticaPath = `/Coordinacion Logistica/${req.body.Id}`;
+
+  let formsCoordinacionLogistica =
+    utils.formsCoordinacionLogisticaObjectWithoutUndefined(
+      req.body.Id,
+      req.body.Nombre,
+      req.body.Convenio,
+      req.body.Ida,
+      req.body.Vuelta,
+      req.body.Identificator,
+      req.body.EquipajeAdicional,
+      req.body.Email,
+      req.body.InformacionAdicional,
+      configuration,
+      coordinacionLogisticaPath
+    );
+
+  var pasaporteFilesPromises = [];
+  for (let i = 0; req.body.PasaporteFiles.length > i; i++) {
+    pasaporteFilesPromises.push(
+      utils.uploadFileToSharePointWorkflowOEI(
+        `${coordinacionLogisticaPath}/Pasaporte/${i}. ${req.body.PasaporteFiles[i].Name}`,
+        req.body.PasaporteFiles[i].Bytes
+      )
+    );
+  }
+
+  var promiseResponses = await Promise.all([...pasaporteFilesPromises]);
+
+  PasaporteSharePointFiles = [];
+
+  var promiseResponsesOffSet = 0;
+  for (let i = promiseResponsesOffSet; pasaporteFilesPromises.length > i; i++) {
+    PasaporteSharePointFiles.push(promiseResponses[i].data);
+  }
+
+  formsCoordinacionLogistica = Object.assign(formsCoordinacionLogistica, {
+    SharePointFiles: [
+      {
+        Name: "Pasaporte",
+        Files: PasaporteSharePointFiles,
+      },
+    ],
+  });
+
+  formsCoordinacionLogistica = Object.assign(formsCoordinacionLogistica, {
+    Keys: Object.keys(formsCoordinacionLogistica),
+  });
+
+  while (true) {
+    try {
+      await axios.default.post(
+        `https://prod-10.brazilsouth.logic.azure.com:443/workflows/d9284b8deff34c34b78c7309cbeb0f45/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xt5QdZEYOiWUAmAfu-ykUU1oMDBm2bKT9yUBS0k63sw`,
+        [formsCoordinacionLogistica]
+      );
+
+      break;
+    } catch (err) {
+      console.log(err);
+    }
+  }
 });
 
 module.exports = router;
