@@ -1060,6 +1060,7 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
       req.body.Identificator,
       req.body.EquipajeAdicional,
       req.body.Email,
+      req.body.Telefono,
       req.body.InformacionAdicional,
       configuration,
       coordinacionLogisticaPath

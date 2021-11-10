@@ -191,6 +191,7 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
   Identificator,
   EquipajeAdicional,
   Email,
+  Telefono,
   InformacionAdicional,
   Configuration,
   CoordinacionLogisticaPath
@@ -227,6 +228,10 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
 
   if (Email) {
     obj.Email = Email;
+  }
+
+  if (Telefono) {
+    obj.Telefono = Telefono;
   }
 
   obj.InformacionAdicional = InformacionAdicional;
