@@ -12,6 +12,7 @@ import { FormsService } from 'src/app/services/forms.service';
 import { Utils } from 'src/app/classes/utils';
 import { Convenio } from 'src/app/interfaces/Convenio';
 import { FormsFinancieraInvoice } from 'src/app/interfaces/forms-financiera-invoice';
+import { ToastMessage } from 'src/app/interfaces/toast-message';
 
 @Component({
   selector: 'app-forms-financiera-invoice',
@@ -20,6 +21,7 @@ import { FormsFinancieraInvoice } from 'src/app/interfaces/forms-financiera-invo
 })
 export class FormsFinancieraInvoiceComponent implements OnInit {
   waitTasks: WaitTask[] = [];
+
   formIndex: number = 0;
 
   // 0
@@ -111,6 +113,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   infoAdicional: string = '';
 
   @Output() onWaitTasksChange = new EventEmitter<WaitTask[]>();
+  @Output() onToastMessagesChange = new EventEmitter<ToastMessage>();
 
   constructor(private formsService: FormsService) {}
 
@@ -164,6 +167,12 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 this.waitTasks.findIndex((element) => element.id === taskId)
               );
               this.onWaitTasksChange.emit(this.waitTasks);
+
+              this.onToastMessagesChange.emit({
+                id: Utils.makeRandomString(4),
+                title: "Validacion de usuario",
+                description: 'Bienvenido, se ha validado correctamente su usuario puede proceder al siguiente paso.',
+              });
               break;
           }
         },

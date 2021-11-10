@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { FormsService } from 'src/app/services/forms.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Convenio } from 'src/app/interfaces/Convenio';
@@ -8,6 +14,8 @@ import { HttpEventType } from '@angular/common/http';
 import { Utils } from 'src/app/classes/utils';
 import { FormsJuridicaContratacion } from 'src/app/interfaces/forms-juridica-contratacion';
 import { FormsJuridicaContratacionRequest } from 'src/app/interfaces/forms-juridica-contratacion-request';
+import { ToastMessage } from 'src/app/interfaces/toast-message';
+import { Toast } from 'bootstrap';
 
 @Component({
   selector: 'app-forms',
@@ -21,6 +29,49 @@ export class FormsComponent implements OnInit {
     setTimeout(() => {
       this.waitTasks = waitTasks;
     }, 0);
+  }
+
+  @ViewChildren('toastList') toastList!: QueryList<ElementRef>;
+  toastMessages: ToastMessage[] = [];
+
+  setToastMessages(toastMessage: ToastMessage) {
+    /*setTimeout(() => {
+      this.toastMessages.push(toastMessage);
+      
+      setTimeout(() => {
+        const toast = new Toast(
+          this.toastList.get(
+            this.toastMessages.findIndex(
+              (element) => element.id === toastMessage.id
+            )
+          )?.nativeElement
+        );
+        toast.show();
+
+        setTimeout(() => {
+          this.toastMessages.splice(
+            this.toastMessages.findIndex(
+              (element) => element.id === toastMessage.id
+            )
+          );
+        }, 5500);
+      }, 100);
+    }, 0);*/
+  }
+
+  removeToastMessage(toastId: string) {
+    const toastMessageIndex = this.toastMessages.findIndex(
+      (element) => element.id === toastId
+    );
+
+    /*const toast = new Toast(
+      this.toastList.get(toastMessageIndex)?.nativeElement
+    );
+    toast.hide();*/
+
+    setTimeout(() => {
+      this.toastMessages.splice(toastMessageIndex);
+    }, 500);
   }
 
   loading: boolean = false;
@@ -40,8 +91,7 @@ export class FormsComponent implements OnInit {
     switch (this.router.url) {
       case '/forms/coordinacionlogistica':
         this.title = 'Coordinacion logistica';
-        this.description =
-          'Coordinacion logistica descripcion';
+        this.description = 'Coordinacion logistica descripcion';
         break;
       case '/forms/financiera/registration':
         this.title = 'Registro colaborador o proveedor';

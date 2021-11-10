@@ -68,73 +68,6 @@ async function uploadFileToSharePointWorkflowOEI(path, base64) {
   return uploadResponse;
 }
 
-function convenioObjectWithoutUndefined(
-  _id,
-  aliado,
-  numero,
-  administracion,
-  gerencia,
-  direccionAdjunta,
-  asistenciaContable,
-  tesoreriaDistribucion,
-  tesoreria,
-  tesoreriaConfirmacion,
-  direccionFinanciera,
-  enabled
-) {
-  var obj = {};
-
-  if (_id) {
-    obj._id = _id;
-  }
-
-  if (aliado) {
-    obj.aliado = aliado;
-  }
-
-  if (numero) {
-    obj.numero = numero;
-  }
-
-  if (administracion) {
-    obj.administracion = administracion;
-  }
-
-  if (gerencia) {
-    obj.gerencia = gerencia;
-  }
-
-  if (direccionAdjunta) {
-    obj.direccionAdjunta = direccionAdjunta;
-  }
-
-  if (asistenciaContable) {
-    obj.asistenciaContable = asistenciaContable;
-  }
-
-  if (tesoreriaDistribucion) {
-    obj.tesoreriaDistribucion = tesoreriaDistribucion;
-  }
-
-  if (tesoreria) {
-    obj.tesoreria = tesoreria;
-  }
-
-  if (tesoreriaConfirmacion) {
-    obj.tesoreriaConfirmacion = tesoreriaConfirmacion;
-  }
-
-  if (direccionFinanciera) {
-    obj.direccionFinanciera = direccionFinanciera;
-  }
-
-  if (enabled) {
-    obj.enabled = enabled;
-  }
-
-  return obj;
-}
-
 function financieraFlowObjectWithoutUndefined(
   _id,
   persona,
@@ -163,6 +96,23 @@ function financieraFlowObjectWithoutUndefined(
 
   if (legalizacion) {
     obj.legalizacion = legalizacion;
+  }
+
+  if (steps) {
+    obj.steps = steps;
+  }
+
+  return obj;
+}
+
+function coordinacionLogisticaFlowObjectWithoutUndefined(
+  _id,
+  steps
+) {
+  var obj = {};
+
+  if (_id) {
+    obj._id = _id;
   }
 
   if (steps) {
@@ -232,10 +182,74 @@ function formsFinancieraInvoiceObjectWithoutUndefined(
   return obj;
 }
 
+function formsCoordinacionLogisticaObjectWithoutUndefined(
+  Id,
+  TipoPersona,
+  TipoRelacion,
+  Identificator,
+  Email,
+  TipoGestion,
+  TipoLegalizacion,
+  Convenio,
+  InformacionAdicional,
+  Configuration,
+  GestionPath
+) {
+  var obj = {};
+
+  if (Id) {
+    obj.Id = Id;
+  }
+
+  if (TipoPersona) {
+    obj.TipoPersona = TipoPersona;
+  }
+
+  if (TipoRelacion) {
+    obj.TipoRelacion = TipoRelacion;
+  }
+
+  if (Identificator) {
+    obj.Identificator = Identificator;
+  }
+
+  if (Email) {
+    obj.Email = Email;
+  }
+
+  if (TipoGestion) {
+    obj.TipoGestion = TipoGestion;
+  }
+
+  if (TipoLegalizacion) {
+    obj.TipoLegalizacion = TipoLegalizacion;
+  }
+
+  if (Convenio) {
+    obj.Convenio = Convenio;
+  }
+
+  obj.InformacionAdicional = InformacionAdicional;
+
+  if (Configuration) {
+    obj.Configuration = Configuration;
+  }
+
+  if (GestionPath) {
+    obj.GestionPath = GestionPath;
+  }
+
+  return obj;
+}
+
 module.exports = {
   uploadFileToSharePointWorkflowOEI: uploadFileToSharePointWorkflowOEI,
   makeRandomString: makeRandomString,
-  convenioObjectWithoutUndefined: convenioObjectWithoutUndefined,
   financieraFlowObjectWithoutUndefined: financieraFlowObjectWithoutUndefined,
-  formsFinancieraInvoiceObjectWithoutUndefined: formsFinancieraInvoiceObjectWithoutUndefined
+  coordinacionLogisticaFlowObjectWithoutUndefined:
+    coordinacionLogisticaFlowObjectWithoutUndefined,
+  formsFinancieraInvoiceObjectWithoutUndefined:
+    formsFinancieraInvoiceObjectWithoutUndefined,
+  formsCoordinacionLogisticaObjectWithoutUndefined:
+    formsCoordinacionLogisticaObjectWithoutUndefined,
 };

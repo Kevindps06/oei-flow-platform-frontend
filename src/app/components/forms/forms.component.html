@@ -33,7 +33,7 @@
           <div
             class="
               progress-bar progress-bar-striped progress-bar-animated
-              text-dark
+              text-light
             "
             role="progressbar"
             [ngStyle]="{
@@ -50,6 +50,16 @@
         </p>
       </div>
     </div>
+  </div>
+</div>
+<div *ngIf="toastMessages.length > 0" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1111">
+  <div #toastList *ngFor="let toastMessage of toastMessages" id="liveToast{{ toastMessage.id }}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div *ngIf="toastMessage.title" class="toast-header">
+      <img src="../../../assets/banner.png" style="max-width: 35%;" class="rounded me-2">
+      <strong class="me-auto">{{ toastMessage.title }}</strong>
+      <button (click)="removeToastMessage(toastMessage.id)" type="button" class="btn-close" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">{{ toastMessage.description }}</div>
   </div>
 </div>
 <div class="container">
@@ -73,7 +83,9 @@
           </h4>
         </div>
         <div class="col-12">
-          <p class="card-text" style="white-space: pre-wrap">{{ description }}</p>
+          <p class="card-text" style="white-space: pre-wrap">
+            {{ description }}
+          </p>
         </div>
       </div>
     </div>
@@ -89,6 +101,7 @@
           <app-forms-financiera-invoice
             *ngIf="isRoute('/forms/financiera/invoice')"
             (onWaitTasksChange)="setWaitTasks($event)"
+            (onToastMessagesChange)="setToastMessages($event)"
           ></app-forms-financiera-invoice>
           <app-forms-coordinacionlogistica
             *ngIf="isRoute('/forms/coordinacionlogistica')"

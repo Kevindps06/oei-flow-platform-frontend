@@ -5,6 +5,9 @@ const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
 const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
+const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
+
+// FinancieraFlow
 
 router.post("/configuration/financieraflow", async (req, res) => {
   try {
@@ -71,6 +74,68 @@ router.delete("/configuration/financieraflow", async (req, res) => {
     );
 
     res.status(200).json(financieraFlow);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// CoordinacionLogisticaFlow
+
+router.post("/configuration/coordinacionlogisticaflow", async (req, res) => {
+  try {
+    const coordinacionLogisticaFlow = new CoordinacionLogisticaFlow(req.body);
+
+    await coordinacionLogisticaFlow.save();
+
+    res.status(201).json(coordinacionLogisticaFlow);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/configuration/coordinacionlogisticaflow", async (req, res) => {
+  try {
+    const coordinacionLogisticaFlow = await CoordinacionLogisticaFlow.find(
+      utils.coordinacionLogisticaFlowObjectWithoutUndefined(
+        req.query._id,
+        req.query.steps
+      )
+    );
+
+    res.status(200).json(coordinacionLogisticaFlow);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.put("/configuration/coordinacionlogisticaflow", async (req, res) => {
+  try {
+    const coordinacionLogisticaFlow =
+      await CoordinacionLogisticaFlow.updateMany(
+        utils.coordinacionLogisticaFlowObjectWithoutUndefined(
+          req.query._id,
+          req.query.steps
+        ),
+        req.body
+      );
+
+    res.status(200).json(coordinacionLogisticaFlow);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.delete("/configuration/coordinacionlogisticaflow", async (req, res) => {
+  try {
+    const coordinacionLogisticaFlow =
+      await CoordinacionLogisticaFlow.deleteMany(
+        utils.coordinacionLogisticaFlowObjectWithoutUndefined(
+          req.query._id,
+          req.query.steps
+        )
+      );
+
+    res.status(200).json(coordinacionLogisticaFlow);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -307,7 +372,7 @@ router.post("/forms/financiera/registration", async (req, res) => {
 router.post("/forms/financiera/invoice", async (req, res) => {
   let configuration = [];
 
-  /*let steps = (
+  let steps = (
     await axios.default.get(
       `http://35.171.49.111/api/configuration/financieraflow`,
       {
@@ -319,9 +384,9 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         },
       }
     )
-  ).data[0].steps;*/
+  ).data[0].steps;
 
-  let steps = (
+  /*let steps = (
     await FinancieraFlow.find(
       utils.financieraFlowObjectWithoutUndefined(
         req.query._id,
@@ -332,7 +397,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         req.query.steps
       )
     )
-  )[0].steps;
+  )[0].steps;*/
 
   const authResponseConvenio = await auth.getToken(auth.tokenRequest);
   const convenio = (
