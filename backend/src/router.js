@@ -4,8 +4,8 @@ const router = express.Router();
 const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
-const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
-const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
+//const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
+//const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
 
 // FinancieraFlow
 
@@ -231,7 +231,7 @@ router.get("/sites/:siteId/lists/:listId/:operation", async (req, res) => {
 router.get("/workflow/validateUser", async (req, res) => {
   const authResponse = await auth.getToken(auth.tokenRequest);
   const response = await axios.default.get(
-    `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONTRATISTASPROVEEDORES_LIST_ID}/items?$select=id,fields&$expand=fields&$filter=fields/Tipo_x0020_de_x0020_persona eq '${req.query.tipoDePersona}' and fields/Tipo_x0020_de_x0020_relacion eq '${req.query.tipoDeRelacion}' and fields/CC_x002f_NIT eq '${req.query.identification}' and fields/Emaildecontacto eq '${req.query.email}'`,
+    `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONTRATISTASPROVEEDORES_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/Tipo_x0020_de_x0020_persona eq '${req.query.tipoDePersona}' and fields/Tipo_x0020_de_x0020_relacion eq '${req.query.tipoDeRelacion}' and fields/CC_x002f_NIT eq '${req.query.identification}' and fields/Emaildecontacto eq '${req.query.email}'`,
     {
       headers: {
         Authorization: "Bearer " + authResponse.accessToken,
@@ -265,7 +265,7 @@ router.get("/workflow/validateUser", async (req, res) => {
 
     res
       .status(response.status)
-      .json({ userInfo: response.data, generatedCode: generatedCode });
+      .json({ userInfo: response.data.value[0], generatedCode: generatedCode });
   } else {
     res.status(404).send();
   }
@@ -319,7 +319,12 @@ router.get("/platform/validateUser", async (req, res) => {
       }
       response2.data.value[0].fields.Convenios = convenios;
 
-      res.status(response2.status).json({ userInfo: response2.data.value[0] });
+      res
+        .status(response2.status)
+        .json({
+          userInfo: response.data.value[0],
+          plaftformInfo: response2.data.value[0],
+        });
     } else {
       res.status(404).send();
     }
@@ -370,11 +375,9 @@ router.post("/forms/financiera/registration", async (req, res) => {
 });
 
 router.post("/forms/financiera/invoice", async (req, res) => {
-  res.status(201).send();
-
   let configuration = [];
 
-  /*let steps = (
+  let steps = (
     await axios.default.get(
       `http://35.171.49.111/api/configuration/financieraflow`,
       {
@@ -386,9 +389,9 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         },
       }
     )
-  ).data[0].steps;*/
+  ).data[0].steps;
 
-  let steps = (
+  /*let steps = (
     await FinancieraFlow.find(
       utils.financieraFlowObjectWithoutUndefined(
         req.query._id,
@@ -399,7 +402,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         req.query.steps
       )
     )
-  )[0].steps;
+  )[0].steps;*/
 
   const authResponseConvenio = await auth.getToken(auth.tokenRequest);
   const convenio = (
@@ -964,30 +967,30 @@ router.post("/forms/financiera/invoice", async (req, res) => {
       console.log(err);
     }
   }
+
+  res.status(201).send();
 });
 
 router.post("/forms/coordinacionlogistica", async (req, res) => {
-  res.status(201).send();
-
   let configuration = [];
 
-  /*let steps = (
+  let steps = (
     await axios.default.get(
       `http://35.171.49.111/api/configuration/coordinacionlogisticaflow`,
       {
         params: {},
       }
     )
-  ).data[0].steps;*/
+  ).data[0].steps;
 
-  let steps = (
+  /*let steps = (
     await CoordinacionLogisticaFlow.find(
       utils.coordinacionLogisticaFlowObjectWithoutUndefined(
         req.query._id,
         req.query.steps
       )
     )
-  )[0].steps;
+  )[0].steps;*/
 
   const authResponseConvenio = await auth.getToken(auth.tokenRequest);
   const convenio = (
@@ -1110,6 +1113,8 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
       console.log(err);
     }
   }
+
+  res.status(201).send();
 });
 
 module.exports = router;

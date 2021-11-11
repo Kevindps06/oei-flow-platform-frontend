@@ -122,7 +122,7 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
               );
               this.waitTasks[taskIndex].current = event.loaded;
               this.waitTasks[taskIndex].progress = Math.round(
-                (event.loaded * 100) / this.waitTasks[taskIndex].total
+                (event.loaded * 100) / event.total
               );
               this.onWaitTasksChange.emit(this.waitTasks);
               break;
@@ -206,7 +206,7 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
               );
               this.waitTasks[taskIndex].current = event.loaded;
               this.waitTasks[taskIndex].progress = Math.round(
-                (event.loaded * 100) / this.waitTasks[taskIndex].total
+                (event.loaded * 100) / event.total
               );
               this.onWaitTasksChange.emit(this.waitTasks);
               break;

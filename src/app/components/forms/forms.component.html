@@ -1,67 +1,3 @@
-<div
-  *ngIf="waitTasks.length > 0 || loading"
-  [ngClass]="{
-    'fade-in': waitTasks.length > 0,
-    'fade-out': waitTasks.length === 0,
-    'd-none': waitTasks.length === 0 && loading === false
-  }"
-  class="position-fixed top-0"
-  style="
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 11;
-  "
-  (animationstart)="animationstart($event)"
-  (animationend)="animationend($event)"
->
-  <div
-    class="position-absolute top-50 start-50 translate-middle"
-    style="width: 50vw"
-  >
-    <div class="row g-3">
-      <div class="col-12 text-center">
-        <img
-          src="../../../assets/loading.svg"
-          height="100px"
-          width="100px"
-          class="img-fluid"
-        />
-      </div>
-      <div class="col-12">
-        <div class="progress">
-          <div
-            class="
-              progress-bar progress-bar-striped progress-bar-animated
-              text-light
-            "
-            role="progressbar"
-            [ngStyle]="{
-              width: (waitTasks.length > 0 ? waitTasks[0].progress : 100) + '%'
-            }"
-          >
-            {{ waitTasks.length > 0 ? waitTasks[0].progress : "" }}%
-          </div>
-        </div>
-      </div>
-      <div class="col-12 text-center">
-        <p class="fs-4 text-light">
-          {{ waitTasks.length > 0 ? waitTasks[0].description : "" }}
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-<div *ngIf="toastMessages.length > 0" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1111">
-  <div #toastList *ngFor="let toastMessage of toastMessages" id="liveToast{{ toastMessage.id }}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-    <div *ngIf="toastMessage.title" class="toast-header">
-      <img src="../../../assets/banner.png" style="max-width: 35%;" class="rounded me-2">
-      <strong class="me-auto">{{ toastMessage.title }}</strong>
-      <button (click)="removeToastMessage(toastMessage.id)" type="button" class="btn-close" aria-label="Close"></button>
-    </div>
-    <div class="toast-body">{{ toastMessage.description }}</div>
-  </div>
-</div>
 <div class="container">
   <div
     class="
@@ -101,7 +37,6 @@
           <app-forms-financiera-invoice
             *ngIf="isRoute('/forms/financiera/invoice')"
             (onWaitTasksChange)="setWaitTasks($event)"
-            (onToastMessagesChange)="setToastMessages($event)"
           ></app-forms-financiera-invoice>
           <app-forms-coordinacionlogistica
             *ngIf="isRoute('/forms/coordinacionlogistica')"

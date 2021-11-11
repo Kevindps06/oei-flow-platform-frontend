@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-header',
@@ -9,9 +10,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
   @Input() loggedUser: any;
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(private router: Router, private sharedService: SharedService) {}
 
   ngOnInit(): void {}
+
+  onIniciarSesionBtnClick() {
+    this.sharedService.setLoggedUser(undefined)
+  }
 
   isRoute(route: string) {
     return this.router.url === route;

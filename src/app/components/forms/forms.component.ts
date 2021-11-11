@@ -15,7 +15,6 @@ import { Utils } from 'src/app/classes/utils';
 import { FormsJuridicaContratacion } from 'src/app/interfaces/forms-juridica-contratacion';
 import { FormsJuridicaContratacionRequest } from 'src/app/interfaces/forms-juridica-contratacion-request';
 import { ToastMessage } from 'src/app/interfaces/toast-message';
-import { Toast } from 'bootstrap';
 
 @Component({
   selector: 'app-forms',
@@ -30,51 +29,6 @@ export class FormsComponent implements OnInit {
       this.waitTasks = waitTasks;
     }, 0);
   }
-
-  @ViewChildren('toastList') toastList!: QueryList<ElementRef>;
-  toastMessages: ToastMessage[] = [];
-
-  setToastMessages(toastMessage: ToastMessage) {
-    /*setTimeout(() => {
-      this.toastMessages.push(toastMessage);
-      
-      setTimeout(() => {
-        const toast = new Toast(
-          this.toastList.get(
-            this.toastMessages.findIndex(
-              (element) => element.id === toastMessage.id
-            )
-          )?.nativeElement
-        );
-        toast.show();
-
-        setTimeout(() => {
-          this.toastMessages.splice(
-            this.toastMessages.findIndex(
-              (element) => element.id === toastMessage.id
-            )
-          );
-        }, 5500);
-      }, 100);
-    }, 0);*/
-  }
-
-  removeToastMessage(toastId: string) {
-    const toastMessageIndex = this.toastMessages.findIndex(
-      (element) => element.id === toastId
-    );
-
-    /*const toast = new Toast(
-      this.toastList.get(toastMessageIndex)?.nativeElement
-    );
-    toast.hide();*/
-
-    setTimeout(() => {
-      this.toastMessages.splice(toastMessageIndex);
-    }, 500);
-  }
-
-  loading: boolean = false;
 
   title!: string;
   description!: string;
@@ -162,18 +116,6 @@ export class FormsComponent implements OnInit {
 
   startWithRoute(route: string) {
     return this.router.url.startsWith(route);
-  }
-
-  animationstart(event: AnimationEvent) {
-    if (event.animationName === 'fadeIn') {
-      this.loading = true;
-    }
-  }
-
-  animationend(event: AnimationEvent) {
-    if (event.animationName === 'fadeOut') {
-      this.loading = false;
-    }
   }
 
   onSubmitFinancieraRegistrationForm(

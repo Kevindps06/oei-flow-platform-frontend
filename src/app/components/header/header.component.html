@@ -68,7 +68,7 @@
             class="nav-link text-white"
             aria-current="page"
             [routerLink]="['/forms/coordinacionlogistica']"
-            [state]="loggedUser.fields"
+            [state]="loggedUser.plaftformInfo.fields"
             >Coordinacion logistica</a
           >
         </li>
@@ -106,6 +106,7 @@
           (mouseover)="onMouseOverLoginButton()"
           (mouseout)="onMouseOutLoginButton()"
           [routerLink]="['/login']"
+          (click)="onIniciarSesionBtnClick()"
           [ngClass]="{
             'text-light': !mouseOverLoginButton,
             'text-dark': mouseOverLoginButton

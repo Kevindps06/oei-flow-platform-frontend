@@ -1,5 +1,6 @@
 export interface ToastMessage {
     id: string,
     title: string,
-    description: string
+    description: string,
+    autohide?: number
 }

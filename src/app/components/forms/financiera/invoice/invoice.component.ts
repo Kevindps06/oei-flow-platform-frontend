@@ -13,6 +13,7 @@ import { Utils } from 'src/app/classes/utils';
 import { Convenio } from 'src/app/interfaces/Convenio';
 import { FormsFinancieraInvoice } from 'src/app/interfaces/forms-financiera-invoice';
 import { ToastMessage } from 'src/app/interfaces/toast-message';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-forms-financiera-invoice',
@@ -20,8 +21,6 @@ import { ToastMessage } from 'src/app/interfaces/toast-message';
   styleUrls: ['./invoice.component.css'],
 })
 export class FormsFinancieraInvoiceComponent implements OnInit {
-  waitTasks: WaitTask[] = [];
-
   formIndex: number = 0;
 
   // 0
@@ -115,7 +114,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   @Output() onWaitTasksChange = new EventEmitter<WaitTask[]>();
   @Output() onToastMessagesChange = new EventEmitter<ToastMessage>();
 
-  constructor(private formsService: FormsService) {}
+  constructor(
+    private formsService: FormsService,
+    private sharedService: SharedService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -140,38 +142,30 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           switch (event.type) {
             case HttpEventType.Sent:
               taskId = Utils.makeRandomString(4);
-              this.waitTasks.push({
+              this.sharedService.pushWaitTask({
                 id: taskId,
                 description: 'Validando informacion...',
-                total: 0,
-                current: 0,
                 progress: 0,
               });
-              this.onWaitTasksChange.emit(this.waitTasks);
               break;
             case HttpEventType.DownloadProgress:
-              let taskIndex = this.waitTasks.findIndex(
-                (element) => element.id === taskId
-              );
-              this.waitTasks[taskIndex].current = event.loaded;
-              this.waitTasks[taskIndex].progress = Math.round(
-                (event.loaded * 100) / event.total
-              );
-              this.onWaitTasksChange.emit(this.waitTasks);
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                progress: Math.round((event.loaded * 100) / event.total),
+              });
               break;
             case HttpEventType.Response:
-              this.flowUser = event.body.userInfo.value[0];
+              this.flowUser = event.body.userInfo;
               this.verificationCode = event.body.generatedCode;
 
-              this.waitTasks.splice(
-                this.waitTasks.findIndex((element) => element.id === taskId)
-              );
-              this.onWaitTasksChange.emit(this.waitTasks);
+              this.sharedService.removeWaitTask({
+                id: taskId,
+              });
 
-              this.onToastMessagesChange.emit({
+              this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
-                title: "Validacion de usuario",
-                description: 'Bienvenido, se ha validado correctamente su usuario puede proceder al siguiente paso.',
+                title: `Bienvenido ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
+                description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
               });
               break;
           }
@@ -181,10 +175,9 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
             this.flowUser = undefined;
             this.validacionUsuarioError = true;
 
-            this.waitTasks.splice(
-              this.waitTasks.findIndex((element) => element.id === taskId)
-            );
-            this.onWaitTasksChange.emit(this.waitTasks);
+            this.sharedService.removeWaitTask({
+              id: taskId,
+            });
           }
         }
       );
@@ -296,24 +289,17 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           switch (event.type) {
             case HttpEventType.Sent:
               taskId = Utils.makeRandomString(4);
-              this.waitTasks.push({
+              this.sharedService.pushWaitTask({
                 id: taskId,
                 description: 'Cargando convenios...',
-                total: 0,
-                current: 0,
                 progress: 0,
               });
-              this.onWaitTasksChange.emit(this.waitTasks);
               break;
             case HttpEventType.DownloadProgress:
-              let taskIndex = this.waitTasks.findIndex(
-                (element) => element.id === taskId
-              );
-              this.waitTasks[taskIndex].current = event.loaded;
-              this.waitTasks[taskIndex].progress = Math.round(
-                (event.loaded * 100) / event.total
-              );
-              this.onWaitTasksChange.emit(this.waitTasks);
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                progress: Math.round((event.loaded * 100) / event.total),
+              });
               break;
             case HttpEventType.Response:
               event.body.value.forEach((convenio: any) => {
@@ -325,10 +311,9 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 });
               });
 
-              this.waitTasks.splice(
-                this.waitTasks.findIndex((element) => element.id === taskId)
-              );
-              this.onWaitTasksChange.emit(this.waitTasks);
+              this.sharedService.removeWaitTask({
+                id: taskId,
+              });
               break;
           }
         });
@@ -360,32 +345,24 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           switch (event.type) {
             case HttpEventType.Sent:
               taskId = Utils.makeRandomString(4);
-              this.waitTasks.push({
+              this.sharedService.pushWaitTask({
                 id: taskId,
                 description: 'Cargando convenios...',
-                total: 0,
-                current: 0,
                 progress: 0,
               });
-              this.onWaitTasksChange.emit(this.waitTasks);
               break;
             case HttpEventType.DownloadProgress:
-              let taskIndex = this.waitTasks.findIndex(
-                (element) => element.id === taskId
-              );
-              this.waitTasks[taskIndex].current = event.loaded;
-              this.waitTasks[taskIndex].progress = Math.round(
-                (event.loaded * 100) / event.total
-              );
-              this.onWaitTasksChange.emit(this.waitTasks);
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                progress: Math.round((event.loaded * 100) / event.total),
+              });
               break;
             case HttpEventType.Response:
               this.convenios = event.body;
 
-              this.waitTasks.splice(
-                this.waitTasks.findIndex((element) => element.id === taskId)
-              );
-              this.onWaitTasksChange.emit(this.waitTasks);
+              this.sharedService.removeWaitTask({
+                id: taskId,
+              });
               break;
           }
         });
@@ -504,38 +481,61 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
       .postFormsFinancieraInvoice(formsFinancieraInvoice)
       .subscribe(
         (event) => {
-          let taskIndex;
           switch (event.type) {
             case HttpEventType.Sent:
               taskId = Utils.makeRandomString(4);
-              this.waitTasks.push({
+              this.sharedService.pushWaitTask({
                 id: taskId,
                 description: `Enviando ${
+                  (formsFinancieraInvoice.TipoGestion === 'Legalizacion'
+                    ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
+                    : formsFinancieraInvoice.TipoGestion).toLowerCase()
+                }...`,
+                progress: 0,
+              });
+              break;
+            case HttpEventType.UploadProgress:
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                progress: Math.round((event.loaded * 100) / event.total),
+              });
+              break;
+            case HttpEventType.ResponseHeader:
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                description: `Obteniendo la respuesta del envio de ${
+                  (formsFinancieraInvoice.TipoGestion === 'Legalizacion'
+                    ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
+                    : formsFinancieraInvoice.TipoGestion).toLowerCase()
+                }...`,
+                progress: 0,
+              });
+              break;
+            case HttpEventType.DownloadProgress:
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                progress: Math.round((event.loaded * 100) / event.total),
+              });
+              break;
+            case HttpEventType.Response:
+              this.sharedService.removeWaitTask({
+                id: taskId,
+              });
+
+              this.sharedService.pushToastMessage({
+                id: Utils.makeRandomString(4),
+                title: `${
                   formsFinancieraInvoice.TipoGestion === 'Legalizacion'
                     ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
                     : formsFinancieraInvoice.TipoGestion
-                }...`,
-                total: 0,
-                current: 0,
-                progress: 0,
+                } enviada satisfactoriamente`,
+                description: `Su ${
+                  formsFinancieraInvoice.TipoGestion === 'Legalizacion'
+                    ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
+                    : formsFinancieraInvoice.TipoGestion
+                } ha sido ingresada correctamente y sera procesada en un plazo maximo de 10 dias habiles*.`,
+                autohide: 30000,
               });
-              this.onWaitTasksChange.emit(this.waitTasks);
-              break;
-            case HttpEventType.UploadProgress:
-              taskIndex = this.waitTasks.findIndex(
-                (element) => element.id === taskId
-              );
-              this.waitTasks[taskIndex].current = event.loaded;
-              this.waitTasks[taskIndex].progress = Math.round(
-                (event.loaded * 100) / event.total
-              );
-              this.onWaitTasksChange.emit(this.waitTasks);
-              break;
-            case HttpEventType.ResponseHeader:
-              this.waitTasks.splice(
-                this.waitTasks.findIndex((element) => element.id === taskId)
-              );
-              this.onWaitTasksChange.emit(this.waitTasks);
               break;
           }
         },
