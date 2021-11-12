@@ -105,10 +105,7 @@ function financieraFlowObjectWithoutUndefined(
   return obj;
 }
 
-function coordinacionLogisticaFlowObjectWithoutUndefined(
-  _id,
-  steps
-) {
+function coordinacionLogisticaFlowObjectWithoutUndefined(_id, steps) {
   var obj = {};
 
   if (_id) {
@@ -132,6 +129,7 @@ function formsFinancieraInvoiceObjectWithoutUndefined(
   TipoLegalizacion,
   Convenio,
   InformacionAdicional,
+  ConvenioInformation,
   Configuration,
   GestionPath
 ) {
@@ -171,6 +169,10 @@ function formsFinancieraInvoiceObjectWithoutUndefined(
 
   obj.InformacionAdicional = InformacionAdicional;
 
+  if (ConvenioInformation) {
+    obj.ConvenioInformation = ConvenioInformation;
+  }
+
   if (Configuration) {
     obj.Configuration = Configuration;
   }
@@ -193,6 +195,8 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
   Email,
   Telefono,
   InformacionAdicional,
+  Requestor,
+  ConvenioInformation,
   Configuration,
   CoordinacionLogisticaPath
 ) {
@@ -235,6 +239,14 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
   }
 
   obj.InformacionAdicional = InformacionAdicional;
+
+  if (Requestor) {
+    obj.Requestor = Requestor;
+  }
+
+  if (ConvenioInformation) {
+    obj.ConvenioInformation = ConvenioInformation;
+  }
 
   if (Configuration) {
     obj.Configuration = Configuration;

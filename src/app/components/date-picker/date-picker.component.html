@@ -2,26 +2,26 @@
   <div class="col-sm-4">
     <div class="form-floating">
       <select
-        (change)="onAnoChange()"
-        [(ngModel)]="ano"
-        name="selectAno"
+        (change)="onYearChange()"
+        [(ngModel)]="year"
+        name="selectYear"
         class="form-select"
-        id="selectAno"
+        id="selectYear"
         [ngClass]="{
-          'is-valid': requiredFeedbackYear && ano,
-          'is-invalid': requiredFeedbackYear && !ano
+          'is-valid': requiredFeedbackYear && year,
+          'is-invalid': requiredFeedbackYear && !year
         }"
       >
         <option selected disabled></option>
         <option
-          *ngFor="let ano of anos"
-          [disabled]="yearIsInPass(ano)"
-          [value]="ano"
+          *ngFor="let year of years"
+          [disabled]="yearIsInThePast(year)"
+          [value]="year"
         >
-          {{ ano }}
+          {{ year }}
         </option>
       </select>
-      <label for="selectAno"
+      <label for="selectYear"
         >Año<span *ngIf="requiredFeedbackYear" class="text-danger"
           >*</span
         ></label
@@ -34,26 +34,26 @@
   <div class="col-sm-4">
     <div class="form-floating">
       <select
-        (change)="onMesChange()"
-        [(ngModel)]="mes"
-        name="selectMes"
+        (change)="onMonthChange()"
+        [(ngModel)]="month"
+        name="selectMonth"
         class="form-select"
-        id="selectMes"
+        id="selectMonth"
         [ngClass]="{
-          'is-valid': requiredFeedbackMonth && mes,
-          'is-invalid': requiredFeedbackMonth && !mes
+          'is-valid': requiredFeedbackMonth && month,
+          'is-invalid': requiredFeedbackMonth && !month
         }"
       >
         <option selected disabled></option>
         <option
-          *ngFor="let mes of meses"
-          [disabled]="mes.disabled"
-          [value]="mes.month"
+          *ngFor="let monthOfYear of monthsOfYear"
+          [disabled]="monthIsInThePast(monthOfYear.number)"
+          [value]="monthOfYear.number"
         >
-          {{ mes.month }}
+          {{ monthOfYear.month }}
         </option>
       </select>
-      <label for="selectMes"
+      <label for="selectMonth"
         >Mes<span *ngIf="requiredFeedbackMonth" class="text-danger"
           >*</span
         ></label
@@ -66,32 +66,32 @@
   <div class="col-sm-4">
     <div class="form-floating">
       <select
-        [disabled]="!mes || !ano"
-        (change)="onDiaChange()"
-        [(ngModel)]="dia"
-        name="selectDia"
+        [disabled]="!month || !year"
+        (change)="onDayChange()"
+        [(ngModel)]="day"
+        name="selectDay"
         class="form-select"
-        id="selectDia"
+        id="selectDay"
         [ngClass]="{
-          'is-valid': requiredFeedbackDay && mes && ano && dia,
-          'is-invalid': requiredFeedbackDay && mes && ano && !dia
+          'is-valid': requiredFeedbackDay && month && year && day,
+          'is-invalid': requiredFeedbackDay && month && year && !day
         }"
       >
         <option selected disabled></option>
         <option
-          *ngFor="let dia of diasDelMes"
-          [disabled]="dia.disabled"
-          [value]="dia.day"
+          *ngFor="let dayOfMonth of daysOfMonth"
+          [disabled]="dayIsInThePast(dayOfMonth)"
+          [value]="dayOfMonth"
         >
-          {{ dia.day }}
+          {{ dayOfMonth }}
         </option>
       </select>
-      <label for="selectDia"
+      <label for="selectDay"
         >Dia<span
           *ngIf="requiredFeedbackDay"
           [ngClass]="{
-            'text-light': mes === undefined || ano === undefined,
-            'text-danger': mes !== undefined && ano !== undefined
+            'text-light': !month || !year,
+            'text-danger': month && year
           }"
           >*</span
         ></label

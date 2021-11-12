@@ -11,101 +11,75 @@ export class DatePickerComponent implements OnInit {
   @Input() requiredFeedbackMonth: string = '';
   @Input() requiredFeedbackYear: string = '';
 
-  anos: number[] = [];
+  years: number[] = [];
 
-  meses: { month: string; disabled: boolean }[] = [
-    { month: 'Enero', disabled: false },
-    { month: 'Febrero', disabled: false },
-    { month: 'Marzo', disabled: false },
-    { month: 'Abril', disabled: false },
-    { month: 'Mayo', disabled: false },
-    { month: 'Junio', disabled: false },
-    { month: 'Julio', disabled: false },
-    { month: 'Agosto', disabled: false },
-    { month: 'Septiembre', disabled: false },
-    { month: 'Octubre', disabled: false },
-    { month: 'Noviembre', disabled: false },
-    { month: 'Diciembre', disabled: false },
-  ];
-  monthsString: string[] = [
-    'Enero',
-    'Febrero',
-    'Marzo',
-    'Abril',
-    'Mayo',
-    'Junio',
-    'Julio',
-    'Agosto',
-    'Septiembre',
-    'Octubre',
-    'Noviembre',
-    'Diciembre',
+  monthsOfYear: { month: string; number: number }[] = [
+    { month: 'Enero', number: 1 },
+    { month: 'Febrero', number: 2 },
+    { month: 'Marzo', number: 3 },
+    { month: 'Abril', number: 4 },
+    { month: 'Mayo', number: 5 },
+    { month: 'Junio', number: 6 },
+    { month: 'Julio', number: 7 },
+    { month: 'Agosto', number: 8 },
+    { month: 'Septiembre', number: 9 },
+    { month: 'Octubre', number: 10 },
+    { month: 'Noviembre', number: 11 },
+    { month: 'Diciembre', number: 12 },
   ];
 
-  diasDelMes: { day: number; disabled: boolean }[] = [];
+  daysOfMonth: number[] = [];
 
-  ano!: number;
+  year: number | undefined;
 
-  onAnoChange() {
-    this.mes = '';
-    this.dia = undefined;
-
-    this.meses = [
-      { month: 'Enero', disabled: this.monthIsInPass('Enero') },
-      { month: 'Febrero', disabled: this.monthIsInPass('Febrero') },
-      { month: 'Marzo', disabled: this.monthIsInPass('Marzo') },
-      { month: 'Abril', disabled: this.monthIsInPass('Abril') },
-      { month: 'Mayo', disabled: this.monthIsInPass('Mayo') },
-      { month: 'Junio', disabled: this.monthIsInPass('Junio') },
-      { month: 'Julio', disabled: this.monthIsInPass('Julio') },
-      { month: 'Agosto', disabled: this.monthIsInPass('Agosto') },
-      { month: 'Septiembre', disabled: this.monthIsInPass('Septiembre') },
-      { month: 'Octubre', disabled: this.monthIsInPass('Octubre') },
-      { month: 'Noviembre', disabled: this.monthIsInPass('Noviembre') },
-      { month: 'Diciembre', disabled: this.monthIsInPass('Diciembre') },
-    ];
+  onYearChange() {
+    this.month = undefined;
+    this.day = undefined;
   }
 
-  mes: string = '';
+  month: number | undefined;
 
-  onMesChange() {
-    var daysInMonth = new Date(
-      this.ano,
-      this.monthsString.indexOf(this.mes) + 1,
-      0
-    ).getDate();
+  onMonthChange() {
+    if (!this.year || !this.month) {
+      return;
+    }
 
-    this.dia = undefined;
-    this.diasDelMes = [];
+    const daysInMonth = new Date(this.year, this.month, 0).getDate();
+
+    this.day = undefined;
+    this.daysOfMonth = [];
     for (let i = 1; daysInMonth >= i; i++) {
-      this.diasDelMes.push({
-        day: i,
-        disabled: this.dayIsInPass(i),
-      });
+      this.daysOfMonth.push(i);
     }
   }
 
-  dia: number | undefined;
+  day: number | undefined;
 
-  onDiaChange() {
-    this.onDateChange.emit(
-      new Date(this.ano, this.monthsString.indexOf(this.mes), this.dia)
-    );
+  onDayChange() {
+    if (!this.year || !this.month) {
+      return;
+    }
+
+    this.onDateChange.emit(new Date(this.year, this.month, this.day));
   }
 
   @Output() onDateChange: EventEmitter<Date> = new EventEmitter();
 
   constructor() {}
 
+  daysInMonth(month: number, year: number) {
+    return new Date(year, month, 0).getDate();
+  }
+
   ngOnInit(): void {
     var date = new Date();
 
     for (let i = date.getFullYear(); date.getFullYear() + 1 >= i; i++) {
-      this.anos.push(i);
+      this.years.push(i);
     }
   }
 
-  yearIsInPass(year: number) {
+  yearIsInThePast(year: number) {
     if (!this.allowPass) {
       let date = new Date();
 
@@ -119,18 +93,19 @@ export class DatePickerComponent implements OnInit {
     return false;
   }
 
-  monthIsInPass(month: string) {
+  monthIsInThePast(month: number) {
+    if (!this.year) {
+      return true;
+    }
+
     if (!this.allowPass) {
       let date = new Date();
 
-      if (this.ano > date.getFullYear()) {
+      if (
+        this.year > date.getFullYear() ||
+        (this.year == date.getFullYear() && month - 1 >= date.getMonth())
+      ) {
         return false;
-      }
-
-      if (this.ano == date.getFullYear()) {
-        if (this.monthsString.indexOf(month) >= date.getMonth()) {
-          return false;
-        }
       }
 
       return true;
@@ -139,25 +114,22 @@ export class DatePickerComponent implements OnInit {
     return false;
   }
 
-  dayIsInPass(day: number) {
+  dayIsInThePast(day: number) {
+    if (!this.year || !this.month) {
+      return true;
+    }
+
     if (!this.allowPass) {
       let date = new Date();
 
-      if (this.ano > date.getFullYear()) {
-        return false;
-      }
-
-      if (this.monthsString.indexOf(this.mes) > date.getMonth()) {
-        return false;
-      }
-
       if (
-        this.ano == date.getFullYear() &&
-        this.monthsString.indexOf(this.mes) == date.getMonth()
+        this.year > date.getFullYear() ||
+        (this.year == date.getFullYear() && this.month - 1 > date.getMonth()) ||
+        (this.year == date.getFullYear() &&
+          this.month - 1 == date.getMonth() &&
+          day > date.getDate())
       ) {
-        if (day >= date.getDay()) {
-          return false;
-        }
+        return false;
       }
 
       return true;

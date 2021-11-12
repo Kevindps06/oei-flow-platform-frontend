@@ -12,4 +12,5 @@ export interface FormsCoordinacionLogistica {
   Telefono: string;
   PasaporteFiles: FileItem[];
   InformacionAdicional: string;
+  Requestor: any
 }

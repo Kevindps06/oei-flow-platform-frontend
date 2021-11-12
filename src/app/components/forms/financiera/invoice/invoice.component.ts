@@ -525,14 +525,14 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
                 title: `${
-                  formsFinancieraInvoice.TipoGestion === 'Legalizacion'
+                  (formsFinancieraInvoice.TipoGestion === 'Legalizacion'
                     ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-                    : formsFinancieraInvoice.TipoGestion
+                    : formsFinancieraInvoice.TipoGestion).toLowerCase()
                 } enviada satisfactoriamente`,
                 description: `Su ${
-                  formsFinancieraInvoice.TipoGestion === 'Legalizacion'
+                  (formsFinancieraInvoice.TipoGestion === 'Legalizacion'
                     ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-                    : formsFinancieraInvoice.TipoGestion
+                    : formsFinancieraInvoice.TipoGestion).toLowerCase()
                 } ha sido ingresada correctamente y sera procesada en un plazo maximo de 10 dias habiles*.`,
                 autohide: 30000,
               });
