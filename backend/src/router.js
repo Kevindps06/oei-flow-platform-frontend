@@ -4,8 +4,8 @@ const router = express.Router();
 const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
-//const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
-//const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
+const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
+const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
 
 // FinancieraFlow
 
