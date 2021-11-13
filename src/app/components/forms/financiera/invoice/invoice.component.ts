@@ -486,11 +486,11 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               taskId = Utils.makeRandomString(4);
               this.sharedService.pushWaitTask({
                 id: taskId,
-                description: `Enviando ${
-                  (formsFinancieraInvoice.TipoGestion === 'Legalizacion'
-                    ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-                    : formsFinancieraInvoice.TipoGestion).toLowerCase()
-                }...`,
+                description: `Enviando ${(formsFinancieraInvoice.TipoGestion ===
+                'Legalizacion'
+                  ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
+                  : formsFinancieraInvoice.TipoGestion
+                ).toLowerCase()}...`,
                 progress: 0,
               });
               break;
@@ -503,11 +503,11 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
             case HttpEventType.ResponseHeader:
               this.sharedService.pushWaitTask({
                 id: taskId,
-                description: `Obteniendo la respuesta del envio de ${
-                  (formsFinancieraInvoice.TipoGestion === 'Legalizacion'
-                    ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-                    : formsFinancieraInvoice.TipoGestion).toLowerCase()
-                }...`,
+                description: `Obteniendo la respuesta del envio de ${(formsFinancieraInvoice.TipoGestion ===
+                'Legalizacion'
+                  ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
+                  : formsFinancieraInvoice.TipoGestion
+                ).toLowerCase()}...`,
                 progress: 0,
               });
               break;
@@ -524,16 +524,15 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
 
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
-                title: `${
-                  (formsFinancieraInvoice.TipoGestion === 'Legalizacion'
-                    ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-                    : formsFinancieraInvoice.TipoGestion).toLowerCase()
-                } enviada satisfactoriamente`,
-                description: `Su ${
-                  (formsFinancieraInvoice.TipoGestion === 'Legalizacion'
-                    ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-                    : formsFinancieraInvoice.TipoGestion).toLowerCase()
-                } ha sido ingresada correctamente y sera procesada en un plazo maximo de 10 dias habiles*.`,
+                title: `${(formsFinancieraInvoice.TipoGestion === 'Legalizacion'
+                  ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
+                  : formsFinancieraInvoice.TipoGestion
+                ).toLowerCase()} enviada satisfactoriamente`,
+                description: `Su ${(formsFinancieraInvoice.TipoGestion ===
+                'Legalizacion'
+                  ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
+                  : formsFinancieraInvoice.TipoGestion
+                ).toLowerCase()} ha sido ingresada correctamente y sera procesada en un plazo maximo de 10 dias habiles*.`,
                 autohide: 30000,
               });
               break;
@@ -568,14 +567,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 Utils.validateFiles(this.informeActividadesFiles)
               );
             case 'Anticipo':
-              return (
-                (this.tipoPersona === 'Juridica'
-                  ? Utils.validateFiles(this.camaraComercioFiles)
-                  : true) &&
-                Utils.validateFiles(this.formatoSolicitudAvancesFiles) &&
-                Utils.validateFiles(this.cotizacionesFiles) &&
-                Utils.validateFiles(this.solicitudesComisionFiles)
-              );
+              return Utils.validateFiles(this.formatoSolicitudAvancesFiles);
             case 'Dieta':
               return Utils.validateFiles(this.formatoSolicitudViajesFiles);
             case 'Legalizacion':
