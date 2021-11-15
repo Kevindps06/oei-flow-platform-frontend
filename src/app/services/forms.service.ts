@@ -2,14 +2,12 @@ import { Injectable } from '@angular/core';
 import {
   HttpClient,
   HttpEventType,
-  HttpHeaders,
   HttpParams,
   HttpRequest,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { FormsFinancieraRegistration } from '../interfaces/forms-financiera-registration';
-import { Utils } from '../classes/utils';
 import { FormsJuridicaContratacion } from '../interfaces/forms-juridica-contratacion';
 import { FormsJuridicaContratacionConvenioRequest } from '../interfaces/forms-juridica-contratacion-convenio-request';
 import { environment } from 'src/environments/environment';
@@ -31,7 +29,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `http://${environment.backendAddress}/api/workflow/validateUser`,
+        `${environment.protocol}://${environment.backendAddress}/api/workflow/validateUser`,
         {
           reportProgress: true,
           params: new HttpParams().appendAll({
@@ -51,7 +49,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'POST',
-        `http://${environment.backendAddress}/api/forms/financiera/registration`,
+        `${environment.protocol}://${environment.backendAddress}/api/forms/financiera/registration`,
         formsFinancieraRegistration,
         {
           reportProgress: true,
@@ -66,7 +64,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'POST',
-        `http://${environment.backendAddress}/api/forms/financiera/invoice`,
+        `${environment.protocol}://${environment.backendAddress}/api/forms/financiera/invoice`,
         formsFinancieraInvoice,
         {
           reportProgress: true,
@@ -81,7 +79,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'POST',
-        `http://${environment.backendAddress}/api/forms/coordinacionlogistica`,
+        `${environment.protocol}://${environment.backendAddress}/api/forms/coordinacionlogistica`,
         formsCoordinacionLogistica,
         {
           reportProgress: true,
@@ -94,7 +92,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `http://${environment.backendAddress}/api/convenios`,
+        `${environment.protocol}://${environment.backendAddress}/api/convenios`,
         {
           reportProgress: true,
           params: new HttpParams().appendAll({

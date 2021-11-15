@@ -495,7 +495,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
 
   let steps = (
     await axios.default.get(
-      `http://35.171.49.111/api/configuration/financieraflow`,
+      `https://oeiprojectflow.org/api/configuration/financieraflow`,
       {
         params: {
           persona: req.body.TipoPersona,
@@ -1093,7 +1093,7 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
 
   let steps = (
     await axios.default.get(
-      `http://35.171.49.111/api/configuration/coordinacionlogisticaflow`,
+      `https://oeiprojectflow.org/api/configuration/coordinacionlogisticaflow`,
       {
         params: {},
       }
