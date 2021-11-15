@@ -60,7 +60,7 @@ export class DatePickerComponent implements OnInit {
       return;
     }
 
-    this.onDateChange.emit(new Date(this.year, this.month, this.day));
+    this.onDateChange.emit(new Date(this.year, this.month - 1, this.day));
   }
 
   @Output() onDateChange: EventEmitter<Date> = new EventEmitter();
@@ -74,8 +74,14 @@ export class DatePickerComponent implements OnInit {
   ngOnInit(): void {
     var date = new Date();
 
-    for (let i = date.getFullYear(); date.getFullYear() + 1 >= i; i++) {
-      this.years.push(i);
+    if (this.allowPass) {
+      for (let i = date.getFullYear() - 100; date.getFullYear() >= i; i++) {
+        this.years.push(i);
+      }
+    } else {
+      for (let i = date.getFullYear(); date.getFullYear() + 1 >= i; i++) {
+        this.years.push(i);
+      }
     }
   }
 

@@ -22,8 +22,10 @@ import { FormsFinancieraInvoiceComponent } from './components/forms/financiera/i
 import { GlobalHttpInterceptorService } from './services/global-http-interceptor.service';
 import { UploadFilesComponent } from './components/upload-files/upload-files.component';
 import { HomeComponent } from './components/home/home.component';
-import { CoordinacionLogisticaComponent } from './components/forms/coordinacionlogistica/coordinacionlogistica.component';
+import { FormsCoordinacionLogisticaComponent } from './components/forms/coordinacionlogistica/coordinacionlogistica.component';
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
+import { FormsCoordinacionLogisticaFillQuotationsComponent } from './components/forms/coordinacionlogistica/fill-quotations/fill-quotations.component';
+import { FormsCoordinacionLogisticaSelectQuotationComponent } from './components/forms/coordinacionlogistica/select-quotation/select-quotation.component';
 
 @NgModule({
   declarations: [
@@ -44,8 +46,10 @@ import { DatePickerComponent } from './components/date-picker/date-picker.compon
     FormsFinancieraInvoiceComponent,
     UploadFilesComponent,
     HomeComponent,
-    CoordinacionLogisticaComponent,
+    FormsCoordinacionLogisticaComponent,
     DatePickerComponent,
+    FormsCoordinacionLogisticaFillQuotationsComponent,
+    FormsCoordinacionLogisticaSelectQuotationComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [

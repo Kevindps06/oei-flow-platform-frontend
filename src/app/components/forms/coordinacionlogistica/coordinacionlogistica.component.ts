@@ -1,6 +1,5 @@
 import { HttpEventType } from '@angular/common/http';
-import { HtmlParser } from '@angular/compiler';
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Utils } from 'src/app/classes/utils';
 import { Convenio } from 'src/app/interfaces/Convenio';
@@ -15,7 +14,7 @@ import { SharedService } from 'src/app/services/shared.service';
   templateUrl: './coordinacionlogistica.component.html',
   styleUrls: ['./coordinacionlogistica.component.css'],
 })
-export class CoordinacionLogisticaComponent implements OnInit {
+export class FormsCoordinacionLogisticaComponent implements OnInit {
   convenios: Convenio[] = [];
 
   nombre: string = '';
@@ -27,13 +26,24 @@ export class CoordinacionLogisticaComponent implements OnInit {
     this.fechaIda = fechaIda;
   }
 
+  horaIda!: String;
+
   fechaVuelta: Date | undefined;
 
   setFechaVuelta(fechaVuelta: Date) {
     this.fechaVuelta = fechaVuelta;
   }
 
+  horaVuelta!: String;
+
   identification: string = '';
+
+  fechaNacimiento!: Date;
+
+  setFechaNacimiento(fechaNacimiento: Date) {
+    this.fechaNacimiento = fechaNacimiento;
+  }
+
   equipajeAdicional: boolean = false;
   email: string = '';
   telefono: string = '';
@@ -42,6 +52,12 @@ export class CoordinacionLogisticaComponent implements OnInit {
 
   setPasaporteFiles(pasaporteFiles: FileItem[]) {
     this.pasaporteFiles = pasaporteFiles;
+  }
+
+  cedulaFiles: FileItem[] = [];
+
+  setCedulaFiles(cedulaFiles: FileItem[]) {
+    this.cedulaFiles = cedulaFiles;
   }
 
   infoAdicional: string = '';
@@ -62,7 +78,7 @@ export class CoordinacionLogisticaComponent implements OnInit {
         id: Utils.makeRandomString(4),
         title: `Acceso inautorizado`,
         description: `Para ingresar a este componente es necesario contar con el acceso autorizado, inicie sesion y vuelva a intentar ingresar.`,
-        autohide: 10000
+        autohide: 10000,
       });
       return;
     }
@@ -74,12 +90,9 @@ export class CoordinacionLogisticaComponent implements OnInit {
     ) {
       this.convenios.push({
         Id: history.state.plaftformInfo.fields.Convenios[i].id,
-        Aliado:
-          history.state.plaftformInfo.fields.Convenios[i].fields.field_Aliado,
-        Numero:
-          history.state.plaftformInfo.fields.Convenios[i].fields.field_Numero,
-        Mostrar:
-          history.state.plaftformInfo.fields.Convenios[i].fields.field_Mostrar,
+        Aliado: history.state.plaftformInfo.fields.Convenios[i].fields.Aliado,
+        Numero: history.state.plaftformInfo.fields.Convenios[i].fields.Numero,
+        Mostrar: history.state.plaftformInfo.fields.Convenios[i].fields.Mostrar,
       });
     }
   }
@@ -90,12 +103,16 @@ export class CoordinacionLogisticaComponent implements OnInit {
       Nombre: this.nombre,
       Convenio: this.convenio,
       Ida: this.fechaIda,
+      HorarioIda: this.horaIda,
       Vuelta: this.fechaVuelta,
+      HorarioVuelta: this.horaVuelta,
       Identificator: this.identification,
+      FechaNacimiento: this.fechaNacimiento,
       EquipajeAdicional: this.equipajeAdicional,
       Email: this.email,
       Telefono: this.telefono,
       PasaporteFiles: this.pasaporteFiles,
+      CedulaFiles: this.cedulaFiles,
       InformacionAdicional: this.infoAdicional,
       Requestor: history.state.userInfo,
     };
@@ -105,7 +122,6 @@ export class CoordinacionLogisticaComponent implements OnInit {
       .postFormsCoordinacionLogistica(formsCoordinacionLogistica)
       .subscribe(
         (event) => {
-          let taskIndex;
           switch (event.type) {
             case HttpEventType.Sent:
               taskId = Utils.makeRandomString(4);
@@ -142,7 +158,7 @@ export class CoordinacionLogisticaComponent implements OnInit {
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
                 title: `Coordinacion logistica enviada satisfactoriamente`,
-                description: `Su coordinacion logistica ha sido ingresada correctamente y sera procesada muy pronto.`,
+                description: `Su coordinacion logistica ha sido ingresada correctamente y sera procesada muy pronto, este atento de su correo electronico por el cual se le notificara del estado y manera de validacion de la peticion.`,
                 autohide: 30000,
               });
 
@@ -159,14 +175,19 @@ export class CoordinacionLogisticaComponent implements OnInit {
   }
 
   isValid() {
-    return (
-      this.nombre &&
+    return this.nombre &&
       this.convenio &&
       this.fechaIda &&
-      (this.identification.length === 8 || this.identification.length === 10) &&
-      Utils.validateEmail(this.email) &&
-      this.telefono.length === 10 &&
-      this.pasaporteFiles.length > 0
-    );
+      this.horaIda &&
+      this.fechaVuelta
+      ? this.horaVuelta
+      : true &&
+          (this.identification.length === 8 ||
+            this.identification.length === 10) &&
+          this.fechaNacimiento &&
+          Utils.validateEmail(this.email) &&
+          this.telefono.length === 10 &&
+          Utils.validateFiles(this.pasaporteFiles) &&
+          Utils.validateFiles(this.cedulaFiles);
   }
 }

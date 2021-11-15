@@ -4,10 +4,11 @@ const router = express.Router();
 const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
+const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
 const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
 const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
 
-// FinancieraFlow
+// Configuration - FinancieraFlow
 
 router.post("/configuration/financieraflow", async (req, res) => {
   try {
@@ -79,7 +80,7 @@ router.delete("/configuration/financieraflow", async (req, res) => {
   }
 });
 
-// CoordinacionLogisticaFlow
+// Configuration - CoordinacionLogisticaFlow
 
 router.post("/configuration/coordinacionlogisticaflow", async (req, res) => {
   try {
@@ -136,6 +137,123 @@ router.delete("/configuration/coordinacionlogisticaflow", async (req, res) => {
       );
 
     res.status(200).json(coordinacionLogisticaFlow);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Forms - CoordinacionesLogisticas
+
+router.post("/forms/coordinacioneslogisticas", async (req, res) => {
+  try {
+    const coordinacionLogistica = new CoordinacionLogistica(req.body);
+
+    await coordinacionLogistica.save();
+
+    res.status(201).json(coordinacionLogistica);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/forms/coordinacioneslogisticas", async (req, res) => {
+  try {
+    const coordinacionLogistica = await CoordinacionLogistica.find(
+      utils.formsCoordinacionesLogisticasObjectWithoutUndefined(
+        req.query._id,
+        req.query.Id,
+        req.query.Nombre,
+        req.query.Convenio,
+        req.query.Ida,
+        req.query.HorarioIda,
+        req.query.Vuelta,
+        req.query.HorarioVuelta,
+        req.query.Identificator,
+        req.query.FechaNacimiento,
+        req.query.EquipajeAdicional,
+        req.query.Email,
+        req.query.Telefono,
+        req.query.InformacionAdicional,
+        req.query.Requestor,
+        req.query.ConvenioInformation,
+        req.query.Configuration,
+        req.query.CoordinacionLogisticaPath,
+        req.query.SharePointFiles,
+        req.query.Keys,
+        req.query.Quotations
+      )
+    );
+
+    res.status(200).json(coordinacionLogistica);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.put("/forms/coordinacioneslogisticas", async (req, res) => {
+  try {
+    const coordinacionLogistica = await CoordinacionLogistica.updateMany(
+      utils.formsCoordinacionesLogisticasObjectWithoutUndefined(
+        req.query._id,
+        req.query.Id,
+        req.query.Nombre,
+        req.query.Convenio,
+        req.query.Ida,
+        req.query.HorarioIda,
+        req.query.Vuelta,
+        req.query.HorarioVuelta,
+        req.query.Identificator,
+        req.query.FechaNacimiento,
+        req.query.EquipajeAdicional,
+        req.query.Email,
+        req.query.Telefono,
+        req.query.InformacionAdicional,
+        req.query.Requestor,
+        req.query.ConvenioInformation,
+        req.query.Configuration,
+        req.query.CoordinacionLogisticaPath,
+        req.query.SharePointFiles,
+        req.query.Keys,
+        req.query.Quotations
+      ),
+      req.body
+    );
+
+    res.status(200).json(coordinacionLogistica);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.delete("/forms/coordinacioneslogisticas", async (req, res) => {
+  try {
+    const coordinacionLogistica = await CoordinacionLogistica.deleteMany(
+      utils.coordinacionLogisticaFlowObjectWithoutUndefined(
+        req.query._id,
+        req.query.Id,
+        req.query.Nombre,
+        req.query.Convenio,
+        req.query.Ida,
+        req.query.HorarioIda,
+        req.query.Vuelta,
+        req.query.HorarioVuelta,
+        req.query.Identificator,
+        req.query.FechaNacimiento,
+        req.query.EquipajeAdicional,
+        req.query.Email,
+        req.query.Telefono,
+        req.query.InformacionAdicional,
+        req.query.Requestor,
+        req.query.ConvenioInformation,
+        req.query.Configuration,
+        req.query.CoordinacionLogisticaPath,
+        req.query.SharePointFiles,
+        req.query.Keys,
+        req.query.Quotations
+      )
+    );
+
+    res.status(200).json(coordinacionLogistica);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -274,7 +392,7 @@ router.get("/workflow/validateUser", async (req, res) => {
 router.get("/platform/validateUser", async (req, res) => {
   const authResponse = await auth.getToken(auth.tokenRequest);
   const response = await axios.default.get(
-    `https://graph.microsoft.com/v1.0/sites/${process.env.WORKFLOW_OEI_SITE_ID}/lists/${process.env.WORKFLOW_OEI_SITE_USERINFORMATION_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/EMail eq '${req.query.email}'`,
+    `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_USERINFORMATION_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/EMail eq '${req.query.email}'`,
     {
       headers: {
         Authorization: "Bearer " + authResponse.accessToken,
@@ -286,7 +404,7 @@ router.get("/platform/validateUser", async (req, res) => {
   if (response.data.value.length > 0) {
     const authResponse2 = await auth.getToken(auth.tokenRequest);
     const response2 = await axios.default.get(
-      `https://graph.microsoft.com/v1.0/sites/${process.env.WORKFLOW_OEI_SITE_ID}/lists/${process.env.WORKFLOW_OEI_SITE_PLATFORMUSERS_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/UserLookupId eq '${response.data.value[0].id}' and fields/Password eq '${req.query.password}'`,
+      `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_PLATFORMUSERS_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/UserLookupId eq '${response.data.value[0].id}' and fields/Password eq '${req.query.password}'`,
       {
         headers: {
           Authorization: "Bearer " + authResponse2.accessToken,
@@ -305,7 +423,7 @@ router.get("/platform/validateUser", async (req, res) => {
         if (response2.data.value[0].fields.Convenios[i] !== undefined) {
           const authResponse3 = await auth.getToken(auth.tokenRequest);
           const response3 = await axios.default.get(
-            `https://graph.microsoft.com/v1.0/sites/${process.env.WORKFLOW_OEI_SITE_ID}/lists/${process.env.WORKFLOW_OEI_SITE_CONVENIOS_LIST_ID}/items/${response2.data.value[0].fields.Convenios[i].LookupId}?$select=id&$expand=fields`,
+            `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items/${response2.data.value[0].fields.Convenios[i].LookupId}?$select=id&$expand=fields`,
             {
               headers: {
                 Authorization: "Bearer " + authResponse3.accessToken,
@@ -345,17 +463,17 @@ router.post("/forms/financiera/registration", async (req, res) => {
   if (req.body.TipoPersona === "Natural") {
     formsFinancieraRegistration = Object.assign(formsFinancieraRegistration, {
       "Numero de cedula de ciudadania": req.body.Identificator,
-      RUT: req.body["RutFiles"],
-      Cedula: req.body["CedulaFiles"],
-      "Certificacion bancaria": req.body["CertificacionBancariaFiles"],
+      RUT: req.body.RutFiles,
+      Cedula: req.body.CedulaFiles,
+      "Certificacion bancaria": req.body.CertificacionBancariaFiles,
     });
   } else {
     formsFinancieraRegistration = Object.assign(formsFinancieraRegistration, {
       "NIT (Con digito de verificacion y previamente registrado) Ej. 890507890-4":
         req.body.Identificator,
-      RUT: req.body["RutFiles"],
-      "Cedula representante legal": req.body["CedulaFiles"],
-      "Certificacion bancaria": req.body["CertificacionBancariaFiles"],
+      RUT: req.body.RutFiles,
+      "Cedula representante legal": req.body.CedulaFiles,
+      "Certificacion bancaria": req.body.CertificacionBancariaFiles,
     });
   }
 
@@ -375,7 +493,7 @@ router.post("/forms/financiera/registration", async (req, res) => {
 router.post("/forms/financiera/invoice", async (req, res) => {
   let configuration = [];
 
-  /*let steps = (
+  let steps = (
     await axios.default.get(
       `http://35.171.49.111/api/configuration/financieraflow`,
       {
@@ -387,9 +505,9 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         },
       }
     )
-  ).data[0].steps;*/
+  ).data[0].steps;
 
-  let steps = (
+  /*let steps = (
     await FinancieraFlow.find(
       utils.financieraFlowObjectWithoutUndefined(
         req.query._id,
@@ -400,7 +518,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         req.query.steps
       )
     )
-  )[0].steps;
+  )[0].steps;*/
 
   const authResponseConvenio = await auth.getToken(auth.tokenRequest);
   const convenio = (
@@ -973,23 +1091,23 @@ router.post("/forms/financiera/invoice", async (req, res) => {
 router.post("/forms/coordinacionlogistica", async (req, res) => {
   let configuration = [];
 
-  /*let steps = (
+  let steps = (
     await axios.default.get(
       `http://35.171.49.111/api/configuration/coordinacionlogisticaflow`,
       {
         params: {},
       }
     )
-  ).data[0].steps;*/
+  ).data[0].steps;
 
-  let steps = (
+  /*let steps = (
     await CoordinacionLogisticaFlow.find(
       utils.coordinacionLogisticaFlowObjectWithoutUndefined(
         req.query._id,
         req.query.steps
       )
     )
-  )[0].steps;
+  )[0].steps;*/
 
   const authResponseConvenio = await auth.getToken(auth.tokenRequest);
   const convenio = (
@@ -1030,7 +1148,10 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
         }/lists/${
           process.env.FINANCIERA_OEI_SITE_USERINFORMATION_LIST_ID
         }/items/${
-          convenio[steps[i].key][exception ? exception.encargado : 0].LookupId
+          steps[i].requestor
+            ? req.body.Requestor.id
+            : convenio[steps[i].key][exception ? exception.encargado : 0]
+                .LookupId
         }`,
         {
           headers: {
@@ -1063,13 +1184,23 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
         month: "long",
         day: "numeric",
       }),
-      new Date(req.body.Vuelta).toLocaleDateString("es-CO", {
+      req.body.HorarioIda,
+      req.body.Vuelta
+        ? new Date(req.body.Vuelta).toLocaleDateString("es-CO", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        : undefined,
+      req.body.HorarioVuelta,
+      req.body.Identificator,
+      new Date(req.body.FechaNacimiento).toLocaleDateString("es-CO", {
         weekday: "long",
         year: "numeric",
         month: "long",
         day: "numeric",
       }),
-      req.body.Identificator,
       req.body.EquipajeAdicional,
       req.body.Email,
       req.body.Telefono,
@@ -1090,7 +1221,20 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
     );
   }
 
-  var promiseResponses = await Promise.all([...pasaporteFilesPromises]);
+  var cedulaFilesPromises = [];
+  for (let i = 0; req.body.CedulaFiles.length > i; i++) {
+    cedulaFilesPromises.push(
+      utils.uploadFileToSharePointWorkflowOEI(
+        `${coordinacionLogisticaPath}/Cedula/${i}. ${req.body.CedulaFiles[i].Name}`,
+        req.body.CedulaFiles[i].Bytes
+      )
+    );
+  }
+
+  var promiseResponses = await Promise.all([
+    ...pasaporteFilesPromises,
+    ...cedulaFilesPromises,
+  ]);
 
   PasaporteSharePointFiles = [];
 
@@ -1099,11 +1243,27 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
     PasaporteSharePointFiles.push(promiseResponses[i].data);
   }
 
+  CedulaSharePointFiles = [];
+
+  var promiseResponsesOffSet =
+    promiseResponsesOffSet + pasaporteFilesPromises.length;
+  for (
+    let i = promiseResponsesOffSet;
+    promiseResponsesOffSet + cedulaFilesPromises.length > i;
+    i++
+  ) {
+    CedulaSharePointFiles.push(promiseResponses[i].data);
+  }
+
   formsCoordinacionLogistica = Object.assign(formsCoordinacionLogistica, {
     SharePointFiles: [
       {
         Name: "Pasaporte",
         Files: PasaporteSharePointFiles,
+      },
+      {
+        Name: "Cedula",
+        Files: CedulaSharePointFiles,
       },
     ],
   });

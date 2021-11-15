@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  backendAddress: '192.168.0.7',
+  backendAddress: '192.168.0.6',
 };
 
 /*

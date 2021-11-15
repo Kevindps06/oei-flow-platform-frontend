@@ -14,21 +14,16 @@
     <div class="card-body">
       <div class="row g-3">
         <div class="col-12">
-          <h4 class="card-title text-center" style="white-space: pre-wrap">
+          <h5 class="card-title text-center" style="white-space: pre-wrap">
             {{ title }}
-          </h4>
+          </h5>
         </div>
         <div class="col-12">
           <p class="card-text" style="white-space: pre-wrap">
             {{ description }}
           </p>
         </div>
-      </div>
-    </div>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item"></li>
-      <li class="list-group-item">
-        <div class="mt-3">
+        <div class="col-12">
           <app-forms-financiera-registration
             *ngIf="isRoute('/forms/financiera/registration')"
             (onWaitTasksChange)="setWaitTasks($event)"
@@ -36,13 +31,25 @@
           </app-forms-financiera-registration>
           <app-forms-financiera-invoice
             *ngIf="isRoute('/forms/financiera/invoice')"
-            (onWaitTasksChange)="setWaitTasks($event)"
           ></app-forms-financiera-invoice>
           <app-forms-coordinacionlogistica
             *ngIf="isRoute('/forms/coordinacionlogistica')"
-            (onWaitTasksChange)="setWaitTasks($event)"
           >
           </app-forms-coordinacionlogistica>
+          <app-forms-coordinacionlogistica-fillquotations
+            *ngIf="
+              startWithRoute('/forms/coordinacionlogistica/') &&
+              endWithRoute('/fillquotations')
+            "
+          >
+          </app-forms-coordinacionlogistica-fillquotations>
+          <app-forms-coordinacionlogistica-selectquotation
+            *ngIf="
+              startWithRoute('/forms/coordinacionlogistica/') &&
+              endWithRoute('/selectquotation')
+            "
+          >
+          </app-forms-coordinacionlogistica-selectquotation>
           <app-forms-juridica-contratacion-convenio-request
             *ngIf="isRoute('/forms/juridica/contratacion/convenio/request')"
             [convenios]="convenios"
@@ -54,7 +61,7 @@
             (onWaitTasksChange)="setWaitTasks($event)"
           ></app-forms-juridica-contratacion-request>
         </div>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,0 +1,109 @@
+<div id="firstElement" class="row g-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-12">
+            <h5 class="card-title text-center">
+              Actualizar reservas de la peticion
+            </h5>
+          </div>
+          <div class="col-12">
+            <div class="form-floating">
+              <input
+                [(ngModel)]="aerolinea"
+                type="text"
+                class="form-control"
+                name="inputAerolinea"
+                id="inputAerolinea"
+                placeholder="\0"
+                maxlength="255"
+                [ngClass]="{ 'is-valid': aerolinea, 'is-invalid': !aerolinea }"
+              />
+              <label for="inputAerolinea"
+                >Aerolinea<span class="text-danger">*</span></label
+              >
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-floating">
+              <input
+                [(ngModel)]="trayecto"
+                type="text"
+                class="form-control"
+                name="inputTrayecto"
+                id="inputTrayecto"
+                placeholder="\0"
+                maxlength="255"
+                [ngClass]="{ 'is-valid': trayecto, 'is-invalid': !trayecto }"
+              />
+              <label for="inputTrayecto"
+                >Trayecto<span class="text-danger">*</span></label
+              >
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-floating">
+              <input
+                [(ngModel)]="costo"
+                type="text"
+                class="form-control"
+                name="inputCosto"
+                id="inputCosto"
+                placeholder="\0"
+                [OnlyNumbers]="true"
+                maxlength="255"
+                [ngClass]="{
+                  'is-valid': costo > 0,
+                  'is-invalid': costo < 1 || !costo
+                }"
+              />
+              <label for="inputCosto"
+                >Costo<span class="text-danger">*</span></label
+              >
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="d-grid gap-2 col-6 mx-auto mb-2">
+    <button
+      href="#firstElement"
+      [disabled]="!isValid()"
+      (click)="btnAddClick()"
+      class="btn btn-primary"
+    >
+      Añadir
+    </button>
+  </div>
+  <div *ngIf="quotations.length > 0" class="col-12">
+    <table class="table table-dark">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Aerolinea</th>
+          <th scope="col">Trayecto</th>
+          <th scope="col">Costo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let quotation of quotations">
+          <th scope="row">{{ quotation.Number }}</th>
+          <td>{{ quotation.Aerolinea }}</td>
+          <td>{{ quotation.Trayecto }}</td>
+          <td>{{ quotation.Costo }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

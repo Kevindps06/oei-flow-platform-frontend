@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
         }
 
         if (waitTask.progress === 100) {
-          this.waitTasks[taskIndex].description = "Finalizando...";
+          this.waitTasks[taskIndex].description = "Su peticion se encuentra siendo procesada, por favor espere...";
         }
 
         this.waitTasks[taskIndex].progress = waitTask.progress;
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
                 )
               );
             },
-            toastMessage.autohide ? toastMessage.autohide : 5000
+            toastMessage.autohide ? toastMessage.autohide : 6500
           );
         }
       }

@@ -1,4 +1,3 @@
-const fs = require("fs");
 const axios = require("axios");
 const auth = require("../apis/microsoft/auth");
 
@@ -189,8 +188,11 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
   Nombre,
   Convenio,
   Ida,
+  HorarioIda,
   Vuelta,
+  HorarioVuelta,
   Identificator,
+  FechaNacimiento,
   EquipajeAdicional,
   Email,
   Telefono,
@@ -218,12 +220,24 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
     obj.Ida = Ida;
   }
 
+  if (HorarioIda) {
+    obj.HorarioIda = HorarioIda;
+  }
+
   if (Vuelta) {
     obj.Vuelta = Vuelta;
   }
 
+  if (HorarioVuelta) {
+    obj.HorarioVuelta = HorarioVuelta;
+  }
+
   if (Identificator) {
     obj.Identificator = Identificator;
+  }
+
+  if (FechaNacimiento) {
+    obj.FechaNacimiento = FechaNacimiento;
   }
 
   if (EquipajeAdicional) {
@@ -259,6 +273,116 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
   return obj;
 }
 
+function formsCoordinacionesLogisticasObjectWithoutUndefined(
+  _id,
+  Id,
+  Nombre,
+  Convenio,
+  Ida,
+  HorarioIda,
+  Vuelta,
+  HorarioVuelta,
+  Identificator,
+  FechaNacimiento,
+  EquipajeAdicional,
+  Email,
+  Telefono,
+  InformacionAdicional,
+  Requestor,
+  ConvenioInformation,
+  Configuration,
+  CoordinacionLogisticaPath,
+  SharePointFiles,
+  Keys,
+  Quotations
+) {
+  var obj = {};
+
+  if (_id) {
+    obj._id = _id;
+  }
+
+  if (Id) {
+    obj.Id = Id;
+  }
+
+  if (Nombre) {
+    obj.Nombre = Nombre;
+  }
+
+  if (Convenio) {
+    obj.Convenio = Convenio;
+  }
+
+  if (Ida) {
+    obj.Ida = Ida;
+  }
+
+  if (HorarioIda) {
+    obj.HorarioIda = HorarioIda;
+  }
+
+  if (Vuelta) {
+    obj.Vuelta = Vuelta;
+  }
+
+  if (HorarioVuelta) {
+    obj.HorarioVuelta = HorarioVuelta;
+  }
+
+  if (Identificator) {
+    obj.Identificator = Identificator;
+  }
+
+  if (FechaNacimiento) {
+    obj.FechaNacimiento = FechaNacimiento;
+  }
+
+  if (EquipajeAdicional) {
+    obj.EquipajeAdicional = EquipajeAdicional;
+  }
+
+  if (Email) {
+    obj.Email = Email;
+  }
+
+  if (Telefono) {
+    obj.Telefono = Telefono;
+  }
+
+  obj.InformacionAdicional = InformacionAdicional;
+
+  if (Requestor) {
+    obj.Requestor = Requestor;
+  }
+
+  if (ConvenioInformation) {
+    obj.ConvenioInformation = ConvenioInformation;
+  }
+
+  if (Configuration) {
+    obj.Configuration = Configuration;
+  }
+
+  if (CoordinacionLogisticaPath) {
+    obj.CoordinacionLogisticaPath = CoordinacionLogisticaPath;
+  }
+
+  if (SharePointFiles) {
+    obj.SharePointFiles = SharePointFiles;
+  }
+
+  if (Keys) {
+    obj.Keys = Keys;
+  }
+
+  if (Quotations) {
+    obj.Quotations = Quotations;
+  }
+
+  return obj;
+}
+
 module.exports = {
   uploadFileToSharePointWorkflowOEI: uploadFileToSharePointWorkflowOEI,
   makeRandomString: makeRandomString,
@@ -269,4 +393,6 @@ module.exports = {
     formsFinancieraInvoiceObjectWithoutUndefined,
   formsCoordinacionLogisticaObjectWithoutUndefined:
     formsCoordinacionLogisticaObjectWithoutUndefined,
+  formsCoordinacionesLogisticasObjectWithoutUndefined:
+    formsCoordinacionesLogisticasObjectWithoutUndefined,
 };
