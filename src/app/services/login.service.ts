@@ -10,6 +10,9 @@ export class LoginService {
   constructor(private http: HttpClient) {}
 
   validateUser(email: string, password: string): Observable<any> {
+    console.log('Protocol:', environment.protocol)
+    console.log('Backend Address:', environment.backendAddress);
+
     return this.http.request(
       new HttpRequest(
         'GET',
