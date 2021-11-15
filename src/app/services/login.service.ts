@@ -7,18 +7,13 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class LoginService {
-  user: any | undefined;
-
   constructor(private http: HttpClient) {}
 
-  validateUser(
-    email: string,
-    password: string,
-  ): Observable<any> {
+  validateUser(email: string, password: string): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `http://${environment.backendAddress}/api/platform/validateUser`,
+        `${environment.protocol}://${environment.backendAddress}/api/platform/validateUser`,
         {
           reportProgress: true,
           params: new HttpParams().appendAll({
