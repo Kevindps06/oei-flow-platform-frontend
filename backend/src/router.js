@@ -839,9 +839,143 @@ router.post("/forms/financiera/invoice", async (req, res) => {
           ],
         });
         break;
+      case "Legalizacion":
+        switch (req.body.TipoLegalizacion) {
+          case "Desplazamiento":
+            var formatoLegalizacionViajesFilesPromises = [];
+            for (
+              let i = 0;
+              req.body.FormatoLegalizacionViajesFiles.length > i;
+              i++
+            ) {
+              formatoLegalizacionViajesFilesPromises.push(
+                utils.uploadFileToSharePointWorkflowOEI(
+                  `${gestionPath}/Formato de legalizacion de viajes/${i}. ${req.body.FormatoLegalizacionViajesFiles[i].Name}`,
+                  req.body.FormatoLegalizacionViajesFiles[i].Bytes
+                )
+              );
+            }
+
+            var soportesFacturasFilesPromises = [];
+            for (let i = 0; req.body.SoportesFacturasFiles.length > i; i++) {
+              soportesFacturasFilesPromises.push(
+                utils.uploadFileToSharePointWorkflowOEI(
+                  `${gestionPath}/Soportes facturas/${i}. ${req.body.SoportesFacturasFiles[i].Name}`,
+                  req.body.SoportesFacturasFiles[i].Bytes
+                )
+              );
+            }
+
+            var pasabordosTiquetesAereosFilesPromises = [];
+            for (
+              let i = 0;
+              req.body.PasabordosTiquetesAereosFiles.length > i;
+              i++
+            ) {
+              pasabordosTiquetesAereosFilesPromises.push(
+                utils.uploadFileToSharePointWorkflowOEI(
+                  `${gestionPath}/Pasabordos tiquetes aereos/${i}. ${req.body.PasabordosTiquetesAereosFiles[i].Name}`,
+                  req.body.PasabordosTiquetesAereosFiles[i].Bytes
+                )
+              );
+            }
+
+            var informeActividadesFilesPromises = [];
+            for (let i = 0; req.body.InformeActividadesFiles.length > i; i++) {
+              informeActividadesFilesPromises.push(
+                utils.uploadFileToSharePointWorkflowOEI(
+                  `${gestionPath}/Informe de actividades/${i}. ${req.body.InformeActividadesFiles[i].Name}`,
+                  req.body.InformeActividadesFiles[i].Bytes
+                )
+              );
+            }
+
+            var promiseResponses = await Promise.all([
+              ...formatoLegalizacionViajesFilesPromises,
+              ...soportesFacturasFilesPromises,
+              ...pasabordosTiquetesAereosFilesPromises,
+              ...informeActividadesFilesPromises,
+            ]);
+
+            FormatoLegalizacionViajesSharePointFiles = [];
+            SoportesFacturasSharePointFiles = [];
+            PasabordosTiquetesAereosSharePointFiles = [];
+            InformeActividadesSharePointFiles = [];
+
+            var promiseResponsesOffSet = 0;
+            for (
+              let i = promiseResponsesOffSet;
+              formatoLegalizacionViajesFilesPromises.length > i;
+              i++
+            ) {
+              FormatoLegalizacionViajesSharePointFiles.push(
+                promiseResponses[i].data
+              );
+            }
+
+            promiseResponsesOffSet =
+              promiseResponsesOffSet +
+              formatoLegalizacionViajesFilesPromises.length;
+            for (
+              let i = promiseResponsesOffSet;
+              promiseResponsesOffSet + soportesFacturasFilesPromises.length > i;
+              i++
+            ) {
+              SoportesFacturasSharePointFiles.push(promiseResponses[i].data);
+            }
+
+            promiseResponsesOffSet =
+              promiseResponsesOffSet + soportesFacturasFilesPromises.length;
+            for (
+              let i = promiseResponsesOffSet;
+              promiseResponsesOffSet +
+                pasabordosTiquetesAereosFilesPromises.length >
+              i;
+              i++
+            ) {
+              PasabordosTiquetesAereosSharePointFiles.push(
+                promiseResponses[i].data
+              );
+            }
+
+            promiseResponsesOffSet =
+              promiseResponsesOffSet +
+              pasabordosTiquetesAereosFilesPromises.length;
+            for (
+              let i = promiseResponsesOffSet;
+              promiseResponsesOffSet + informeActividadesFilesPromises.length >
+              i;
+              i++
+            ) {
+              InformeActividadesSharePointFiles.push(promiseResponses[i].data);
+            }
+
+            formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
+              SharePointFiles: [
+                {
+                  Name: "Formato de legalizacion de viajes",
+                  Files: FormatoLegalizacionViajesSharePointFiles,
+                },
+                {
+                  Name: "Soportes facturas",
+                  Files: SoportesFacturasSharePointFiles,
+                },
+                {
+                  Name: "Pasabordos tiquetes aereos",
+                  Files: PasabordosTiquetesAereosSharePointFiles,
+                },
+                {
+                  Name: "Informe de actividades",
+                  Files: InformeActividadesSharePointFiles,
+                },
+              ],
+            });
+            break;
+        }
+        break;
     }
   } else {
-    switch (req.body.TipoSoporteContable) {
+    switch (req.body.TipoGestion) {
       case "Cuenta de cobro":
         var cuentaCobroFilesPromises = [];
         for (let i = 0; req.body.CuentaCobroFiles.length > i; i++) {
@@ -1097,24 +1231,24 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
   let configuration = [];
 
   // For localhost testing only
-  /*let steps = (
+  let steps = (
     await axios.default.get(
       `https://oeiprojectflow.org/api/configuration/coordinacionlogisticaflow`,
       {
         params: {},
       }
     )
-  ).data[0].steps;*/
+  ).data[0].steps;
 
   // Production direct with database
-  let steps = (
+  /*let steps = (
     await CoordinacionLogisticaFlow.find(
       utils.coordinacionLogisticaFlowObjectWithoutUndefined(
         req.query._id,
         req.query.steps
       )
     )
-  )[0].steps;
+  )[0].steps;*/
 
   const authResponseConvenio = await auth.getToken(auth.tokenRequest);
   const convenio = (
@@ -1280,36 +1414,36 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
   });
 
   //while (true) {
-    try {
-      let promises = [];
+  try {
+    let promises = [];
 
-      // For localhost testing only
-      promises.push(
-        axios.default.post(
-          `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
-          formsCoordinacionLogistica
-        )
-      );
+    // For localhost testing only
+    promises.push(
+      axios.default.post(
+        `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
+        formsCoordinacionLogistica
+      )
+    );
 
-      // Production direct with database
-      /*const coordinacionLogistica = new CoordinacionLogistica(
+    // Production direct with database
+    /*const coordinacionLogistica = new CoordinacionLogistica(
         formsCoordinacionLogistica
       );
       promises.push(coordinacionLogistica.save());*/
 
-      /*promises.push(
+    /*promises.push(
         axios.default.post(
           `https://prod-10.brazilsouth.logic.azure.com:443/workflows/d9284b8deff34c34b78c7309cbeb0f45/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xt5QdZEYOiWUAmAfu-ykUU1oMDBm2bKT9yUBS0k63sw`,
           [formsCoordinacionLogistica]
         )
       );*/
 
-      await Promise.all(promises);
+    await Promise.all(promises);
 
-      //break;
-    } catch (err) {
-      console.log(err);
-    }
+    //break;
+  } catch (err) {
+    console.log(err);
+  }
   //}
 
   res.status(201).send();

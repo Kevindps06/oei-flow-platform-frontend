@@ -14,6 +14,7 @@ import { Convenio } from 'src/app/interfaces/Convenio';
 import { FormsFinancieraInvoice } from 'src/app/interfaces/forms-financiera-invoice';
 import { ToastMessage } from 'src/app/interfaces/toast-message';
 import { SharedService } from 'src/app/services/shared.service';
+import { defaultIfEmpty } from 'rxjs/operators';
 
 @Component({
   selector: 'app-forms-financiera-invoice',
@@ -107,6 +108,34 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
 
   setFormatoSolicitudViajesFiles(formatoSolicitudViajesFiles: FileItem[]) {
     this.formatoSolicitudViajesFiles = formatoSolicitudViajesFiles;
+  }
+
+  // Legalizacion - Desplazamiento
+
+  formatoLegalizacionViajesFiles: FileItem[] = [];
+
+  setFormatoLegalizacionViajesFiles(
+    formatoLegalizacionViajesFiles: FileItem[]
+  ) {
+    this.formatoLegalizacionViajesFiles = formatoLegalizacionViajesFiles;
+  }
+
+  soportesFacturasFiles: FileItem[] = [];
+
+  setSoportesFacturasFiles(soportesFacturasFiles: FileItem[]) {
+    this.soportesFacturasFiles = soportesFacturasFiles;
+  }
+
+  pasabordosTiquetesAereosFiles: FileItem[] = [];
+
+  setPasabordosTiquetesAereosFiles(pasabordosTiquetesAereosFiles: FileItem[]) {
+    this.pasabordosTiquetesAereosFiles = pasabordosTiquetesAereosFiles;
+  }
+
+  informeActividades2Files: FileItem[] = [];
+
+  setInformeActividades2Files(informeActividades2Files: FileItem[]) {
+    this.informeActividades2Files = informeActividades2Files;
   }
 
   infoAdicional: string = '';
@@ -335,18 +364,25 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
             this.formatoSolicitudViajesFiles = [];
             break;
           case 'Legalizacion':
+            switch (this.tipoLegalizacion) {
+              case 'Desplazamiento':
+                this.formatoLegalizacionViajesFiles = [];
+                this.soportesFacturasFiles = [];
+                this.pasabordosTiquetesAereosFiles = [];
+                this.informeActividades2Files = [];
+                break;
+            }
             break;
           default:
             break;
         }
         // Load form index 3 values
         var taskId: string;
-        this.formsService.getConvenios(true).subscribe((event) => {
+        this.formsService.getConvenios().subscribe((event) => {
           switch (event.type) {
             case HttpEventType.Sent:
-              taskId = Utils.makeRandomString(4);
               this.sharedService.pushWaitTask({
-                id: taskId,
+                id: (taskId = Utils.makeRandomString(4)),
                 description: 'Cargando convenios...',
                 progress: 0,
               });
@@ -358,7 +394,14 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               });
               break;
             case HttpEventType.Response:
-              this.convenios = event.body;
+              event.body.value.forEach((convenio: any) => {
+                this.convenios.push({
+                  Id: convenio.id,
+                  Aliado: convenio.fields.Aliado,
+                  Numero: convenio.fields.Numero,
+                  Mostrar: convenio.fields.Mostrar,
+                });
+              });
 
               this.sharedService.removeWaitTask({
                 id: taskId,
@@ -430,6 +473,25 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           });
           // Cleaning fields because information has been saved
           this.formatoSolicitudViajesFiles = [];
+          break;
+        case 'Legalizacion':
+          switch (this.tipoLegalizacion) {
+            case 'Desplazamiento':
+              formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
+                FormatoLegalizacionViajesFiles:
+                  this.formatoLegalizacionViajesFiles,
+                SoportesFacturasFiles: this.soportesFacturasFiles,
+                PasabordosTiquetesAereosFiles:
+                  this.pasabordosTiquetesAereosFiles,
+                InformeActividadesFiles: this.informeActividades2Files,
+              });
+              // Cleaning fields because information has been saved
+              this.formatoLegalizacionViajesFiles = [];
+              this.soportesFacturasFiles = [];
+              this.pasabordosTiquetesAereosFiles = [];
+              this.informeActividades2Files = [];
+              break;
+          }
           break;
       }
     } else {
@@ -575,7 +637,17 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
             case 'Dieta':
               return Utils.validateFiles(this.formatoSolicitudViajesFiles);
             case 'Legalizacion':
-              return false;
+              switch (this.tipoLegalizacion) {
+                case 'Desplazamiento':
+                  return (
+                    Utils.validateFiles(this.formatoLegalizacionViajesFiles) &&
+                    Utils.validateFiles(this.soportesFacturasFiles) &&
+                    Utils.validateFiles(this.pasabordosTiquetesAereosFiles) &&
+                    Utils.validateFiles(this.informeActividades2Files)
+                  );
+                default:
+                  return false;
+              }
             default:
               return false;
           }

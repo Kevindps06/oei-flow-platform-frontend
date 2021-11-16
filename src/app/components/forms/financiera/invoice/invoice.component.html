@@ -43,8 +43,15 @@
                 Juridica
               </label>
               <div class="invalid-feedback">
-                <p *ngIf="!validacionUsuarioError">Este campo es (*) obligatorio, rellenelo.</p>
-                <p *ngIf="validacionUsuarioError">No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro <a [routerLink]="['/forms/financiera/registration']" >aqui</a>.</p>
+                <p *ngIf="!validacionUsuarioError">
+                  Este campo es (*) obligatorio, rellenelo.
+                </p>
+                <p *ngIf="validacionUsuarioError">
+                  No se ha entrado ningun registro con los datos ingresados,
+                  verifiquelos y vuelva a intentarlo, o realice el proceso de
+                  registro
+                  <a [routerLink]="['/forms/financiera/registration']">aqui</a>.
+                </p>
               </div>
             </div>
           </div>
@@ -97,8 +104,15 @@
                 >Proveedor</label
               >
               <div class="invalid-feedback">
-                <p *ngIf="!validacionUsuarioError">Este campo es (*) obligatorio, rellenelo.</p>
-                <p *ngIf="validacionUsuarioError">No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro <a [routerLink]="['/forms/financiera/registration']" >aqui</a>.</p>
+                <p *ngIf="!validacionUsuarioError">
+                  Este campo es (*) obligatorio, rellenelo.
+                </p>
+                <p *ngIf="validacionUsuarioError">
+                  No se ha entrado ningun registro con los datos ingresados,
+                  verifiquelos y vuelva a intentarlo, o realice el proceso de
+                  registro
+                  <a [routerLink]="['/forms/financiera/registration']">aqui</a>.
+                </p>
               </div>
             </div>
           </div>
@@ -140,8 +154,15 @@
                 ></label
               >
               <div class="invalid-feedback">
-                <p *ngIf="!validacionUsuarioError">Este campo es (*) obligatorio, rellenelo.</p>
-                <p *ngIf="validacionUsuarioError">No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro <a [routerLink]="['/forms/financiera/registration']" >aqui</a>.</p>
+                <p *ngIf="!validacionUsuarioError">
+                  Este campo es (*) obligatorio, rellenelo.
+                </p>
+                <p *ngIf="validacionUsuarioError">
+                  No se ha entrado ningun registro con los datos ingresados,
+                  verifiquelos y vuelva a intentarlo, o realice el proceso de
+                  registro
+                  <a [routerLink]="['/forms/financiera/registration']">aqui</a>.
+                </p>
               </div>
             </div>
           </div>
@@ -189,8 +210,15 @@
                 [OnlyNumbers]="true"
               />
               <div class="invalid-feedback">
-                <p *ngIf="!validacionUsuarioError">Este campo es (*) obligatorio, rellenelo.</p>
-                <p *ngIf="validacionUsuarioError">No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro <a [routerLink]="['/forms/financiera/registration']" >aqui</a>.</p>
+                <p *ngIf="!validacionUsuarioError">
+                  Este campo es (*) obligatorio, rellenelo.
+                </p>
+                <p *ngIf="validacionUsuarioError">
+                  No se ha entrado ningun registro con los datos ingresados,
+                  verifiquelos y vuelva a intentarlo, o realice el proceso de
+                  registro
+                  <a [routerLink]="['/forms/financiera/registration']">aqui</a>.
+                </p>
               </div>
             </div>
           </div>
@@ -211,8 +239,15 @@
               />
               <label for="correo">Correo electronico</label>
               <div class="invalid-feedback">
-                <p *ngIf="!validacionUsuarioError">Este campo es (*) obligatorio, rellenelo.</p>
-                <p *ngIf="validacionUsuarioError">No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro <a [routerLink]="['/forms/financiera/registration']" >aqui</a>.</p>
+                <p *ngIf="!validacionUsuarioError">
+                  Este campo es (*) obligatorio, rellenelo.
+                </p>
+                <p *ngIf="validacionUsuarioError">
+                  No se ha entrado ningun registro con los datos ingresados,
+                  verifiquelos y vuelva a intentarlo, o realice el proceso de
+                  registro
+                  <a [routerLink]="['/forms/financiera/registration']">aqui</a>.
+                </p>
               </div>
             </div>
           </div>
@@ -325,7 +360,7 @@
             Dieta
           </label>
         </div>
-        <div class="form-check">
+        <div *ngIf="tipoRelacion === 'Contratista'" class="form-check">
           <input
             [(ngModel)]="tipoGestion"
             (change)="invalidateFlowUser()"
@@ -334,7 +369,6 @@
             name="tipoSoporteContable3"
             id="tipoSoporteContable3"
             value="Legalizacion"
-            disabled
           />
           <label class="form-check-label" for="tipoSoporteContable3">
             Legalizacion
@@ -358,10 +392,10 @@
             type="radio"
             name="tipoLegalizacion0"
             id="tipoLegalizacion0"
-            value="Suministro y servicio"
+            value="Desplazamiento"
           />
           <label class="form-check-label" for="tipoLegalizacion0">
-            Suministro y servicio
+            Desplazamiento
           </label>
         </div>
       </div>
@@ -523,12 +557,14 @@
           <!-- Dieta -->
           <div *ngIf="tipoGestion === 'Dieta'">
             <div class="col-12">
-              <label class="form-label"
+              <label class="form-label" for="uploadFilesFormatoSolicitudViajes"
                 >Formato de solicitud de viajes<span class="text-danger"
                   >*</span
                 ></label
               >
               <app-upload-files
+                id="uploadFilesFormatoSolicitudViajes"
+                name="uploadFilesFormatoSolicitudViajes"
                 [requiredFeedback]="
                   'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
                 "
@@ -536,8 +572,72 @@
               ></app-upload-files>
             </div>
           </div>
-          <!-- Legalizacion - Suministro y servicio -->
-          <div *ngIf="tipoLegalizacion === 'Suministro y servicio'"></div>
+          <!-- Legalizacion - Desplazamiento -->
+          <div *ngIf="tipoLegalizacion === 'Desplazamiento'">
+            <div class="col-12">
+              <label class="form-label" for="uploadFilesFormatoSolicitudViajes"
+                >Formato de legalizacion de viajes<span class="text-danger"
+                  >*</span
+                ></label
+              >
+              <app-upload-files
+                id="uploadFilesFormatoSolicitudViajes"
+                name="uploadFilesFormatoSolicitudViajes"
+                [requiredFeedback]="
+                  'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                "
+                (onFilesChange)="setFormatoLegalizacionViajesFiles($event)"
+              ></app-upload-files>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="uploadFilesSoportesFacturas"
+                >Soportes facturas (transporte, alojamiento, imprevistos)<span
+                  class="text-danger"
+                  >*</span
+                ></label
+              >
+              <app-upload-files
+                id="uploadFilesSoportesFacturas"
+                name="uploadFilesSoportesFacturas"
+                [requiredFeedback]="
+                  'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                "
+                (onFilesChange)="setSoportesFacturasFiles($event)"
+              ></app-upload-files>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="uploadFilesPasabordosTiquetesAereos"
+                >Pasabordos tiquetes aereos<span
+                  class="text-danger"
+                  >*</span
+                ></label
+              >
+              <app-upload-files
+                id="uploadFilesPasabordosTiquetesAereos"
+                name="uploadFilesPasabordosTiquetesAereos"
+                [requiredFeedback]="
+                  'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                "
+                (onFilesChange)="setPasabordosTiquetesAereosFiles($event)"
+              ></app-upload-files>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="uploadFilesInforme2Actividades"
+                >Informe de actividades<span
+                  class="text-danger"
+                  >*</span
+                ></label
+              >
+              <app-upload-files
+                id="uploadFilesInforme2Actividades"
+                name="uploadFilesInforme2Actividades"
+                [requiredFeedback]="
+                  'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                "
+                (onFilesChange)="setInformeActividades2Files($event)"
+              ></app-upload-files>
+            </div>
+          </div>
           <!-- | -->
           <div class="col-12">
             <div class="form-floating">
