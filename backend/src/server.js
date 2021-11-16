@@ -23,7 +23,7 @@ app.use(
   express.urlencoded({ limit: bytes(1024 * 1024 * 512), extended: true })
 );
 
-app.use(morgan("tiny"));
+//app.use(morgan("tiny"));
 
 app.use("/api", router);
 
