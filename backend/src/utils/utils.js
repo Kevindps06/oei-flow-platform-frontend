@@ -105,8 +105,6 @@ async function getFinancieraFlowStepsWithEncargados(
     )
   )[0].steps;
 
-  console.log(convenio);
-
   for (let i = 0; stepsFromConfiguration.length > i; i++) {
     if (
       stepsFromConfiguration[i].doWhen &&
@@ -121,9 +119,6 @@ async function getFinancieraFlowStepsWithEncargados(
     const exception = stepsFromConfiguration[i].exceptions?.find(
       (exception) => exception.convenio == convenio.Numero
     );
-
-    console.log(stepsFromConfiguration[i].key);
-    console.log(exception)
 
     const encargado = await getUserFromSharePoint(
       convenio[stepsFromConfiguration[i].key][
