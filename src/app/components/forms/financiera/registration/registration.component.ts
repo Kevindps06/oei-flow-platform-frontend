@@ -1,12 +1,12 @@
 import { HttpEventType } from '@angular/common/http';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Utils } from 'src/app/classes/utils';
 import { Convenio } from 'src/app/interfaces/Convenio';
 import { FileItem } from 'src/app/interfaces/FileItem';
 import { FormsFinancieraRegistration } from 'src/app/interfaces/forms-financiera-registration';
 import { WaitTask } from 'src/app/interfaces/WaitTask';
 import { FormsService } from 'src/app/services/forms.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-forms-financiera-registration',
@@ -14,7 +14,6 @@ import { FormsService } from 'src/app/services/forms.service';
   styleUrls: ['./registration.component.css'],
 })
 export class FormsFinancieraRegistrationComponent implements OnInit {
-  waitTasks: WaitTask[] = [];
   formIndex: number = 0;
 
   // 0
@@ -62,7 +61,10 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
 
   @Output() onWaitTasksChange = new EventEmitter<WaitTask[]>();
 
-  constructor(private formsService: FormsService) {}
+  constructor(
+    private formsService: FormsService,
+    private sharedService: SharedService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -102,29 +104,22 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
         this.certificacionBancariaFiles = [];
 
         // Load form index 2 values
-        var taskId: string;
+        let taskId: string;
         this.formsService.getConvenios().subscribe((event) => {
           switch (event.type) {
             case HttpEventType.Sent:
               taskId = Utils.makeRandomString(4);
-              this.waitTasks.push({
+              this.sharedService.pushWaitTask({
                 id: taskId,
                 description: 'Cargando convenios...',
-                total: 0,
-                current: 0,
                 progress: 0,
               });
-              this.onWaitTasksChange.emit(this.waitTasks);
               break;
             case HttpEventType.DownloadProgress:
-              let taskIndex = this.waitTasks.findIndex(
-                (element) => element.id === taskId
-              );
-              this.waitTasks[taskIndex].current = event.loaded;
-              this.waitTasks[taskIndex].progress = Math.round(
-                (event.loaded * 100) / event.total
-              );
-              this.onWaitTasksChange.emit(this.waitTasks);
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                progress: Math.round((event.loaded * 100) / event.total),
+              });
               break;
             case HttpEventType.Response:
               event.body.value.forEach((convenio: any) => {
@@ -136,10 +131,9 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
                 });
               });
 
-              this.waitTasks.splice(
-                this.waitTasks.findIndex((element) => element.id === taskId)
-              );
-              this.onWaitTasksChange.emit(this.waitTasks);
+              this.sharedService.removeWaitTask({
+                id: taskId,
+              });
               break;
           }
         });
@@ -175,8 +169,8 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
     this.nombre = '';
     this.convenio = '';
     this.email = '';
-    this.digitoVerificacion = ''
-    this.identification = ''
+    this.digitoVerificacion = '';
+    this.identification = '';
     this.tipoRelacion = '';
     this.tipoPersona = '';
 
@@ -187,34 +181,44 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
       .postFormsFinancieraRegistration(formsFinancieraRegistration)
       .subscribe(
         (event) => {
-          let taskIndex;
           switch (event.type) {
             case HttpEventType.Sent:
-              taskId = Utils.makeRandomString(4);
-              this.waitTasks.push({
-                id: taskId,
+              this.sharedService.pushWaitTask({
+                id: (taskId = Utils.makeRandomString(4)),
                 description: `Enviando registro...`,
-                total: 0,
-                current: 0,
                 progress: 0,
               });
-              this.onWaitTasksChange.emit(this.waitTasks);
               break;
             case HttpEventType.UploadProgress:
-              taskIndex = this.waitTasks.findIndex(
-                (element) => element.id === taskId
-              );
-              this.waitTasks[taskIndex].current = event.loaded;
-              this.waitTasks[taskIndex].progress = Math.round(
-                (event.loaded * 100) / event.total
-              );
-              this.onWaitTasksChange.emit(this.waitTasks);
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                progress: Math.round((event.loaded * 100) / event.total),
+              });
               break;
             case HttpEventType.ResponseHeader:
-              this.waitTasks.splice(
-                this.waitTasks.findIndex((element) => element.id === taskId)
-              );
-              this.onWaitTasksChange.emit(this.waitTasks);
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                description: `Obteniendo la respuesta del envio del registro...`,
+                progress: 0,
+              });
+              break;
+            case HttpEventType.DownloadProgress:
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                progress: Math.round((event.loaded * 100) / event.total),
+              });
+              break;
+            case HttpEventType.Response:
+              this.sharedService.removeWaitTask({
+                id: taskId,
+              });
+
+              this.sharedService.pushToastMessage({
+                id: Utils.makeRandomString(4),
+                title: `Registro enviado satisfactoriamente`,
+                description: `Su registro ha sido ingresado correctamente y sera procesado en un plazo maximo de 10 dias habiles*, este atento de su correo electronico por el cual se le notificara del estado y manera de validacion de la peticion.`,
+                autohide: 30000,
+              });
               break;
           }
         },

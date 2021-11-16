@@ -72,7 +72,11 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
 
   ngOnInit(): void {
     if (!history.state.userInfo || !history.state.plaftformInfo) {
-      this.router.navigateByUrl('/login');
+      this.router.navigate(['/login'], {
+        state: {
+          fromRoute: this.router.url,
+        },
+      });
 
       this.sharedService.pushToastMessage({
         id: Utils.makeRandomString(4),

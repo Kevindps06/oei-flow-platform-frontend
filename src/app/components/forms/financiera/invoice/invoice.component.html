@@ -1,4 +1,4 @@
-<div id="firstElement" class="row g-3">
+<div id="firstElement" name="firstElement" class="row g-3">
   <div *ngIf="formIndex === 0" class="col-12">
     <div class="card">
       <div class="card-body">
@@ -43,11 +43,8 @@
                 Juridica
               </label>
               <div class="invalid-feedback">
-                {{
-                  !validacionUsuarioError
-                    ? "Este campo es (*) obligatorio, seleccione una opcion."
-                    : "No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro aqui."
-                }}
+                <p *ngIf="!validacionUsuarioError">Este campo es (*) obligatorio, rellenelo.</p>
+                <p *ngIf="validacionUsuarioError">No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro <a [routerLink]="['/forms/financiera/registration']" >aqui</a>.</p>
               </div>
             </div>
           </div>
@@ -100,11 +97,8 @@
                 >Proveedor</label
               >
               <div class="invalid-feedback">
-                {{
-                  !validacionUsuarioError
-                    ? "Este campo es (*) obligatorio, seleccione una opcion."
-                    : "No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro aqui."
-                }}
+                <p *ngIf="!validacionUsuarioError">Este campo es (*) obligatorio, rellenelo.</p>
+                <p *ngIf="validacionUsuarioError">No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro <a [routerLink]="['/forms/financiera/registration']" >aqui</a>.</p>
               </div>
             </div>
           </div>
@@ -146,11 +140,8 @@
                 ></label
               >
               <div class="invalid-feedback">
-                {{
-                  !validacionUsuarioError
-                    ? "Este campo es (*) obligatorio, rellenelo."
-                    : "No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro aqui."
-                }}
+                <p *ngIf="!validacionUsuarioError">Este campo es (*) obligatorio, rellenelo.</p>
+                <p *ngIf="validacionUsuarioError">No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro <a [routerLink]="['/forms/financiera/registration']" >aqui</a>.</p>
               </div>
             </div>
           </div>
@@ -198,11 +189,8 @@
                 [OnlyNumbers]="true"
               />
               <div class="invalid-feedback">
-                {{
-                  !validacionUsuarioError
-                    ? "Este campo es (*) obligatorio, rellenelo."
-                    : "No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro aqui."
-                }}
+                <p *ngIf="!validacionUsuarioError">Este campo es (*) obligatorio, rellenelo.</p>
+                <p *ngIf="validacionUsuarioError">No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro <a [routerLink]="['/forms/financiera/registration']" >aqui</a>.</p>
               </div>
             </div>
           </div>
@@ -223,11 +211,8 @@
               />
               <label for="correo">Correo electronico</label>
               <div class="invalid-feedback">
-                {{
-                  !validacionUsuarioError
-                    ? "Este campo es (*) obligatorio, rellenelo."
-                    : "No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro aqui."
-                }}
+                <p *ngIf="!validacionUsuarioError">Este campo es (*) obligatorio, rellenelo.</p>
+                <p *ngIf="validacionUsuarioError">No se ha entrado ningun registro con los datos ingresados, verifiquelos y vuelva a intentarlo, o realice el proceso de registro <a [routerLink]="['/forms/financiera/registration']" >aqui</a>.</p>
               </div>
             </div>
           </div>

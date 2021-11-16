@@ -127,6 +127,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   }
 
   btnValidarUsuarioClick() {
+    this.invalidateFlowUser();
+
     var taskId: string;
     this.formsService
       .validateFlowUser(
@@ -141,9 +143,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         (event) => {
           switch (event.type) {
             case HttpEventType.Sent:
-              taskId = Utils.makeRandomString(4);
               this.sharedService.pushWaitTask({
-                id: taskId,
+                id: (taskId = Utils.makeRandomString(4)),
                 description: 'Validando informacion...',
                 progress: 0,
               });
@@ -288,9 +289,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         this.formsService.getConvenios().subscribe((event) => {
           switch (event.type) {
             case HttpEventType.Sent:
-              taskId = Utils.makeRandomString(4);
               this.sharedService.pushWaitTask({
-                id: taskId,
+                id: (taskId = Utils.makeRandomString(4)),
                 description: 'Cargando convenios...',
                 progress: 0,
               });
@@ -483,9 +483,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         (event) => {
           switch (event.type) {
             case HttpEventType.Sent:
-              taskId = Utils.makeRandomString(4);
               this.sharedService.pushWaitTask({
-                id: taskId,
+                id: (taskId = Utils.makeRandomString(4)),
                 description: `Enviando ${(formsFinancieraInvoice.TipoGestion ===
                 'Legalizacion'
                   ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
@@ -532,7 +531,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 'Legalizacion'
                   ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
                   : formsFinancieraInvoice.TipoGestion
-                ).toLowerCase()} ha sido ingresada correctamente y sera procesada en un plazo maximo de 10 dias habiles*.`,
+                ).toLowerCase()} ha sido ingresada correctamente y sera procesada en un plazo maximo de 10 dias habiles*, este atento de su correo electronico por el cual se le notificara del estado y manera de validacion de la peticion.`,
                 autohide: 30000,
               });
               break;

@@ -65,7 +65,13 @@ export class LoginComponent implements OnInit {
               description: `Hola ${event.body.userInfo.fields.Title}, esperamos tengas la mejor de las estancias.`,
             });
 
-            this.router.navigateByUrl('/');
+            if (history.state.fromRoute) {
+              this.router.navigate([history.state.fromRoute], {
+                state: event.body,
+              });
+            } else {
+              this.router.navigate(['/']);
+            }
             break;
         }
       },

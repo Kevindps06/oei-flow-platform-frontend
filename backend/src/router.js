@@ -493,7 +493,8 @@ router.post("/forms/financiera/registration", async (req, res) => {
 router.post("/forms/financiera/invoice", async (req, res) => {
   let configuration = [];
 
-  let steps = (
+  // For localhost testing only
+  /*let steps = (
     await axios.default.get(
       `https://oeiprojectflow.org/api/configuration/financieraflow`,
       {
@@ -505,9 +506,10 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         },
       }
     )
-  ).data[0].steps;
+  ).data[0].steps;*/
 
-  /*let steps = (
+  // Production direct with database
+  let steps = (
     await FinancieraFlow.find(
       utils.financieraFlowObjectWithoutUndefined(
         req.query._id,
@@ -518,7 +520,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         req.query.steps
       )
     )
-  )[0].steps;*/
+  )[0].steps;
 
   const authResponseConvenio = await auth.getToken(auth.tokenRequest);
   const convenio = (
@@ -1091,23 +1093,25 @@ router.post("/forms/financiera/invoice", async (req, res) => {
 router.post("/forms/coordinacionlogistica", async (req, res) => {
   let configuration = [];
 
-  let steps = (
+  // For localhost testing only
+  /*let steps = (
     await axios.default.get(
       `https://oeiprojectflow.org/api/configuration/coordinacionlogisticaflow`,
       {
         params: {},
       }
     )
-  ).data[0].steps;
+  ).data[0].steps;*/
 
-  /*let steps = (
+  // Production direct with database
+  let steps = (
     await CoordinacionLogisticaFlow.find(
       utils.coordinacionLogisticaFlowObjectWithoutUndefined(
         req.query._id,
         req.query.steps
       )
     )
-  )[0].steps;*/
+  )[0].steps;
 
   const authResponseConvenio = await auth.getToken(auth.tokenRequest);
   const convenio = (
