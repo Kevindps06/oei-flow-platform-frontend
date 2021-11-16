@@ -294,7 +294,8 @@ function formsCoordinacionesLogisticasObjectWithoutUndefined(
   CoordinacionLogisticaPath,
   SharePointFiles,
   Keys,
-  Quotations
+  Quotations,
+  SelectedQuotation
 ) {
   var obj = {};
 
@@ -380,6 +381,10 @@ function formsCoordinacionesLogisticasObjectWithoutUndefined(
     obj.Quotations = Quotations;
   }
 
+  if (SelectedQuotation) {
+    obj.SelectedQuotation = SelectedQuotation;
+  }
+  
   return obj;
 }
 

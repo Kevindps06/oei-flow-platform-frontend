@@ -175,11 +175,11 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           if (err.status === 404) {
             this.flowUser = undefined;
             this.validacionUsuarioError = true;
-
-            this.sharedService.removeWaitTask({
-              id: taskId,
-            });
           }
+
+          this.sharedService.removeWaitTask({
+            id: taskId,
+          });
         }
       );
   }
@@ -537,7 +537,11 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               break;
           }
         },
-        (err) => {}
+        (err) => {
+          this.sharedService.removeWaitTask({
+            id: taskId,
+          });
+        }
       );
   }
 

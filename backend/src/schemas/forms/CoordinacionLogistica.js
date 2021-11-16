@@ -21,6 +21,7 @@ const schema = mongoose.Schema({
   SharePointFiles: [],
   Keys: [String],
   Quotations: [],
+  SelectedQuotation: Object
 });
 
 module.exports = mongoose

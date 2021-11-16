@@ -180,7 +180,8 @@ router.get("/forms/coordinacioneslogisticas", async (req, res) => {
         req.query.CoordinacionLogisticaPath,
         req.query.SharePointFiles,
         req.query.Keys,
-        req.query.Quotations
+        req.query.Quotations,
+        req.query.SelectedQuotation
       )
     );
 
@@ -214,7 +215,8 @@ router.put("/forms/coordinacioneslogisticas", async (req, res) => {
         req.query.CoordinacionLogisticaPath,
         req.query.SharePointFiles,
         req.query.Keys,
-        req.query.Quotations
+        req.query.Quotations,
+        req.query.SelectedQuotation
       ),
       req.body
     );
@@ -249,7 +251,8 @@ router.delete("/forms/coordinacioneslogisticas", async (req, res) => {
         req.query.CoordinacionLogisticaPath,
         req.query.SharePointFiles,
         req.query.Keys,
-        req.query.Quotations
+        req.query.Quotations,
+        req.query.SelectedQuotation
       )
     );
 
@@ -1276,18 +1279,38 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
     Keys: Object.keys(formsCoordinacionLogistica),
   });
 
-  while (true) {
+  //while (true) {
     try {
-      await axios.default.post(
-        `https://prod-10.brazilsouth.logic.azure.com:443/workflows/d9284b8deff34c34b78c7309cbeb0f45/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xt5QdZEYOiWUAmAfu-ykUU1oMDBm2bKT9yUBS0k63sw`,
-        [formsCoordinacionLogistica]
+      let promises = [];
+
+      // For localhost testing only
+      promises.push(
+        axios.default.post(
+          `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
+          formsCoordinacionLogistica
+        )
       );
 
-      break;
+      // Production direct with database
+      /*const coordinacionLogistica = new CoordinacionLogistica(
+        formsCoordinacionLogistica
+      );
+      promises.push(coordinacionLogistica.save());*/
+
+      /*promises.push(
+        axios.default.post(
+          `https://prod-10.brazilsouth.logic.azure.com:443/workflows/d9284b8deff34c34b78c7309cbeb0f45/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xt5QdZEYOiWUAmAfu-ykUU1oMDBm2bKT9yUBS0k63sw`,
+          [formsCoordinacionLogistica]
+        )
+      );*/
+
+      await Promise.all(promises);
+
+      //break;
     } catch (err) {
       console.log(err);
     }
-  }
+  //}
 
   res.status(201).send();
 });

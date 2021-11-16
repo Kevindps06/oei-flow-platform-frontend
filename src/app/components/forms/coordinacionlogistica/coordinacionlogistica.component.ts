@@ -170,7 +170,11 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
               break;
           }
         },
-        (err) => {}
+        (err) => {
+          this.sharedService.removeWaitTask({
+            id: taskId,
+          });
+        }
       );
   }
 
