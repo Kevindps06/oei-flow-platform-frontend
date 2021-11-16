@@ -123,6 +123,7 @@ async function getFinancieraFlowStepsWithEncargados(
     );
 
     console.log(stepsFromConfiguration[i].key);
+    console.log(exception)
 
     const encargado = await getUserFromSharePoint(
       convenio[stepsFromConfiguration[i].key][
