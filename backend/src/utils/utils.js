@@ -167,7 +167,6 @@ async function uploadFileToSharePointWorkflowOEI(path, base64) {
 
   var chunk = 0;
   while (chunks >= chunk) {
-    console.log(`${chunk}/${chunks}`);
     const chunkOffset = chunk * chunkSize;
     const chunkData = data.slice(chunkOffset, chunkOffset + chunkSize);
     const chunkDataLength = chunkData.length;

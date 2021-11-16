@@ -500,8 +500,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
             CuentaCobroFiles: this.cuentaCobroFacturaFiles,
             FacturaEquivalenteFiles: this.facturaEquivalenteFiles,
-            SeguridadSocialFiles: this.seguridadSocialParafiscalesFiles,
-            CertificadoParafiscales: this.informeActividadesFiles,
+            CertificadoParafiscalesFiles: this.seguridadSocialParafiscalesFiles,
+            InformeActividadesFiles: this.informeActividadesFiles,
           });
           // Cleaning fields because information has been saved
           this.informeActividadesFiles = [];
