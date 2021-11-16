@@ -523,10 +523,11 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
 
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
-                title: `${(formsFinancieraInvoice.TipoGestion === 'Legalizacion'
-                  ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-                  : formsFinancieraInvoice.TipoGestion
-                ).toLowerCase()} enviada satisfactoriamente`,
+                title: `${
+                  formsFinancieraInvoice.TipoGestion === 'Legalizacion'
+                    ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
+                    : formsFinancieraInvoice.TipoGestion
+                } enviada satisfactoriamente`,
                 description: `Su ${(formsFinancieraInvoice.TipoGestion ===
                 'Legalizacion'
                   ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
