@@ -249,6 +249,7 @@ function coordinacionLogisticaFlowObjectWithoutUndefined(_id, steps) {
 }
 
 function formsFinancieraInvoiceObjectWithoutUndefined(
+  _id,
   Id,
   TipoPersona,
   TipoRelacion,
@@ -263,6 +264,10 @@ function formsFinancieraInvoiceObjectWithoutUndefined(
   GestionPath
 ) {
   var obj = {};
+
+  if (_id) {
+    obj._id = _id;
+  }
 
   if (Id) {
     obj.Id = Id;
@@ -314,96 +319,6 @@ function formsFinancieraInvoiceObjectWithoutUndefined(
 }
 
 function formsCoordinacionLogisticaObjectWithoutUndefined(
-  Id,
-  Nombre,
-  Convenio,
-  Ida,
-  HorarioIda,
-  Vuelta,
-  HorarioVuelta,
-  Identificator,
-  FechaNacimiento,
-  EquipajeAdicional,
-  Email,
-  Telefono,
-  InformacionAdicional,
-  Requestor,
-  ConvenioInformation,
-  Configuration,
-  CoordinacionLogisticaPath
-) {
-  var obj = {};
-
-  if (Id) {
-    obj.Id = Id;
-  }
-
-  if (Nombre) {
-    obj.Nombre = Nombre;
-  }
-
-  if (Convenio) {
-    obj.Convenio = Convenio;
-  }
-
-  if (Ida) {
-    obj.Ida = Ida;
-  }
-
-  if (HorarioIda) {
-    obj.HorarioIda = HorarioIda;
-  }
-
-  if (Vuelta) {
-    obj.Vuelta = Vuelta;
-  }
-
-  if (HorarioVuelta) {
-    obj.HorarioVuelta = HorarioVuelta;
-  }
-
-  if (Identificator) {
-    obj.Identificator = Identificator;
-  }
-
-  if (FechaNacimiento) {
-    obj.FechaNacimiento = FechaNacimiento;
-  }
-
-  if (EquipajeAdicional) {
-    obj.EquipajeAdicional = EquipajeAdicional;
-  }
-
-  if (Email) {
-    obj.Email = Email;
-  }
-
-  if (Telefono) {
-    obj.Telefono = Telefono;
-  }
-
-  obj.InformacionAdicional = InformacionAdicional;
-
-  if (Requestor) {
-    obj.Requestor = Requestor;
-  }
-
-  if (ConvenioInformation) {
-    obj.ConvenioInformation = ConvenioInformation;
-  }
-
-  if (Configuration) {
-    obj.Configuration = Configuration;
-  }
-
-  if (CoordinacionLogisticaPath) {
-    obj.CoordinacionLogisticaPath = CoordinacionLogisticaPath;
-  }
-
-  return obj;
-}
-
-function formsCoordinacionesLogisticasObjectWithoutUndefined(
   _id,
   Id,
   Nombre,
@@ -421,11 +336,7 @@ function formsCoordinacionesLogisticasObjectWithoutUndefined(
   Requestor,
   ConvenioInformation,
   Configuration,
-  CoordinacionLogisticaPath,
-  SharePointFiles,
-  Keys,
-  Quotations,
-  SelectedQuotation
+  CoordinacionLogisticaPath
 ) {
   var obj = {};
 
@@ -499,22 +410,6 @@ function formsCoordinacionesLogisticasObjectWithoutUndefined(
     obj.CoordinacionLogisticaPath = CoordinacionLogisticaPath;
   }
 
-  if (SharePointFiles) {
-    obj.SharePointFiles = SharePointFiles;
-  }
-
-  if (Keys) {
-    obj.Keys = Keys;
-  }
-
-  if (Quotations) {
-    obj.Quotations = Quotations;
-  }
-
-  if (SelectedQuotation) {
-    obj.SelectedQuotation = SelectedQuotation;
-  }
-
   return obj;
 }
 
@@ -528,9 +423,7 @@ module.exports = {
     formsFinancieraInvoiceObjectWithoutUndefined,
   formsCoordinacionLogisticaObjectWithoutUndefined:
     formsCoordinacionLogisticaObjectWithoutUndefined,
-  formsCoordinacionesLogisticasObjectWithoutUndefined:
-    formsCoordinacionesLogisticasObjectWithoutUndefined,
   getConvenioFromSharePoint: getConvenioFromSharePoint,
   getFinancieraFlowStepsWithEncargados: getFinancieraFlowStepsWithEncargados,
-  getUserFromSharePoint: getUserFromSharePoint,
+  getUserFromSharePoint: getUserFromSharePoint
 };

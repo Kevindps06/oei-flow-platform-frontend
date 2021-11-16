@@ -4,9 +4,10 @@ const router = express.Router();
 const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
-const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
 const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
 const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
+const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
+const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
 
 // Configuration - FinancieraFlow
 
@@ -142,6 +143,126 @@ router.delete("/configuration/coordinacionlogisticaflow", async (req, res) => {
   }
 });
 
+// Forms - FinancieraInvoice
+
+router.post("/forms/financiera/invoice", async (req, res) => {
+  try {
+    const financieraInvoice = new FinancieraInvoice(req.body);
+
+    await financieraInvoice.save();
+
+    res.status(201).json(financieraInvoice);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/forms/financiera/invoice", async (req, res) => {
+  try {
+    const financieraInvoice = await FinancieraInvoice.find(
+      utils.formsFinancieraInvoiceObjectWithoutUndefined(
+        req.query._id,
+        req.query.Id,
+        req.query.Nombre,
+        req.query.Convenio,
+        req.query.Ida,
+        req.query.HorarioIda,
+        req.query.Vuelta,
+        req.query.HorarioVuelta,
+        req.query.Identificator,
+        req.query.FechaNacimiento,
+        req.query.EquipajeAdicional,
+        req.query.Email,
+        req.query.Telefono,
+        req.query.InformacionAdicional,
+        req.query.Requestor,
+        req.query.ConvenioInformation,
+        req.query.Configuration,
+        req.query.CoordinacionLogisticaPath,
+        req.query.SharePointFiles,
+        req.query.Keys,
+        req.query.Quotations,
+        req.query.SelectedQuotation
+      )
+    );
+
+    res.status(200).json(financieraInvoice);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.put("/forms/financiera/invoice", async (req, res) => {
+  try {
+    const financieraInvoice = await FinancieraInvoice.updateMany(
+      utils.formsFinancieraInvoiceObjectWithoutUndefined(
+        req.query._id,
+        req.query.Id,
+        req.query.Nombre,
+        req.query.Convenio,
+        req.query.Ida,
+        req.query.HorarioIda,
+        req.query.Vuelta,
+        req.query.HorarioVuelta,
+        req.query.Identificator,
+        req.query.FechaNacimiento,
+        req.query.EquipajeAdicional,
+        req.query.Email,
+        req.query.Telefono,
+        req.query.InformacionAdicional,
+        req.query.Requestor,
+        req.query.ConvenioInformation,
+        req.query.Configuration,
+        req.query.CoordinacionLogisticaPath,
+        req.query.SharePointFiles,
+        req.query.Keys,
+        req.query.Quotations,
+        req.query.SelectedQuotation
+      ),
+      req.body
+    );
+
+    res.status(200).json(financieraInvoice);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.delete("/forms/financiera/invoice", async (req, res) => {
+  try {
+    const financieraInvoice = await FinancieraInvoice.deleteMany(
+      utils.formsFinancieraInvoiceObjectWithoutUndefined(
+        req.query._id,
+        req.query.Id,
+        req.query.Nombre,
+        req.query.Convenio,
+        req.query.Ida,
+        req.query.HorarioIda,
+        req.query.Vuelta,
+        req.query.HorarioVuelta,
+        req.query.Identificator,
+        req.query.FechaNacimiento,
+        req.query.EquipajeAdicional,
+        req.query.Email,
+        req.query.Telefono,
+        req.query.InformacionAdicional,
+        req.query.Requestor,
+        req.query.ConvenioInformation,
+        req.query.Configuration,
+        req.query.CoordinacionLogisticaPath,
+        req.query.SharePointFiles,
+        req.query.Keys,
+        req.query.Quotations,
+        req.query.SelectedQuotation
+      )
+    );
+
+    res.status(200).json(financieraInvoice);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 // Forms - CoordinacionesLogisticas
 
 router.post("/forms/coordinacioneslogisticas", async (req, res) => {
@@ -230,7 +351,7 @@ router.put("/forms/coordinacioneslogisticas", async (req, res) => {
 router.delete("/forms/coordinacioneslogisticas", async (req, res) => {
   try {
     const coordinacionLogistica = await CoordinacionLogistica.deleteMany(
-      utils.coordinacionLogisticaFlowObjectWithoutUndefined(
+      utils.formsCoordinacionesLogisticasObjectWithoutUndefined(
         req.query._id,
         req.query.Id,
         req.query.Nombre,
@@ -510,6 +631,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
 
   let formsFinancieraInvoice =
     utils.formsFinancieraInvoiceObjectWithoutUndefined(
+      req.body._id,
       req.body.Id,
       req.body.TipoPersona,
       req.body.TipoRelacion,
@@ -1135,10 +1257,63 @@ router.post("/forms/financiera/invoice", async (req, res) => {
 
   while (true) {
     try {
-      await axios.default.post(
-        `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
-        [formsFinancieraInvoice]
+      let promises = [];
+
+      // For localhost testing only
+      /*promises.push(
+        axios.default.post(
+          `https://oeiprojectflow.org/api/forms/financiera/invoice`,
+          formsFinancieraInvoice
+        )
+      );*/
+
+      // Production direct with database
+      /*const financieraInvoice = new FinancieraInvoice(
+        formsFinancieraInvoice
       );
+      promises.push(financieraInvoice.save());*/
+
+      promises.push(
+        axios.default.post(
+          `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
+          [formsFinancieraInvoice]
+        )
+      );
+
+      await Promise.all(promises);
+
+      break;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  while (true) {
+    try {
+      let promises = [];
+
+      // For localhost testing only
+      promises.push(
+        axios.default.post(
+          `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
+          formsCoordinacionLogistica
+        )
+      );
+
+      // Production direct with database
+      const coordinacionLogistica = new CoordinacionLogistica(
+        formsCoordinacionLogistica
+      );
+      promises.push(coordinacionLogistica.save());
+
+      promises.push(
+        axios.default.post(
+          `https://prod-10.brazilsouth.logic.azure.com:443/workflows/d9284b8deff34c34b78c7309cbeb0f45/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xt5QdZEYOiWUAmAfu-ykUU1oMDBm2bKT9yUBS0k63sw`,
+          [formsCoordinacionLogistica]
+        )
+      );
+
+      await Promise.all(promises);
 
       break;
     } catch (err) {
@@ -1335,38 +1510,38 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
     Keys: Object.keys(formsCoordinacionLogistica),
   });
 
-  //while (true) {
-  try {
-    let promises = [];
+  while (true) {
+    try {
+      let promises = [];
 
-    // For localhost testing only
-    promises.push(
-      axios.default.post(
-        `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
-        formsCoordinacionLogistica
-      )
-    );
+      // For localhost testing only
+      promises.push(
+        axios.default.post(
+          `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
+          formsCoordinacionLogistica
+        )
+      );
 
-    // Production direct with database
-    /*const coordinacionLogistica = new CoordinacionLogistica(
+      // Production direct with database
+      const coordinacionLogistica = new CoordinacionLogistica(
         formsCoordinacionLogistica
       );
-      promises.push(coordinacionLogistica.save());*/
+      promises.push(coordinacionLogistica.save());
 
-    /*promises.push(
+      promises.push(
         axios.default.post(
           `https://prod-10.brazilsouth.logic.azure.com:443/workflows/d9284b8deff34c34b78c7309cbeb0f45/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xt5QdZEYOiWUAmAfu-ykUU1oMDBm2bKT9yUBS0k63sw`,
           [formsCoordinacionLogistica]
         )
-      );*/
+      );
 
-    await Promise.all(promises);
+      await Promise.all(promises);
 
-    //break;
-  } catch (err) {
-    console.log(err);
+      break;
+    } catch (err) {
+      console.log(err);
+    }
   }
-  //}
 
   res.status(201).send();
 });
