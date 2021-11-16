@@ -1,5 +1,136 @@
 const axios = require("axios");
 const auth = require("../apis/microsoft/auth");
+const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
+
+async function getConvenioFromSharePoint(convenioNumber) {
+  let convenioFromSharePoint;
+
+  do {
+    try {
+      convenioFromSharePoint = (
+        await axios.default.get(
+          `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items`,
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                (
+                  await auth.getToken(auth.tokenRequest)
+                ).accessToken,
+              Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+            },
+            params: {
+              $select: "id",
+              $expand: "fields",
+              $filter: `fields/Numero eq '${convenioNumber}'`,
+            },
+          }
+        )
+      ).data.value[0].fields;
+    } catch (err) {
+      console.log("utils.js - getConvenioFromSharePoint - Error:", err);
+    }
+  } while (!convenioFromSharePoint);
+
+  return convenioFromSharePoint;
+}
+
+async function getUserFromSharePoint(lookupId) {
+  let user;
+
+  do {
+    try {
+      user = (
+        await axios.default.get(
+          `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_USERINFORMATION_LIST_ID}/items/${lookupId}`,
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                (
+                  await auth.getToken(auth.tokenRequest)
+                ).accessToken,
+              Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+            },
+            params: {
+              $select: "id",
+              $expand: "fields",
+            },
+          }
+        )
+      ).data.fields;
+    } catch (err) {
+      console.log("utils.js - getUserFromSharePoint - Error:", err);
+    }
+  } while (!user);
+
+  return user;
+}
+
+async function getFinancieraFlowStepsWithEncargados(
+  _id,
+  TipoPersona,
+  TipoRelacion,
+  TipoGestion,
+  TipoLegalizacion,
+  steps,
+  convenio
+) {
+  // For localhost testing only
+  /*let stepsFromConfiguration = (
+    await axios.default.get(
+      `https://oeiprojectflow.org/api/configuration/financieraflow`,
+      {
+        params: {
+          persona: TipoPersona,
+          relacion: TipoRelacion,
+          gestion: TipoGestion,
+          legalizacion: TipoLegalizacion,
+        },
+      }
+    )
+  ).data[0].steps;*/
+
+  // Production direct with database
+  let stepsFromConfiguration = (
+    await FinancieraFlow.find(
+      financieraFlowObjectWithoutUndefined(
+        _id,
+        TipoPersona,
+        TipoRelacion,
+        TipoGestion,
+        TipoLegalizacion,
+        steps
+      )
+    )
+  )[0].steps;
+
+  for (let i = 0; stepsFromConfiguration.length > i; i++) {
+    if (
+      stepsFromConfiguration[i].doWhen &&
+      stepsFromConfiguration[i].doWhen.length > 0 &&
+      stepsFromConfiguration[i].doWhen.findIndex(
+        (doWhen) => doWhen.convenio === convenio.Numero
+      ) === -1
+    ) {
+      continue;
+    }
+
+    const exception = stepsFromConfiguration[i].exceptions?.find(
+      (exception) => exception.convenio == convenio.Numero
+    );
+
+    const encargado = await getUserFromSharePoint(
+      convenio[stepsFromConfiguration[i].key][
+        exception ? exception.encargado : 0
+      ].LookupId
+    );
+
+    stepsFromConfiguration[i].encargado = encargado;
+  }
+
+  return stepsFromConfiguration;
+}
 
 function makeRandomString(length) {
   var result = "";
@@ -384,7 +515,7 @@ function formsCoordinacionesLogisticasObjectWithoutUndefined(
   if (SelectedQuotation) {
     obj.SelectedQuotation = SelectedQuotation;
   }
-  
+
   return obj;
 }
 
@@ -400,4 +531,7 @@ module.exports = {
     formsCoordinacionLogisticaObjectWithoutUndefined,
   formsCoordinacionesLogisticasObjectWithoutUndefined:
     formsCoordinacionesLogisticasObjectWithoutUndefined,
+  getConvenioFromSharePoint: getConvenioFromSharePoint,
+  getFinancieraFlowStepsWithEncargados: getFinancieraFlowStepsWithEncargados,
+  getUserFromSharePoint: getUserFromSharePoint,
 };

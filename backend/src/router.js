@@ -494,95 +494,17 @@ router.post("/forms/financiera/registration", async (req, res) => {
 });
 
 router.post("/forms/financiera/invoice", async (req, res) => {
-  let configuration = [];
+  const convenio = await utils.getConvenioFromSharePoint(req.body.Convenio);
 
-  // For localhost testing only
-  /*let steps = (
-    await axios.default.get(
-      `https://oeiprojectflow.org/api/configuration/financieraflow`,
-      {
-        params: {
-          persona: req.body.TipoPersona,
-          relacion: req.body.TipoRelacion,
-          gestion: req.body.TipoGestion,
-          legalizacion: req.body.TipoLegalizacion,
-        },
-      }
-    )
-  ).data[0].steps;*/
-
-  // Production direct with database
-  let steps = (
-    await FinancieraFlow.find(
-      utils.financieraFlowObjectWithoutUndefined(
-        req.query._id,
-        req.query.TipoPersona,
-        req.query.TipoRelacion,
-        req.query.TipoGestion,
-        req.query.TipoLegalizacion,
-        req.query.steps
-      )
-    )
-  )[0].steps;
-
-  const authResponseConvenio = await auth.getToken(auth.tokenRequest);
-  const convenio = (
-    await axios.default.get(
-      `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items`,
-      {
-        headers: {
-          Authorization: "Bearer " + authResponseConvenio.accessToken,
-          Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
-        },
-        params: {
-          $select: "id",
-          $expand: "fields",
-          $filter: `fields/Numero eq '${req.body.Convenio}'`,
-        },
-      }
-    )
-  ).data.value[0].fields;
-
-  for (let i = 0; steps.length > i; i++) {
-    if (
-      steps[i].doWhen &&
-      steps[i].doWhen.length > 0 &&
-      steps[i].doWhen.findIndex((x) => x.convenio === req.body.Convenio) === -1
-    ) {
-      continue;
-    }
-
-    const exception = steps[i].exceptions?.find(
-      (x) => x.convenio === req.body.Convenio
-    );
-
-    const authResponseEncargado = await auth.getToken(auth.tokenRequest);
-    const encargado = (
-      await axios.default.get(
-        `https://graph.microsoft.com/v1.0/sites/${
-          process.env.FINANCIERA_OEI_SITE_ID
-        }/lists/${
-          process.env.FINANCIERA_OEI_SITE_USERINFORMATION_LIST_ID
-        }/items/${
-          convenio[steps[i].key][exception ? exception.encargado : 0].LookupId
-        }`,
-        {
-          headers: {
-            Authorization: "Bearer " + authResponseEncargado.accessToken,
-            Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
-          },
-          params: {
-            $select: "id",
-            $expand: "fields",
-          },
-        }
-      )
-    ).data.fields;
-
-    steps[i].encargado = encargado;
-
-    configuration.push(steps[i]);
-  }
+  const configuration = await utils.getFinancieraFlowStepsWithEncargados(
+    req.body._id,
+    req.body.TipoPersona,
+    req.body.TipoRelacion,
+    req.body.TipoGestion,
+    req.body.TipoLegalizacion,
+    req.body.steps,
+    convenio
+  );
 
   const gestionPath = `/Gestion/${req.body.TipoPersona}/${req.body.TipoRelacion}/${req.body.TipoGestion}/${req.body.Id}`;
 
