@@ -105,12 +105,14 @@ async function getFinancieraFlowStepsWithEncargados(
     )
   )[0].steps;
 
+  console.log(convenio);
+
   for (let i = 0; stepsFromConfiguration.length > i; i++) {
     if (
       stepsFromConfiguration[i].doWhen &&
       stepsFromConfiguration[i].doWhen.length > 0 &&
       stepsFromConfiguration[i].doWhen.findIndex(
-        (doWhen) => doWhen.convenio === convenio.Numero
+        (doWhen) => doWhen.convenio == convenio.Numero
       ) === -1
     ) {
       continue;
@@ -119,8 +121,6 @@ async function getFinancieraFlowStepsWithEncargados(
     const exception = stepsFromConfiguration[i].exceptions?.find(
       (exception) => exception.convenio == convenio.Numero
     );
-
-    console.log(convenio);
 
     console.log(stepsFromConfiguration[i].key);
 
