@@ -127,7 +127,7 @@
           <div class="col-12">
             <h5 class="card-title text-center">Informacion de usuario</h5>
           </div>
-          <div *ngIf="tipoPersona === 'Natural'" class="col-12">
+          <div *ngIf="tipoPersona === 'Natural'" class="col-9 col-md-10 col-xl-11">
             <div class="form-floating">
               <input
                 [(ngModel)]="identificator"
@@ -166,7 +166,7 @@
               </div>
             </div>
           </div>
-          <div *ngIf="tipoPersona === 'Juridica'" class="col-12">
+          <div *ngIf="tipoPersona === 'Juridica'" class="col-9 col-md-10 col-xl-11">
             <label for="inputNIT1" class="form-label"
               >NIT (Con digito de verificacion) Ej. 890507890-4<span
                 class="text-danger"
@@ -222,41 +222,12 @@
               </div>
             </div>
           </div>
-          <div class="col-9 col-md-10 col-xl-11">
-            <div class="form-floating">
-              <input
-                [ngClass]="{
-                  'is-valid': isValid(formIndex),
-                  'is-invalid': !validateEmail(email) || validacionUsuarioError
-                }"
-                (input)="invalidateFlowUser()"
-                [(ngModel)]="email"
-                type="email"
-                class="form-control"
-                id="correo"
-                name="correo"
-                placeholder="x"
-              />
-              <label for="correo">Correo electronico</label>
-              <div class="invalid-feedback">
-                <p *ngIf="!validacionUsuarioError">
-                  Este campo es (*) obligatorio, rellenelo.
-                </p>
-                <p *ngIf="validacionUsuarioError">
-                  No se ha entrado ningun registro con los datos ingresados,
-                  verifiquelos y vuelva a intentarlo, o realice el proceso de
-                  registro
-                  <a [routerLink]="['/forms/financiera/registration']">aqui</a>.
-                </p>
-              </div>
-            </div>
-          </div>
           <div class="col-3 col-md-2 col-xl-1 d-grid grap-2 mx-auto">
             <button
               [disabled]="
                 !(tipoPersona === 'Natural'
-                  ? identificator && validateEmail(email)
-                  : identificator && digitoVerificacion && validateEmail(email))
+                  ? identificator
+                  : identificator && digitoVerificacion)
               "
               (click)="btnValidarUsuarioClick()"
               class="btn btn-primary"

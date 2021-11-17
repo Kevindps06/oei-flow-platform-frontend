@@ -164,8 +164,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         this.tipoRelacion,
         this.tipoPersona === 'Juridica'
           ? `${this.identificator}-${this.digitoVerificacion}`
-          : this.identificator,
-        this.email
+          : this.identificator
       )
       .subscribe(
         (event) => {

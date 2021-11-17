@@ -24,7 +24,6 @@ export class FormsService {
     tipoDePersona: string,
     tipoDeRelacion: string,
     identification: string,
-    email: string
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
@@ -36,7 +35,6 @@ export class FormsService {
             tipoDePersona: tipoDePersona,
             tipoDeRelacion: tipoDeRelacion,
             identification: identification,
-            email: email,
           }),
         }
       )
