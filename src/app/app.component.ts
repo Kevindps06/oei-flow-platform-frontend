@@ -33,7 +33,8 @@ export class AppComponent implements OnInit {
         }
 
         if (waitTask.progress === 100) {
-          this.waitTasks[taskIndex].description = "Su peticion se encuentra siendo procesada, por favor espere...";
+          this.waitTasks[taskIndex].description =
+            'Su peticion se encuentra siendo procesada, por favor espere...';
         }
 
         this.waitTasks[taskIndex].progress = waitTask.progress;
@@ -55,11 +56,7 @@ export class AppComponent implements OnInit {
         if (toastMessage.autohide !== -1) {
           setTimeout(
             () => {
-              this.toastMessages.splice(
-                this.toastMessages.findIndex(
-                  (element) => element.id === toastMessage.id
-                )
-              );
+              this.removeToastMessage(toastMessage.id);
             },
             toastMessage.autohide ? toastMessage.autohide : 6500
           );
@@ -69,22 +66,43 @@ export class AppComponent implements OnInit {
   }
 
   removeToastMessage(toastId: string) {
-    this.toastMessages.splice(
+    this.toastMessages[
       this.toastMessages.findIndex((element) => element.id === toastId)
-    );
+    ].hide = true;
+
+    setTimeout(() => {
+      this.toastMessages.splice(
+        this.toastMessages.findIndex((element) => element.id === toastId),
+        1
+      );
+    }, 400);
   }
 
-  loading: boolean = false;
+  loadingScreen: boolean = false;
 
-  animationstart(event: AnimationEvent) {
+  loadingScreenAnimationStart(event: AnimationEvent) {
     if (event.animationName === 'fadeIn') {
-      this.loading = true;
+      this.loadingScreen = true;
     }
   }
 
-  animationend(event: AnimationEvent) {
+  loadingScreenAnimationEnd(event: AnimationEvent) {
     if (event.animationName === 'fadeOut') {
-      this.loading = false;
+      this.loadingScreen = false;
+    }
+  }
+
+  toastShow: boolean = false;
+
+  toastShowAnimationStart(event: AnimationEvent) {
+    if (event.animationName === 'fadeIn') {
+      this.toastShow = true;
+    }
+  }
+
+  toastShowAnimationEnd(event: AnimationEvent) {
+    if (event.animationName === 'fadeOut') {
+      this.toastShow = false;
     }
   }
 }

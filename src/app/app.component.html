@@ -1,9 +1,9 @@
 <div
-  *ngIf="waitTasks.length > 0 || loading"
+  *ngIf="waitTasks.length > 0 || loadingScreen"
   [ngClass]="{
     'fade-in': waitTasks.length > 0,
     'fade-out': waitTasks.length === 0,
-    'd-none': waitTasks.length === 0 && loading === false
+    'd-none': waitTasks.length === 0 && !loadingScreen
   }"
   class="position-fixed"
   style="
@@ -12,8 +12,8 @@
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 11;
   "
-  (animationstart)="animationstart($event)"
-  (animationend)="animationend($event)"
+  (animationstart)="loadingScreenAnimationStart($event)"
+  (animationend)="loadingScreenAnimationEnd($event)"
 >
   <div
     class="position-absolute top-50 start-50 translate-middle"
@@ -58,6 +58,13 @@
   style="z-index: 1111"
 >
   <div
+    [ngClass]="{
+      'fade-in': !toastMessage.hide,
+      'fade-out': toastMessage.hide,
+      'd-none': false
+    }"
+    (animationstart)="toastShowAnimationStart($event)"
+    (animationend)="toastShowAnimationEnd($event)"
     *ngFor="let toastMessage of toastMessages"
     style="display: block"
     data-bs-autohide="false"
