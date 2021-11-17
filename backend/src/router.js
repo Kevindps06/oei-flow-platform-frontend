@@ -4,6 +4,7 @@ const router = express.Router();
 const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
+const fs = require('fs')
 const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
 const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
 const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
@@ -145,7 +146,7 @@ router.delete("/configuration/coordinacionlogisticaflow", async (req, res) => {
 
 // Forms - FinancieraInvoice
 
-router.post("/forms/financiera/invoice", async (req, res) => {
+router.post("/forms/financiera/invoices", async (req, res) => {
   try {
     fs.writeFileSync("lastbody.json", req.body);
 
@@ -161,7 +162,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
   }
 });
 
-router.get("/forms/financiera/invoice", async (req, res) => {
+router.get("/forms/financiera/invoices", async (req, res) => {
   try {
     const financieraInvoice = await FinancieraInvoice.find(
       utils.formsFinancieraInvoiceObjectWithoutUndefined(
@@ -196,7 +197,7 @@ router.get("/forms/financiera/invoice", async (req, res) => {
   }
 });
 
-router.put("/forms/financiera/invoice", async (req, res) => {
+router.put("/forms/financiera/invoices", async (req, res) => {
   try {
     const financieraInvoice = await FinancieraInvoice.updateMany(
       utils.formsFinancieraInvoiceObjectWithoutUndefined(
@@ -232,7 +233,7 @@ router.put("/forms/financiera/invoice", async (req, res) => {
   }
 });
 
-router.delete("/forms/financiera/invoice", async (req, res) => {
+router.delete("/forms/financiera/invoices", async (req, res) => {
   try {
     const financieraInvoice = await FinancieraInvoice.deleteMany(
       utils.formsFinancieraInvoiceObjectWithoutUndefined(
@@ -1259,7 +1260,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
     Keys: Object.keys(formsFinancieraInvoice),
   });
 
-  while (true) {
+  //while (true) {
     try {
       let promises = [];
 
@@ -1286,11 +1287,11 @@ router.post("/forms/financiera/invoice", async (req, res) => {
 
       await Promise.all(promises);
 
-      break;
+      //break;
     } catch (err) {
       console.log(err);
     }
-  }
+  //}
 
   res.status(201).send();
 });
