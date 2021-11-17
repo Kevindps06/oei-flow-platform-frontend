@@ -1030,7 +1030,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.CuentaCobroFiles.length > i; i++) {
           cuentaCobroFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPzath}/Cuenta de cobro o factura/${i}. ${req.body.CuentaCobroFiles[i].Name}`,
+              `${gestionPath}/Cuenta de cobro o factura/${i}. ${req.body.CuentaCobroFiles[i].Name}`,
               req.body.CuentaCobroFiles[i].Bytes
             )
           );
