@@ -147,6 +147,8 @@ router.delete("/configuration/coordinacionlogisticaflow", async (req, res) => {
 
 router.post("/forms/financiera/invoice", async (req, res) => {
   try {
+    console.log(req.body)
+
     const financieraInvoice = new FinancieraInvoice(req.body);
 
     await financieraInvoice.save();
@@ -1515,18 +1517,18 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
       let promises = [];
 
       // For localhost testing only
-      promises.push(
+      /*promises.push(
         axios.default.post(
           `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
           formsCoordinacionLogistica
         )
-      );
+      );*/
 
       // Production direct with database
-      const coordinacionLogistica = new CoordinacionLogistica(
+      /*const coordinacionLogistica = new CoordinacionLogistica(
         formsCoordinacionLogistica
       );
-      promises.push(coordinacionLogistica.save());
+      promises.push(coordinacionLogistica.save());*/
 
       promises.push(
         axios.default.post(
