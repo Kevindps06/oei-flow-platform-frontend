@@ -7,8 +7,8 @@ const utils = require("./utils/utils");
 const fs = require('fs')
 const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
 const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
-const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
-const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
+//const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
+//const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
 
 // Configuration - FinancieraFlow
 
@@ -1267,10 +1267,10 @@ router.post("/forms/financiera/invoice", async (req, res) => {
       // For localhost testing only
       /*promises.push(
         axios.default.post(
-          `https://oeiprojectflow.org/api/forms/financiera/invoice`,
+          `https://oeiprojectflow.org/api/forms/financiera/invoices`,
           formsFinancieraInvoice
         )
-      );*/
+      );
 
       // Production direct with database
       /*const financieraInvoice = new FinancieraInvoice(
@@ -1485,20 +1485,6 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
   while (true) {
     try {
       let promises = [];
-
-      // For localhost testing only
-      /*promises.push(
-        axios.default.post(
-          `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
-          formsCoordinacionLogistica
-        )
-      );*/
-
-      // Production direct with database
-      /*const coordinacionLogistica = new CoordinacionLogistica(
-        formsCoordinacionLogistica
-      );
-      promises.push(coordinacionLogistica.save());*/
 
       promises.push(
         axios.default.post(
