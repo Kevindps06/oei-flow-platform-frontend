@@ -436,7 +436,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         this.tipoPersona === 'Natural'
           ? this.identificator
           : `${this.identificator}-${this.digitoVerificacion}`,
-      Email: this.email,
+      Email: this.flowUser.fields.Emaildecontacto,
       TipoGestion: this.tipoGestion,
       TipoLegalizacion: this.tipoLegalizacion,
       Convenio: this.convenio,
