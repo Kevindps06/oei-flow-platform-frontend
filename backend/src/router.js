@@ -5,10 +5,10 @@ const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
 const fs = require("fs");
-//const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
-//const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
-//const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
-//const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
+const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
+const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
+const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
+const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
 
 // Configuration - FinancieraFlow
 
@@ -1030,7 +1030,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.CuentaCobroFiles.length > i; i++) {
           cuentaCobroFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Cuenta de cobro o factura/${i}. ${req.body.CuentaCobroFiles[i].Name}`,
+              `${gestionPzath}/Cuenta de cobro o factura/${i}. ${req.body.CuentaCobroFiles[i].Name}`,
               req.body.CuentaCobroFiles[i].Bytes
             )
           );
@@ -1121,7 +1121,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
           SharePointFiles: [
             {
-              Name: "Cuenta de cobro",
+              Name: "Cuenta de cobro o factura",
               Files: CuentaCobroSharePointFiles,
             },
             {

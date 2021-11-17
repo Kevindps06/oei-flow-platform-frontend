@@ -1,6 +1,6 @@
 const axios = require("axios");
 const auth = require("../apis/microsoft/auth");
-//const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
+const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
 
 async function getConvenioFromSharePoint(convenioNumber) {
   let convenioFromSharePoint;
@@ -77,7 +77,7 @@ async function getFinancieraFlowStepsWithEncargados(
   convenio
 ) {
   // For localhost testing only
-  let stepsFromConfiguration = (
+  /*let stepsFromConfiguration = (
     await axios.default.get(
       `https://oeiprojectflow.org/api/configuration/financieraflow`,
       {
@@ -89,10 +89,10 @@ async function getFinancieraFlowStepsWithEncargados(
         },
       }
     )
-  ).data[0].steps;
+  ).data[0].steps;*/
 
   // Production direct with database
-  /*let stepsFromConfiguration = (
+  let stepsFromConfiguration = (
     await FinancieraFlow.find(
       financieraFlowObjectWithoutUndefined(
         _id,
@@ -103,7 +103,7 @@ async function getFinancieraFlowStepsWithEncargados(
         steps
       )
     )
-  )[0].steps;*/
+  )[0].steps;
 
   let stepsFromConfigurationFilled = []
 
