@@ -14,7 +14,6 @@ import { Convenio } from 'src/app/interfaces/Convenio';
 import { FormsFinancieraInvoice } from 'src/app/interfaces/forms-financiera-invoice';
 import { ToastMessage } from 'src/app/interfaces/toast-message';
 import { SharedService } from 'src/app/services/shared.service';
-import { defaultIfEmpty } from 'rxjs/operators';
 
 @Component({
   selector: 'app-forms-financiera-invoice',
@@ -331,6 +330,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               });
               break;
             case HttpEventType.Response:
+              this.convenios = [];
+
               event.body.value.forEach((convenio: any) => {
                 this.convenios.push({
                   Id: convenio.id,
@@ -394,6 +395,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               });
               break;
             case HttpEventType.Response:
+              this.convenios = [];
+
               event.body.value.forEach((convenio: any) => {
                 this.convenios.push({
                   Id: convenio.id,
@@ -603,6 +606,17 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         (err) => {
           this.sharedService.removeWaitTask({
             id: taskId,
+          });
+
+          this.sharedService.pushToastMessage({
+            id: Utils.makeRandomString(4),
+            title: `Ha ocurrido algo`,
+            description: `No se ha podido enviar su ${(formsFinancieraInvoice.TipoGestion ===
+            'Legalizacion'
+              ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
+              : formsFinancieraInvoice.TipoGestion
+            ).toLowerCase()} debido a algo, vuelva a intentarlo o contacte con el area de soporte encargada.`,
+            autohide: 30000,
           });
         }
       );

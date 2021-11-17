@@ -4,11 +4,11 @@ const router = express.Router();
 const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
-const fs = require('fs')
+const fs = require("fs");
 const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
 const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
-//const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
-//const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
+const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
+const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
 
 // Configuration - FinancieraFlow
 
@@ -855,11 +855,11 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         break;
       case "Dieta":
         var formatoSolicitudViajesFilesPromises = [];
-        for (let i = 0; req.body.FormatoSolicitudViajes.length > i; i++) {
+        for (let i = 0; req.body.FormatoSolicitudViajesFiles.length > i; i++) {
           formatoSolicitudViajesFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Dieta/${i}. ${req.body.FormatoSolicitudViajes[i].Name}`,
-              req.body.FormatoSolicitudViajes[i].Bytes
+              `${gestionPath}/Dieta/${i}. ${req.body.FormatoSolicitudViajesFiles[i].Name}`,
+              req.body.FormatoSolicitudViajesFiles[i].Bytes
             )
           );
         }
@@ -1260,12 +1260,11 @@ router.post("/forms/financiera/invoice", async (req, res) => {
     Keys: Object.keys(formsFinancieraInvoice),
   });
 
-  //while (true) {
-    try {
-      let promises = [];
+  try {
+    let promises = [];
 
-      // For localhost testing only
-      /*promises.push(
+    // For localhost testing only
+    /*promises.push(
         axios.default.post(
           `https://oeiprojectflow.org/api/forms/financiera/invoices`,
           formsFinancieraInvoice
@@ -1278,20 +1277,19 @@ router.post("/forms/financiera/invoice", async (req, res) => {
       );
       promises.push(financieraInvoice.save());*/
 
-      promises.push(
-        axios.default.post(
-          `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
-          [formsFinancieraInvoice]
-        )
-      );
+    promises.push(
+      axios.default.post(
+        `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
+        [formsFinancieraInvoice]
+      )
+    );
 
-      await Promise.all(promises);
-
-      //break;
-    } catch (err) {
-      console.log(err);
-    }
-  //}
+    await Promise.all(promises);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send()
+    return
+  }
 
   res.status(201).send();
 });

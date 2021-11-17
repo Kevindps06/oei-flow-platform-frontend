@@ -425,5 +425,5 @@ module.exports = {
     formsCoordinacionLogisticaObjectWithoutUndefined,
   getConvenioFromSharePoint: getConvenioFromSharePoint,
   getFinancieraFlowStepsWithEncargados: getFinancieraFlowStepsWithEncargados,
-  getUserFromSharePoint: getUserFromSharePoint
+  getUserFromSharePoint: getUserFromSharePoint,
 };
