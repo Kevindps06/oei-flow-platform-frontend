@@ -147,7 +147,7 @@ router.delete("/configuration/coordinacionlogisticaflow", async (req, res) => {
 
 router.post("/forms/financiera/invoice", async (req, res) => {
   try {
-    console.log(req.body)
+    fs.writeFileSync("lastbody.json", req.body);
 
     const financieraInvoice = new FinancieraInvoice(req.body);
 
@@ -155,7 +155,8 @@ router.post("/forms/financiera/invoice", async (req, res) => {
 
     res.status(201).json(financieraInvoice);
   } catch (err) {
-    console.log(err);
+    fs.writeFileSync("lasterror.json", err);
+
     res.status(500).json(err);
   }
 });
@@ -1280,39 +1281,6 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         axios.default.post(
           `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
           [formsFinancieraInvoice]
-        )
-      );
-
-      await Promise.all(promises);
-
-      break;
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  while (true) {
-    try {
-      let promises = [];
-
-      // For localhost testing only
-      promises.push(
-        axios.default.post(
-          `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
-          formsCoordinacionLogistica
-        )
-      );
-
-      // Production direct with database
-      const coordinacionLogistica = new CoordinacionLogistica(
-        formsCoordinacionLogistica
-      );
-      promises.push(coordinacionLogistica.save());
-
-      promises.push(
-        axios.default.post(
-          `https://prod-10.brazilsouth.logic.azure.com:443/workflows/d9284b8deff34c34b78c7309cbeb0f45/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xt5QdZEYOiWUAmAfu-ykUU1oMDBm2bKT9yUBS0k63sw`,
-          [formsCoordinacionLogistica]
         )
       );
 
