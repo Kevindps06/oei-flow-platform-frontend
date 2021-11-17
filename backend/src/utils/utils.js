@@ -105,13 +105,14 @@ async function getFinancieraFlowStepsWithEncargados(
     )
   )[0].steps;
 
+  let stepsFromConfigurationFilled = []
+
   for (let i = 0; stepsFromConfiguration.length > i; i++) {
     if (
       stepsFromConfiguration[i].doWhen &&
-      stepsFromConfiguration[i].doWhen.length > 0 &&
-      stepsFromConfiguration[i].doWhen.findIndex(
+      !stepsFromConfiguration[i].doWhen.find(
         (doWhen) => doWhen.convenio == convenio.Numero
-      ) === -1
+      )
     ) {
       continue;
     }
@@ -127,9 +128,11 @@ async function getFinancieraFlowStepsWithEncargados(
     );
 
     stepsFromConfiguration[i].encargado = encargado;
+
+    stepsFromConfigurationFilled.push(stepsFromConfiguration[i]);
   }
 
-  return stepsFromConfiguration;
+  return stepsFromConfigurationFilled;
 }
 
 function makeRandomString(length) {

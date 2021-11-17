@@ -858,7 +858,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         for (let i = 0; req.body.FormatoSolicitudViajesFiles.length > i; i++) {
           formatoSolicitudViajesFilesPromises.push(
             utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Dieta/${i}. ${req.body.FormatoSolicitudViajesFiles[i].Name}`,
+              `${gestionPath}/Formato de solicitud de viajes/${i}. ${req.body.FormatoSolicitudViajesFiles[i].Name}`,
               req.body.FormatoSolicitudViajesFiles[i].Bytes
             )
           );
