@@ -19,6 +19,7 @@ router.post("/configuration/financieraflow", async (req, res) => {
 
     res.status(201).json(financieraFlow);
   } catch (err) {
+    console.log(err)
     res.status(500).json(err);
   }
 });
