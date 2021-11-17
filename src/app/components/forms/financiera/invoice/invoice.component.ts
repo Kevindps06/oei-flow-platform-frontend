@@ -184,6 +184,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               break;
             case HttpEventType.Response:
               this.flowUser = event.body.userInfo;
+              this.email = this.flowUser.fields.Emaildecontacto;
               this.verificationCode = event.body.generatedCode;
 
               this.sharedService.removeWaitTask({
@@ -234,7 +235,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         // Reset form index 1 values
         this.identificator = '';
         this.digitoVerificacion = '';
-        this.email = '';
+        //this.email = '';
         this.flowUser = undefined;
         this.verificationCode = '';
         this.validacionUsuarioError = false;
@@ -271,7 +272,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         // Reset form index 1 values
         this.identificator = '';
         this.digitoVerificacion = '';
-        this.email = '';
+        //this.email = '';
         this.flowUser = undefined;
         this.verificationCode = '';
         this.validacionUsuarioError = false;
@@ -436,7 +437,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         this.tipoPersona === 'Natural'
           ? this.identificator
           : `${this.identificator}-${this.digitoVerificacion}`,
-      Email: this.flowUser.fields.Emaildecontacto,
+      Email: this.email,
       TipoGestion: this.tipoGestion,
       TipoLegalizacion: this.tipoLegalizacion,
       Convenio: this.convenio,
@@ -532,7 +533,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
     this.convenio = '';
     this.tipoLegalizacion = '';
     this.tipoGestion = '';
-    this.email = '';
+    //this.email = '';
     this.digitoVerificacion = '';
     this.identificator = '';
     this.tipoRelacion = '';
