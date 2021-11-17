@@ -5,10 +5,10 @@ const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
 const fs = require("fs");
-//const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
-//const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
-//const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
-//const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
+const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
+const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
+const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
+const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
 
 // Configuration - FinancieraFlow
 
