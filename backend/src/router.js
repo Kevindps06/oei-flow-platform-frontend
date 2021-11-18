@@ -673,7 +673,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
 
         uploadFilesPromises.push(
           utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Cuenta de cobro`,
+            `${gestionPath}/Cuenta de cobro o factura`,
             req.body.CuentaCobroFiles
           )
         );
@@ -704,7 +704,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
           SharePointFiles: [
             {
-              Name: "Cuenta de cobro",
+              Name: "Cuenta de cobro o factura",
               Files: promisesResponses[0],
             },
             {
@@ -878,6 +878,13 @@ router.post("/forms/financiera/invoice", async (req, res) => {
           )
         );
 
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Poliza de anticipo y cumpliento`,
+            req.body.PolizaAnticipoCumplientoFiles
+          )
+        );
+
         var promisesResponses = await Promise.all(uploadFilesPromises);
 
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
@@ -897,6 +904,10 @@ router.post("/forms/financiera/invoice", async (req, res) => {
             {
               Name: "Informe de actividades",
               Files: promisesResponses[3],
+            },
+            {
+              Name: "Poliza de anticipo y cumpliento",
+              Files: promisesResponses[4]
             },
           ],
         });

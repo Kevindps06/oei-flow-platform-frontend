@@ -179,8 +179,6 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
 
     this.formIndex = 0;
 
-    console.log(formsFinancieraRegistration);
-
     var taskId: string;
     this.formsService
       .postFormsFinancieraRegistration(formsFinancieraRegistration)

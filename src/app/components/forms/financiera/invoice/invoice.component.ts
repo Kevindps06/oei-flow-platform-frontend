@@ -46,7 +46,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   convenios: Convenio[] = [];
   convenio: string = '';
 
-  // Cuenta de cobro/Factura
+  // Cuenta de cobro o factura
 
   cuentaCobroFacturaFiles: FileItem[] = [];
 
@@ -72,6 +72,14 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
 
   setInformeActividadesFiles(informeActividadesFiles: FileItem[]) {
     this.informeActividadesFiles = informeActividadesFiles;
+  }
+
+  polizaAnticipoCumplimientoFiles: FileItem[] = [];
+
+  setPolizaAnticipoCumplimientoFiles(
+    polizaAnticipoCumplimientoFiles: FileItem[]
+  ) {
+    this.polizaAnticipoCumplimientoFiles = polizaAnticipoCumplimientoFiles;
   }
 
   // Anticipo
@@ -504,6 +512,16 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
             CertificadoParafiscalesFiles: this.seguridadSocialParafiscalesFiles,
             InformeActividadesFiles: this.informeActividadesFiles,
           });
+
+          if (this.tipoRelacion === 'Contratista') {
+            formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
+              PolizaAnticipoCumplientoFiles:
+                this.polizaAnticipoCumplimientoFiles,
+            });
+
+            this.polizaAnticipoCumplimientoFiles = [];
+          }
+
           // Cleaning fields because information has been saved
           this.informeActividadesFiles = [];
           this.seguridadSocialParafiscalesFiles = [];
@@ -533,7 +551,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
     this.tipoGestion = '';
     //this.email = '';
     this.digitoVerificacion = '';
-    this.invalidateFlowUser()
+    this.invalidateFlowUser();
     this.identificator = '';
     this.tipoRelacion = '';
     this.tipoPersona = '';
@@ -624,10 +642,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   isValid(formIndex: number = this.formIndex) {
     switch (formIndex) {
       case 0:
-        if (this.tipoPersona === 'Juridica') {
-          this.tipoRelacion = 'Proveedor';
-        }
-
         return this.tipoPersona && this.tipoRelacion;
       case 1:
         return this.flowUser;
@@ -643,7 +657,11 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 Utils.validateFiles(this.cuentaCobroFacturaFiles) &&
                 Utils.validateFiles(this.facturaEquivalenteFiles) &&
                 Utils.validateFiles(this.seguridadSocialParafiscalesFiles) &&
-                Utils.validateFiles(this.informeActividadesFiles)
+                Utils.validateFiles(this.informeActividadesFiles) &&
+                (this.tipoRelacion === 'Contratista' &&
+                this.tipoPersona === 'Juridica'
+                  ? Utils.validateFiles(this.polizaAnticipoCumplimientoFiles)
+                  : true)
               );
             case 'Anticipo':
               return Utils.validateFiles(this.formatoSolicitudAvancesFiles);

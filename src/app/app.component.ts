@@ -111,4 +111,18 @@ export class AppComponent implements OnInit {
       this.toastShow = false;
     }
   }
+
+  inMaintenance: boolean = false;
+
+  maintenanceScreenAnimationStart(event: AnimationEvent) {
+    if (event.animationName === 'fadeIn') {
+      this.toastShow = true;
+    }
+  }
+
+  maintenanceScreenAnimationEnd(event: AnimationEvent) {
+    if (event.animationName === 'fadeOut') {
+      this.toastShow = false;
+    }
+  }
 }

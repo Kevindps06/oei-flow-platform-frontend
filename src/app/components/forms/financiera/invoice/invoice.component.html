@@ -80,7 +80,6 @@
                   'is-valid': tipoRelacion,
                   'is-invalid': !tipoRelacion || validacionUsuarioError
                 }"
-                [disabled]="tipoPersona === 'Juridica'"
               />
               <label class="form-check-label" for="tipoRelacionContratista"
                 >Contratista</label
@@ -152,9 +151,7 @@
                 [OnlyNumbers]="true"
               />
               <label for="floatingInputIdentificator"
-                >Cedula de ciudadania<span class="text-danger"
-                  >*</span
-                ></label
+                >Cedula de ciudadania<span class="text-danger">*</span></label
               >
               <div class="invalid-feedback">
                 <p *ngIf="!validacionUsuarioError">
@@ -301,14 +298,10 @@
             value="Cuenta de cobro"
           />
           <label class="form-check-label" for="tipoSoporteContable0">
-            {{
-              tipoPersona === "Natural"
-                ? "Cuenta de cobro"
-                : "Cuenta de cobro o factura"
-            }}
+            Cuenta de cobro o factura
           </label>
         </div>
-        <div class="form-check">
+        <div *ngIf="tipoPersona !== 'Juridica'" class="form-check">
           <input
             [(ngModel)]="tipoGestion"
             class="form-check-input"
@@ -321,7 +314,7 @@
             Anticipo
           </label>
         </div>
-        <div *ngIf="tipoRelacion === 'Contratista'" class="form-check">
+        <div *ngIf="tipoPersona !== 'Juridica' && tipoRelacion === 'Contratista'" class="form-check">
           <input
             [(ngModel)]="tipoGestion"
             class="form-check-input"
@@ -334,7 +327,7 @@
             Dieta
           </label>
         </div>
-        <div *ngIf="tipoRelacion === 'Contratista'" class="form-check">
+        <div *ngIf="tipoPersona !== 'Juridica' && tipoRelacion === 'Contratista'" class="form-check">
           <input
             [(ngModel)]="tipoGestion"
             class="form-check-input"
@@ -417,15 +410,11 @@
               </div>
             </div>
           </div>
-          <!-- Cuenta de cobro/Factura -->
+          <!-- Cuenta de cobro o factura -->
           <div *ngIf="tipoGestion === 'Cuenta de cobro'">
             <div class="col-12">
               <label for="fieldCuentaCobroFacturaFiles" class="form-label"
-                >{{
-                  tipoPersona === "Natural"
-                    ? "Cuenta de cobro"
-                    : "Cuenta de cobro o factura"
-                }}<span class="text-danger">*</span>
+                >Cuenta de cobro o factura<span class="text-danger">*</span>
               </label>
               <app-upload-files
                 [requiredFeedback]="
@@ -476,6 +465,19 @@
                   'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
                 "
                 (onFilesChange)="setInformeActividadesFiles($event)"
+              ></app-upload-files>
+            </div>
+            <div *ngIf="tipoRelacion === 'Contratista' && tipoPersona === 'Juridica'" class="col-12">
+              <label for="uploadFilesPolizaAnticipoCumplimiento" class="form-label"
+                >Poliza de anticipo y cumpliento<span class="text-danger">*</span></label
+              >
+              <app-upload-files
+                name="uploadFilesPolizaAnticipoCumplimiento"
+                id="uploadFilesPolizaAnticipoCumplimiento"
+                [requiredFeedback]="
+                  'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                "
+                (onFilesChange)="setPolizaAnticipoCumplimientoFiles($event)"
               ></app-upload-files>
             </div>
           </div>
