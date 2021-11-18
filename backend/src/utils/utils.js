@@ -5,7 +5,7 @@ const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
 async function getConvenioFromSharePoint(convenioNumber) {
   let convenioFromSharePoint;
 
-  let retries = 0
+  let retries = 0;
   do {
     try {
       convenioFromSharePoint = (
@@ -33,7 +33,7 @@ async function getConvenioFromSharePoint(convenioNumber) {
     }
 
     retries++;
-  } while (!convenioFromSharePoint || retries < 5);
+  } while (!convenioFromSharePoint && retries < 5);
 
   return convenioFromSharePoint;
 }
@@ -68,7 +68,7 @@ async function getUserFromSharePoint(lookupId) {
     }
 
     retries++;
-  } while (!user || retries < 5);
+  } while (!user && retries < 5);
 
   return user;
 }
@@ -111,7 +111,7 @@ async function getFinancieraFlowStepsWithEncargados(
     )
   )[0].steps;
 
-  let stepsFromConfigurationFilled = []
+  let stepsFromConfigurationFilled = [];
 
   for (let i = 0; stepsFromConfiguration.length > i; i++) {
     if (
@@ -154,7 +154,7 @@ function makeRandomString(length) {
   return result;
 }
 
-async function uploadFileToSharePointWorkflowOEI(path, base64) {
+async function uploadFileToSharePoint(path, base64) {
   const authResponse = await auth.getToken(auth.tokenRequest);
 
   var response = await axios.default.post(
@@ -204,6 +204,26 @@ async function uploadFileToSharePointWorkflowOEI(path, base64) {
   }
 
   return uploadResponse;
+}
+
+async function uploadFilesToSharePointWorkflow(path, files) {
+  let filesPromises = [];
+
+  for (let file in files) {
+    filesPromises.push(
+      uploadFileToSharePoint(
+        `${path}/${file}. ${files[file].Name}`,
+        files[file].Bytes
+      )
+    );
+  }
+
+  let promisesResponse = []
+  for (let promiseResponse of await Promise.all(filesPromises)) {
+    promisesResponse.push(promiseResponse.data);
+  }
+
+  return promisesResponse;
 }
 
 function financieraFlowObjectWithoutUndefined(
@@ -423,7 +443,8 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
 }
 
 module.exports = {
-  uploadFileToSharePointWorkflowOEI: uploadFileToSharePointWorkflowOEI,
+  uploadFileToSharePoint: uploadFileToSharePoint,
+  uploadFilesToSharePointWorkflow: uploadFilesToSharePointWorkflow,
   makeRandomString: makeRandomString,
   financieraFlowObjectWithoutUndefined: financieraFlowObjectWithoutUndefined,
   coordinacionLogisticaFlowObjectWithoutUndefined:

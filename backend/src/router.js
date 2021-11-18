@@ -10,6 +10,19 @@ const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionL
 const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
 const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
 
+router.get("/request", async (req, res) => {
+  let retries = 0;
+  do {
+    try {
+      throw `Try ${retries}`;
+    } catch {
+      console.log(`Log Try ${retries}`);
+    }
+
+    retries++;
+  } while (retries < 5);
+});
+
 // Configuration - FinancieraFlow
 
 router.post("/configuration/financieraflow", async (req, res) => {
@@ -388,20 +401,6 @@ router.delete("/forms/coordinacioneslogisticas", async (req, res) => {
   }
 });
 
-router.post("/request", async (req, res) => {
-  var response;
-  try {
-    response = await utils.uploadFileToSharePointWorkflowOEI(
-      `/${req.body.filename}`,
-      req.body.bytes
-    );
-
-    res.status(response.status).json(response.data);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
 router.get("/convenios", async (req, res) => {
   const authResponse = await auth.getToken(auth.tokenRequest);
 
@@ -670,236 +669,119 @@ router.post("/forms/financiera/invoice", async (req, res) => {
   if (req.body.TipoPersona === "Natural") {
     switch (req.body.TipoGestion) {
       case "Cuenta de cobro":
-        var cuentaCobroFilesPromises = [];
-        for (let i = 0; req.body.CuentaCobroFiles.length > i; i++) {
-          cuentaCobroFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Cuenta de cobro/${i}. ${req.body.CuentaCobroFiles[i].Name}`,
-              req.body.CuentaCobroFiles[i].Bytes
-            )
-          );
-        }
+        var uploadFilesPromises = [];
 
-        var facturaEquivalenteFilesPromises = [];
-        for (let i = 0; req.body.FacturaEquivalenteFiles.length > i; i++) {
-          facturaEquivalenteFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Factura equivalente/${i}. ${req.body.FacturaEquivalenteFiles[i].Name}`,
-              req.body.FacturaEquivalenteFiles[i].Bytes
-            )
-          );
-        }
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Cuenta de cobro`,
+            req.body.CuentaCobroFiles
+          )
+        );
 
-        var seguridadSocialFilesPromises = [];
-        for (let i = 0; req.body.SeguridadSocialFiles.length > i; i++) {
-          seguridadSocialFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Seguridad Social/${i}. ${req.body.SeguridadSocialFiles[i].Name}`,
-              req.body.SeguridadSocialFiles[i].Bytes
-            )
-          );
-        }
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Factura equivalente`,
+            req.body.FacturaEquivalenteFiles
+          )
+        );
 
-        var informeActividadesFilesPromises = [];
-        for (let i = 0; req.body.InformeActividadesFiles.length > i; i++) {
-          informeActividadesFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Informe de actividades/${i}. ${req.body.InformeActividadesFiles[i].Name}`,
-              req.body.InformeActividadesFiles[i].Bytes
-            )
-          );
-        }
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Seguridad Social`,
+            req.body.SeguridadSocialFiles
+          )
+        );
 
-        var promiseResponses = await Promise.all([
-          ...cuentaCobroFilesPromises,
-          ...facturaEquivalenteFilesPromises,
-          ...seguridadSocialFilesPromises,
-          ...informeActividadesFilesPromises,
-        ]);
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Informe de actividades`,
+            req.body.InformeActividadesFiles
+          )
+        );
 
-        CuentaCobroSharePointFiles = [];
-        FacturaEquivalenteSharePointFiles = [];
-        SeguridadSocialSharePointFiles = [];
-        InformeActividadesSharePointFiles = [];
-
-        var promiseResponsesOffSet = 0;
-        for (
-          let i = promiseResponsesOffSet;
-          cuentaCobroFilesPromises.length > i;
-          i++
-        ) {
-          CuentaCobroSharePointFiles.push(promiseResponses[i].data);
-        }
-
-        promiseResponsesOffSet =
-          promiseResponsesOffSet + cuentaCobroFilesPromises.length;
-        for (
-          let i = promiseResponsesOffSet;
-          promiseResponsesOffSet + facturaEquivalenteFilesPromises.length > i;
-          i++
-        ) {
-          FacturaEquivalenteSharePointFiles.push(promiseResponses[i].data);
-        }
-
-        promiseResponsesOffSet =
-          promiseResponsesOffSet + facturaEquivalenteFilesPromises.length;
-        for (
-          let i = promiseResponsesOffSet;
-          promiseResponsesOffSet + seguridadSocialFilesPromises.length > i;
-          i++
-        ) {
-          SeguridadSocialSharePointFiles.push(promiseResponses[i].data);
-        }
-
-        promiseResponsesOffSet =
-          promiseResponsesOffSet + seguridadSocialFilesPromises.length;
-        for (
-          let i = promiseResponsesOffSet;
-          promiseResponsesOffSet + informeActividadesFilesPromises.length > i;
-          i++
-        ) {
-          InformeActividadesSharePointFiles.push(promiseResponses[i].data);
-        }
+        var promisesResponses = await Promise.all(uploadFilesPromises);
 
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
           SharePointFiles: [
             {
               Name: "Cuenta de cobro",
-              Files: CuentaCobroSharePointFiles,
+              Files: promisesResponses[0],
             },
             {
               Name: "Factura equivalente",
-              Files: FacturaEquivalenteSharePointFiles,
+              Files: promisesResponses[1],
             },
             {
               Name: "Seguridad social",
-              Files: SeguridadSocialSharePointFiles,
+              Files: promisesResponses[2],
             },
             {
               Name: "Informe de actividades",
-              Files: InformeActividadesSharePointFiles,
+              Files: promisesResponses[3],
             },
           ],
         });
         break;
       case "Anticipo":
-        var formatoSolicitudAvancesFilesPromises = [];
-        for (let i = 0; req.body.FormatoSolicitudAvancesFiles.length > i; i++) {
-          formatoSolicitudAvancesFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Formato de solicitud de avances/${i}. ${req.body.FormatoSolicitudAvancesFiles[i].Name}`,
-              req.body.FormatoSolicitudAvancesFiles[i].Bytes
-            )
-          );
-        }
+        var uploadFilesPromises = [];
 
-        var cotizacionesFilesPromises = [];
-        for (let i = 0; req.body.CotizacionesFiles.length > i; i++) {
-          cotizacionesFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Cotizaciones/${i}. ${req.body.CotizacionesFiles[i].Name}`,
-              req.body.CotizacionesFiles[i].Bytes
-            )
-          );
-        }
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Formato de solicitud de avances`,
+            req.body.FormatoSolicitudAvancesFiles
+          )
+        );
 
-        var solicitudesComisionFilesPromises = [];
-        for (let i = 0; req.body.SolicitudesComisionFiles.length > i; i++) {
-          solicitudesComisionFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Solicitudes de comision/${i}. ${req.body.SolicitudesComisionFiles[i].Name}`,
-              req.body.SolicitudesComisionFiles[i].Bytes
-            )
-          );
-        }
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Cotizaciones`,
+            req.body.CotizacionesFiles
+          )
+        );
 
-        var promiseResponses = await Promise.all([
-          ...formatoSolicitudAvancesFilesPromises,
-          ...cotizacionesFilesPromises,
-          ...solicitudesComisionFilesPromises,
-        ]);
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Solicitudes de comision`,
+            req.body.SolicitudesComisionFiles
+          )
+        );
 
-        FormatoSolicitudAvancesSharePointFiles = [];
-        CotizacionesSharePointFiles = [];
-        SolicitudesComisionSharePointFiles = [];
-
-        var promiseResponsesOffSet = 0;
-        for (
-          let i = promiseResponsesOffSet;
-          formatoSolicitudAvancesFilesPromises.length > i;
-          i++
-        ) {
-          FormatoSolicitudAvancesSharePointFiles.push(promiseResponses[i].data);
-        }
-
-        promiseResponsesOffSet =
-          promiseResponsesOffSet + formatoSolicitudAvancesFilesPromises.length;
-        for (
-          let i = promiseResponsesOffSet;
-          promiseResponsesOffSet + cotizacionesFilesPromises.length > i;
-          i++
-        ) {
-          CotizacionesSharePointFiles.push(promiseResponses[i].data);
-        }
-
-        promiseResponsesOffSet =
-          promiseResponsesOffSet + cotizacionesFilesPromises.length;
-        for (
-          let i = promiseResponsesOffSet;
-          promiseResponsesOffSet + solicitudesComisionFilesPromises.length > i;
-          i++
-        ) {
-          SolicitudesComisionSharePointFiles.push(promiseResponses[i].data);
-        }
+        var promisesResponses = await Promise.all(uploadFilesPromises);
 
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
           SharePointFiles: [
             {
               Name: "Formato de solicitud de avances",
-              Files: FormatoSolicitudAvancesSharePointFiles,
+              Files: promisesResponses[0],
             },
             {
               Name: "Cotizaciones",
-              Files: CotizacionesSharePointFiles,
+              Files: promisesResponses[1],
             },
             {
               Name: "Solicitudes de comision",
-              Files: SolicitudesComisionSharePointFiles,
+              Files: promisesResponses[2],
             },
           ],
         });
         break;
       case "Dieta":
-        var formatoSolicitudViajesFilesPromises = [];
-        for (let i = 0; req.body.FormatoSolicitudViajesFiles.length > i; i++) {
-          formatoSolicitudViajesFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Formato de solicitud de viajes/${i}. ${req.body.FormatoSolicitudViajesFiles[i].Name}`,
-              req.body.FormatoSolicitudViajesFiles[i].Bytes
-            )
-          );
-        }
+        var uploadFilesPromises = [];
 
-        var promiseResponses = await Promise.all(
-          formatoSolicitudViajesFilesPromises
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Formato de solicitud de viajes`,
+            req.body.FormatoSolicitudViajesFiles
+          )
         );
 
-        FormatoSolicitudViajesSharePointFiles = [];
-
-        var promiseResponsesOffSet = 0;
-        for (
-          let i = promiseResponsesOffSet;
-          formatoSolicitudViajesFilesPromises.length > i;
-          i++
-        ) {
-          FormatoSolicitudViajesSharePointFiles.push(promiseResponses[i].data);
-        }
+        var promisesResponses = await Promise.all(uploadFilesPromises);
 
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
           SharePointFiles: [
             {
               Name: "Formato de solicitud de viajes",
-              Files: FormatoSolicitudViajesSharePointFiles,
+              Files: promisesResponses[0],
             },
           ],
         });
@@ -907,131 +789,55 @@ router.post("/forms/financiera/invoice", async (req, res) => {
       case "Legalizacion":
         switch (req.body.TipoLegalizacion) {
           case "Desplazamiento":
-            var formatoLegalizacionViajesFilesPromises = [];
-            for (
-              let i = 0;
-              req.body.FormatoLegalizacionViajesFiles.length > i;
-              i++
-            ) {
-              formatoLegalizacionViajesFilesPromises.push(
-                utils.uploadFileToSharePointWorkflowOEI(
-                  `${gestionPath}/Formato de legalizacion de viajes/${i}. ${req.body.FormatoLegalizacionViajesFiles[i].Name}`,
-                  req.body.FormatoLegalizacionViajesFiles[i].Bytes
-                )
-              );
-            }
+            var uploadFilesPromises = [];
 
-            var soportesFacturasFilesPromises = [];
-            for (let i = 0; req.body.SoportesFacturasFiles.length > i; i++) {
-              soportesFacturasFilesPromises.push(
-                utils.uploadFileToSharePointWorkflowOEI(
-                  `${gestionPath}/Soportes facturas/${i}. ${req.body.SoportesFacturasFiles[i].Name}`,
-                  req.body.SoportesFacturasFiles[i].Bytes
-                )
-              );
-            }
+            uploadFilesPromises.push(
+              utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Formato de legalizacion de viajes`,
+                req.body.FormatoLegalizacionViajesFiles
+              )
+            );
 
-            var pasabordosTiquetesAereosFilesPromises = [];
-            for (
-              let i = 0;
-              req.body.PasabordosTiquetesAereosFiles.length > i;
-              i++
-            ) {
-              pasabordosTiquetesAereosFilesPromises.push(
-                utils.uploadFileToSharePointWorkflowOEI(
-                  `${gestionPath}/Pasabordos tiquetes aereos/${i}. ${req.body.PasabordosTiquetesAereosFiles[i].Name}`,
-                  req.body.PasabordosTiquetesAereosFiles[i].Bytes
-                )
-              );
-            }
+            uploadFilesPromises.push(
+              utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Soportes facturas`,
+                req.body.SoportesFacturasFiles
+              )
+            );
 
-            var informeActividadesFilesPromises = [];
-            for (let i = 0; req.body.InformeActividadesFiles.length > i; i++) {
-              informeActividadesFilesPromises.push(
-                utils.uploadFileToSharePointWorkflowOEI(
-                  `${gestionPath}/Informe de actividades/${i}. ${req.body.InformeActividadesFiles[i].Name}`,
-                  req.body.InformeActividadesFiles[i].Bytes
-                )
-              );
-            }
+            uploadFilesPromises.push(
+              utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Pasabordos tiquetes aereos`,
+                req.body.PasabordosTiquetesAereosFiles
+              )
+            );
 
-            var promiseResponses = await Promise.all([
-              ...formatoLegalizacionViajesFilesPromises,
-              ...soportesFacturasFilesPromises,
-              ...pasabordosTiquetesAereosFilesPromises,
-              ...informeActividadesFilesPromises,
-            ]);
+            uploadFilesPromises.push(
+              utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Informe de actividades`,
+                req.body.InformeActividadesFiles
+              )
+            );
 
-            FormatoLegalizacionViajesSharePointFiles = [];
-            SoportesFacturasSharePointFiles = [];
-            PasabordosTiquetesAereosSharePointFiles = [];
-            InformeActividadesSharePointFiles = [];
-
-            var promiseResponsesOffSet = 0;
-            for (
-              let i = promiseResponsesOffSet;
-              formatoLegalizacionViajesFilesPromises.length > i;
-              i++
-            ) {
-              FormatoLegalizacionViajesSharePointFiles.push(
-                promiseResponses[i].data
-              );
-            }
-
-            promiseResponsesOffSet =
-              promiseResponsesOffSet +
-              formatoLegalizacionViajesFilesPromises.length;
-            for (
-              let i = promiseResponsesOffSet;
-              promiseResponsesOffSet + soportesFacturasFilesPromises.length > i;
-              i++
-            ) {
-              SoportesFacturasSharePointFiles.push(promiseResponses[i].data);
-            }
-
-            promiseResponsesOffSet =
-              promiseResponsesOffSet + soportesFacturasFilesPromises.length;
-            for (
-              let i = promiseResponsesOffSet;
-              promiseResponsesOffSet +
-                pasabordosTiquetesAereosFilesPromises.length >
-              i;
-              i++
-            ) {
-              PasabordosTiquetesAereosSharePointFiles.push(
-                promiseResponses[i].data
-              );
-            }
-
-            promiseResponsesOffSet =
-              promiseResponsesOffSet +
-              pasabordosTiquetesAereosFilesPromises.length;
-            for (
-              let i = promiseResponsesOffSet;
-              promiseResponsesOffSet + informeActividadesFilesPromises.length >
-              i;
-              i++
-            ) {
-              InformeActividadesSharePointFiles.push(promiseResponses[i].data);
-            }
+            var promisesResponses = await Promise.all(uploadFilesPromises);
 
             formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
               SharePointFiles: [
                 {
                   Name: "Formato de legalizacion de viajes",
-                  Files: FormatoLegalizacionViajesSharePointFiles,
+                  Files: promisesResponses[0],
                 },
                 {
                   Name: "Soportes facturas",
-                  Files: SoportesFacturasSharePointFiles,
+                  Files: promisesResponses[1],
                 },
                 {
                   Name: "Pasabordos tiquetes aereos",
-                  Files: PasabordosTiquetesAereosSharePointFiles,
+                  Files: promisesResponses[2],
                 },
                 {
                   Name: "Informe de actividades",
-                  Files: InformeActividadesSharePointFiles,
+                  Files: promisesResponses[3],
                 },
               ],
             });
@@ -1042,229 +848,109 @@ router.post("/forms/financiera/invoice", async (req, res) => {
   } else {
     switch (req.body.TipoGestion) {
       case "Cuenta de cobro":
-        var cuentaCobroFilesPromises = [];
-        for (let i = 0; req.body.CuentaCobroFiles.length > i; i++) {
-          cuentaCobroFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Cuenta de cobro o factura/${i}. ${req.body.CuentaCobroFiles[i].Name}`,
-              req.body.CuentaCobroFiles[i].Bytes
-            )
-          );
-        }
+        var uploadFilesPromises = [];
 
-        var facturaEquivalenteFilesPromises = [];
-        for (let i = 0; req.body.FacturaEquivalenteFiles.length > i; i++) {
-          facturaEquivalenteFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Factura equivalente/${i}. ${req.body.FacturaEquivalenteFiles[i].Name}`,
-              req.body.FacturaEquivalenteFiles[i].Bytes
-            )
-          );
-        }
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Cuenta de cobro o factura`,
+            req.body.CuentaCobroFiles
+          )
+        );
 
-        var certificadoParafiscalesFilesPromises = [];
-        for (let i = 0; req.body.CertificadoParafiscalesFiles.length > i; i++) {
-          certificadoParafiscalesFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Certificado de parafiscales/${i}. ${req.body.CertificadoParafiscalesFiles[i].Name}`,
-              req.body.CertificadoParafiscalesFiles[i].Bytes
-            )
-          );
-        }
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Factura equivalente`,
+            req.body.FacturaEquivalenteFiles
+          )
+        );
 
-        var informeActividadesFilesPromises = [];
-        for (let i = 0; req.body.InformeActividadesFiles.length > i; i++) {
-          informeActividadesFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Informe de actividades/${i}. ${req.body.InformeActividadesFiles[i].Name}`,
-              req.body.InformeActividadesFiles[i].Bytes
-            )
-          );
-        }
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Certificado de parafiscales`,
+            req.body.CertificadoParafiscalesFiles
+          )
+        );
 
-        var promiseResponses = await Promise.all([
-          ...cuentaCobroFilesPromises,
-          ...facturaEquivalenteFilesPromises,
-          ...certificadoParafiscalesFilesPromises,
-          ...informeActividadesFilesPromises,
-        ]);
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Informe de actividades`,
+            req.body.InformeActividadesFiles
+          )
+        );
 
-        CuentaCobroSharePointFiles = [];
-        FacturaEquivalenteSharePointFiles = [];
-        CertificadoParafiscalesSharePointFiles = [];
-        InformeActividadesSharePointFiles = [];
-
-        var promiseResponsesOffSet = 0;
-        for (
-          let i = promiseResponsesOffSet;
-          cuentaCobroFilesPromises.length > i;
-          i++
-        ) {
-          CuentaCobroSharePointFiles.push(promiseResponses[i].data);
-        }
-
-        promiseResponsesOffSet =
-          promiseResponsesOffSet + cuentaCobroFilesPromises.length;
-        for (
-          let i = promiseResponsesOffSet;
-          promiseResponsesOffSet + facturaEquivalenteFilesPromises.length > i;
-          i++
-        ) {
-          FacturaEquivalenteSharePointFiles.push(promiseResponses[i].data);
-        }
-
-        promiseResponsesOffSet =
-          promiseResponsesOffSet + facturaEquivalenteFilesPromises.length;
-        for (
-          let i = promiseResponsesOffSet;
-          promiseResponsesOffSet + certificadoParafiscalesFilesPromises.length >
-          i;
-          i++
-        ) {
-          CertificadoParafiscalesSharePointFiles.push(promiseResponses[i].data);
-        }
-
-        promiseResponsesOffSet =
-          promiseResponsesOffSet + certificadoParafiscalesFilesPromises.length;
-        for (
-          let i = promiseResponsesOffSet;
-          promiseResponsesOffSet + informeActividadesFilesPromises.length > i;
-          i++
-        ) {
-          InformeActividadesSharePointFiles.push(promiseResponses[i].data);
-        }
+        var promisesResponses = await Promise.all(uploadFilesPromises);
 
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
           SharePointFiles: [
             {
               Name: "Cuenta de cobro o factura",
-              Files: CuentaCobroSharePointFiles,
+              Files: promisesResponses[0],
             },
             {
               Name: "Factura equivalente",
-              Files: FacturaEquivalenteSharePointFiles,
+              Files: promisesResponses[1],
             },
             {
               Name: "Certificado de parafiscales",
-              Files: CertificadoParafiscalesSharePointFiles,
+              Files: promisesResponses[2],
             },
             {
               Name: "Informe de actividades",
-              Files: InformeActividadesSharePointFiles,
+              Files: promisesResponses[3],
             },
           ],
         });
         break;
       case "Anticipo":
-        var camaraComercioFilesPromises = [];
-        for (let i = 0; req.body.CamaraComercioFiles.length > i; i++) {
-          camaraComercioFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Camara de comercio/${i}. ${req.body.CamaraComercioFiles[i].Name}`,
-              req.body.CamaraComercioFiles[i].Bytes
-            )
-          );
-        }
+        var uploadFilesPromises = [];
 
-        var formatoSolicitudAvancesFilesPromises = [];
-        for (let i = 0; req.body.FormatoSolicitudAvancesFiles.length > i; i++) {
-          formatoSolicitudAvancesFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Formato de solicitud de avances/${i}. ${req.body.FormatoSolicitudAvancesFiles[i].Name}`,
-              req.body.FormatoSolicitudAvancesFiles[i].Bytes
-            )
-          );
-        }
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Camara de comercio`,
+            req.body.CamaraComercioFiles
+          )
+        );
 
-        var cotizacionesFilesPromises = [];
-        for (let i = 0; req.body.CotizacionesFiles.length > i; i++) {
-          cotizacionesFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Cotizaciones/${i}. ${req.body.CotizacionesFiles[i].Name}`,
-              req.body.CotizacionesFiles[i].Bytes
-            )
-          );
-        }
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Formato de solicitud de avances`,
+            req.body.FormatoSolicitudAvancesFiles
+          )
+        );
 
-        var solicitudesComisionFilesPromises = [];
-        for (let i = 0; req.body.SolicitudesComisionFiles.length > i; i++) {
-          solicitudesComisionFilesPromises.push(
-            utils.uploadFileToSharePointWorkflowOEI(
-              `${gestionPath}/Solicitudes de comision/${i}. ${req.body.SolicitudesComisionFiles[i].Name}`,
-              req.body.SolicitudesComisionFiles[i].Bytes
-            )
-          );
-        }
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Cotizaciones`,
+            req.body.CotizacionesFiles
+          )
+        );
 
-        var promiseResponses = await Promise.all([
-          ...camaraComercioFilesPromises,
-          ...formatoSolicitudAvancesFilesPromises,
-          ...cotizacionesFilesPromises,
-          ...solicitudesComisionFilesPromises,
-        ]);
+        uploadFilesPromises.push(
+          utils.uploadFilesToSharePointWorkflow(
+            `${gestionPath}/Solicitudes de comision`,
+            req.body.SolicitudesComisionFiles
+          )
+        );
 
-        CamaraComercioSharePointFiles = [];
-        FormatoSolicitudAvancesSharePointFiles = [];
-        CotizacionesSharePointFiles = [];
-        SolicitudesComisionSharePointFiles = [];
-
-        var promiseResponsesOffSet = 0;
-        for (
-          let i = promiseResponsesOffSet;
-          camaraComercioFilesPromises.length > i;
-          i++
-        ) {
-          CamaraComercioSharePointFiles.push(promiseResponses[i].data);
-        }
-
-        promiseResponsesOffSet =
-          promiseResponsesOffSet + camaraComercioFilesPromises.length;
-        for (
-          let i = promiseResponsesOffSet;
-          promiseResponsesOffSet + formatoSolicitudAvancesFilesPromises.length >
-          i;
-          i++
-        ) {
-          FormatoSolicitudAvancesSharePointFiles.push(promiseResponses[i].data);
-        }
-
-        promiseResponsesOffSet =
-          promiseResponsesOffSet + formatoSolicitudAvancesFilesPromises.length;
-        for (
-          let i = promiseResponsesOffSet;
-          promiseResponsesOffSet + cotizacionesFilesPromises.length > i;
-          i++
-        ) {
-          CotizacionesSharePointFiles.push(promiseResponses[i].data);
-        }
-
-        promiseResponsesOffSet =
-          promiseResponsesOffSet + cotizacionesFilesPromises.length;
-        for (
-          let i = promiseResponsesOffSet;
-          promiseResponsesOffSet + solicitudesComisionFilesPromises.length > i;
-          i++
-        ) {
-          SolicitudesComisionSharePointFiles.push(promiseResponses[i].data);
-        }
+        var promisesResponses = await Promise.all(uploadFilesPromises);
 
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
           SharePointFiles: [
             {
               Name: "Camara de comercio",
-              Files: CamaraComercioSharePointFiles,
+              Files: promisesResponses[0],
             },
             {
               Name: "Formato de solicitud de avances",
-              Files: FormatoSolicitudAvancesSharePointFiles,
+              Files: promisesResponses[1],
             },
             {
               Name: "Cotizaciones",
-              Files: CotizacionesSharePointFiles,
+              Files: promisesResponses[2],
             },
             {
               Name: "Solicitudes de comision",
-              Files: SolicitudesComisionSharePointFiles,
+              Files: promisesResponses[3],
             },
           ],
         });
@@ -1276,7 +962,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
     Keys: Object.keys(formsFinancieraInvoice),
   });
 
-  let retries = 0
+  let retries = 0;
   do {
     try {
       let promises = [];
@@ -1443,7 +1129,7 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
   var pasaporteFilesPromises = [];
   for (let i = 0; req.body.PasaporteFiles.length > i; i++) {
     pasaporteFilesPromises.push(
-      utils.uploadFileToSharePointWorkflowOEI(
+      utils.uploadFileToSharePoint(
         `${coordinacionLogisticaPath}/Pasaporte/${i}. ${req.body.PasaporteFiles[i].Name}`,
         req.body.PasaporteFiles[i].Bytes
       )
@@ -1453,7 +1139,7 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
   var cedulaFilesPromises = [];
   for (let i = 0; req.body.CedulaFiles.length > i; i++) {
     cedulaFilesPromises.push(
-      utils.uploadFileToSharePointWorkflowOEI(
+      utils.uploadFileToSharePoint(
         `${coordinacionLogisticaPath}/Cedula/${i}. ${req.body.CedulaFiles[i].Name}`,
         req.body.CedulaFiles[i].Bytes
       )
