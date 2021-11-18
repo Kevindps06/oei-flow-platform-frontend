@@ -66,16 +66,22 @@ export class AppComponent implements OnInit {
   }
 
   removeToastMessage(toastId: string) {
-    this.toastMessages[
-      this.toastMessages.findIndex((element) => element.id === toastId)
-    ].hide = true;
+    let toastIndex;
 
-    setTimeout(() => {
-      this.toastMessages.splice(
-        this.toastMessages.findIndex((element) => element.id === toastId),
-        1
-      );
-    }, 400);
+    if (
+      (toastIndex = this.toastMessages.findIndex(
+        (element) => element.id === toastId
+      )) !== -1
+    ) {
+      this.toastMessages[toastIndex].hide = true;
+
+      setTimeout(() => {
+        this.toastMessages.splice(
+          this.toastMessages.findIndex((element) => element.id === toastId),
+          1
+        );
+      }, 400);
+    }
   }
 
   loadingScreen: boolean = false;

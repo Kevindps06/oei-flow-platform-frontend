@@ -1,10 +1,11 @@
 const axios = require("axios");
 const auth = require("../apis/microsoft/auth");
-//const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
+const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
 
 async function getConvenioFromSharePoint(convenioNumber) {
   let convenioFromSharePoint;
 
+  let retries = 0
   do {
     try {
       convenioFromSharePoint = (
@@ -28,9 +29,11 @@ async function getConvenioFromSharePoint(convenioNumber) {
         )
       ).data.value[0].fields;
     } catch (err) {
-      console.log("utils.js - getConvenioFromSharePoint - Error:", err);
+      console.log(`Try: ${retries} - Error:`, err);
     }
-  } while (!convenioFromSharePoint);
+
+    retries++;
+  } while (!convenioFromSharePoint || retries < 5);
 
   return convenioFromSharePoint;
 }
@@ -38,6 +41,7 @@ async function getConvenioFromSharePoint(convenioNumber) {
 async function getUserFromSharePoint(lookupId) {
   let user;
 
+  let retries = 0;
   do {
     try {
       user = (
@@ -60,9 +64,11 @@ async function getUserFromSharePoint(lookupId) {
         )
       ).data.fields;
     } catch (err) {
-      console.log("utils.js - getUserFromSharePoint - Error:", err);
+      console.log(`Try: ${retries} - Error:`, err);
     }
-  } while (!user);
+
+    retries++;
+  } while (!user || retries < 5);
 
   return user;
 }
@@ -77,7 +83,7 @@ async function getFinancieraFlowStepsWithEncargados(
   convenio
 ) {
   // For localhost testing only
-  let stepsFromConfiguration = (
+  /*let stepsFromConfiguration = (
     await axios.default.get(
       `https://oeiprojectflow.org/api/configuration/financieraflow`,
       {
@@ -89,10 +95,10 @@ async function getFinancieraFlowStepsWithEncargados(
         },
       }
     )
-  ).data[0].steps;
+  ).data[0].steps;*/
 
   // Production direct with database
-  /*let stepsFromConfiguration = (
+  let stepsFromConfiguration = (
     await FinancieraFlow.find(
       financieraFlowObjectWithoutUndefined(
         _id,
@@ -103,7 +109,7 @@ async function getFinancieraFlowStepsWithEncargados(
         steps
       )
     )
-  )[0].steps;*/
+  )[0].steps;
 
   let stepsFromConfigurationFilled = []
 

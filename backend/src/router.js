@@ -5,10 +5,10 @@ const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
 const fs = require("fs");
-//const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
-//const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
-//const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
-//const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
+const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
+const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
+const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
+const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
 
 // Configuration - FinancieraFlow
 
@@ -478,16 +478,26 @@ router.get("/sites/:siteId/lists/:listId/:operation", async (req, res) => {
 router.get("/workflow/validateUser", async (req, res) => {
   const authResponse = await auth.getToken(auth.tokenRequest);
   const response = await axios.default.get(
-    `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONTRATISTASPROVEEDORES_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/Tipo_x0020_de_x0020_persona eq '${req.query.tipoDePersona}' and fields/Tipo_x0020_de_x0020_relacion eq '${req.query.tipoDeRelacion}' and fields/CC_x002f_NIT eq '${req.query.identification}'`,
+    `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONTRATISTASPROVEEDORES_LIST_ID}/items`,
     {
       headers: {
         Authorization: "Bearer " + authResponse.accessToken,
         Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
       },
+      params: {
+        $select: "id",
+        $expand: "fields",
+        $filter: `fields/Tipo_x0020_de_x0020_persona eq '${req.query.tipoPersona}' and fields/Tipo_x0020_de_x0020_relacion eq '${req.query.tipoRelacion}' and fields/CC_x002f_NIT eq '${req.query.identificator}'`,
+        $orderby: "fields/Created desc",
+        $top: 1,
+      },
     }
   );
 
-  if (response.data.value.length > 0) {
+  if (
+    response.data.value.length > 0 &&
+    response.data.value[0].fields.Estado === "Verificado"
+  ) {
     /*let transporter = nodemailer.createTransport({
       host: "smtp.office365.com",
       port: 587,
@@ -608,11 +618,17 @@ router.post("/forms/financiera/registration", async (req, res) => {
 
   formsFinancieraRegistration = Object.assign(formsFinancieraRegistration, {
     "Informacion adicional": req.body.InformacionAdicional,
+  });
+
+  formsFinancieraRegistration = Object.assign(formsFinancieraRegistration, {
     Keys: Object.keys(formsFinancieraRegistration),
+    ConvenioInformation: await utils.getConvenioFromSharePoint(
+      req.body.Convenio
+    ),
   });
 
   const response = await axios.default.post(
-    `https://prod-07.brazilsouth.logic.azure.com:443/workflows/0ada25ebf29e4a97ba30739737e286b7/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=cXyqc38D4zc_hDtzTFOrHmuJWJhcrdHczOi54FUtfQ8`,
+    `https://prod-20.brazilsouth.logic.azure.com:443/workflows/d86f74b4e4374001a78424d69cc15240/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4gnntmoLVSwLIKE6lvawvpgJ_Z3Xq9u5hTj0Iof4qQI`,
     [formsFinancieraRegistration]
   );
 
@@ -1260,11 +1276,13 @@ router.post("/forms/financiera/invoice", async (req, res) => {
     Keys: Object.keys(formsFinancieraInvoice),
   });
 
-  try {
-    let promises = [];
+  let retries = 0
+  do {
+    try {
+      let promises = [];
 
-    // For localhost testing only
-    /*promises.push(
+      // For localhost testing only
+      /*promises.push(
         axios.default.post(
           `https://oeiprojectflow.org/api/forms/financiera/invoices`,
           formsFinancieraInvoice
@@ -1277,19 +1295,22 @@ router.post("/forms/financiera/invoice", async (req, res) => {
       );
       promises.push(financieraInvoice.save());*/
 
-    promises.push(
-      axios.default.post(
-        `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
-        [formsFinancieraInvoice]
-      )
-    );
+      promises.push(
+        axios.default.post(
+          `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
+          [formsFinancieraInvoice]
+        )
+      );
 
-    await Promise.all(promises);
-  } catch (err) {
-    console.log(err);
-    res.status(500).send()
-    return
-  }
+      await Promise.all(promises);
+
+      break;
+    } catch (err) {
+      console.log(`Try ${retries} - Error:`, err);
+    }
+
+    retries++;
+  } while (retries < 5);
 
   res.status(201).send();
 });

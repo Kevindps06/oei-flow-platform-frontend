@@ -32,9 +32,9 @@ export class FormsService {
         {
           reportProgress: true,
           params: new HttpParams().appendAll({
-            tipoDePersona: tipoDePersona,
-            tipoDeRelacion: tipoDeRelacion,
-            identification: identification,
+            tipoPersona: tipoDePersona,
+            tipoRelacion: tipoDeRelacion,
+            identificator: identification,
           }),
         }
       )

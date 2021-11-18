@@ -114,8 +114,8 @@
                   [(ngModel)]="identification"
                   type="text"
                   class="form-control"
-                  name="floatingInputIdentificacion"
-                  id="floatingInputIdentificacion"
+                  name="floatingInputIdentificator"
+                  id="floatingInputIdentificator"
                   placeholder="\0"
                   [ngClass]="{
                     'is-valid':
@@ -128,7 +128,7 @@
                   maxlength="10"
                   [OnlyNumbers]="true"
                 />
-                <label for="floatingInputIdentificacion"
+                <label for="floatingInputIdentificator"
                   >Numero de cedula de ciudadania<span class="text-danger"
                     >*</span
                   ></label
@@ -232,7 +232,7 @@
                   <option selected disabled></option>
                   <option
                     *ngFor="let convenio of convenios"
-                    value="{{ convenio.Aliado + ' | ' + convenio.Numero }}"
+                    [value]="convenio.Numero"
                   >
                     {{ convenio.Aliado + " | " + convenio.Numero }}
                   </option>

@@ -127,15 +127,18 @@
           <div class="col-12">
             <h5 class="card-title text-center">Informacion de usuario</h5>
           </div>
-          <div *ngIf="tipoPersona === 'Natural'" class="col-9 col-md-10 col-xl-11">
+          <div
+            *ngIf="tipoPersona === 'Natural'"
+            class="col-9 col-md-10 col-xl-11"
+          >
             <div class="form-floating">
               <input
                 [(ngModel)]="identificator"
                 (input)="invalidateFlowUser()"
                 type="text"
                 class="form-control"
-                name="floatingInputIdentificacion"
-                id="floatingInputIdentificacion"
+                name="floatingInputIdentificator"
+                id="floatingInputIdentificator"
                 placeholder="\0"
                 [ngClass]="{
                   'is-valid':
@@ -148,8 +151,8 @@
                 maxlength="10"
                 [OnlyNumbers]="true"
               />
-              <label for="floatingInputIdentificacion"
-                >Numero de cedula de ciudadania<span class="text-danger"
+              <label for="floatingInputIdentificator"
+                >Cedula de ciudadania<span class="text-danger"
                   >*</span
                 ></label
               >
@@ -166,7 +169,10 @@
               </div>
             </div>
           </div>
-          <div *ngIf="tipoPersona === 'Juridica'" class="col-9 col-md-10 col-xl-11">
+          <div
+            *ngIf="tipoPersona === 'Juridica'"
+            class="col-9 col-md-10 col-xl-11"
+          >
             <label for="inputNIT1" class="form-label"
               >NIT (Con digito de verificacion) Ej. 890507890-4<span
                 class="text-danger"
@@ -288,7 +294,6 @@
         <div class="form-check">
           <input
             [(ngModel)]="tipoGestion"
-            (change)="invalidateFlowUser()"
             class="form-check-input"
             type="radio"
             name="tipoSoporteContable0"
@@ -306,7 +311,6 @@
         <div class="form-check">
           <input
             [(ngModel)]="tipoGestion"
-            (change)="invalidateFlowUser()"
             class="form-check-input"
             type="radio"
             name="tipoSoporteContable1"
@@ -320,7 +324,6 @@
         <div *ngIf="tipoRelacion === 'Contratista'" class="form-check">
           <input
             [(ngModel)]="tipoGestion"
-            (change)="invalidateFlowUser()"
             class="form-check-input"
             type="radio"
             name="tipoSoporteContable2"
@@ -334,7 +337,6 @@
         <div *ngIf="tipoRelacion === 'Contratista'" class="form-check">
           <input
             [(ngModel)]="tipoGestion"
-            (change)="invalidateFlowUser()"
             class="form-check-input"
             type="radio"
             name="tipoSoporteContable3"
@@ -577,9 +579,10 @@
               ></app-upload-files>
             </div>
             <div class="col-12">
-              <label class="form-label" for="uploadFilesPasabordosTiquetesAereos"
-                >Pasabordos tiquetes aereos<span
-                  class="text-danger"
+              <label
+                class="form-label"
+                for="uploadFilesPasabordosTiquetesAereos"
+                >Pasabordos tiquetes aereos<span class="text-danger"
                   >*</span
                 ></label
               >
@@ -594,10 +597,7 @@
             </div>
             <div class="col-12">
               <label class="form-label" for="uploadFilesInforme2Actividades"
-                >Informe de actividades<span
-                  class="text-danger"
-                  >*</span
-                ></label
+                >Informe de actividades<span class="text-danger">*</span></label
               >
               <app-upload-files
                 id="uploadFilesInforme2Actividades"
@@ -614,7 +614,6 @@
             <div class="form-floating">
               <input
                 [(ngModel)]="infoAdicional"
-                (input)="invalidateFlowUser()"
                 type="text"
                 class="form-control"
                 name="inputInformacionAdicional"

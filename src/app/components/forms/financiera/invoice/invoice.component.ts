@@ -30,7 +30,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   // 1
   identificator: string = '';
   digitoVerificacion: string = '';
-  email: string = '';
   flowUser: any;
   verificationCode: string = '';
   validacionUsuarioError: boolean = false;
@@ -184,7 +183,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               break;
             case HttpEventType.Response:
               this.flowUser = event.body.userInfo;
-              this.email = this.flowUser.fields.Emaildecontacto;
               this.verificationCode = event.body.generatedCode;
 
               this.sharedService.removeWaitTask({
@@ -437,7 +435,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         this.tipoPersona === 'Natural'
           ? this.identificator
           : `${this.identificator}-${this.digitoVerificacion}`,
-      Email: this.email,
+      Email: this.flowUser.fields.Emaildecontacto,
       TipoGestion: this.tipoGestion,
       TipoLegalizacion: this.tipoLegalizacion,
       Convenio: this.convenio,
@@ -535,6 +533,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
     this.tipoGestion = '';
     //this.email = '';
     this.digitoVerificacion = '';
+    this.invalidateFlowUser()
     this.identificator = '';
     this.tipoRelacion = '';
     this.tipoPersona = '';

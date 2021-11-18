@@ -122,6 +122,8 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
               });
               break;
             case HttpEventType.Response:
+              this.convenios = []
+
               event.body.value.forEach((convenio: any) => {
                 this.convenios.push({
                   Id: convenio.id,
@@ -162,6 +164,7 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
     };
 
     // Cleaning fields because information has been saved
+    this.manejoDatos = false
     this.informacionAdicional = '';
     this.certificacionBancariaFiles = [];
     this.cedulaFiles = [];
@@ -175,6 +178,8 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
     this.tipoPersona = '';
 
     this.formIndex = 0;
+
+    console.log(formsFinancieraRegistration);
 
     var taskId: string;
     this.formsService
