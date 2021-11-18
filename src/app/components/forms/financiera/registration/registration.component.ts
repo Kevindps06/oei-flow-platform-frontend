@@ -20,11 +20,7 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
   tipoPersona: string = '';
 
   tipoRelacion: string = '';
-
-  setTipoRelacion(tipoRelacion: string) {
-    this.tipoRelacion = tipoRelacion;
-  }
-
+  
   // 1
   identification: string = '';
   digitoVerificacion: string = '';

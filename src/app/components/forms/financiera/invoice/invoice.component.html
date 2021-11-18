@@ -314,7 +314,10 @@
             Anticipo
           </label>
         </div>
-        <div *ngIf="tipoPersona !== 'Juridica' && tipoRelacion === 'Contratista'" class="form-check">
+        <div
+          *ngIf="tipoPersona !== 'Juridica' && tipoRelacion === 'Contratista'"
+          class="form-check"
+        >
           <input
             [(ngModel)]="tipoGestion"
             class="form-check-input"
@@ -327,7 +330,10 @@
             Dieta
           </label>
         </div>
-        <div *ngIf="tipoPersona !== 'Juridica' && tipoRelacion === 'Contratista'" class="form-check">
+        <div
+          *ngIf="tipoPersona !== 'Juridica' && tipoRelacion === 'Contratista'"
+          class="form-check"
+        >
           <input
             [(ngModel)]="tipoGestion"
             class="form-check-input"
@@ -373,15 +379,7 @@
         <div class="row g-3">
           <div class="col-12">
             <h5 class="card-title text-center">
-              {{ tipoPersona }} - {{ tipoRelacion }} -
-              {{
-                tipoGestion === "Cuenta de cobro"
-                  ? tipoGestion +
-                    (tipoPersona === "Juridica" ? " o factura" : "")
-                  : tipoGestion
-              }}{{
-                tipoGestion === "Legalizacion" ? " - " + tipoLegalizacion : ""
-              }}
+              {{ tipoPersona }} - {{ tipoRelacion }} - {{ tipoGestion }}{{tipoGestion === "Legalizacion" ? " - " + tipoLegalizacion : ""}}
             </h5>
           </div>
           <div class="col-12">
@@ -467,9 +465,18 @@
                 (onFilesChange)="setInformeActividadesFiles($event)"
               ></app-upload-files>
             </div>
-            <div *ngIf="tipoRelacion === 'Contratista' && tipoPersona === 'Juridica'" class="col-12">
-              <label for="uploadFilesPolizaAnticipoCumplimiento" class="form-label"
-                >Poliza de anticipo y cumpliento<span class="text-danger">*</span></label
+            <div
+              *ngIf="
+                tipoRelacion === 'Contratista' && tipoPersona === 'Juridica'
+              "
+              class="col-12"
+            >
+              <label
+                for="uploadFilesPolizaAnticipoCumplimiento"
+                class="form-label"
+                >Poliza de anticipo y cumpliento<span class="text-danger"
+                  >*</span
+                ></label
               >
               <app-upload-files
                 name="uploadFilesPolizaAnticipoCumplimiento"

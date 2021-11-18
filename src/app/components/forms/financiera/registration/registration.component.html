@@ -26,7 +26,6 @@
               </div>
               <div class="form-check">
                 <input
-                  (change)="setTipoRelacion('Proveedor')"
                   [(ngModel)]="tipoPersona"
                   class="form-check-input"
                   type="radio"
@@ -70,7 +69,6 @@
                     'is-valid': tipoRelacion,
                     'is-invalid': !tipoRelacion
                   }"
-                  [disabled]="tipoPersona === 'Juridica'"
                 />
                 <label class="form-check-label" for="tipoRelacionContratista"
                   >Contratista</label
@@ -261,7 +259,7 @@
                   maxlength="255"
                 />
                 <label for="inputNombre"
-                  >Nombre<span class="text-danger">*</span></label
+                  >Nombre o razon social<span class="text-danger">*</span></label
                 >
                 <div class="invalid-feedback">
                   Este campo es (*) obligatorio, seleccione una opcion.
