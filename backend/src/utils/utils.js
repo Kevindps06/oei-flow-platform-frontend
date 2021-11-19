@@ -290,7 +290,9 @@ function formsFinancieraInvoiceObjectWithoutUndefined(
   InformacionAdicional,
   ConvenioInformation,
   Configuration,
-  GestionPath
+  GestionPath,
+  SharePointFiles,
+  Keys,
 ) {
   var obj = {};
 
@@ -342,6 +344,14 @@ function formsFinancieraInvoiceObjectWithoutUndefined(
 
   if (GestionPath) {
     obj.GestionPath = GestionPath;
+  }
+
+  if (SharePointFiles) {
+    obj.SharePointFiles = SharePointFiles;
+  }
+
+  if (Keys) {
+    obj.Keys = Keys;
   }
 
   return obj;

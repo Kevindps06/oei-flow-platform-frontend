@@ -161,16 +161,12 @@ router.delete("/configuration/coordinacionlogisticaflow", async (req, res) => {
 
 router.post("/forms/financiera/invoices", async (req, res) => {
   try {
-    fs.writeFileSync("lastbody.json", req.body);
-
     const financieraInvoice = new FinancieraInvoice(req.body);
 
     await financieraInvoice.save();
 
     res.status(201).json(financieraInvoice);
   } catch (err) {
-    fs.writeFileSync("lasterror.json", err);
-
     res.status(500).json(err);
   }
 });
