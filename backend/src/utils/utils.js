@@ -218,7 +218,7 @@ async function uploadFilesToSharePointWorkflow(path, files) {
     );
   }
 
-  let promisesResponse = []
+  let promisesResponse = [];
   for (let promiseResponse of await Promise.all(filesPromises)) {
     promisesResponse.push(promiseResponse.data);
   }

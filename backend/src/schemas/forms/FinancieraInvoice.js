@@ -13,24 +13,8 @@ const schema = mongoose.Schema({
   ConvenioInformation: Object,
   Configuration: [],
   GestionPath: String,
-  //
-  CuentaCobroFiles: [],
-  FacturaEquivalenteFiles: [],
-  SeguridadSocialFiles: [],
-  CertificadoParafiscalesFiles: [],
-  InformeActividadesFiles: [],
-  //
-  CamaraComercioFiles: [],
-  FormatoSolicitudAvancesFiles: [],
-  CotizacionesFiles: [],
-  SolicitudesComisionFiles: [],
-  //
-  FormatoSolicitudViajesFiles: [],
-  //
-  FormatoLegalizacionViajesFiles: [],
-  SoportesFacturasFiles: [],
-  PasabordosTiquetesAereosFiles: [],
-  InformeActividadesFiles: [],
+  SharePointFiles: [],
+  Keys: [],
 });
 
 module.exports = mongoose

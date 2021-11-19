@@ -907,7 +907,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
             },
             {
               Name: "Poliza de anticipo y cumpliento",
-              Files: promisesResponses[4]
+              Files: promisesResponses[4],
             },
           ],
         });
@@ -984,7 +984,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
           `https://oeiprojectflow.org/api/forms/financiera/invoices`,
           formsFinancieraInvoice
         )
-      );
+      );*/
 
       // Production direct with database
       /*const financieraInvoice = new FinancieraInvoice(
