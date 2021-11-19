@@ -177,26 +177,19 @@ router.get("/forms/financiera/invoices", async (req, res) => {
       utils.formsFinancieraInvoiceObjectWithoutUndefined(
         req.query._id,
         req.query.Id,
-        req.query.Nombre,
-        req.query.Convenio,
-        req.query.Ida,
-        req.query.HorarioIda,
-        req.query.Vuelta,
-        req.query.HorarioVuelta,
+        req.query.TipoPersona,
+        req.query.TipoRelacion,
         req.query.Identificator,
-        req.query.FechaNacimiento,
-        req.query.EquipajeAdicional,
         req.query.Email,
-        req.query.Telefono,
+        req.query.TipoGestion,
+        req.query.TipoLegalizacion,
+        req.query.Convenio,
         req.query.InformacionAdicional,
-        req.query.Requestor,
         req.query.ConvenioInformation,
         req.query.Configuration,
-        req.query.CoordinacionLogisticaPath,
+        req.query.GestionPath,
         req.query.SharePointFiles,
-        req.query.Keys,
-        req.query.Quotations,
-        req.query.SelectedQuotation
+        req.query.Keys
       )
     );
 
@@ -212,26 +205,19 @@ router.put("/forms/financiera/invoices", async (req, res) => {
       utils.formsFinancieraInvoiceObjectWithoutUndefined(
         req.query._id,
         req.query.Id,
-        req.query.Nombre,
-        req.query.Convenio,
-        req.query.Ida,
-        req.query.HorarioIda,
-        req.query.Vuelta,
-        req.query.HorarioVuelta,
+        req.query.TipoPersona,
+        req.query.TipoRelacion,
         req.query.Identificator,
-        req.query.FechaNacimiento,
-        req.query.EquipajeAdicional,
         req.query.Email,
-        req.query.Telefono,
+        req.query.TipoGestion,
+        req.query.TipoLegalizacion,
+        req.query.Convenio,
         req.query.InformacionAdicional,
-        req.query.Requestor,
         req.query.ConvenioInformation,
         req.query.Configuration,
-        req.query.CoordinacionLogisticaPath,
+        req.query.GestionPath,
         req.query.SharePointFiles,
-        req.query.Keys,
-        req.query.Quotations,
-        req.query.SelectedQuotation
+        req.query.Keys
       ),
       req.body
     );
@@ -248,26 +234,19 @@ router.delete("/forms/financiera/invoices", async (req, res) => {
       utils.formsFinancieraInvoiceObjectWithoutUndefined(
         req.query._id,
         req.query.Id,
-        req.query.Nombre,
-        req.query.Convenio,
-        req.query.Ida,
-        req.query.HorarioIda,
-        req.query.Vuelta,
-        req.query.HorarioVuelta,
+        req.query.TipoPersona,
+        req.query.TipoRelacion,
         req.query.Identificator,
-        req.query.FechaNacimiento,
-        req.query.EquipajeAdicional,
         req.query.Email,
-        req.query.Telefono,
+        req.query.TipoGestion,
+        req.query.TipoLegalizacion,
+        req.query.Convenio,
         req.query.InformacionAdicional,
-        req.query.Requestor,
         req.query.ConvenioInformation,
         req.query.Configuration,
-        req.query.CoordinacionLogisticaPath,
+        req.query.GestionPath,
         req.query.SharePointFiles,
-        req.query.Keys,
-        req.query.Quotations,
-        req.query.SelectedQuotation
+        req.query.Keys
       )
     );
 
