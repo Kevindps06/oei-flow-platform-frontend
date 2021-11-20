@@ -5,10 +5,10 @@ const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
 const fs = require("fs");
-//const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
-//const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
-//const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
-//const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
+const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
+const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
+const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
+const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
 
 router.get("/request", async (req, res) => {
   let retries = 0;
@@ -953,13 +953,14 @@ router.post("/forms/financiera/invoice", async (req, res) => {
     try {
       let promises = [];
 
+      /* Save to database */
       // For localhost testing only
-      promises.push(
+      /*promises.push(
         axios.default.post(
           `https://oeiprojectflow.org/api/forms/financiera/invoices`,
           formsFinancieraInvoice
         )
-      );
+      );*/
 
       // Production direct with database
       /*const financieraInvoice = new FinancieraInvoice(
@@ -967,13 +968,15 @@ router.post("/forms/financiera/invoice", async (req, res) => {
       );
       promises.push(financieraInvoice.save());*/
 
-      /*promises.push(
+      /* Send to MS FLOW */
+      promises.push(
         axios.default.post(
           `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
           [formsFinancieraInvoice]
         )
-      );*/
+      );
 
+      /* Wait all async actions finish */
       await Promise.all(promises);
 
       break;
@@ -988,94 +991,20 @@ router.post("/forms/financiera/invoice", async (req, res) => {
 });
 
 router.post("/forms/coordinacionlogistica", async (req, res) => {
-  let configuration = [];
+  const convenio = await utils.getConvenioFromSharePoint(req.body.Convenio);
 
-  // For localhost testing only
-  let steps = (
-    await axios.default.get(
-      `https://oeiprojectflow.org/api/configuration/coordinacionlogisticaflow`,
-      {
-        params: {},
-      }
-    )
-  ).data[0].steps;
-
-  // Production direct with database
-  /*let steps = (
-    await CoordinacionLogisticaFlow.find(
-      utils.coordinacionLogisticaFlowObjectWithoutUndefined(
-        req.query._id,
-        req.query.steps
-      )
-    )
-  )[0].steps;*/
-
-  const authResponseConvenio = await auth.getToken(auth.tokenRequest);
-  const convenio = (
-    await axios.default.get(
-      `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items`,
-      {
-        headers: {
-          Authorization: "Bearer " + authResponseConvenio.accessToken,
-          Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
-        },
-        params: {
-          $select: "id",
-          $expand: "fields",
-          $filter: `fields/Numero eq '${req.body.Convenio}'`,
-        },
-      }
-    )
-  ).data.value[0].fields;
-
-  for (let i = 0; steps.length > i; i++) {
-    if (
-      steps[i].doWhen &&
-      steps[i].doWhen.length > 0 &&
-      steps[i].doWhen.findIndex((x) => x.convenio === req.body.Convenio) === -1
-    ) {
-      continue;
-    }
-
-    const exception = steps[i].exceptions?.find(
-      (x) => x.convenio === req.body.Convenio
+  const configuration =
+    await utils.getCoordinacionLogisticaFlowStepsWithEncargados(
+      req.body._id,
+      req.body.steps,
+      convenio
     );
-
-    const authResponseEncargado = await auth.getToken(auth.tokenRequest);
-    const encargado = (
-      await axios.default.get(
-        `https://graph.microsoft.com/v1.0/sites/${
-          process.env.FINANCIERA_OEI_SITE_ID
-        }/lists/${
-          process.env.FINANCIERA_OEI_SITE_USERINFORMATION_LIST_ID
-        }/items/${
-          steps[i].requestor
-            ? req.body.Requestor.id
-            : convenio[steps[i].key][exception ? exception.encargado : 0]
-                .LookupId
-        }`,
-        {
-          headers: {
-            Authorization: "Bearer " + authResponseEncargado.accessToken,
-            Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
-          },
-          params: {
-            $select: "id",
-            $expand: "fields",
-          },
-        }
-      )
-    ).data.fields;
-
-    steps[i].encargado = encargado;
-
-    configuration.push(steps[i]);
-  }
 
   const coordinacionLogisticaPath = `/Coordinacion Logistica/${req.body.Id}`;
 
   let formsCoordinacionLogistica =
     utils.formsCoordinacionLogisticaObjectWithoutUndefined(
+      req.body._id,
       req.body.Id,
       req.body.Nombre,
       req.body.Convenio,
@@ -1112,59 +1041,33 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
       coordinacionLogisticaPath
     );
 
-  var pasaporteFilesPromises = [];
-  for (let i = 0; req.body.PasaporteFiles.length > i; i++) {
-    pasaporteFilesPromises.push(
-      utils.uploadFileToSharePoint(
-        `${coordinacionLogisticaPath}/Pasaporte/${i}. ${req.body.PasaporteFiles[i].Name}`,
-        req.body.PasaporteFiles[i].Bytes
-      )
-    );
-  }
+  var uploadFilesPromises = [];
 
-  var cedulaFilesPromises = [];
-  for (let i = 0; req.body.CedulaFiles.length > i; i++) {
-    cedulaFilesPromises.push(
-      utils.uploadFileToSharePoint(
-        `${coordinacionLogisticaPath}/Cedula/${i}. ${req.body.CedulaFiles[i].Name}`,
-        req.body.CedulaFiles[i].Bytes
-      )
-    );
-  }
+  uploadFilesPromises.push(
+    utils.uploadFilesToSharePointWorkflow(
+      `${coordinacionLogisticaPath}/Pasaporte`,
+      req.body.PasaporteFiles
+    )
+  );
 
-  var promiseResponses = await Promise.all([
-    ...pasaporteFilesPromises,
-    ...cedulaFilesPromises,
-  ]);
+  uploadFilesPromises.push(
+    utils.uploadFilesToSharePointWorkflow(
+      `${coordinacionLogisticaPath}/Cedula`,
+      req.body.CedulaFiles
+    )
+  );
 
-  PasaporteSharePointFiles = [];
-
-  var promiseResponsesOffSet = 0;
-  for (let i = promiseResponsesOffSet; pasaporteFilesPromises.length > i; i++) {
-    PasaporteSharePointFiles.push(promiseResponses[i].data);
-  }
-
-  CedulaSharePointFiles = [];
-
-  var promiseResponsesOffSet =
-    promiseResponsesOffSet + pasaporteFilesPromises.length;
-  for (
-    let i = promiseResponsesOffSet;
-    promiseResponsesOffSet + cedulaFilesPromises.length > i;
-    i++
-  ) {
-    CedulaSharePointFiles.push(promiseResponses[i].data);
-  }
+  var promisesResponses = await Promise.all(uploadFilesPromises);
 
   formsCoordinacionLogistica = Object.assign(formsCoordinacionLogistica, {
     SharePointFiles: [
       {
         Name: "Pasaporte",
-        Files: PasaporteSharePointFiles,
+        Files: promisesResponses[0],
       },
       {
         Name: "Cedula",
-        Files: CedulaSharePointFiles,
+        Files: promisesResponses[1],
       },
     ],
   });
@@ -1173,10 +1076,33 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
     Keys: Object.keys(formsCoordinacionLogistica),
   });
 
-  while (true) {
+  res.status(200).send();
+
+  fs.writeFileSync("data.json", JSON.stringify(formsCoordinacionLogistica));
+
+  return
+
+  let retries = 0;
+  do {
     try {
       let promises = [];
 
+      /* Save to database */
+      // For localhost testing only
+      promises.push(
+        axios.default.post(
+          `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
+          formsCoordinacionLogistica
+        )
+      );
+
+      // Production direct with database
+      /*const financieraInvoice = new FinancieraInvoice(
+        formsFinancieraInvoice
+      );
+      promises.push(financieraInvoice.save());*/
+
+      /* Send to MS FLOW */
       promises.push(
         axios.default.post(
           `https://prod-10.brazilsouth.logic.azure.com:443/workflows/d9284b8deff34c34b78c7309cbeb0f45/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xt5QdZEYOiWUAmAfu-ykUU1oMDBm2bKT9yUBS0k63sw`,
@@ -1184,13 +1110,16 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
         )
       );
 
+      /* Wait all async actions finish */
       await Promise.all(promises);
 
       break;
     } catch (err) {
-      console.log(err);
+      console.log(`Try ${retries} - Error:`, err);
     }
-  }
+
+    retries++;
+  } while (retries < 5);
 
   res.status(201).send();
 });

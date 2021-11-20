@@ -19,7 +19,7 @@ const schema = mongoose.Schema({
   Configuration: Object,
   CoordinacionLogisticaPath: String,
   SharePointFiles: [],
-  Keys: [String],
+  Keys: [],
   Quotations: [],
   SelectedQuotation: Object
 });

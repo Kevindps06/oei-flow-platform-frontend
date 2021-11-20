@@ -301,7 +301,7 @@
             Cuenta de cobro o factura
           </label>
         </div>
-        <div *ngIf="tipoPersona !== 'Juridica'" class="form-check">
+        <div *ngIf="tipoRelacion !== 'Contratista' || tipoRelacion === 'Contratista' && tipoPersona !== 'Juridica'" class="form-check">
           <input
             [(ngModel)]="tipoGestion"
             class="form-check-input"

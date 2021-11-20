@@ -1,6 +1,7 @@
 const axios = require("axios");
 const auth = require("../apis/microsoft/auth");
-//const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
+const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
+const CoordinacionLogisticaFlow = require("../schemas/configuration/CoordinacionLogisticaFlow");
 
 async function getConvenioFromSharePoint(convenioNumber) {
   let convenioFromSharePoint;
@@ -77,6 +78,33 @@ async function getUserFromSharePoint(lookupId) {
   return user;
 }
 
+async function inflateFlowSteps(flowSteps, convenio) {
+  let inflateFlowSteps = [];
+
+  for (let i = 0; flowSteps.length > i; i++) {
+    if (
+      flowSteps[i].doWhen &&
+      !flowSteps[i].doWhen.find((doWhen) => doWhen.convenio == convenio.Numero)
+    ) {
+      continue;
+    }
+
+    const exception = flowSteps[i].exceptions?.find(
+      (exception) => exception.convenio == convenio.Numero
+    );
+
+    const encargado = await getUserFromSharePoint(
+      convenio[flowSteps[i].key][exception ? exception.encargado : 0].LookupId
+    );
+
+    flowSteps[i].encargado = encargado;
+
+    inflateFlowSteps.push(flowSteps[i]);
+  }
+
+  return inflateFlowSteps;
+}
+
 async function getFinancieraFlowStepsWithEncargados(
   _id,
   TipoPersona,
@@ -87,22 +115,24 @@ async function getFinancieraFlowStepsWithEncargados(
   convenio
 ) {
   // For localhost testing only
-  let stepsFromConfiguration = (
+  /*let stepsFromConfiguration = (
     await axios.default.get(
       `https://oeiprojectflow.org/api/configuration/financieraflow`,
       {
-        params: {
-          persona: TipoPersona,
-          relacion: TipoRelacion,
-          gestion: TipoGestion,
-          legalizacion: TipoLegalizacion,
-        },
+        params: financieraFlowObjectWithoutUndefined(
+          _id,
+          TipoPersona,
+          TipoRelacion,
+          TipoGestion,
+          TipoLegalizacion,
+          steps
+        ),
       }
     )
-  ).data[0].steps;
+  ).data[0].steps;*/
 
   // Production direct with database
-  /*let stepsFromConfiguration = (
+  let stepsFromConfiguration = (
     await FinancieraFlow.find(
       financieraFlowObjectWithoutUndefined(
         _id,
@@ -113,36 +143,34 @@ async function getFinancieraFlowStepsWithEncargados(
         steps
       )
     )
-  )[0].steps;*/
+  )[0].steps;
 
-  let stepsFromConfigurationFilled = [];
+  return await inflateFlowSteps(stepsFromConfiguration, convenio);
+}
 
-  for (let i = 0; stepsFromConfiguration.length > i; i++) {
-    if (
-      stepsFromConfiguration[i].doWhen &&
-      !stepsFromConfiguration[i].doWhen.find(
-        (doWhen) => doWhen.convenio == convenio.Numero
-      )
-    ) {
-      continue;
-    }
+async function getCoordinacionLogisticaFlowStepsWithEncargados(
+  _id,
+  steps,
+  convenio
+) {
+  // For localhost testing only
+  /*let stepsFromConfiguration = (
+    await axios.default.get(
+      `https://oeiprojectflow.org/api/configuration/coordinacionlogisticaflow`,
+      {
+        params: coordinacionLogisticaFlowObjectWithoutUndefined(_id, steps),
+      }
+    )
+  ).data[0].steps;*/
 
-    const exception = stepsFromConfiguration[i].exceptions?.find(
-      (exception) => exception.convenio == convenio.Numero
-    );
+  // Production direct with database
+  let stepsFromConfiguration = (
+    await CoordinacionLogisticaFlow.find(
+      coordinacionLogisticaFlowObjectWithoutUndefined(_id, steps)
+    )
+  )[0].steps;
 
-    const encargado = await getUserFromSharePoint(
-      convenio[stepsFromConfiguration[i].key][
-        exception ? exception.encargado : 0
-      ].LookupId
-    );
-
-    stepsFromConfiguration[i].encargado = encargado;
-
-    stepsFromConfigurationFilled.push(stepsFromConfiguration[i]);
-  }
-
-  return stepsFromConfigurationFilled;
+  return await inflateFlowSteps(stepsFromConfiguration, convenio);
 }
 
 function makeRandomString(length) {
@@ -294,7 +322,7 @@ function formsFinancieraInvoiceObjectWithoutUndefined(
   Configuration,
   GestionPath,
   SharePointFiles,
-  Keys,
+  Keys
 ) {
   var obj = {};
 
@@ -377,7 +405,11 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
   Requestor,
   ConvenioInformation,
   Configuration,
-  CoordinacionLogisticaPath
+  CoordinacionLogisticaPath,
+  SharePointFiles,
+  Keys,
+  Quotations,
+  SelectedQuotation
 ) {
   var obj = {};
 
@@ -451,6 +483,22 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
     obj.CoordinacionLogisticaPath = CoordinacionLogisticaPath;
   }
 
+  if (SharePointFiles) {
+    obj.SharePointFiles = SharePointFiles;
+  }
+
+  if (Keys) {
+    obj.Keys = Keys;
+  }
+
+  if (Quotations) {
+    obj.Quotations = Quotations;
+  }
+
+  if (SelectedQuotation) {
+    obj.SelectedQuotation = SelectedQuotation;
+  }
+
   return obj;
 }
 
@@ -467,5 +515,7 @@ module.exports = {
     formsCoordinacionLogisticaObjectWithoutUndefined,
   getConvenioFromSharePoint: getConvenioFromSharePoint,
   getFinancieraFlowStepsWithEncargados: getFinancieraFlowStepsWithEncargados,
+  getCoordinacionLogisticaFlowStepsWithEncargados:
+    getCoordinacionLogisticaFlowStepsWithEncargados,
   getUserFromSharePoint: getUserFromSharePoint,
 };
