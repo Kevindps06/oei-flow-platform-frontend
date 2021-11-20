@@ -465,7 +465,9 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
     obj.Telefono = Telefono;
   }
 
-  obj.InformacionAdicional = InformacionAdicional;
+  if (InformacionAdicional) {
+    obj.InformacionAdicional = InformacionAdicional;
+  }
 
   if (Requestor) {
     obj.Requestor = Requestor;
