@@ -1,6 +1,6 @@
 const axios = require("axios");
 const auth = require("../apis/microsoft/auth");
-const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
+//const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
 
 async function getConvenioFromSharePoint(convenioNumber) {
   let convenioFromSharePoint;
@@ -34,6 +34,8 @@ async function getConvenioFromSharePoint(convenioNumber) {
 
     retries++;
   } while (!convenioFromSharePoint && retries < 5);
+
+  delete convenioFromSharePoint["@odata.etag"];
 
   return convenioFromSharePoint;
 }
@@ -70,6 +72,8 @@ async function getUserFromSharePoint(lookupId) {
     retries++;
   } while (!user && retries < 5);
 
+  delete user["@odata.etag"];
+
   return user;
 }
 
@@ -83,7 +87,7 @@ async function getFinancieraFlowStepsWithEncargados(
   convenio
 ) {
   // For localhost testing only
-  /*let stepsFromConfiguration = (
+  let stepsFromConfiguration = (
     await axios.default.get(
       `https://oeiprojectflow.org/api/configuration/financieraflow`,
       {
@@ -95,10 +99,10 @@ async function getFinancieraFlowStepsWithEncargados(
         },
       }
     )
-  ).data[0].steps;*/
+  ).data[0].steps;
 
   // Production direct with database
-  let stepsFromConfiguration = (
+  /*let stepsFromConfiguration = (
     await FinancieraFlow.find(
       financieraFlowObjectWithoutUndefined(
         _id,
@@ -109,7 +113,7 @@ async function getFinancieraFlowStepsWithEncargados(
         steps
       )
     )
-  )[0].steps;
+  )[0].steps;*/
 
   let stepsFromConfigurationFilled = [];
 
@@ -203,7 +207,10 @@ async function uploadFileToSharePoint(path, base64) {
     chunk++;
   }
 
-  return uploadResponse;
+  delete uploadResponse.data["@odata.context"];
+  delete uploadResponse.data["@content.downloadUrl"];
+
+  return uploadResponse.data;
 }
 
 async function uploadFilesToSharePointWorkflow(path, files) {
@@ -218,12 +225,7 @@ async function uploadFilesToSharePointWorkflow(path, files) {
     );
   }
 
-  let promisesResponse = [];
-  for (let promiseResponse of await Promise.all(filesPromises)) {
-    promisesResponse.push(promiseResponse.data);
-  }
-
-  return promisesResponse;
+  return await Promise.all(filesPromises);
 }
 
 function financieraFlowObjectWithoutUndefined(

@@ -5,10 +5,10 @@ const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
 const fs = require("fs");
-const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
-const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
-const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
-const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
+//const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
+//const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
+//const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
+//const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
 
 router.get("/request", async (req, res) => {
   let retries = 0;
@@ -954,12 +954,12 @@ router.post("/forms/financiera/invoice", async (req, res) => {
       let promises = [];
 
       // For localhost testing only
-      /*promises.push(
+      promises.push(
         axios.default.post(
           `https://oeiprojectflow.org/api/forms/financiera/invoices`,
           formsFinancieraInvoice
         )
-      );*/
+      );
 
       // Production direct with database
       /*const financieraInvoice = new FinancieraInvoice(
@@ -967,12 +967,12 @@ router.post("/forms/financiera/invoice", async (req, res) => {
       );
       promises.push(financieraInvoice.save());*/
 
-      promises.push(
+      /*promises.push(
         axios.default.post(
           `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
           [formsFinancieraInvoice]
         )
-      );
+      );*/
 
       await Promise.all(promises);
 
