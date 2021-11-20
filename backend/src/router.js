@@ -273,7 +273,7 @@ router.post("/forms/coordinacioneslogisticas", async (req, res) => {
 router.get("/forms/coordinacioneslogisticas", async (req, res) => {
   try {
     const coordinacionLogistica = await CoordinacionLogistica.find(
-      utils.formsCoordinacionesLogisticasObjectWithoutUndefined(
+      utils.formsCoordinacionLogisticaObjectWithoutUndefined(
         req.query._id,
         req.query.Id,
         req.query.Nombre,
@@ -308,7 +308,7 @@ router.get("/forms/coordinacioneslogisticas", async (req, res) => {
 router.put("/forms/coordinacioneslogisticas", async (req, res) => {
   try {
     const coordinacionLogistica = await CoordinacionLogistica.updateMany(
-      utils.formsCoordinacionesLogisticasObjectWithoutUndefined(
+      utils.formsCoordinacionLogisticaObjectWithoutUndefined(
         req.query._id,
         req.query.Id,
         req.query.Nombre,
@@ -344,7 +344,7 @@ router.put("/forms/coordinacioneslogisticas", async (req, res) => {
 router.delete("/forms/coordinacioneslogisticas", async (req, res) => {
   try {
     const coordinacionLogistica = await CoordinacionLogistica.deleteMany(
-      utils.formsCoordinacionesLogisticasObjectWithoutUndefined(
+      utils.formsCoordinacionLogisticaObjectWithoutUndefined(
         req.query._id,
         req.query.Id,
         req.query.Nombre,
@@ -504,20 +504,22 @@ router.get("/workflow/validateUser", async (req, res) => {
 
 router.get("/platform/validateUser", async (req, res) => {
   const authResponse = await auth.getToken(auth.tokenRequest);
-  const response = await axios.default.get(
-    `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_USERINFORMATION_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/EMail eq '${req.query.email}'`,
-    {
-      headers: {
-        Authorization: "Bearer " + authResponse.accessToken,
-        Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
-      },
-    }
-  );
+  const response = (
+    await axios.default.get(
+      `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_USERINFORMATION_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/EMail eq '${req.query.email}'`,
+      {
+        headers: {
+          Authorization: "Bearer " + authResponse.accessToken,
+          Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+        },
+      }
+    )
+  ).data.value[0];
 
-  if (response.data.value.length > 0) {
+  if (response) {
     const authResponse2 = await auth.getToken(auth.tokenRequest);
     const response2 = await axios.default.get(
-      `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_PLATFORMUSERS_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/UserLookupId eq '${response.data.value[0].id}' and fields/Password eq '${req.query.password}'`,
+      `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_PLATFORMUSERS_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/UserLookupId eq '${response.id}' and fields/Password eq '${req.query.password}'`,
       {
         headers: {
           Authorization: "Bearer " + authResponse2.accessToken,
@@ -551,7 +553,7 @@ router.get("/platform/validateUser", async (req, res) => {
       response2.data.value[0].fields.Convenios = convenios;
 
       res.status(response2.status).json({
-        userInfo: response.data.value[0],
+        userInfo: response,
         plaftformInfo: response2.data.value[0],
       });
     } else {
@@ -1078,9 +1080,9 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
 
   res.status(200).send();
 
-  fs.writeFileSync("data.json", JSON.stringify(formsCoordinacionLogistica));
+  fs.writeFileSync("../data.json", JSON.stringify(formsCoordinacionLogistica));
 
-  return
+  return;
 
   let retries = 0;
   do {
