@@ -23,7 +23,7 @@ export class FormsService {
   validateFlowUser(
     tipoDePersona: string,
     tipoDeRelacion: string,
-    identification: string,
+    identification: string
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
@@ -81,6 +81,40 @@ export class FormsService {
         formsCoordinacionLogistica,
         {
           reportProgress: true,
+        }
+      )
+    );
+  }
+
+  getFormsCoordinacionLogistica(Id: string): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
+        {
+          reportProgress: true,
+          params: new HttpParams().appendAll({
+            Id: Id,
+          }),
+        }
+      )
+    );
+  }
+
+  putFormsCoordinacionLogistica(
+    formsCoordinacionLogistica: any,
+    Id: string
+  ): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'PUT',
+        `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
+        formsCoordinacionLogistica,
+        {
+          reportProgress: true,
+          params: new HttpParams().appendAll({
+            Id: Id,
+          }),
         }
       )
     );

@@ -26,11 +26,11 @@ const routes: Routes = [
     component: FormsComponent,
   },
   {
-    path: 'forms/coordinacionlogistica/:id/fillquotations',
+    path: 'forms/coordinacionlogistica/:Id/fillquotations',
     component: FormsComponent,
   },
   {
-    path: 'forms/coordinacionlogistica/:id/selectquotation',
+    path: 'forms/coordinacionlogistica/:Id/selectquotation',
     component: FormsComponent,
   },
   {

@@ -5,10 +5,10 @@ const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
 const fs = require("fs");
-const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
-const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
-const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
-const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
+//const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
+//const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
+//const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
+//const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
 
 router.get("/request", async (req, res) => {
   let retries = 0;
@@ -515,6 +515,10 @@ router.get("/platform/validateUser", async (req, res) => {
       }
     )
   ).data.value[0];
+
+  delete response["@odata.etag"];
+  delete response["fields@odata.context"];
+  delete response.fields["@odata.etag"];
 
   if (response) {
     const authResponse2 = await auth.getToken(auth.tokenRequest);
@@ -1077,12 +1081,6 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
   formsCoordinacionLogistica = Object.assign(formsCoordinacionLogistica, {
     Keys: Object.keys(formsCoordinacionLogistica),
   });
-
-  res.status(200).send();
-
-  fs.writeFileSync("../data.json", JSON.stringify(formsCoordinacionLogistica));
-
-  return;
 
   let retries = 0;
   do {
