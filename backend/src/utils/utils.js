@@ -1,7 +1,7 @@
 const axios = require("axios");
 const auth = require("../apis/microsoft/auth");
-//const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
-//const CoordinacionLogisticaFlow = require("../schemas/configuration/CoordinacionLogisticaFlow");
+const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
+const CoordinacionLogisticaFlow = require("../schemas/configuration/CoordinacionLogisticaFlow");
 
 async function getConvenioFromSharePoint(convenioNumber) {
   let convenioFromSharePoint;
@@ -154,21 +154,21 @@ async function getCoordinacionLogisticaFlowStepsWithEncargados(
   convenio
 ) {
   // For localhost testing only
-  let stepsFromConfiguration = (
+  /*let stepsFromConfiguration = (
     await axios.default.get(
       `https://oeiprojectflow.org/api/configuration/coordinacionlogisticaflow`,
       {
         params: coordinacionLogisticaFlowObjectWithoutUndefined(_id, steps),
       }
     )
-  ).data[0].steps;
+  ).data[0].steps;*/
 
   // Production direct with database
-  /*let stepsFromConfiguration = (
+  let stepsFromConfiguration = (
     await CoordinacionLogisticaFlow.find(
       coordinacionLogisticaFlowObjectWithoutUndefined(_id, steps)
     )
-  )[0].steps;*/
+  )[0].steps;
 
   return await inflateFlowSteps(stepsFromConfiguration, convenio);
 }
