@@ -244,18 +244,14 @@ async function uploadFileToSharePoint(path, buffer) {
 }
 
 async function uploadFilesToSharePointWorkflow(filesPath, files) {
-  let filesPromises = [];
-
   for (let i = 0; files.length > i; i++) {
     if (files[i].ServerPath) {
       const tmpFilePath = path.join(files[i].ServerPath, files[i].Name);
       console.log(tmpFilePath);
 
-      filesPromises.push(
-        uploadFileToSharePoint(
-          `${filesPath}/${i}. ${files[i].Name}`,
-          fs.readFileSync(tmpFilePath)
-        )
+      await uploadFileToSharePoint(
+        `${filesPath}/${i}. ${files[i].Name}`,
+        fs.readFileSync(tmpFilePath)
       );
 
       fs.rm(tmpFilePath, (err) => {
@@ -264,16 +260,12 @@ async function uploadFilesToSharePointWorkflow(filesPath, files) {
         }
       });
     } else {
-      filesPromises.push(
-        uploadFileToSharePoint(
-          `${filesPath}/${i}. ${files[i].Name}`,
-          Buffer.from(files[i].Bytes, "base64")
-        )
+      await uploadFileToSharePoint(
+        `${filesPath}/${i}. ${files[i].Name}`,
+        Buffer.from(files[i].Bytes, "base64")
       );
     }
   }
-
-  return await Promise.all(filesPromises);
 }
 
 function financieraFlowObjectWithoutUndefined(

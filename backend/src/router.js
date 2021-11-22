@@ -657,55 +657,35 @@ router.post("/forms/financiera/invoice", async (req, res) => {
   if (req.body.TipoPersona === "Natural") {
     switch (req.body.TipoGestion) {
       case "Cuenta de cobro":
-        var uploadFilesPromises = [];
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Cuenta de cobro o factura`,
-            req.body.CuentaCobroFiles
-          )
-        );
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Factura equivalente`,
-            req.body.FacturaEquivalenteFiles
-          )
-        );
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Seguridad Social`,
-            req.body.SeguridadSocialFiles
-          )
-        );
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Informe de actividades`,
-            req.body.InformeActividadesFiles
-          )
-        );
-
-        var promisesResponses = await Promise.all(uploadFilesPromises);
-
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
           SharePointFiles: [
             {
               Name: "Cuenta de cobro o factura",
-              Files: promisesResponses[0],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Cuenta de cobro o factura`,
+                req.body.CuentaCobroFiles
+              ),
             },
             {
               Name: "Factura equivalente",
-              Files: promisesResponses[1],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Factura equivalente`,
+                req.body.FacturaEquivalenteFiles
+              ),
             },
             {
               Name: "Seguridad social",
-              Files: promisesResponses[2],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Seguridad Social`,
+                req.body.SeguridadSocialFiles
+              ),
             },
             {
               Name: "Informe de actividades",
-              Files: promisesResponses[3],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Informe de actividades`,
+                req.body.InformeActividadesFiles
+              ),
             },
           ],
         });
