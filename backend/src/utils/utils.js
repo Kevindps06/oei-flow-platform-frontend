@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
 const CoordinacionLogisticaFlow = require("../schemas/configuration/CoordinacionLogisticaFlow");
+const { promises } = require("stream");
 
 async function getConvenioFromSharePoint(convenioNumber) {
   let convenioFromSharePoint;
@@ -244,14 +245,18 @@ async function uploadFileToSharePoint(path, buffer) {
 }
 
 async function uploadFilesToSharePointWorkflow(filesPath, files) {
+  let filesUploadResponses = [];
+
   for (let i = 0; files.length > i; i++) {
     if (files[i].ServerPath) {
       const tmpFilePath = path.join(files[i].ServerPath, files[i].Name);
       console.log(tmpFilePath);
 
-      await uploadFileToSharePoint(
-        `${filesPath}/${i}. ${files[i].Name}`,
-        fs.readFileSync(tmpFilePath)
+      filesUploadResponses.push(
+        await uploadFileToSharePoint(
+          `${filesPath}/${i}. ${files[i].Name}`,
+          fs.readFileSync(tmpFilePath)
+        )
       );
 
       fs.rm(tmpFilePath, (err) => {
@@ -260,12 +265,16 @@ async function uploadFilesToSharePointWorkflow(filesPath, files) {
         }
       });
     } else {
-      await uploadFileToSharePoint(
-        `${filesPath}/${i}. ${files[i].Name}`,
-        Buffer.from(files[i].Bytes, "base64")
+      filesUploadResponses.push(
+        await uploadFileToSharePoint(
+          `${filesPath}/${i}. ${files[i].Name}`,
+          Buffer.from(files[i].Bytes, "base64")
+        )
       );
     }
   }
+
+  return filesUploadResponses;
 }
 
 function financieraFlowObjectWithoutUndefined(
