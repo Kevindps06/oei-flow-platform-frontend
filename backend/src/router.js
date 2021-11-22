@@ -5,22 +5,29 @@ const auth = require("./apis/microsoft/auth");
 const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
 const fs = require("fs");
+const path = require("path");
+const os = require("os");
 const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
 const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
 const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
 const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
 
-router.get("/request", async (req, res) => {
-  let retries = 0;
-  do {
-    try {
-      throw `Try ${retries}`;
-    } catch {
-      console.log(`Log Try ${retries}`);
-    }
+router.post("/request", async (req, res) => {
+  res.status(200).send(req.body.length);
+});
 
-    retries++;
-  } while (retries < 5);
+// Upload file to server
+
+router.post("/uploadfile", (req, res) => {
+  try {
+    let tmpPath = fs.mkdtempSync(path.join(os.tmpdir(), "webApp-"));
+
+    fs.writeFileSync(path.join(tmpPath, req.query.name), req.body);
+
+    res.status(201).json(tmpPath);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 // Configuration - FinancieraFlow
@@ -1089,18 +1096,18 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
 
       /* Save to database */
       // For localhost testing only
-      /*promises.push(
+      promises.push(
         axios.default.post(
           `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
           formsCoordinacionLogistica
         )
-      );*/
+      );
 
       // Production direct with database
-      const coordinacionLogistica = new CoordinacionLogistica(
+      /*const coordinacionLogistica = new CoordinacionLogistica(
         formsCoordinacionLogistica
       );
-      promises.push(coordinacionLogistica.save());
+      promises.push(coordinacionLogistica.save());*/
 
       /* Send to MS FLOW */
       promises.push(

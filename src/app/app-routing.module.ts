@@ -14,6 +14,10 @@ const routes: Routes = [
     component: LoginComponent,
   },
   {
+    path: 'forms/tests',
+    component: FormsComponent,
+  },
+  {
     path: 'forms/financiera/registration',
     component: FormsComponent,
   },

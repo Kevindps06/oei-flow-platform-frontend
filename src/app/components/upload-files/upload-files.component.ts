@@ -8,6 +8,7 @@ import { Utils } from 'src/app/classes/utils';
   styleUrls: ['./upload-files.component.css'],
 })
 export class UploadFilesComponent implements OnInit {
+  @Input() contentAsArrayBuffer: boolean = false;
   @Input() requiredFeedback: string = '';
 
   constructor() {}
@@ -30,10 +31,17 @@ export class UploadFilesComponent implements OnInit {
         Uploaded: false,
       });
 
-      Utils.getBase64(event.target.files[i]).then((result) => {
-        this.Files[currentFilesLength + i].Bytes = result as string;
-        this.Files[currentFilesLength + i].Uploaded = true;
-      });
+      if (this.contentAsArrayBuffer) {
+        Utils.getBuffer(event.target.files[i]).then((result) => {
+          this.Files[currentFilesLength + i].Bytes = result as ArrayBuffer;
+          this.Files[currentFilesLength + i].Uploaded = true;
+        });
+      } else {
+        Utils.getBase64(event.target.files[i]).then((result) => {
+          this.Files[currentFilesLength + i].Bytes = result as string;
+          this.Files[currentFilesLength + i].Uploaded = true;
+        });
+      }
     }
 
     event.target.value = null;

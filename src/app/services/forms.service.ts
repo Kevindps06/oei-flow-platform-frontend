@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   HttpClient,
   HttpEventType,
+  HttpHeaders,
   HttpParams,
   HttpRequest,
 } from '@angular/common/http';
@@ -30,12 +31,47 @@ export class FormsService {
         'GET',
         `${environment.protocol}://${environment.backendAddress}/api/workflow/validateUser`,
         {
-          reportProgress: true,
           params: new HttpParams().appendAll({
             tipoPersona: tipoDePersona,
             tipoRelacion: tipoDeRelacion,
             identificator: identification,
           }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  postFormsTests(formsTests: any): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'POST',
+        `${environment.protocol}://${environment.backendAddress}/api/request`,
+        formsTests,
+        {
+          headers: new HttpHeaders({
+            'content-type': 'application/json',
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  postUploadFile(name: string, data: ArrayBuffer): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'POST',
+        `${environment.protocol}://${environment.backendAddress}/api/uploadfile`,
+        data,
+        {
+          headers: new HttpHeaders({
+            'content-type': 'application/octet-stream',
+          }),
+          params: new HttpParams().appendAll({
+            name: name,
+          }),
+          reportProgress: true,
         }
       )
     );
@@ -50,6 +86,9 @@ export class FormsService {
         `${environment.protocol}://${environment.backendAddress}/api/forms/financiera/registration`,
         formsFinancieraRegistration,
         {
+          headers: new HttpHeaders({
+            'content-type': 'application/json',
+          }),
           reportProgress: true,
         }
       )
@@ -65,6 +104,9 @@ export class FormsService {
         `${environment.protocol}://${environment.backendAddress}/api/forms/financiera/invoice`,
         formsFinancieraInvoice,
         {
+          headers: new HttpHeaders({
+            'content-type': 'application/json',
+          }),
           reportProgress: true,
         }
       )
@@ -80,6 +122,9 @@ export class FormsService {
         `${environment.protocol}://${environment.backendAddress}/api/forms/coordinacionlogistica`,
         formsCoordinacionLogistica,
         {
+          headers: new HttpHeaders({
+            'content-type': 'application/json',
+          }),
           reportProgress: true,
         }
       )
@@ -92,10 +137,10 @@ export class FormsService {
         'GET',
         `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
         {
-          reportProgress: true,
           params: new HttpParams().appendAll({
             Id: Id,
           }),
+          reportProgress: true,
         }
       )
     );
@@ -111,10 +156,13 @@ export class FormsService {
         `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
         formsCoordinacionLogistica,
         {
-          reportProgress: true,
+          headers: new HttpHeaders({
+            'content-type': 'application/json',
+          }),
           params: new HttpParams().appendAll({
             Id: Id,
           }),
+          reportProgress: true,
         }
       )
     );
@@ -126,10 +174,10 @@ export class FormsService {
         'GET',
         `${environment.protocol}://${environment.backendAddress}/api/convenios`,
         {
-          reportProgress: true,
           params: new HttpParams().appendAll({
             showAll: showAll,
           }),
+          reportProgress: true,
         }
       )
     );
@@ -195,7 +243,7 @@ export class FormsService {
             return throwError(err);
           })
         )
-        .subscribe();
+        .toPromise()
     });
   }
 }

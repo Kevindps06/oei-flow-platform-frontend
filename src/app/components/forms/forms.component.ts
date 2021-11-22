@@ -43,6 +43,11 @@ export class FormsComponent implements OnInit {
 
   ngOnInit(): void {
     switch (this.router.url) {
+      case '/forms/tests':
+        this.title = 'Test';
+        this.description =
+          '';
+        return;
       case '/forms/financiera/registration':
         this.title = 'Registro colaborador o proveedor';
         this.description =

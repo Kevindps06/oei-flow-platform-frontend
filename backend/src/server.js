@@ -17,10 +17,12 @@ app.use(
   })
 );
 
-app.use(express.json({ limit: bytes(1024 * 1024 * 512) }));
+app.use(express.raw({ limit: bytes(1024 * 1024 * 1024) }));
+
+app.use(express.json({ limit: bytes(1024 * 1024 * 128) }));
 
 app.use(
-  express.urlencoded({ limit: bytes(1024 * 1024 * 512), extended: true })
+  express.urlencoded({ limit: bytes(1024 * 1024 * 128), extended: true })
 );
 
 //app.use(morgan("tiny"));

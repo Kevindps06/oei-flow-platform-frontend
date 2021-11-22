@@ -1,6 +1,14 @@
-import { FileItem } from "../interfaces/FileItem";
+import { HttpEventType } from '@angular/common/http';
+import { FileItem } from '../interfaces/FileItem';
+import { FormsService } from '../services/forms.service';
+import { SharedService } from '../services/shared.service';
 
 export class Utils {
+  constructor(
+    public formsService: FormsService,
+    public sharedService: SharedService
+  ) {}
+
   static makeRandomString(length: number) {
     var result = '';
     var characters =
@@ -24,6 +32,16 @@ export class Utils {
     });
   }
 
+  static getBuffer(file: File) {
+    const reader = new FileReader();
+    return new Promise((resolve) => {
+      reader.onload = function (e) {
+        resolve(reader.result);
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
   static validateEmail(email: string): boolean {
     const re =
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -34,13 +52,31 @@ export class Utils {
     if (fileItems.length > 0) {
       for (let i = 0; fileItems.length > i; i++) {
         if (!fileItems[i].Uploaded) {
-          return false
+          return false;
         }
       }
 
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
+  }
+
+  async uploadFilesToServer(files: FileItem[]) {
+    let filesUploadsPromises = [];
+
+    for (let i = 0; files.length > i; i++)
+      filesUploadsPromises.push(
+        this.formsService
+          .postUploadFile(files[i].Name, files[i].Bytes as ArrayBuffer)
+          .subscribe((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Response:
+                return httpEvent.body;
+            }
+          })
+      );
+
+    return await Promise.all(filesUploadsPromises);
   }
 }

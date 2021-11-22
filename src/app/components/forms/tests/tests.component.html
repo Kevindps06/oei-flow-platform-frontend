@@ -1,0 +1,22 @@
+<div id="firstElement" name="firstElement" class="row g-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label" for="uploadFiles">Files</label>
+            <app-upload-files
+              [contentAsArrayBuffer]="true"
+              id="uploadFiles"
+              name="uploadFiles"
+              (onFilesChange)="setFiles($event)"
+            ></app-upload-files>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="d-grid gap-2 col-6 mx-auto mb-2">
+    <button (click)="btnSubmitClick()" class="btn btn-primary">Enviar</button>
+  </div>
+</div>

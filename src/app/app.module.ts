@@ -26,6 +26,7 @@ import { FormsCoordinacionLogisticaComponent } from './components/forms/coordina
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
 import { FormsCoordinacionLogisticaFillQuotationsComponent } from './components/forms/coordinacionlogistica/fill-quotations/fill-quotations.component';
 import { FormsCoordinacionLogisticaSelectQuotationComponent } from './components/forms/coordinacionlogistica/select-quotation/select-quotation.component';
+import { TestsComponent } from './components/forms/tests/tests.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { FormsCoordinacionLogisticaSelectQuotationComponent } from './components
     DatePickerComponent,
     FormsCoordinacionLogisticaFillQuotationsComponent,
     FormsCoordinacionLogisticaSelectQuotationComponent,
+    TestsComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [

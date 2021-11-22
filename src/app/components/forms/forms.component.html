@@ -24,6 +24,7 @@
           </p>
         </div>
         <div class="col-12">
+          <app-forms-tests *ngIf="isRoute('/forms/tests')"> </app-forms-tests>
           <app-forms-financiera-registration
             *ngIf="isRoute('/forms/financiera/registration')"
             (onWaitTasksChange)="setWaitTasks($event)"

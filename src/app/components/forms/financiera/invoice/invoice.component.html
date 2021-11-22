@@ -238,44 +238,6 @@
               Validar
             </button>
           </div>
-          <!--<div *ngIf="flowUser" class="col-9 col-md-10 col-xl-11">
-              <div class="form-floating">
-                <input
-                  [ngClass]="{
-                    'is-invalid': !verificationCode || !authValidation,
-                    'is-valid': authValidation
-                  }"
-                  (change)="resetTwoFactValidation()"
-                  [(ngModel)]="authCode"
-                  type="text"
-                  class="form-control"
-                  id="twoFactorFloatingInput"
-                  name="twoFactorFloatingInput"
-                  placeholder=""
-                />
-                <label for="twoFactorFloatingInput"
-                  >Codigo de autentificacion</label
-                >
-                <div class="invalid-feedback">
-                  {{
-                    !authCode
-                      ? "Este campo es (*) obligatorio, rellenelo."
-                      : "El codigo ingresado no coincide con el generado."
-                  }}
-                </div>
-              </div>
-            </div>
-            <div
-              *ngIf="flowUser"
-              class="col-3 col-md-2 col-xl-1 d-grid grap-2 mx-auto"
-            >
-              <button
-                class="btn btn-primary"
-                (click)="btnValidateTwoFactorClick()"
-              >
-                Validar
-              </button>
-            </div>-->
         </div>
       </div>
     </div>
@@ -301,7 +263,13 @@
             Cuenta de cobro o factura
           </label>
         </div>
-        <div *ngIf="tipoRelacion !== 'Contratista' || tipoRelacion === 'Contratista' && tipoPersona !== 'Juridica'" class="form-check">
+        <div
+          *ngIf="
+            tipoRelacion !== 'Contratista' ||
+            (tipoRelacion === 'Contratista' && tipoPersona !== 'Juridica')
+          "
+          class="form-check"
+        >
           <input
             [(ngModel)]="tipoGestion"
             class="form-check-input"
@@ -379,7 +347,10 @@
         <div class="row g-3">
           <div class="col-12">
             <h5 class="card-title text-center">
-              {{ tipoPersona }} - {{ tipoRelacion }} - {{ tipoGestion }}{{tipoGestion === "Legalizacion" ? " - " + tipoLegalizacion : ""}}
+              {{ tipoPersona }} - {{ tipoRelacion }} - {{ tipoGestion
+              }}{{
+                tipoGestion === "Legalizacion" ? " - " + tipoLegalizacion : ""
+              }}
             </h5>
           </div>
           <div class="col-12">
@@ -415,6 +386,7 @@
                 >Cuenta de cobro o factura<span class="text-danger">*</span>
               </label>
               <app-upload-files
+                [contentAsArrayBuffer]="true"
                 [requiredFeedback]="
                   'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
                 "
@@ -430,6 +402,7 @@
                 ></label
               >
               <app-upload-files
+                [contentAsArrayBuffer]="true"
                 [requiredFeedback]="
                   'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
                 "
@@ -446,6 +419,7 @@
                 }}<span class="text-danger">*</span></label
               >
               <app-upload-files
+                [contentAsArrayBuffer]="true"
                 [requiredFeedback]="
                   'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
                 "
@@ -457,6 +431,7 @@
                 >Informe de actividades<span class="text-danger">*</span></label
               >
               <app-upload-files
+                [contentAsArrayBuffer]="true"
                 name="uploadFilesInformeActividades"
                 id="uploadFilesInformeActividades"
                 [requiredFeedback]="
@@ -479,6 +454,7 @@
                 ></label
               >
               <app-upload-files
+                [contentAsArrayBuffer]="true"
                 name="uploadFilesPolizaAnticipoCumplimiento"
                 id="uploadFilesPolizaAnticipoCumplimiento"
                 [requiredFeedback]="
@@ -495,6 +471,7 @@
                 >Camara de comercio (Si aplica)</label
               >
               <app-upload-files
+                [contentAsArrayBuffer]="true"
                 id="uploadFilesCamaraComercio"
                 name="uploadFilesCamaraComercio"
                 (onFilesChange)="setCamaraDeComercioFiles($event)"
@@ -507,6 +484,7 @@
                 ></label
               >
               <app-upload-files
+                [contentAsArrayBuffer]="true"
                 id="uploadFilesFormatoSolicitudAvances"
                 name="uploadFilesFormatoSolicitudAvances"
                 [requiredFeedback]="
@@ -520,6 +498,7 @@
                 >Cotizaciones (Si es el caso)</label
               >
               <app-upload-files
+                [contentAsArrayBuffer]="true"
                 id="uploadFilesCotizaciones"
                 name="uploadFilesCotizaciones"
                 (onFilesChange)="setCotizacionesFiles($event)"
@@ -530,6 +509,7 @@
                 >Solicitudes de comision (Si es el caso)</label
               >
               <app-upload-files
+                [contentAsArrayBuffer]="true"
                 id="uploadFilesSolicitudComisiones"
                 name="uploadFilesSolicitudComisiones"
                 (onFilesChange)="setSolicitudesComisionFiles($event)"
@@ -545,6 +525,7 @@
                 ></label
               >
               <app-upload-files
+                [contentAsArrayBuffer]="true"
                 id="uploadFilesFormatoSolicitudViajes"
                 name="uploadFilesFormatoSolicitudViajes"
                 [requiredFeedback]="
@@ -563,6 +544,7 @@
                 ></label
               >
               <app-upload-files
+                [contentAsArrayBuffer]="true"
                 id="uploadFilesFormatoSolicitudViajes"
                 name="uploadFilesFormatoSolicitudViajes"
                 [requiredFeedback]="
@@ -579,6 +561,7 @@
                 ></label
               >
               <app-upload-files
+                [contentAsArrayBuffer]="true"
                 id="uploadFilesSoportesFacturas"
                 name="uploadFilesSoportesFacturas"
                 [requiredFeedback]="
@@ -596,6 +579,7 @@
                 ></label
               >
               <app-upload-files
+                [contentAsArrayBuffer]="true"
                 id="uploadFilesPasabordosTiquetesAereos"
                 name="uploadFilesPasabordosTiquetesAereos"
                 [requiredFeedback]="
@@ -609,6 +593,7 @@
                 >Informe de actividades<span class="text-danger">*</span></label
               >
               <app-upload-files
+                [contentAsArrayBuffer]="true"
                 id="uploadFilesInforme2Actividades"
                 name="uploadFilesInforme2Actividades"
                 [requiredFeedback]="

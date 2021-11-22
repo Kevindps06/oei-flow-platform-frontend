@@ -1,5 +1,7 @@
 const axios = require("axios");
 const auth = require("../apis/microsoft/auth");
+const fs = require("fs");
+const path = require("path");
 const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
 const CoordinacionLogisticaFlow = require("../schemas/configuration/CoordinacionLogisticaFlow");
 
@@ -186,7 +188,7 @@ function makeRandomString(length) {
   return result;
 }
 
-async function uploadFileToSharePoint(path, base64) {
+async function uploadFileToSharePoint(path, buffer) {
   const authResponse = await auth.getToken(auth.tokenRequest);
 
   var response = await axios.default.post(
@@ -199,7 +201,7 @@ async function uploadFileToSharePoint(path, base64) {
     }
   );
 
-  const data = Buffer.from(base64, "base64");
+  const data = buffer;
   const dataLength = data.length;
   const chunkSize = 327680; // 320 KiB
   const chunks = Math.ceil(dataLength / chunkSize, dataLength) - 1;
@@ -241,16 +243,33 @@ async function uploadFileToSharePoint(path, base64) {
   return uploadResponse.data;
 }
 
-async function uploadFilesToSharePointWorkflow(path, files) {
+async function uploadFilesToSharePointWorkflow(filesPath, files) {
   let filesPromises = [];
 
-  for (let file in files) {
-    filesPromises.push(
-      uploadFileToSharePoint(
-        `${path}/${file}. ${files[file].Name}`,
-        files[file].Bytes
-      )
-    );
+  for (let i = 0; files.length > i; i++) {
+    if (files[i].ServerPath) {
+      const tmpFilePath = path.join(files[i].ServerPath, files[i].Name);
+
+      filesPromises.push(
+        uploadFileToSharePoint(
+          `${filesPath}/${i}. ${files[i].Name}`,
+          fs.readFileSync(tmpFilePath)
+        )
+      );
+
+      fs.rm(tmpFilePath, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+    } else {
+      filesPromises.push(
+        uploadFileToSharePoint(
+          `${filesPath}/${i}. ${files[i].Name}`,
+          Buffer.from(files[i].Bytes, "base64")
+        )
+      );
+    }
   }
 
   return await Promise.all(filesPromises);

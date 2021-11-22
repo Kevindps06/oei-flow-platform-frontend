@@ -3,6 +3,7 @@ export interface FileItem {
   Name: string;
   Size: number;
   Type: string;
-  Bytes?: string;
+  Bytes?: String | ArrayBuffer;
+  ServerPath?: String;
   Uploaded: boolean;
 }

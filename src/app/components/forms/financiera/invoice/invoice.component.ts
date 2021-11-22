@@ -14,6 +14,8 @@ import { Convenio } from 'src/app/interfaces/Convenio';
 import { FormsFinancieraInvoice } from 'src/app/interfaces/forms-financiera-invoice';
 import { ToastMessage } from 'src/app/interfaces/toast-message';
 import { SharedService } from 'src/app/services/shared.service';
+import { catchError, map } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-forms-financiera-invoice',
@@ -434,7 +436,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
     return isDevMode();
   }
 
-  btnSubmitClick() {
+  async btnSubmitClick() {
     let formsFinancieraInvoice: FormsFinancieraInvoice = {
       Id: Utils.makeRandomString(32),
       TipoPersona: this.tipoPersona,
@@ -450,9 +452,205 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
       InformacionAdicional: this.infoAdicional,
     };
 
+    let filesUploadsPromises = [];
+
     if (this.tipoPersona === 'Natural') {
       switch (this.tipoGestion) {
         case 'Cuenta de cobro':
+          for (let i = 0; this.cuentaCobroFacturaFiles.length > i; i++) {
+            let taskId: string = Utils.makeRandomString(4);
+
+            filesUploadsPromises.push(
+              this.formsService
+                .postUploadFile(
+                  this.cuentaCobroFacturaFiles[i].Name,
+                  this.cuentaCobroFacturaFiles[i].Bytes as ArrayBuffer
+                )
+                .pipe(
+                  map((httpEvent) => {
+                    switch (httpEvent.type) {
+                      case HttpEventType.Sent:
+                        this.sharedService.pushWaitTask({
+                          id: taskId,
+                          description: `Subiendo archivos de cuenta de cobro o factura...`,
+                          progress: 0,
+                        });
+                        break;
+                      case HttpEventType.UploadProgress:
+                        this.sharedService.pushWaitTask({
+                          id: taskId,
+                          progress: Math.round(
+                            (httpEvent.loaded * 100) / httpEvent.total
+                          ),
+                        });
+                        break;
+                      case HttpEventType.Response:
+                        delete this.cuentaCobroFacturaFiles[i].Bytes;
+                        this.cuentaCobroFacturaFiles[i].ServerPath =
+                          httpEvent.body;
+
+                        this.sharedService.removeWaitTask({
+                          id: taskId,
+                        });
+                        break;
+                    }
+                  }),
+                  catchError((err) => {
+                    return throwError(err);
+                  })
+                )
+                .toPromise()
+            );
+          }
+
+          for (let i = 0; this.facturaEquivalenteFiles.length > i; i++) {
+            let taskId: string = Utils.makeRandomString(4);
+
+            filesUploadsPromises.push(
+              this.formsService
+                .postUploadFile(
+                  this.facturaEquivalenteFiles[i].Name,
+                  this.facturaEquivalenteFiles[i].Bytes as ArrayBuffer
+                )
+                .pipe(
+                  map((httpEvent) => {
+                    switch (httpEvent.type) {
+                      case HttpEventType.Sent:
+                        this.sharedService.pushWaitTask({
+                          id: taskId,
+                          description: `Subiendo archivos de factura equivalente...`,
+                          progress: 0,
+                        });
+                        break;
+                      case HttpEventType.UploadProgress:
+                        this.sharedService.pushWaitTask({
+                          id: taskId,
+                          progress: Math.round(
+                            (httpEvent.loaded * 100) / httpEvent.total
+                          ),
+                        });
+                        break;
+                      case HttpEventType.Response:
+                        delete this.facturaEquivalenteFiles[i].Bytes;
+                        this.facturaEquivalenteFiles[i].ServerPath =
+                          httpEvent.body;
+
+                        this.sharedService.removeWaitTask({
+                          id: taskId,
+                        });
+                        break;
+                    }
+                  }),
+                  catchError((err) => {
+                    return throwError(err);
+                  })
+                )
+                .toPromise()
+            );
+          }
+
+          for (
+            let i = 0;
+            this.seguridadSocialParafiscalesFiles.length > i;
+            i++
+          ) {
+            let taskId: string = Utils.makeRandomString(4);
+
+            filesUploadsPromises.push(
+              this.formsService
+                .postUploadFile(
+                  this.seguridadSocialParafiscalesFiles[i].Name,
+                  this.seguridadSocialParafiscalesFiles[i].Bytes as ArrayBuffer
+                )
+                .pipe(
+                  map((httpEvent) => {
+                    switch (httpEvent.type) {
+                      case HttpEventType.Sent:
+                        this.sharedService.pushWaitTask({
+                          id: taskId,
+                          description: `Subiendo archivos de ${
+                            this.tipoPersona === 'Natural'
+                              ? 'seguridad social'
+                              : 'parafiscales'
+                          }...`,
+                          progress: 0,
+                        });
+                        break;
+                      case HttpEventType.UploadProgress:
+                        this.sharedService.pushWaitTask({
+                          id: taskId,
+                          progress: Math.round(
+                            (httpEvent.loaded * 100) / httpEvent.total
+                          ),
+                        });
+                        break;
+                      case HttpEventType.Response:
+                        delete this.seguridadSocialParafiscalesFiles[i].Bytes;
+                        this.seguridadSocialParafiscalesFiles[i].ServerPath =
+                          httpEvent.body;
+
+                        this.sharedService.removeWaitTask({
+                          id: taskId,
+                        });
+                        break;
+                    }
+                  }),
+                  catchError((err) => {
+                    return throwError(err);
+                  })
+                )
+                .toPromise()
+            );
+          }
+
+          for (let i = 0; this.informeActividadesFiles.length > i; i++) {
+            let taskId: string = Utils.makeRandomString(4);
+
+            filesUploadsPromises.push(
+              this.formsService
+                .postUploadFile(
+                  this.informeActividadesFiles[i].Name,
+                  this.informeActividadesFiles[i].Bytes as ArrayBuffer
+                )
+                .pipe(
+                  map((httpEvent) => {
+                    switch (httpEvent.type) {
+                      case HttpEventType.Sent:
+                        this.sharedService.pushWaitTask({
+                          id: taskId,
+                          description: `Subiendo archivos de informe de actividades...`,
+                          progress: 0,
+                        });
+                        break;
+                      case HttpEventType.UploadProgress:
+                        this.sharedService.pushWaitTask({
+                          id: taskId,
+                          progress: Math.round(
+                            (httpEvent.loaded * 100) / httpEvent.total
+                          ),
+                        });
+                        break;
+                      case HttpEventType.Response:
+                        delete this.informeActividadesFiles[i].Bytes;
+                        this.informeActividadesFiles[i].ServerPath =
+                          httpEvent.body;
+
+                        this.sharedService.removeWaitTask({
+                          id: taskId,
+                        });
+                        break;
+                    }
+                  }),
+                  catchError((err) => {
+                    return throwError(err);
+                  })
+                )
+                .toPromise()
+            );
+          }
+
+          await Promise.all(filesUploadsPromises);
+
           formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
             CuentaCobroFiles: this.cuentaCobroFacturaFiles,
             FacturaEquivalenteFiles: this.facturaEquivalenteFiles,
@@ -549,7 +747,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
     this.convenio = '';
     this.tipoLegalizacion = '';
     this.tipoGestion = '';
-    //this.email = '';
     this.digitoVerificacion = '';
     this.invalidateFlowUser();
     this.identificator = '';
@@ -581,28 +778,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 progress: Math.round((event.loaded * 100) / event.total),
               });
               break;
-            case HttpEventType.ResponseHeader:
-              this.sharedService.pushWaitTask({
-                id: taskId,
-                description: `Obteniendo la respuesta del envio de ${(formsFinancieraInvoice.TipoGestion ===
-                'Legalizacion'
-                  ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-                  : formsFinancieraInvoice.TipoGestion
-                ).toLowerCase()}...`,
-                progress: 0,
-              });
-              break;
-            case HttpEventType.DownloadProgress:
-              this.sharedService.pushWaitTask({
-                id: taskId,
-                progress: Math.round((event.loaded * 100) / event.total),
-              });
-              break;
             case HttpEventType.Response:
-              this.sharedService.removeWaitTask({
-                id: taskId,
-              });
-
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
                 title: `${
@@ -634,6 +810,11 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               : formsFinancieraInvoice.TipoGestion
             ).toLowerCase()} debido a algo, vuelva a intentarlo o contacte con el area de soporte encargada.`,
             autohide: 30000,
+          });
+        },
+        () => {
+          this.sharedService.removeWaitTask({
+            id: taskId,
           });
         }
       );
