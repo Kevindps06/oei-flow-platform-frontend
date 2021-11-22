@@ -205,6 +205,7 @@ async function uploadFileToSharePoint(path, buffer) {
   const dataLength = data.length;
   const chunkSize = 327680; // 320 KiB
   const chunks = Math.ceil(dataLength / chunkSize, dataLength) - 1;
+  console.log(chunks);
 
   var uploadResponse;
 
