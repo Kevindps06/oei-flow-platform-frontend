@@ -203,7 +203,10 @@ async function uploadFileToSharePoint(path, buffer) {
 
   const data = buffer;
   const dataLength = data.length;
-  const chunkSize = 327680; // 320 KiB
+  //const chunkSize = 327680; // 320 KiB
+  //const chunkSize = 655360 * 2; // 640 KiB
+  //const chunkSize = 983040 * 3; // 960 KiB
+  const chunkSize = 1310720 * 4; // 1.25 MiB
   const chunks = Math.ceil(dataLength / chunkSize, dataLength) - 1;
   console.log(chunks);
 
@@ -228,11 +231,7 @@ async function uploadFileToSharePoint(path, buffer) {
         }
       );
     } catch (err) {
-      if (err.code === "ETIMEDOUT") {
-        continue;
-      }
-
-      throw err;
+      continue;
     }
 
     chunk++;
