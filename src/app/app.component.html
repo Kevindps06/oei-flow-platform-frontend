@@ -110,7 +110,7 @@
             [ngStyle]="{
               width: (waitTasks.length > 0 ? waitTasks[0].progress : 100) + '%'
             }"
-            [innerHTML]="waitTasks[0].progress ? waitTasks[0].progress : '100%'"
+            [innerHTML]="(waitTasks.length > 0 ? waitTasks[0].progress : 100) + '%'"
           ></div>
         </div>
       </div>
