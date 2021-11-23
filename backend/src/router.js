@@ -510,7 +510,7 @@ router.get("/workflow/validateUser", async (req, res) => {
 });
 
 router.get("/platform/validateUser", async (req, res) => {
-  const platformUserResponse = (
+  const userInformationResponse = (
     await axios.default.get(
       `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_USERINFORMATION_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/EMail eq '${req.query.email}'`,
       {
@@ -523,13 +523,13 @@ router.get("/platform/validateUser", async (req, res) => {
     )
   ).data.value[0];
 
-  if (platformUserResponse) {
+  if (userInformationResponse) {
     delete platformUserResponse["@odata.etag"];
     delete platformUserResponse["fields@odata.context"];
     delete platformUserResponse.fields["@odata.etag"];
 
     const platformUserInfoResponse = await axios.default.get(
-      `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_PLATFORMUSERS_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/UserLookupId eq '${platformUserResponse.id}' and fields/Password eq '${req.query.password}'`,
+      `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_PLATFORMUSERS_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/UserLookupId eq '${userInformationResponse.id}' and fields/Password eq '${req.query.password}'`,
       {
         headers: {
           Authorization:
@@ -541,14 +541,14 @@ router.get("/platform/validateUser", async (req, res) => {
 
     if (platformUserInfoResponse) {
       convenios = [];
-      
+
       for (
         let i = 0;
         platformUserInfoResponse.fields.Convenios.length > i;
         i++
       ) {
         if (platformUserInfoResponse.fields.Convenios[i]) {
-          const platformUserConvenioInfoResponse = await axios.default.get(
+          const platformConvenioInfoResponse = await axios.default.get(
             `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items/${platformUserInfoResponse.fields.Convenios[i].LookupId}?$select=id&$expand=fields`,
             {
               headers: {
@@ -562,14 +562,14 @@ router.get("/platform/validateUser", async (req, res) => {
             }
           );
 
-          convenios.push(platformUserConvenioInfoResponse.data);
+          convenios.push(platformConvenioInfoResponse.data);
         }
       }
 
       platformUserInfoResponse.fields.Convenios = convenios;
 
       res.status(200).json({
-        userInfo: platformUserResponse,
+        userInfo: userInformationResponse,
         plaftformInfo: platformUserInfoResponse,
       });
     } else {
