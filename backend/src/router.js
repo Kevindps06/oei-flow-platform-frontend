@@ -550,23 +550,29 @@ router.get("/platform/validateUser", async (req, res) => {
         i++
       ) {
         if (platformUserInfoResponse.fields.Convenios[i]) {
-          const platformConvenioInfoResponse = await axios.default.get(
-            `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items/${platformUserInfoResponse.fields.Convenios[i].LookupId}?$select=id&$expand=fields`,
-            {
-              headers: {
-                Authorization:
-                  "Bearer " +
-                  (
-                    await auth.getToken(auth.tokenRequest)
-                  ).accessToken,
-                Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
-              },
-            }
-          );
+          const platformConvenioInfoResponse = (
+            await axios.default.get(
+              `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items/${platformUserInfoResponse.fields.Convenios[i].LookupId}?$select=id&$expand=fields`,
+              {
+                headers: {
+                  Authorization:
+                    "Bearer " +
+                    (
+                      await auth.getToken(auth.tokenRequest)
+                    ).accessToken,
+                  Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+                },
+              }
+            )
+          ).data.fields;
+
+          delete platformConvenioInfoResponse["@odata.etag"];
+          delete platformConvenioInfoResponse["fields@odata.context"];
+          delete platformConvenioInfoResponse.fields["@odata.etag"];
 
           console.log(platformConvenioInfoResponse);
 
-          convenios.push(platformConvenioInfoResponse.data);
+          convenios.push(platformConvenioInfoResponse);
         }
       }
 
