@@ -1251,7 +1251,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 progress: Math.round((event.loaded * 100) / event.total),
               });
               break;
-            case HttpEventType.ResponseHeader:
+            case HttpEventType.Response:
               this.sharedService.removeWaitTask({
                 id: taskId,
               });

@@ -585,6 +585,8 @@ router.get("/platform/validateUser", async (req, res) => {
 });
 
 router.post("/forms/financiera/registration", async (req, res) => {
+  res.status(200).send();
+
   let formsFinancieraRegistration = {
     ID: req.body.Id,
     "Tipo de persona": req.body.TipoPersona,
@@ -627,11 +629,11 @@ router.post("/forms/financiera/registration", async (req, res) => {
     `https://prod-20.brazilsouth.logic.azure.com:443/workflows/d86f74b4e4374001a78424d69cc15240/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4gnntmoLVSwLIKE6lvawvpgJ_Z3Xq9u5hTj0Iof4qQI`,
     [formsFinancieraRegistration]
   );
-
-  res.status(response.status).json(response.data);
 });
 
 router.post("/forms/financiera/invoice", async (req, res) => {
+  res.status(200).send();
+
   const convenio = await utils.getConvenioFromSharePoint(req.body.Convenio);
 
   const configuration = await utils.getFinancieraFlowStepsWithEncargados(
@@ -988,8 +990,6 @@ router.post("/forms/financiera/invoice", async (req, res) => {
 
     retries++;
   } while (retries < 5);
-
-  res.status(201).send();
 });
 
 router.post("/forms/coordinacionlogistica", async (req, res) => {
