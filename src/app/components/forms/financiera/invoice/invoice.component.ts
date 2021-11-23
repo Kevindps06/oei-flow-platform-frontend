@@ -220,7 +220,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
                     title: `Bienvenido ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
-                    description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, la ultima peticion de registro con esta informacion ha sido rechazada, verifiquela y vuelva a intentarlo o registrese <a [routerLink]="['/forms/financiera/registration']">aqui</a>.`,
+                    description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, la ultima peticion de registro con esta informacion ha sido rechazada, verifiquela y vuelva a intentarlo o registrese <a href="/forms/financiera/registration">aqui</a>.`,
                     autohide: 15000,
                   });
 
@@ -240,7 +240,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
                 title: `Hola solicitante`,
-                description: `No se ha encontrado ningun registro con la informacion ingresada, verifiquela y vuelva a intentarlo o registrese <a [routerLink]="['/forms/financiera/registration']">aqui</a>.`,
+                description: `No se ha encontrado ningun registro con la informacion ingresada, verifiquela y vuelva a intentarlo o registrese <a href="/forms/financiera/registration">aqui</a>.`,
               });
 
               this.validacionUsuarioError = true;
@@ -248,18 +248,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           }
         }
       );
-  }
-
-  resetTwoFactValidation() {
-    this.authValidation = false;
-  }
-
-  btnValidateTwoFactorClick() {
-    if (this.flowUser && this.verificationCode === this.authCode) {
-      this.authValidation = true;
-    } else {
-      this.authValidation = false;
-    }
   }
 
   btnPreviousClick() {
