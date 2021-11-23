@@ -510,62 +510,67 @@ router.get("/workflow/validateUser", async (req, res) => {
 });
 
 router.get("/platform/validateUser", async (req, res) => {
-  const authResponse = await auth.getToken(auth.tokenRequest);
-  const response = (
+  const platformUserResponse = (
     await axios.default.get(
       `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_USERINFORMATION_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/EMail eq '${req.query.email}'`,
       {
         headers: {
-          Authorization: "Bearer " + authResponse.accessToken,
+          Authorization:
+            "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
           Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
         },
       }
     )
   ).data.value[0];
 
-  delete response["@odata.etag"];
-  delete response["fields@odata.context"];
-  delete response.fields["@odata.etag"];
+  if (platformUserResponse) {
+    delete platformUserResponse["@odata.etag"];
+    delete platformUserResponse["fields@odata.context"];
+    delete platformUserResponse.fields["@odata.etag"];
 
-  if (response) {
-    const authResponse2 = await auth.getToken(auth.tokenRequest);
-    const response2 = await axios.default.get(
-      `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_PLATFORMUSERS_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/UserLookupId eq '${response.id}' and fields/Password eq '${req.query.password}'`,
+    const platformUserInfoResponse = await axios.default.get(
+      `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_PLATFORMUSERS_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/UserLookupId eq '${platformUserResponse.id}' and fields/Password eq '${req.query.password}'`,
       {
         headers: {
-          Authorization: "Bearer " + authResponse2.accessToken,
+          Authorization:
+            "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
           Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
         },
       }
-    );
+    ).data.value[0];
 
-    if (response2.data.value.length > 0) {
+    if (platformUserInfoResponse) {
       convenios = [];
+      
       for (
         let i = 0;
-        response2.data.value[0].fields.Convenios.length > i;
+        platformUserInfoResponse.fields.Convenios.length > i;
         i++
       ) {
-        if (response2.data.value[0].fields.Convenios[i] !== undefined) {
-          const authResponse3 = await auth.getToken(auth.tokenRequest);
-          const response3 = await axios.default.get(
-            `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items/${response2.data.value[0].fields.Convenios[i].LookupId}?$select=id&$expand=fields`,
+        if (platformUserInfoResponse.fields.Convenios[i]) {
+          const platformUserConvenioInfoResponse = await axios.default.get(
+            `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items/${platformUserInfoResponse.fields.Convenios[i].LookupId}?$select=id&$expand=fields`,
             {
               headers: {
-                Authorization: "Bearer " + authResponse3.accessToken,
+                Authorization:
+                  "Bearer " +
+                  (
+                    await auth.getToken(auth.tokenRequest)
+                  ).accessToken,
                 Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
               },
             }
           );
 
-          convenios.push(response3.data);
+          convenios.push(platformUserConvenioInfoResponse.data);
         }
       }
-      response2.data.value[0].fields.Convenios = convenios;
 
-      res.status(response2.status).json({
-        userInfo: response,
-        plaftformInfo: response2.data.value[0],
+      platformUserInfoResponse.fields.Convenios = convenios;
+
+      res.status(200).json({
+        userInfo: platformUserResponse,
+        plaftformInfo: platformUserInfoResponse,
       });
     } else {
       res.status(404).send();

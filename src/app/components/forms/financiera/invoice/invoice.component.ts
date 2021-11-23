@@ -778,7 +778,11 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 progress: Math.round((event.loaded * 100) / event.total),
               });
               break;
-            case HttpEventType.Response:
+            case HttpEventType.ResponseHeader:
+              this.sharedService.removeWaitTask({
+                id: taskId,
+              });
+
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
                 title: `${
@@ -808,13 +812,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
             'Legalizacion'
               ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
               : formsFinancieraInvoice.TipoGestion
-            ).toLowerCase()} debido a algo, vuelva a intentarlo o contacte con el area de soporte encargada.`,
+            ).toLowerCase()} debido a algo, vuelva a intentarlo.`,
             autohide: 30000,
-          });
-        },
-        () => {
-          this.sharedService.removeWaitTask({
-            id: taskId,
           });
         }
       );
