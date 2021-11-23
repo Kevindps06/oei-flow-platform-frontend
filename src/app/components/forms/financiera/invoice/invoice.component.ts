@@ -196,15 +196,37 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 id: taskId,
               });
 
-              console.log(event)
-
               this.flowUser = event.body.userInfo;
 
-              this.sharedService.pushToastMessage({
-                id: Utils.makeRandomString(4),
-                title: `Bienvenido ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
-                description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
-              });
+              switch (event.status) {
+                case 200:
+                  this.sharedService.pushToastMessage({
+                    id: Utils.makeRandomString(4),
+                    title: `Bienvenido ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
+                    description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
+                  });
+                  break;
+                case 202:
+                  this.sharedService.pushToastMessage({
+                    id: Utils.makeRandomString(4),
+                    title: `Bienvenido ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
+                    description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, su peticion de registro aun se encuentra siendo procesada, vuelva despues, recuerde que cuando su peticion de registro sea respondida recibira una notificacion en su Email de registro.`,
+                  });
+
+                  this.invalidateFlowUser();
+                  this.validacionUsuarioError = true;
+                  break;
+                case 204:
+                  this.sharedService.pushToastMessage({
+                    id: Utils.makeRandomString(4),
+                    title: `Bienvenido ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
+                    description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, la ultima peticion de registro con esta informacion ha sido rechazada, verifiquela y vuelva a intentarlo o registrese <a [routerLink]="['/forms/financiera/registration']">aqui</a>.`,
+                  });
+
+                  this.invalidateFlowUser();
+                  this.validacionUsuarioError = true;
+                  break;
+              }
               break;
           }
         },
@@ -220,6 +242,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 title: `Hola solicitante`,
                 description: `No se ha encontrado ningun registro con la informacion ingresada, verifiquela y vuelva a intentarlo o registrese <a [routerLink]="['/forms/financiera/registration']">aqui</a>.`,
               });
+
+              this.validacionUsuarioError = true;
               break;
           }
         }
