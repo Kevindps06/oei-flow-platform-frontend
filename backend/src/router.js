@@ -565,14 +565,12 @@ router.get("/platform/validateUser", async (req, res) => {
               }
             )
           ).data;
-          
-          delete convenioInformationResponse["@odata.etag"];
+
+          delete convenioInformationResponse["@odata.context"];
           delete convenioInformationResponse["fields@odata.context"];
           delete convenioInformationResponse.fields["@odata.etag"];
 
-          console.log(convenioInformationResponse);
-
-          convenios.push(platformConvenioInfoResponse);
+          convenios.push(convenioInformationResponse);
         }
       }
 
