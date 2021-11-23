@@ -193,7 +193,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               break;
             case HttpEventType.Response:
               this.flowUser = event.body.userInfo;
-              this.verificationCode = event.body.generatedCode;
 
               this.sharedService.removeWaitTask({
                 id: taskId,
@@ -208,14 +207,34 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           }
         },
         (err) => {
-          if (err.status === 404) {
-            this.flowUser = undefined;
-            this.validacionUsuarioError = true;
-          }
+          console.log(err);
+          console.log(this.flowUser);
 
-          this.sharedService.removeWaitTask({
-            id: taskId,
-          });
+          return
+
+          switch (err.status) {
+            case 403:
+              this.sharedService.pushToastMessage({
+                id: Utils.makeRandomString(4),
+                title: `Bienvenido ${err.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
+                description: `Hola ${err.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
+              });
+              break;
+            case 404:
+              this.sharedService.pushToastMessage({
+                id: Utils.makeRandomString(4),
+                title: `Bienvenido ${err.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
+                description: `Hola ${err.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
+              });
+              break;
+            case 406:
+              this.sharedService.pushToastMessage({
+                id: Utils.makeRandomString(4),
+                title: `Bienvenido ${err.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
+                description: `Hola ${err.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
+              });
+              break;
+          }
         }
       );
   }
@@ -1251,26 +1270,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 progress: Math.round((event.loaded * 100) / event.total),
               });
               break;
-            case HttpEventType.Response:
-              this.sharedService.removeWaitTask({
-                id: taskId,
-              });
-
-              this.sharedService.pushToastMessage({
-                id: Utils.makeRandomString(4),
-                title: `${
-                  formsFinancieraInvoice.TipoGestion === 'Legalizacion'
-                    ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-                    : formsFinancieraInvoice.TipoGestion
-                } enviada satisfactoriamente`,
-                description: `Su ${(formsFinancieraInvoice.TipoGestion ===
-                'Legalizacion'
-                  ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-                  : formsFinancieraInvoice.TipoGestion
-                ).toLowerCase()} ha sido ingresada correctamente y sera procesada en un plazo maximo de 10 dias habiles*, este atento de su correo electronico por el cual se le notificara del estado y manera de validacion de la peticion.`,
-                autohide: 30000,
-              });
-              break;
           }
         },
         (err) => {
@@ -1286,6 +1285,26 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
               : formsFinancieraInvoice.TipoGestion
             ).toLowerCase()} debido a que ha ocurrido un problema mientras se intentaba enviar la peticion, vuelva a intentarlo.`,
+            autohide: 30000,
+          });
+        },
+        () => {
+          this.sharedService.removeWaitTask({
+            id: taskId,
+          });
+
+          this.sharedService.pushToastMessage({
+            id: Utils.makeRandomString(4),
+            title: `${
+              formsFinancieraInvoice.TipoGestion === 'Legalizacion'
+                ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
+                : formsFinancieraInvoice.TipoGestion
+            } enviada satisfactoriamente`,
+            description: `Su ${(formsFinancieraInvoice.TipoGestion ===
+            'Legalizacion'
+              ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
+              : formsFinancieraInvoice.TipoGestion
+            ).toLowerCase()} ha sido ingresada correctamente y sera procesada en un plazo maximo de 10 dias habiles*, este atento de su correo electronico por el cual se le notificara del estado y manera de validacion de la peticion.`,
             autohide: 30000,
           });
         }

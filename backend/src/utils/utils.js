@@ -211,7 +211,7 @@ async function uploadFileToSharePoint(path, buffer) {
   //const chunkSize = 1638400; // 1.56 MiB * 5
   //const chunkSize = 1966080; // 1.87 MiB * 6
   //const chunkSize = 2293760; // 2.18 MiB * 7
-  //const chunkSize = 2621440; // 2.5 MiB * 8
+  const chunkSize = 2621440; // 2.5 MiB * 8
   //const chunkSize = 2949120; // 2.81 MiB * 9
   //const chunkSize = 327680; // 3.12 MiB * 10
   //const chunkSize = 3604480; // 3.43 MiB * 11
@@ -219,7 +219,7 @@ async function uploadFileToSharePoint(path, buffer) {
   //const chunkSize = 4259840; // 4.06 MiB * 13
   //const chunkSize = 4587520; // 4.37 MiB * 14
   //const chunkSize = 4915200; // 4.68 MiB * 15
-  const chunkSize = 5242880; // 5 MiB * 16
+  //const chunkSize = 5242880; // 5 MiB * 16
   const chunks = Math.ceil(dataLength / chunkSize, dataLength) - 1;
   console.log(chunks);
 

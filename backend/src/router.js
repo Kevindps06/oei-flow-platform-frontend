@@ -457,53 +457,50 @@ router.get("/sites/:siteId/lists/:listId/:operation", async (req, res) => {
 });
 
 router.get("/workflow/validateUser", async (req, res) => {
-  const authResponse = await auth.getToken(auth.tokenRequest);
-  const response = await axios.default.get(
-    `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONTRATISTASPROVEEDORES_LIST_ID}/items`,
-    {
-      headers: {
-        Authorization: "Bearer " + authResponse.accessToken,
-        Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
-      },
-      params: {
-        $select: "id",
-        $expand: "fields",
-        $filter: `fields/Tipo_x0020_de_x0020_persona eq '${req.query.tipoPersona}' and fields/Tipo_x0020_de_x0020_relacion eq '${req.query.tipoRelacion}' and fields/CC_x002f_NIT eq '${req.query.identificator}'`,
-        $orderby: "fields/Created desc",
-        $top: 1,
-      },
+  const contratistaProveedorResponse = (
+    await axios.default.get(
+      `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONTRATISTASPROVEEDORES_LIST_ID}/items`,
+      {
+        headers: {
+          Authorization:
+            "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
+          Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+        },
+        params: {
+          $select: "id",
+          $expand: "fields",
+          $filter: `fields/Tipo_x0020_de_x0020_persona eq '${req.query.tipoPersona}' and fields/Tipo_x0020_de_x0020_relacion eq '${req.query.tipoRelacion}' and fields/CC_x002f_NIT eq '${req.query.identificator}'`,
+          $orderby: "fields/Created desc",
+          $top: 1,
+        },
+      }
+    )
+  ).data.value[0];
+
+  delete contratistaProveedorResponse["@odata.etag"];
+  delete contratistaProveedorResponse["fields@odata.context"];
+  delete contratistaProveedorResponse.fields["@odata.etag"];
+
+  console.log(contratistaProveedorResponse);
+
+  if (contratistaProveedorResponse) {
+    switch (contratistaProveedorResponse.fields.Estado) {
+      case "Verificado":
+        res.status(200).json({
+          userInfo: contratistaProveedorResponse,
+        });
+        break;
+      case "Esperando verificacion":
+        res.status(406).json({
+          userInfo: contratistaProveedorResponse,
+        });
+        break;
+      case "Rechazado":
+        res.status(403).json({
+          userInfo: contratistaProveedorResponse,
+        });
+        break;
     }
-  );
-
-  if (
-    response.data.value.length > 0 &&
-    response.data.value[0].fields.Estado === "Verificado"
-  ) {
-    /*let transporter = nodemailer.createTransport({
-      host: "smtp.office365.com",
-      port: 587,
-      auth: {
-        user: "soportecontable@contratista.oei.org.co",
-        pass: "Oei2018*",
-      },
-    });
-
-    transporter
-      .sendMail({
-        from: "soportecontable@contratista.oei.org.co",
-        to: "kevindps@jjk.com.co",
-        subject: "Hello ✔",
-        text: `Hello world? ${generatedCode}`,
-      })
-      .catch((err) => {
-        res.status(404).json(err);
-      });*/
-
-    var generatedCode = utils.makeRandomString(4);
-
-    res
-      .status(response.status)
-      .json({ userInfo: response.data.value[0], generatedCode: generatedCode });
   } else {
     res.status(404).send();
   }
@@ -975,7 +972,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
       /* Send to MS FLOW */
       promises.push(
         axios.default.post(
-          `https://prod-15.brazilsouth.logic.azure.com:443/workflows/471cd993ba91453e93291e330c7cd3f1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V-oDrteENSvLDPqKbeK9ZWNjjBkS3_d0m5vOxTe_S1c`,
+          `https://prod-10.brazilsouth.logic.azure.com:443/workflows/224c1c2ba11641eca0c380112b3f45f7/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ixU2jDh0rBt2Ynx9nyOE_b4N0rP0p-q7b9shJ2qKeII`,
           [formsFinancieraInvoice]
         )
       );
