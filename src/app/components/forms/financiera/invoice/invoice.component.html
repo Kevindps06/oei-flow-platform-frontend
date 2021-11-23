@@ -625,35 +625,33 @@
     </div>
   </div>
   <div *ngIf="formIndex > 0" class="d-grid gap-2 col-6 mx-auto mb-2">
-    <button
-      href="#firstElement"
-      (click)="btnPreviousClick()"
+    <a
       class="btn btn-primary"
+      (click)="btnPreviousClick()"
+      role="button"
+      >Anterior</a
     >
-      Anterior
-    </button>
   </div>
   <div
     *ngIf="formIndex !== 3"
     [ngClass]="{ 'col-12': formIndex === 0 }"
     class="d-grid gap-2 col-6 mx-auto mb-2"
   >
-    <button
-      href="#firstElement"
-      [disabled]="!isValid()"
-      (click)="btnNextClick()"
+    <a
       class="btn btn-primary"
+      (click)="btnNextClick()"
+      role="button"
+      [ngClass]="{ disabled: !isValid() }"
+      >Siguiente</a
     >
-      Siguiente
-    </button>
   </div>
   <div *ngIf="formIndex === 3" class="d-grid gap-2 col-6 mx-auto mb-2">
-    <button
-      [disabled]="!isValid()"
-      (click)="btnSubmitClick()"
+    <a
       class="btn btn-primary"
+      (click)="btnSubmitClick()"
+      role="button"
+      [ngClass]="{ disabled: !isValid() }"
+      >Enviar</a
     >
-      Enviar
-    </button>
   </div>
 </div>

@@ -116,13 +116,27 @@ export class AppComponent implements OnInit {
 
   maintenanceScreenAnimationStart(event: AnimationEvent) {
     if (event.animationName === 'fadeIn') {
-      this.toastShow = true;
+      this.inMaintenance = true;
     }
   }
 
   maintenanceScreenAnimationEnd(event: AnimationEvent) {
     if (event.animationName === 'fadeOut') {
-      this.toastShow = false;
+      this.inMaintenance = false;
+    }
+  }
+
+  inCoding: boolean = false;
+
+  codingScreenAnimationStart(event: AnimationEvent) {
+    if (event.animationName === 'fadeIn') {
+      this.inCoding = true;
+    }
+  }
+
+  codingScreenAnimationEnd(event: AnimationEvent) {
+    if (event.animationName === 'fadeOut') {
+      this.inCoding = false;
     }
   }
 }
