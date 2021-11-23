@@ -482,8 +482,6 @@ router.get("/workflow/validateUser", async (req, res) => {
     delete contratistaProveedorResponse["fields@odata.context"];
     delete contratistaProveedorResponse.fields["@odata.etag"];
 
-    console.log(contratistaProveedorResponse);
-
     switch (contratistaProveedorResponse.fields.Estado) {
       case "Verificado":
         res.status(202).json({

@@ -110,12 +110,17 @@
             [ngStyle]="{
               width: (waitTasks.length > 0 ? waitTasks[0].progress : 100) + '%'
             }"
-            [innerHTML]="(waitTasks.length > 0 ? waitTasks[0].progress : 100) + '%'"
+            [innerHTML]="
+              (waitTasks.length > 0 ? waitTasks[0].progress : 100) + '%'
+            "
           ></div>
         </div>
       </div>
       <div class="col-12 text-center">
-        <p class="fs-4 text-light" [innerHTML]="waitTasks[0].description"></p>
+        <p
+          class="fs-4 text-light"
+          [innerHTML]="waitTasks.length > 0 ? waitTasks[0].description : ''"
+        ></p>
       </div>
     </div>
   </div>

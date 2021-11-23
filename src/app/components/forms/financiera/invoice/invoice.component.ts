@@ -200,9 +200,9 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 case 200:            
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
-                    title: `Bienvenido ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
-                    description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, su peticion de registro aun se encuentra siendo procesada, vuelva despues, recuerde que cuando su peticion de registro sea respondida recibira una notificacion en su Email de registro.`,
-                    autohide: 15000
+                    title: `Registro en espera de aprobacion`,
+                    description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, su peticion de registro aun se encuentra siendo procesada, vuelva mas tarde y, recuerde que cuando su peticion de registro sea respondida recibira una notificacion en su Email.`,
+                    autohide: 20000,
                   });
 
                   this.validacionUsuarioError = true;
@@ -219,9 +219,9 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 case 204:
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
-                    title: `Bienvenido ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
+                    title: `Registro rechazado`,
                     description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, la ultima peticion de registro con esta informacion ha sido rechazada, verifiquela y vuelva a intentarlo o registrese <a href="/forms/financiera/registration">aqui</a>.`,
-                    autohide: 15000,
+                    autohide: 20000,
                   });
 
                   this.validacionUsuarioError = true;
@@ -239,8 +239,9 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
             case 404:
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
-                title: `Hola solicitante`,
+                title: `Registro no encontrado`,
                 description: `No se ha encontrado ningun registro con la informacion ingresada, verifiquela y vuelva a intentarlo o registrese <a href="/forms/financiera/registration">aqui</a>.`,
+                autohide: 20000,
               });
 
               this.validacionUsuarioError = true;
