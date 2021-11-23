@@ -540,6 +540,8 @@ router.get("/platform/validateUser", async (req, res) => {
     )
   ).data.value[0];
 
+  console.log(platformUserInformationResponse);
+
   convenios = [];
 
   for (
@@ -550,7 +552,7 @@ router.get("/platform/validateUser", async (req, res) => {
     if (platformUserInformationResponse.fields.Convenios[i]) {
       const convenioInformationResponse = (
         await axios.default.get(
-          `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items/${platformUserInfoResponse.fields.Convenios[i].LookupId}?$select=id&$expand=fields`,
+          `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items/${platformUserInformationResponse.fields.Convenios[i].LookupId}?$select=id&$expand=fields`,
           {
             headers: {
               Authorization:
@@ -575,7 +577,6 @@ router.get("/platform/validateUser", async (req, res) => {
   platformUserInformationResponse.fields.Convenios = convenios;
 
   console.log(userInformationResponse);
-  console.log(platformUserInformationResponse);
 
   res.status(200).json({
     userInfo: userInformationResponse,
