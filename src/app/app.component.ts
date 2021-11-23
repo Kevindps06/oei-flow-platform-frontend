@@ -28,13 +28,13 @@ export class AppComponent implements OnInit {
       );
 
       if (taskIndex !== -1) {
-        if (waitTask.description) {
-          this.waitTasks[taskIndex].description = waitTask.description;
-        }
-
         if (waitTask.progress === 100) {
           this.waitTasks[taskIndex].description =
             'Su peticion se encuentra siendo procesada, por favor espere...';
+        }
+
+        if (waitTask.description) {
+          this.waitTasks[taskIndex].description = waitTask.description;
         }
 
         this.waitTasks[taskIndex].progress = waitTask.progress;

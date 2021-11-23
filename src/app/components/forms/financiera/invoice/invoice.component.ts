@@ -166,7 +166,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   btnValidarUsuarioClick() {
     this.invalidateFlowUser();
 
-    var taskId: string;
+    const taskId: string = Utils.makeRandomString(4);
     this.formsService
       .validateFlowUser(
         this.tipoPersona,
@@ -180,7 +180,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           switch (event.type) {
             case HttpEventType.Sent:
               this.sharedService.pushWaitTask({
-                id: (taskId = Utils.makeRandomString(4)),
+                id: taskId,
                 description: 'Validando informacion...',
                 progress: 0,
               });
@@ -196,10 +196,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 id: taskId,
               });
 
-              this.flowUser = event.body.userInfo;
-
               switch (event.status) {
-                case 200:
+                case 200:            
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
                     title: `Bienvenido ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
@@ -207,7 +205,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                     autohide: 15000
                   });
 
-                  this.invalidateFlowUser();
                   this.validacionUsuarioError = true;
                   break;
                 case 202:
@@ -216,6 +213,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                     title: `Bienvenido ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
                     description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
                   });
+
+                  this.flowUser = event.body.userInfo;
                   break;
                 case 204:
                   this.sharedService.pushToastMessage({
@@ -225,7 +224,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                     autohide: 15000,
                   });
 
-                  this.invalidateFlowUser();
                   this.validacionUsuarioError = true;
                   break;
               }

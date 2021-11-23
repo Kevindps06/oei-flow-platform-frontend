@@ -110,15 +110,12 @@
             [ngStyle]="{
               width: (waitTasks.length > 0 ? waitTasks[0].progress : 100) + '%'
             }"
-          >
-            {{ waitTasks.length > 0 ? waitTasks[0].progress : "" }}%
-          </div>
+            [innerHTML]="waitTasks[0].progress"
+          ></div>
         </div>
       </div>
       <div class="col-12 text-center">
-        <p class="fs-4 text-light">
-          {{ waitTasks.length > 0 ? waitTasks[0].description : "" }}
-        </p>
+        <p class="fs-4 text-light" [innerHTML]="waitTasks[0].description"></p>
       </div>
     </div>
   </div>
@@ -151,7 +148,7 @@
         style="max-width: 35%"
         class="rounded me-2"
       />
-      <strong class="me-auto">{{ toastMessage.title }}</strong>
+      <strong class="me-auto" [innerHTML]="toastMessage.title"></strong>
       <button
         (click)="removeToastMessage(toastMessage.id)"
         type="button"
@@ -159,7 +156,7 @@
         aria-label="Close"
       ></button>
     </div>
-    <div class="toast-body">{{ toastMessage.description }}</div>
+    <div class="toast-body" [innerHTML]="toastMessage.description"></div>
   </div>
 </div>
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
