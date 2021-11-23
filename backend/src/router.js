@@ -537,7 +537,11 @@ router.get("/platform/validateUser", async (req, res) => {
           Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
         },
       }
-    ).data.value[0];
+    ).data;
+
+    console.log(data);
+
+    return
 
     if (platformUserInfoResponse) {
       convenios = [];
