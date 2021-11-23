@@ -192,11 +192,13 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               });
               break;
             case HttpEventType.Response:
-              this.flowUser = event.body.userInfo;
-
               this.sharedService.removeWaitTask({
                 id: taskId,
               });
+
+              console.log(event)
+
+              this.flowUser = event.body.userInfo;
 
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
@@ -207,31 +209,16 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           }
         },
         (err) => {
-          console.log(err);
-          console.log(this.flowUser);
-
-          return
+          this.sharedService.removeWaitTask({
+            id: taskId,
+          });
 
           switch (err.status) {
-            case 403:
-              this.sharedService.pushToastMessage({
-                id: Utils.makeRandomString(4),
-                title: `Bienvenido ${err.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
-                description: `Hola ${err.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
-              });
-              break;
             case 404:
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
-                title: `Bienvenido ${err.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
-                description: `Hola ${err.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
-              });
-              break;
-            case 406:
-              this.sharedService.pushToastMessage({
-                id: Utils.makeRandomString(4),
-                title: `Bienvenido ${err.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
-                description: `Hola ${err.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
+                title: `Hola solicitante`,
+                description: `No se ha encontrado ningun registro con la informacion ingresada, verifiquela y vuelva a intentarlo o registrese <a [routerLink]="['/forms/financiera/registration']">aqui</a>.`,
               });
               break;
           }

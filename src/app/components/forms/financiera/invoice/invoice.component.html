@@ -47,10 +47,8 @@
                   Este campo es (*) obligatorio, rellenelo.
                 </p>
                 <p *ngIf="validacionUsuarioError">
-                  No se ha entrado ningun registro con los datos ingresados,
-                  verifiquelos y vuelva a intentarlo, o realice el proceso de
-                  registro
-                  <a [routerLink]="['/forms/financiera/registration']">aqui</a>.
+                  No se ha encontrado, se encuentra en espera o ha sido
+                  rechazado el registro con la informacion ingresada.
                 </p>
               </div>
             </div>
@@ -625,10 +623,7 @@
     </div>
   </div>
   <div *ngIf="formIndex > 0" class="d-grid gap-2 col-6 mx-auto mb-2">
-    <a
-      class="btn btn-primary"
-      (click)="btnPreviousClick()"
-      role="button"
+    <a class="btn btn-primary" (click)="btnPreviousClick()" role="button"
       >Anterior</a
     >
   </div>

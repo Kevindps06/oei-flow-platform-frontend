@@ -486,17 +486,17 @@ router.get("/workflow/validateUser", async (req, res) => {
   if (contratistaProveedorResponse) {
     switch (contratistaProveedorResponse.fields.Estado) {
       case "Verificado":
-        res.status(200).json({
+        res.status(202).json({
           userInfo: contratistaProveedorResponse,
         });
         break;
       case "Esperando verificacion":
-        res.status(406).json({
+        res.status(200).json({
           userInfo: contratistaProveedorResponse,
         });
         break;
       case "Rechazado":
-        res.status(403).json({
+        res.status(204).json({
           userInfo: contratistaProveedorResponse,
         });
         break;
