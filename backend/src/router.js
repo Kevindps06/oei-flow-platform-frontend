@@ -528,20 +528,18 @@ router.get("/platform/validateUser", async (req, res) => {
     delete userInformationResponse["fields@odata.context"];
     delete userInformationResponse.fields["@odata.etag"];
 
-    const platformUserInfoResponse = await axios.default.get(
-      `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_PLATFORMUSERS_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/UserLookupId eq '${userInformationResponse.id}' and fields/Password eq '${req.query.password}'`,
-      {
-        headers: {
-          Authorization:
-            "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
-          Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
-        },
-      }
-    ).data;
-
-    console.log(data);
-
-    return
+    const platformUserInfoResponse = (
+      await axios.default.get(
+        `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_PLATFORMUSERS_LIST_ID}/items?$select=id&$expand=fields&$filter=fields/UserLookupId eq '${userInformationResponse.id}' and fields/Password eq '${req.query.password}'`,
+        {
+          headers: {
+            Authorization:
+              "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
+            Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+          },
+        }
+      )
+    ).data.value[0];
 
     if (platformUserInfoResponse) {
       convenios = [];
@@ -565,6 +563,8 @@ router.get("/platform/validateUser", async (req, res) => {
               },
             }
           );
+
+          console.log(platformConvenioInfoResponse);
 
           convenios.push(platformConvenioInfoResponse.data);
         }
