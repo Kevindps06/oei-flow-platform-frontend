@@ -540,7 +540,9 @@ router.get("/platform/validateUser", async (req, res) => {
     )
   ).data.value[0];
 
-  console.log(platformUserInformationResponse);
+  delete platformUserInformationResponse["@odata.etag"];
+  delete platformUserInformationResponse["fields@odata.context"];
+  delete platformUserInformationResponse.fields["@odata.etag"];
 
   convenios = [];
 
@@ -575,8 +577,6 @@ router.get("/platform/validateUser", async (req, res) => {
   }
 
   platformUserInformationResponse.fields.Convenios = convenios;
-
-  console.log(userInformationResponse);
 
   res.status(200).json({
     userInfo: userInformationResponse,
