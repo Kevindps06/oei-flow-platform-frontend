@@ -701,65 +701,43 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         });
         break;
       case "Anticipo":
-        var uploadFilesPromises = [];
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Formato de solicitud de avances`,
-            req.body.FormatoSolicitudAvancesFiles
-          )
-        );
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Cotizaciones`,
-            req.body.CotizacionesFiles
-          )
-        );
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Solicitudes de comision`,
-            req.body.SolicitudesComisionFiles
-          )
-        );
-
         var promisesResponses = await Promise.all(uploadFilesPromises);
 
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
           SharePointFiles: [
             {
               Name: "Formato de solicitud de avances",
-              Files: promisesResponses[0],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Formato de solicitud de avances`,
+                req.body.FormatoSolicitudAvancesFiles
+              ),
             },
             {
               Name: "Cotizaciones",
-              Files: promisesResponses[1],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Cotizaciones`,
+                req.body.CotizacionesFiles
+              ),
             },
             {
               Name: "Solicitudes de comision",
-              Files: promisesResponses[2],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Solicitudes de comision`,
+                req.body.SolicitudesComisionFiles
+              ),
             },
           ],
         });
         break;
       case "Dieta":
-        var uploadFilesPromises = [];
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Formato de solicitud de viajes`,
-            req.body.FormatoSolicitudViajesFiles
-          )
-        );
-
-        var promisesResponses = await Promise.all(uploadFilesPromises);
-
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
           SharePointFiles: [
             {
               Name: "Formato de solicitud de viajes",
-              Files: promisesResponses[0],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Formato de solicitud de viajes`,
+                req.body.FormatoSolicitudViajesFiles
+              ),
             },
           ],
         });
@@ -767,55 +745,35 @@ router.post("/forms/financiera/invoice", async (req, res) => {
       case "Legalizacion":
         switch (req.body.TipoLegalizacion) {
           case "Desplazamiento":
-            var uploadFilesPromises = [];
-
-            uploadFilesPromises.push(
-              utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Formato de legalizacion de viajes`,
-                req.body.FormatoLegalizacionViajesFiles
-              )
-            );
-
-            uploadFilesPromises.push(
-              utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Soportes facturas`,
-                req.body.SoportesFacturasFiles
-              )
-            );
-
-            uploadFilesPromises.push(
-              utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Pasabordos tiquetes aereos`,
-                req.body.PasabordosTiquetesAereosFiles
-              )
-            );
-
-            uploadFilesPromises.push(
-              utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Informe de actividades`,
-                req.body.InformeActividadesFiles
-              )
-            );
-
-            var promisesResponses = await Promise.all(uploadFilesPromises);
-
             formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
               SharePointFiles: [
                 {
                   Name: "Formato de legalizacion de viajes",
-                  Files: promisesResponses[0],
+                  Files: await utils.uploadFilesToSharePointWorkflow(
+                    `${gestionPath}/Formato de legalizacion de viajes`,
+                    req.body.FormatoLegalizacionViajesFiles
+                  ),
                 },
                 {
                   Name: "Soportes facturas",
-                  Files: promisesResponses[1],
+                  Files: await utils.uploadFilesToSharePointWorkflow(
+                    `${gestionPath}/Soportes facturas`,
+                    req.body.SoportesFacturasFiles
+                  ),
                 },
                 {
                   Name: "Pasabordos tiquetes aereos",
-                  Files: promisesResponses[2],
+                  Files: await utils.uploadFilesToSharePointWorkflow(
+                    `${gestionPath}/Pasabordos tiquetes aereos`,
+                    req.body.PasabordosTiquetesAereosFiles
+                  ),
                 },
                 {
                   Name: "Informe de actividades",
-                  Files: promisesResponses[3],
+                  Files: await utils.uploadFilesToSharePointWorkflow(
+                    `${gestionPath}/Informe de actividades`,
+                    req.body.InformeActividadesFiles
+                  ),
                 },
               ],
             });
@@ -826,120 +784,78 @@ router.post("/forms/financiera/invoice", async (req, res) => {
   } else {
     switch (req.body.TipoGestion) {
       case "Cuenta de cobro":
-        var uploadFilesPromises = [];
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Cuenta de cobro o factura`,
-            req.body.CuentaCobroFiles
-          )
-        );
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Factura equivalente`,
-            req.body.FacturaEquivalenteFiles
-          )
-        );
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Certificado de parafiscales`,
-            req.body.CertificadoParafiscalesFiles
-          )
-        );
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Informe de actividades`,
-            req.body.InformeActividadesFiles
-          )
-        );
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Poliza de anticipo y cumpliento`,
-            req.body.PolizaAnticipoCumplientoFiles
-          )
-        );
-
         var promisesResponses = await Promise.all(uploadFilesPromises);
 
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
           SharePointFiles: [
             {
               Name: "Cuenta de cobro o factura",
-              Files: promisesResponses[0],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Cuenta de cobro o factura`,
+                req.body.CuentaCobroFiles
+              ),
             },
             {
               Name: "Factura equivalente",
-              Files: promisesResponses[1],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Factura equivalente`,
+                req.body.FacturaEquivalenteFiles
+              ),
             },
             {
               Name: "Certificado de parafiscales",
-              Files: promisesResponses[2],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Certificado de parafiscales`,
+                req.body.CertificadoParafiscalesFiles
+              ),
             },
             {
               Name: "Informe de actividades",
-              Files: promisesResponses[3],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Informe de actividades`,
+                req.body.InformeActividadesFiles
+              ),
             },
             {
               Name: "Poliza de anticipo y cumpliento",
-              Files: promisesResponses[4],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Poliza de anticipo y cumpliento`,
+                req.body.PolizaAnticipoCumplientoFiles
+              ),
             },
           ],
         });
         break;
       case "Anticipo":
-        var uploadFilesPromises = [];
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Camara de comercio`,
-            req.body.CamaraComercioFiles
-          )
-        );
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Formato de solicitud de avances`,
-            req.body.FormatoSolicitudAvancesFiles
-          )
-        );
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Cotizaciones`,
-            req.body.CotizacionesFiles
-          )
-        );
-
-        uploadFilesPromises.push(
-          utils.uploadFilesToSharePointWorkflow(
-            `${gestionPath}/Solicitudes de comision`,
-            req.body.SolicitudesComisionFiles
-          )
-        );
-
-        var promisesResponses = await Promise.all(uploadFilesPromises);
-
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
           SharePointFiles: [
             {
               Name: "Camara de comercio",
-              Files: promisesResponses[0],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Camara de comercio`,
+                req.body.CamaraComercioFiles
+              ),
             },
             {
               Name: "Formato de solicitud de avances",
-              Files: promisesResponses[1],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Formato de solicitud de avances`,
+                req.body.FormatoSolicitudAvancesFiles
+              ),
             },
             {
               Name: "Cotizaciones",
-              Files: promisesResponses[2],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Cotizaciones`,
+                req.body.CotizacionesFiles
+              ),
             },
             {
               Name: "Solicitudes de comision",
-              Files: promisesResponses[3],
+              Files: await utils.uploadFilesToSharePointWorkflow(
+                `${gestionPath}/Solicitudes de comision`,
+                req.body.SolicitudesComisionFiles
+              ),
             },
           ],
         });
@@ -992,6 +908,8 @@ router.post("/forms/financiera/invoice", async (req, res) => {
 });
 
 router.post("/forms/coordinacionlogistica", async (req, res) => {
+  res.status(200).send();
+
   const convenio = await utils.getConvenioFromSharePoint(req.body.Convenio);
 
   const configuration =
@@ -1042,33 +960,21 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
       coordinacionLogisticaPath
     );
 
-  var uploadFilesPromises = [];
-
-  uploadFilesPromises.push(
-    utils.uploadFilesToSharePointWorkflow(
-      `${coordinacionLogisticaPath}/Pasaporte`,
-      req.body.PasaporteFiles
-    )
-  );
-
-  uploadFilesPromises.push(
-    utils.uploadFilesToSharePointWorkflow(
-      `${coordinacionLogisticaPath}/Cedula`,
-      req.body.CedulaFiles
-    )
-  );
-
-  var promisesResponses = await Promise.all(uploadFilesPromises);
-
   formsCoordinacionLogistica = Object.assign(formsCoordinacionLogistica, {
     SharePointFiles: [
       {
         Name: "Pasaporte",
-        Files: promisesResponses[0],
+        Files: await utils.uploadFilesToSharePointWorkflow(
+          `${coordinacionLogisticaPath}/Pasaporte`,
+          req.body.PasaporteFiles
+        ),
       },
       {
         Name: "Cedula",
-        Files: promisesResponses[1],
+        Files: await utils.uploadFilesToSharePointWorkflow(
+          `${coordinacionLogisticaPath}/Cedula`,
+          req.body.CedulaFiles
+        ),
       },
     ],
   });
@@ -1115,8 +1021,6 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
 
     retries++;
   } while (retries < 5);
-
-  res.status(201).send();
 });
 
 module.exports = router;
