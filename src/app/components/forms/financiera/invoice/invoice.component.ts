@@ -1212,6 +1212,152 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           this.cuentaCobroFacturaFiles = [];
           break;
         case 'Anticipo':
+          this.sharedService.pushWaitTask({
+            id: taskId,
+            description: `Subiendo archivos de camara de comercio...`,
+            progress: 0,
+          });
+
+          for (let i = 0; this.camaraComercioFiles.length > i; i++) {
+            await this.formsService
+              .postUploadFile(
+                this.camaraComercioFiles[i].Name,
+                this.camaraComercioFiles[i].Bytes as ArrayBuffer
+              )
+              .pipe(
+                map((httpEvent) => {
+                  switch (httpEvent.type) {
+                    case HttpEventType.UploadProgress:
+                      this.sharedService.pushWaitTask({
+                        id: taskId,
+                        progress: Math.round(
+                          (httpEvent.loaded * 100) / httpEvent.total
+                        ),
+                      });
+                      break;
+                    case HttpEventType.Response:
+                      delete this.camaraComercioFiles[i].Bytes;
+                      this.camaraComercioFiles[i].ServerPath = httpEvent.body;
+                      break;
+                  }
+                }),
+                catchError((err) => {
+                  return throwError(err);
+                })
+              )
+              .toPromise();
+          }
+
+          this.sharedService.pushWaitTask({
+            id: taskId,
+            description: `Subiendo archivos de solicitud de avances...`,
+            progress: 0,
+          });
+
+          for (let i = 0; this.formatoSolicitudAvancesFiles.length > i; i++) {
+            await this.formsService
+              .postUploadFile(
+                this.formatoSolicitudAvancesFiles[i].Name,
+                this.formatoSolicitudAvancesFiles[i].Bytes as ArrayBuffer
+              )
+              .pipe(
+                map((httpEvent) => {
+                  switch (httpEvent.type) {
+                    case HttpEventType.UploadProgress:
+                      this.sharedService.pushWaitTask({
+                        id: taskId,
+                        progress: Math.round(
+                          (httpEvent.loaded * 100) / httpEvent.total
+                        ),
+                      });
+                      break;
+                    case HttpEventType.Response:
+                      delete this.formatoSolicitudAvancesFiles[i].Bytes;
+                      this.formatoSolicitudAvancesFiles[i].ServerPath =
+                        httpEvent.body;
+                      break;
+                  }
+                }),
+                catchError((err) => {
+                  return throwError(err);
+                })
+              )
+              .toPromise();
+          }
+
+          this.sharedService.pushWaitTask({
+            id: taskId,
+            description: `Subiendo archivos de cotizaciones...`,
+            progress: 0,
+          });
+
+          for (let i = 0; this.cotizacionesFiles.length > i; i++) {
+            await this.formsService
+              .postUploadFile(
+                this.cotizacionesFiles[i].Name,
+                this.cotizacionesFiles[i].Bytes as ArrayBuffer
+              )
+              .pipe(
+                map((httpEvent) => {
+                  switch (httpEvent.type) {
+                    case HttpEventType.UploadProgress:
+                      this.sharedService.pushWaitTask({
+                        id: taskId,
+                        progress: Math.round(
+                          (httpEvent.loaded * 100) / httpEvent.total
+                        ),
+                      });
+                      break;
+                    case HttpEventType.Response:
+                      delete this.cotizacionesFiles[i].Bytes;
+                      this.cotizacionesFiles[i].ServerPath = httpEvent.body;
+                      break;
+                  }
+                }),
+                catchError((err) => {
+                  return throwError(err);
+                })
+              )
+              .toPromise();
+          }
+
+          this.sharedService.pushWaitTask({
+            id: taskId,
+            description: `Subiendo archivos de solicitudes de comision...`,
+            progress: 0,
+          });
+
+          for (let i = 0; this.solicitudesComisionFiles.length > i; i++) {
+            await this.formsService
+              .postUploadFile(
+                this.solicitudesComisionFiles[i].Name,
+                this.solicitudesComisionFiles[i].Bytes as ArrayBuffer
+              )
+              .pipe(
+                map((httpEvent) => {
+                  switch (httpEvent.type) {
+                    case HttpEventType.UploadProgress:
+                      this.sharedService.pushWaitTask({
+                        id: taskId,
+                        progress: Math.round(
+                          (httpEvent.loaded * 100) / httpEvent.total
+                        ),
+                      });
+                      break;
+                    case HttpEventType.Response:
+                      delete this.solicitudesComisionFiles[i].Bytes;
+                      this.solicitudesComisionFiles[i].ServerPath =
+                        httpEvent.body;
+                      break;
+                  }
+                }),
+                catchError((err) => {
+                  return throwError(err);
+                })
+              )
+              .toPromise();
+          }
+
           formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
             CamaraComercioFiles: this.camaraComercioFiles,
             FormatoSolicitudAvancesFiles: this.formatoSolicitudAvancesFiles,
