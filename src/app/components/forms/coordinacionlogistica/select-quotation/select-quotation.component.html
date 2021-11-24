@@ -1,1 +1,38 @@
-<p>select-quotation works!</p>
+<div id="firstElement" class="row g-3">
+  <div *ngIf="quotations.length > 0" class="table-responsive col-12 col-xl-6">
+    <div class="card">
+      <div class="card-body">
+        <table
+          class="table table-borderless table-striped table-hover caption-top"
+        >
+          <caption>
+            Reservas, seleccione una haciendo doble click sobre ella.
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Aerolinea</th>
+              <th scope="col">Trayecto</th>
+              <th scope="col">Costo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              (dblclick)="setSelectedQuotation(quotation)"
+              *ngFor="let quotation of quotations"
+              [ngClass]="{
+                'table-primary':
+                  formsCoordinacionLogistica.SelectedQuotation === quotation
+              }"
+            >
+              <th scope="row">{{ quotation.Number }}</th>
+              <td>{{ quotation.Aerolinea }}</td>
+              <td>{{ quotation.Trayecto }}</td>
+              <td>{{ quotation.Costo }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
