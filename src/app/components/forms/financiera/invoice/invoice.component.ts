@@ -32,11 +32,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   // 1
   identificator: string = '';
   digitoVerificacion: string = '';
-  flowUser: any;
-  verificationCode: string = '';
+  contratistaProveedorInformation: any;
   validacionUsuarioError: boolean = false;
-  authCode: string = '';
-  authValidation: boolean = false;
 
   // 2
   tipoGestion: string = '';
@@ -159,7 +156,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   ngOnInit(): void {}
 
   invalidateFlowUser() {
-    this.flowUser = undefined;
+    this.contratistaProveedorInformation = undefined;
     this.validacionUsuarioError = false;
   }
 
@@ -197,7 +194,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               });
 
               switch (event.status) {
-                case 200:            
+                case 200:
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
                     title: `Registro en espera de aprobacion`,
@@ -214,7 +211,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                     description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
                   });
 
-                  this.flowUser = event.body.userInfo;
+                  this.contratistaProveedorInformation = event.body.userInfo;
                   break;
                 case 204:
                   this.sharedService.pushToastMessage({
@@ -267,11 +264,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         this.identificator = '';
         this.digitoVerificacion = '';
         //this.email = '';
-        this.flowUser = undefined;
-        this.verificationCode = '';
+        this.contratistaProveedorInformation = undefined;
         this.validacionUsuarioError = false;
-        this.authCode = '';
-        this.authValidation = false;
         break;
       case 2.1:
         // Reset form index 2 values
@@ -302,17 +296,16 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
       behavior: 'smooth',
     });
 
+    const taskId: string = Utils.makeRandomString(4);
+
     switch (this.formIndex) {
       case 0:
         // Reset form index 1 values
         this.identificator = '';
         this.digitoVerificacion = '';
         //this.email = '';
-        this.flowUser = undefined;
-        this.verificationCode = '';
+        this.contratistaProveedorInformation = undefined;
         this.validacionUsuarioError = false;
-        this.authCode = '';
-        this.authValidation = false;
         break;
       case 1:
         // Reset form index 2 values
@@ -348,12 +341,11 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
             break;
         }
         // Load form index 3 values
-        var taskId: string;
         this.formsService.getConvenios().subscribe((event) => {
           switch (event.type) {
             case HttpEventType.Sent:
               this.sharedService.pushWaitTask({
-                id: (taskId = Utils.makeRandomString(4)),
+                id: taskId,
                 description: 'Cargando convenios...',
                 progress: 0,
               });
@@ -413,12 +405,11 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
             break;
         }
         // Load form index 3 values
-        var taskId: string;
         this.formsService.getConvenios().subscribe((event) => {
           switch (event.type) {
             case HttpEventType.Sent:
               this.sharedService.pushWaitTask({
-                id: (taskId = Utils.makeRandomString(4)),
+                id: taskId,
                 description: 'Cargando convenios...',
                 progress: 0,
               });
@@ -476,11 +467,12 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         this.tipoPersona === 'Natural'
           ? this.identificator
           : `${this.identificator}-${this.digitoVerificacion}`,
-      Email: this.flowUser.fields.Emaildecontacto,
+      Email: this.contratistaProveedorInformation.fields.Emaildecontacto,
       TipoGestion: this.tipoGestion,
       TipoLegalizacion: this.tipoLegalizacion,
       Convenio: this.convenio,
       InformacionAdicional: this.infoAdicional,
+      Requestor: this.contratistaProveedorInformation,
     };
 
     const taskId: string = Utils.makeRandomString(4);
@@ -1316,7 +1308,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
       case 0:
         return this.tipoPersona && this.tipoRelacion;
       case 1:
-        return this.flowUser;
+        return this.contratistaProveedorInformation;
       case 2:
         return this.tipoGestion;
       case 2.1:

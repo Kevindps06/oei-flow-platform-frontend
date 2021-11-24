@@ -24,4 +24,5 @@ export interface FormsFinancieraInvoice {
   FormatoSolicitudViajesFiles?: FileItem[];
   //
   InformacionAdicional: string;
+  Requestor: any;
 }

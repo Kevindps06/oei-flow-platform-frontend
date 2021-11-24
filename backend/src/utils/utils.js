@@ -351,6 +351,7 @@ function formsFinancieraInvoiceObjectWithoutUndefined(
   TipoLegalizacion,
   Convenio,
   InformacionAdicional,
+  Requestor,
   ConvenioInformation,
   Configuration,
   GestionPath,
@@ -395,7 +396,13 @@ function formsFinancieraInvoiceObjectWithoutUndefined(
     obj.Convenio = Convenio;
   }
 
-  obj.InformacionAdicional = InformacionAdicional;
+  if (InformacionAdicional) {
+    obj.InformacionAdicional = InformacionAdicional;
+  }
+
+  if (Requestor) {
+    obj.Requestor = Requestor;
+  }
 
   if (ConvenioInformation) {
     obj.ConvenioInformation = ConvenioInformation;
