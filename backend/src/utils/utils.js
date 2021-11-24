@@ -257,6 +257,10 @@ async function uploadFileToSharePoint(path, buffer) {
 }
 
 async function uploadFilesToSharePointWorkflow(filesPath, files) {
+  if (!files) {
+    return
+  }
+
   let filesUploadResponses = [];
 
   for (let i = 0; files.length > i; i++) {
