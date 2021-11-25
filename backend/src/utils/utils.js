@@ -264,7 +264,6 @@ async function uploadFilesToSharePointWorkflow(filesPath, files) {
   for (let i = 0; files.length > i; i++) {
     if (files[i].ServerPath) {
       const tmpFilePath = path.join(files[i].ServerPath, files[i].Name);
-      console.log(tmpFilePath);
 
       filesUploadResponses.push(
         await uploadFileToSharePoint(
