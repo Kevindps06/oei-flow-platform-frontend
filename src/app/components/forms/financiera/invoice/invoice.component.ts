@@ -193,8 +193,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 id: taskId,
               });
 
-              switch (event.status) {
-                case 200:
+              switch (event.body.userInfo.Estado) {
+                case "Esperando verificacion":
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
                     title: `Registro en espera de aprobacion`,
@@ -204,7 +204,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
 
                   this.validacionUsuarioError = true;
                   break;
-                case 202:
+                case "Verificado":
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
                     title: `Bienvenido ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
@@ -213,7 +213,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
 
                   this.contratistaProveedorInformation = event.body.userInfo;
                   break;
-                case 204:
+                case "Rechazado":
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
                     title: `Registro rechazado`,

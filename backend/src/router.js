@@ -26,8 +26,6 @@ router.post("/uploadfile", (req, res) => {
 
     const tmpFolderPath = fs.mkdtempSync(path.join(tmpPath, "webApp-"));
 
-    console.log(tmpFolderPath);
-
     fs.writeFileSync(path.join(tmpFolderPath, req.query.name), req.body);
 
     setTimeout(() => {
@@ -501,23 +499,9 @@ router.get("/workflow/validateUser", async (req, res) => {
     delete contratistaProveedorResponse["fields@odata.context"];
     delete contratistaProveedorResponse.fields["@odata.etag"];
 
-    switch (contratistaProveedorResponse.fields.Estado) {
-      case "Verificado":
-        res.status(202).json({
-          userInfo: contratistaProveedorResponse,
-        });
-        break;
-      case "Esperando verificacion":
-        res.status(200).json({
-          userInfo: contratistaProveedorResponse,
-        });
-        break;
-      case "Rechazado":
-        res.status(204).json({
-          userInfo: contratistaProveedorResponse,
-        });
-        break;
-    }
+    res.status(200).json({
+      userInfo: contratistaProveedorResponse,
+    });
   } else {
     res.status(404).send();
   }
