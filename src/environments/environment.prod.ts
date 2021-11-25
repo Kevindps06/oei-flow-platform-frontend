@@ -3,5 +3,5 @@ export const environment = {
   //protocol: 'https',
   //backendAddress: 'oeiprojectflow.org',
   protocol: 'http',
-  backendAddress: '35.171.49.111:8080',
+  backendAddress: 'lab.oeiprojectflow.org',
 };
