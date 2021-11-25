@@ -26,11 +26,17 @@ router.post("/uploadfile", (req, res) => {
 
     const tmpFolderPath = fs.mkdtempSync(path.join(tmpPath, "webApp-"));
 
+    console.log(tmpFolderPath);
+
     fs.writeFileSync(path.join(tmpFolderPath, req.query.name), req.body);
 
     setTimeout(() => {
       if (!fs.existsSync(tmpFolderPath)) {
-        fs.rmdirSync(tmpFolderPath);
+        fs.rm(tmpFolderPath, { recursive: true }, (err) => {
+          if (err) {
+            throw err;
+          }
+        });
       }
     }, 21600000);
 
