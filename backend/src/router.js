@@ -701,8 +701,6 @@ router.post("/forms/financiera/invoice", async (req, res) => {
         });
         break;
       case "Anticipo":
-        var promisesResponses = await Promise.all(uploadFilesPromises);
-
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
           SharePointFiles: [
             {
@@ -784,8 +782,6 @@ router.post("/forms/financiera/invoice", async (req, res) => {
   } else {
     switch (req.body.TipoGestion) {
       case "Cuenta de cobro":
-        var promisesResponses = await Promise.all(uploadFilesPromises);
-
         formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
           SharePointFiles: [
             {
