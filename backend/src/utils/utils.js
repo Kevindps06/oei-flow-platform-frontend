@@ -256,7 +256,7 @@ async function uploadFileToSharePoint(path, buffer) {
 
 async function uploadFilesToSharePointWorkflow(filesPath, files) {
   if (!files) {
-    return []
+    return [];
   }
 
   let filesUploadResponses = [];
@@ -272,7 +272,13 @@ async function uploadFilesToSharePointWorkflow(filesPath, files) {
         )
       );
 
-      fs.rm(tmpFilePath, (err) => {
+      fs.rmSync(tmpFilePath, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+
+      fs.rmdirSync(path.dirname(tmpFilePath), (err) => {
         if (err) {
           throw err;
         }

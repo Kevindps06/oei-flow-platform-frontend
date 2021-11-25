@@ -28,6 +28,12 @@ router.post("/uploadfile", (req, res) => {
 
     fs.writeFileSync(path.join(tmpFolderPath, req.query.name), req.body);
 
+    setTimeout(() => {
+      if (!fs.existsSync(tmpFolderPath)) {
+        fs.rmdirSync(tmpFolderPath);
+      }
+    }, 21600000);
+
     res.status(201).json(tmpFolderPath);
   } catch (err) {
     res.status(500).json(err);
