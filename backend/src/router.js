@@ -2,11 +2,9 @@ const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 const auth = require("./apis/microsoft/auth");
-const nodemailer = require("nodemailer");
 const utils = require("./utils/utils");
 const fs = require("fs");
 const path = require("path");
-const os = require("os");
 const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
 const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
 const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
@@ -20,11 +18,17 @@ router.post("/request", async (req, res) => {
 
 router.post("/uploadfile", (req, res) => {
   try {
-    let tmpPath = fs.mkdtempSync(path.join(os.tmpdir(), "webApp-"));
+    const tmpPath = path.join(__dirname, "..", "tmp");
 
-    fs.writeFileSync(path.join(tmpPath, req.query.name), req.body);
+    if (!fs.existsSync(tmpPath)) {
+      fs.mkdirSync(tmpPath);
+    }
 
-    res.status(201).json(tmpPath);
+    const tmpFolderPath = fs.mkdtempSync(path.join(tmpPath, "webApp-"));
+
+    fs.writeFileSync(path.join(tmpFolderPath, req.query.name), req.body);
+
+    res.status(201).json(tmpFolderPath);
   } catch (err) {
     res.status(500).json(err);
   }

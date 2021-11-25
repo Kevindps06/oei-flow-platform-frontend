@@ -4,7 +4,6 @@ const fs = require("fs");
 const path = require("path");
 const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
 const CoordinacionLogisticaFlow = require("../schemas/configuration/CoordinacionLogisticaFlow");
-const { promises } = require("stream");
 
 async function getConvenioFromSharePoint(convenioNumber) {
   let convenioFromSharePoint;
