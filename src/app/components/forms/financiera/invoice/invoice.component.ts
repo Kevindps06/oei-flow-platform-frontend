@@ -193,7 +193,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 id: taskId,
               });
 
-              switch (event.body.userInfo.Estado) {
+              switch (event.body.userInfo.fields.Estado) {
                 case "Esperando verificacion":
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
