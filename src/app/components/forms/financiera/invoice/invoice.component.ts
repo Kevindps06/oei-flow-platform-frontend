@@ -1538,7 +1538,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 FormatoLegalizacionFiles: this.formatoLegalizacionFiles,
                 CuentaCobroFiles: this.cuentaCobroFacturaFiles,
                 SoportesFacturasFiles: this.soportesFacturasFiles,
-                CertificadoParafiscalesFiles: this.seguridadSocialParafiscalesFiles,
+                CertificadoParafiscalesFiles:
+                  this.seguridadSocialParafiscalesFiles,
               });
               // Cleaning fields because information has been saved
               this.formatoLegalizacionFiles = [];
@@ -1663,6 +1664,12 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                     Utils.validateFiles(this.soportesFacturasFiles) &&
                     Utils.validateFiles(this.pasabordosTiquetesAereosFiles) &&
                     Utils.validateFiles(this.informeActividades2Files)
+                  );
+                case 'Suministro y servicios':
+                  return (
+                    Utils.validateFiles(this.formatoLegalizacionFiles) &&
+                    Utils.validateFiles(this.cuentaCobroFacturaFiles) &&
+                    Utils.validateFiles(this.soportesFacturasFiles)
                   );
                 default:
                   return false;
