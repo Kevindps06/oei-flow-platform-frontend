@@ -274,7 +274,7 @@ async function uploadFilesToSharePointWorkflow(filesPath, files) {
 
       fs.rm(path.dirname(tmpFilePath), { recursive: true }, (err) => {
         if (err) {
-          throw err
+          console.log(err)
         }
       });
     } else {

@@ -9,6 +9,7 @@ const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
 const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
 const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
 const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
+const { error } = require("npmlog");
 
 router.post("/request", async (req, res) => {
   res.status(200).send(req.body.length);
@@ -32,7 +33,7 @@ router.post("/uploadfile", (req, res) => {
       if (!fs.existsSync(tmpFolderPath)) {
         fs.rm(tmpFolderPath, { recursive: true }, (err) => {
           if (err) {
-            throw err;
+            console.log(err);
           }
         });
       }
