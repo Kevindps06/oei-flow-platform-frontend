@@ -279,7 +279,7 @@
           </label>
         </div>
         <div
-          *ngIf="tipoPersona !== 'Juridica' && tipoRelacion === 'Contratista'"
+          *ngIf="tipoPersona !== 'Natural' && tipoRelacion === 'Proveedor'"
           class="form-check"
         >
           <input
@@ -316,6 +316,19 @@
           />
           <label class="form-check-label" for="tipoLegalizacion0">
             Desplazamiento
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            [(ngModel)]="tipoLegalizacion"
+            class="form-check-input"
+            type="radio"
+            name="tipoLegalizacion1"
+            id="tipoLegalizacion1"
+            value="Suministro y servicios"
+          />
+          <label class="form-check-label" for="tipoLegalizacion1">
+            Suministro y servicios
           </label>
         </div>
       </div>
@@ -518,15 +531,17 @@
           <!-- Legalizacion - Desplazamiento -->
           <div *ngIf="tipoLegalizacion === 'Desplazamiento'">
             <div class="col-12">
-              <label class="form-label" for="uploadFilesFormatoSolicitudViajes"
+              <label
+                class="form-label"
+                for="uploadFilesFormatoLegalizacionViajes"
                 >Formato de legalizacion de viajes<span class="text-danger"
                   >*</span
                 ></label
               >
               <app-upload-files
                 [contentAsArrayBuffer]="true"
-                id="uploadFilesFormatoSolicitudViajes"
-                name="uploadFilesFormatoSolicitudViajes"
+                id="uploadFilesFormatoLegalizacionViajes"
+                name="uploadFilesFormatoLegalizacionViajes"
                 [requiredFeedback]="
                   'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
                 "
@@ -580,6 +595,70 @@
                   'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
                 "
                 (onFilesChange)="setInformeActividades2Files($event)"
+              ></app-upload-files>
+            </div>
+          </div>
+          <!-- Legalizacion - Suministro y servicios -->
+          <div *ngIf="tipoLegalizacion === 'Suministro y servicios'">
+            <div class="col-12">
+              <label class="form-label" for="uploadFilesFormatoLegalizacion"
+                >Formato de legalizacion<span class="text-danger"
+                  >*</span
+                ></label
+              >
+              <app-upload-files
+                [contentAsArrayBuffer]="true"
+                id="uploadFilesFormatoLegalizacion"
+                name="uploadFilesFormatoLegalizacion"
+                [requiredFeedback]="
+                  'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                "
+                (onFilesChange)="setFormatoLegalizacionViajesFiles($event)"
+              ></app-upload-files>
+            </div>
+            <div class="col-12">
+              <label for="uploadFilescuentaCobroFactura" class="form-label"
+                >Cuenta de cobro o factura<span class="text-danger">*</span>
+              </label>
+              <app-upload-files
+                [contentAsArrayBuffer]="true"
+                id="uploadFilescuentaCobroFactura"
+                name="uploadFilescuentaCobroFactura"
+                [requiredFeedback]="
+                  'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                "
+                (onFilesChange)="setCuentaCobroFacturaFiles($event)"
+              ></app-upload-files>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="uploadFilesSoportesFacturas"
+                >Soportes facturas (transporte, alojamiento, imprevistos)<span
+                  class="text-danger"
+                  >*</span
+                ></label
+              >
+              <app-upload-files
+                [contentAsArrayBuffer]="true"
+                id="uploadFilesSoportesFacturas"
+                name="uploadFilesSoportesFacturas"
+                [requiredFeedback]="
+                  'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                "
+                (onFilesChange)="setSoportesFacturasFiles($event)"
+              ></app-upload-files>
+            </div>
+            <div class="col-12">
+              <label for="uploadFilesPagoSeguridadSocial" class="form-label">{{
+                tipoPersona === "Natural"
+                  ? "Pago de seguridad social vigente (pagado)"
+                  : "Certificado de
+                parafiscales"
+              }}</label>
+              <app-upload-files
+                [contentAsArrayBuffer]="true"
+                id="uploadFilesPagoSeguridadSocial"
+                name="uploadFilesPagoSeguridadSocial"
+                (onFilesChange)="setSeguridadSocialParafiscalesFiles($event)"
               ></app-upload-files>
             </div>
           </div>
