@@ -279,7 +279,7 @@
           </label>
         </div>
         <div
-          *ngIf="tipoPersona !== 'Natural' && tipoRelacion === 'Proveedor'"
+          *ngIf="!(tipoPersona === 'Natural' && tipoRelacion === 'Proveedor')"
           class="form-check"
         >
           <input
