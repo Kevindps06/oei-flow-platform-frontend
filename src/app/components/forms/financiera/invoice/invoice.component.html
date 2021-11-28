@@ -318,7 +318,7 @@
             Desplazamiento
           </label>
         </div>
-        <div class="form-check">
+        <div *ngIf="tipoPersona === 'Juridica' && tipoRelacion === 'Proveedor'" class="form-check">
           <input
             [(ngModel)]="tipoLegalizacion"
             class="form-check-input"
