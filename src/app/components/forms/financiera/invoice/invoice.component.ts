@@ -143,6 +143,14 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
     this.informeActividades2Files = informeActividades2Files;
   }
 
+  // Legalizacion - Suministro y servicios
+
+  formatoLegalizacionFiles: FileItem[] = [];
+
+  setFormatoLegalizacionFiles(formatoLegalizacionFiles: FileItem[]) {
+    this.formatoLegalizacionFiles = formatoLegalizacionFiles;
+  }
+
   infoAdicional: string = '';
 
   @Output() onWaitTasksChange = new EventEmitter<WaitTask[]>();
@@ -194,7 +202,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               });
 
               switch (event.body.userInfo.fields.Estado) {
-                case "Esperando verificacion":
+                case 'Esperando verificacion':
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
                     title: `Registro en espera de aprobacion`,
@@ -204,7 +212,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
 
                   this.validacionUsuarioError = true;
                   break;
-                case "Verificado":
+                case 'Verificado':
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
                     title: `Bienvenido ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
@@ -213,7 +221,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
 
                   this.contratistaProveedorInformation = event.body.userInfo;
                   break;
-                case "Rechazado":
+                case 'Rechazado':
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
                     title: `Registro rechazado`,
@@ -1369,6 +1377,176 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           this.cotizacionesFiles = [];
           this.camaraComercioFiles = [];
           this.formatoSolicitudAvancesFiles = [];
+          break;
+        case 'Legalizacion':
+          switch (this.tipoLegalizacion) {
+            case 'Suministro y servicios':
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                description: `Subiendo archivos de formato de legalizacion...`,
+                progress: 0,
+              });
+
+              for (let i = 0; this.formatoLegalizacionFiles.length > i; i++) {
+                await this.formsService
+                  .postUploadFile(
+                    this.formatoLegalizacionFiles[i].Name,
+                    this.formatoLegalizacionFiles[i].Bytes as ArrayBuffer
+                  )
+                  .pipe(
+                    map((httpEvent) => {
+                      switch (httpEvent.type) {
+                        case HttpEventType.UploadProgress:
+                          this.sharedService.pushWaitTask({
+                            id: taskId,
+                            progress: Math.round(
+                              (httpEvent.loaded * 100) / httpEvent.total
+                            ),
+                          });
+                          break;
+                        case HttpEventType.Response:
+                          delete this.formatoLegalizacionFiles[i].Bytes;
+                          this.formatoLegalizacionFiles[i].ServerPath =
+                            httpEvent.body;
+                          break;
+                      }
+                    }),
+                    catchError((err) => {
+                      return throwError(err);
+                    })
+                  )
+                  .toPromise();
+              }
+
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                description: `Subiendo archivos de cuenta de cobro o factura...`,
+                progress: 0,
+              });
+
+              for (let i = 0; this.cuentaCobroFacturaFiles.length > i; i++) {
+                await this.formsService
+                  .postUploadFile(
+                    this.cuentaCobroFacturaFiles[i].Name,
+                    this.cuentaCobroFacturaFiles[i].Bytes as ArrayBuffer
+                  )
+                  .pipe(
+                    map((httpEvent) => {
+                      switch (httpEvent.type) {
+                        case HttpEventType.UploadProgress:
+                          this.sharedService.pushWaitTask({
+                            id: taskId,
+                            progress: Math.round(
+                              (httpEvent.loaded * 100) / httpEvent.total
+                            ),
+                          });
+                          break;
+                        case HttpEventType.Response:
+                          delete this.cuentaCobroFacturaFiles[i].Bytes;
+                          this.cuentaCobroFacturaFiles[i].ServerPath =
+                            httpEvent.body;
+                          break;
+                      }
+                    }),
+                    catchError((err) => {
+                      return throwError(err);
+                    })
+                  )
+                  .toPromise();
+              }
+
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                description: `Subiendo archivos de soportes facturas...`,
+                progress: 0,
+              });
+
+              for (let i = 0; this.soportesFacturasFiles.length > i; i++) {
+                await this.formsService
+                  .postUploadFile(
+                    this.soportesFacturasFiles[i].Name,
+                    this.soportesFacturasFiles[i].Bytes as ArrayBuffer
+                  )
+                  .pipe(
+                    map((httpEvent) => {
+                      switch (httpEvent.type) {
+                        case HttpEventType.UploadProgress:
+                          this.sharedService.pushWaitTask({
+                            id: taskId,
+                            progress: Math.round(
+                              (httpEvent.loaded * 100) / httpEvent.total
+                            ),
+                          });
+                          break;
+                        case HttpEventType.Response:
+                          delete this.soportesFacturasFiles[i].Bytes;
+                          this.soportesFacturasFiles[i].ServerPath =
+                            httpEvent.body;
+                          break;
+                      }
+                    }),
+                    catchError((err) => {
+                      return throwError(err);
+                    })
+                  )
+                  .toPromise();
+              }
+
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                description: `Subiendo archivos de certificado de parafiscales...`,
+                progress: 0,
+              });
+
+              for (
+                let i = 0;
+                this.seguridadSocialParafiscalesFiles.length > i;
+                i++
+              ) {
+                await this.formsService
+                  .postUploadFile(
+                    this.seguridadSocialParafiscalesFiles[i].Name,
+                    this.seguridadSocialParafiscalesFiles[i]
+                      .Bytes as ArrayBuffer
+                  )
+                  .pipe(
+                    map((httpEvent) => {
+                      switch (httpEvent.type) {
+                        case HttpEventType.UploadProgress:
+                          this.sharedService.pushWaitTask({
+                            id: taskId,
+                            progress: Math.round(
+                              (httpEvent.loaded * 100) / httpEvent.total
+                            ),
+                          });
+                          break;
+                        case HttpEventType.Response:
+                          delete this.seguridadSocialParafiscalesFiles[i].Bytes;
+                          this.seguridadSocialParafiscalesFiles[i].ServerPath =
+                            httpEvent.body;
+                          break;
+                      }
+                    }),
+                    catchError((err) => {
+                      return throwError(err);
+                    })
+                  )
+                  .toPromise();
+              }
+
+              formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
+                FormatoLegalizacionFiles: this.formatoLegalizacionFiles,
+                CuentaCobroFiles: this.cuentaCobroFacturaFiles,
+                SoportesFacturasFiles: this.soportesFacturasFiles,
+                CertificadoParafiscalesFiles: this.seguridadSocialParafiscalesFiles,
+              });
+              // Cleaning fields because information has been saved
+              this.formatoLegalizacionFiles = [];
+              this.cuentaCobroFacturaFiles = [];
+              this.soportesFacturasFiles = [];
+              this.seguridadSocialParafiscalesFiles = [];
+              break;
+          }
           break;
       }
     }

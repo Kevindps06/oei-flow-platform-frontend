@@ -305,7 +305,7 @@
             <h5 class="card-title text-center">Tipo de legalizacion</h5>
           </div>
         </div>
-        <div class="form-check">
+        <div *ngIf="!(tipoPersona === 'Juridica' && tipoRelacion === 'Proveedor')" class="form-check">
           <input
             [(ngModel)]="tipoLegalizacion"
             class="form-check-input"
@@ -613,7 +613,7 @@
                 [requiredFeedback]="
                   'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
                 "
-                (onFilesChange)="setFormatoLegalizacionViajesFiles($event)"
+                (onFilesChange)="setFormatoLegalizacionFiles($event)"
               ></app-upload-files>
             </div>
             <div class="col-12">
