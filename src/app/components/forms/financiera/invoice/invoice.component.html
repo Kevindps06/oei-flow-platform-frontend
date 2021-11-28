@@ -278,10 +278,7 @@
             Dieta
           </label>
         </div>
-        <div
-          *ngIf="!(tipoPersona === 'Natural' && tipoRelacion === 'Proveedor')"
-          class="form-check"
-        >
+        <div *ngIf="!(tipoPersona === 'Juridica' && tipoRelacion === 'Contratista')" class="form-check">
           <input
             [(ngModel)]="tipoGestion"
             class="form-check-input"
@@ -305,7 +302,7 @@
             <h5 class="card-title text-center">Tipo de legalizacion</h5>
           </div>
         </div>
-        <div *ngIf="!(tipoPersona === 'Juridica' && tipoRelacion === 'Proveedor')" class="form-check">
+        <div *ngIf="tipoPersona === 'Natural' && tipoRelacion === 'Contratista'" class="form-check">
           <input
             [(ngModel)]="tipoLegalizacion"
             class="form-check-input"
@@ -318,7 +315,7 @@
             Desplazamiento
           </label>
         </div>
-        <div *ngIf="tipoPersona === 'Juridica' && tipoRelacion === 'Proveedor'" class="form-check">
+        <div *ngIf="tipoRelacion === 'Proveedor'" class="form-check">
           <input
             [(ngModel)]="tipoLegalizacion"
             class="form-check-input"
@@ -647,13 +644,10 @@
                 (onFilesChange)="setSoportesFacturasFiles($event)"
               ></app-upload-files>
             </div>
-            <div class="col-12">
-              <label for="uploadFilesPagoSeguridadSocial" class="form-label">{{
-                tipoPersona === "Natural"
-                  ? "Pago de seguridad social vigente (pagado)"
-                  : "Certificado de
-                parafiscales"
-              }}</label>
+            <div *ngIf="tipoPersona === 'Juridica'" class="col-12">
+              <label for="uploadFilesPagoSeguridadSocial" class="form-label"
+                >Certificado de parafiscales</label
+              >
               <app-upload-files
                 [contentAsArrayBuffer]="true"
                 id="uploadFilesPagoSeguridadSocial"

@@ -776,6 +776,33 @@ router.post("/forms/financiera/invoice", async (req, res) => {
               ],
             });
             break;
+          case "Suministro y servicios":
+            formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
+              SharePointFiles: [
+                {
+                  Name: "Formato de legalizacion",
+                  Files: await utils.uploadFilesToSharePointWorkflow(
+                    `${gestionPath}/Formato de legalizacion`,
+                    req.body.FormatoLegalizacionFiles
+                  ),
+                },
+                {
+                  Name: "Cuenta de cobro o factura",
+                  Files: await utils.uploadFilesToSharePointWorkflow(
+                    `${gestionPath}/Cuenta de cobro o factura`,
+                    req.body.CuentaCobroFiles
+                  ),
+                },
+                {
+                  Name: "Soportes facturas",
+                  Files: await utils.uploadFilesToSharePointWorkflow(
+                    `${gestionPath}/Soportes facturas`,
+                    req.body.SoportesFacturasFiles
+                  ),
+                },
+              ],
+            });
+            break;
         }
         break;
     }
