@@ -274,7 +274,7 @@ async function uploadFilesToSharePointWorkflow(filesPath, files) {
 
       fs.rm(path.dirname(tmpFilePath), { recursive: true }, (err) => {
         if (err) {
-          console.log(err)
+          console.log(`File delete error: ${err}`);
         }
       });
     } else {

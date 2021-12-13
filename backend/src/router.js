@@ -29,10 +29,10 @@ router.post("/uploadfile", (req, res) => {
     fs.writeFileSync(path.join(tmpFolderPath, req.query.name), req.body);
 
     setTimeout(() => {
-      if (!fs.existsSync(tmpFolderPath)) {
+      if (fs.existsSync(tmpFolderPath)) {
         fs.rm(tmpFolderPath, { recursive: true }, (err) => {
           if (err) {
-            console.log(err);
+            console.log(`File auto delete error: ${err}`);
           }
         });
       }
@@ -178,7 +178,7 @@ router.delete("/configuration/coordinacionlogisticaflow", async (req, res) => {
   }
 });
 
-// Forms - FinancieraInvoice
+// Forms - FinancieraInvoices
 
 router.post("/forms/financiera/invoices", async (req, res) => {
   try {
@@ -928,36 +928,18 @@ router.post("/forms/financiera/invoice", async (req, res) => {
     Keys: Object.keys(formsFinancieraInvoice),
   });
 
+  /* Save to database */
+  const financieraInvoice = new FinancieraInvoice(formsFinancieraInvoice);
+  promises.push(financieraInvoice.save());
+
   let retries = 0;
   do {
     try {
-      let promises = [];
-
-      /* Save to database */
-      // For localhost testing only
-      /*promises.push(
-        axios.default.post(
-          `https://oeiprojectflow.org/api/forms/financiera/invoices`,
-          formsFinancieraInvoice
-        )
-      );*/
-
-      // Production direct with database
-      /*const financieraInvoice = new FinancieraInvoice(
-        formsFinancieraInvoice
-      );
-      promises.push(financieraInvoice.save());*/
-
       /* Send to MS FLOW */
-      promises.push(
-        axios.default.post(
-          `https://prod-10.brazilsouth.logic.azure.com:443/workflows/224c1c2ba11641eca0c380112b3f45f7/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ixU2jDh0rBt2Ynx9nyOE_b4N0rP0p-q7b9shJ2qKeII`,
-          [formsFinancieraInvoice]
-        )
+      await axios.default.post(
+        `https://prod-10.brazilsouth.logic.azure.com:443/workflows/224c1c2ba11641eca0c380112b3f45f7/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ixU2jDh0rBt2Ynx9nyOE_b4N0rP0p-q7b9shJ2qKeII`,
+        [formsFinancieraInvoice]
       );
-
-      /* Wait all async actions finish */
-      await Promise.all(promises);
 
       break;
     } catch (err) {
@@ -1044,36 +1026,21 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
     Keys: Object.keys(formsCoordinacionLogistica),
   });
 
+  /* Save to database */
+  const coordinacionLogistica = new CoordinacionLogistica(
+    formsCoordinacionLogistica
+  );
+
+  await coordinacionLogistica.save();
+
   let retries = 0;
   do {
     try {
-      let promises = [];
-
-      /* Save to database */
-      // For localhost testing only
-      promises.push(
-        axios.default.post(
-          `https://oeiprojectflow.org/api/forms/coordinacioneslogisticas`,
-          formsCoordinacionLogistica
-        )
-      );
-
-      // Production direct with database
-      /*const coordinacionLogistica = new CoordinacionLogistica(
-        formsCoordinacionLogistica
-      );
-      promises.push(coordinacionLogistica.save());*/
-
       /* Send to MS FLOW */
-      promises.push(
-        axios.default.post(
-          `https://prod-10.brazilsouth.logic.azure.com:443/workflows/d9284b8deff34c34b78c7309cbeb0f45/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xt5QdZEYOiWUAmAfu-ykUU1oMDBm2bKT9yUBS0k63sw`,
-          [formsCoordinacionLogistica]
-        )
+      await axios.default.post(
+        `https://prod-10.brazilsouth.logic.azure.com:443/workflows/d9284b8deff34c34b78c7309cbeb0f45/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xt5QdZEYOiWUAmAfu-ykUU1oMDBm2bKT9yUBS0k63sw`,
+        [formsCoordinacionLogistica]
       );
-
-      /* Wait all async actions finish */
-      await Promise.all(promises);
 
       break;
     } catch (err) {
