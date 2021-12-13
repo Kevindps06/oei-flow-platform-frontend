@@ -66,7 +66,7 @@ export class FormsCoordinacionLogisticaSelectQuotationComponent
             break;
           case HttpEventType.Response:
             if (event.body.length > 0) {
-              if (event.body.SelectedQuotation) {
+              if (event.body[0].SelectedQuotation) {
                 this.router.navigate(['/']);
 
                 this.sharedService.pushToastMessage({
@@ -119,7 +119,7 @@ export class FormsCoordinacionLogisticaSelectQuotationComponent
   ) {
     this.formsService
       .putFormsCoordinacionLogistica(
-        { selectedQuotation: selectedQuotation },
+        { SelectedQuotation: selectedQuotation },
         this.Id
       )
       .subscribe(
