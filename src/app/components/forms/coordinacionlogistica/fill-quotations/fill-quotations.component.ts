@@ -33,7 +33,7 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
   ) {}
 
   ngOnInit(): void {
-    if (!history.state.userInfo || !history.state.plaftformInfo) {
+    /*if (!history.state.userInfo || !history.state.plaftformInfo) {
       this.router.navigate(['/login'], {
         state: {
           fromRoute: this.router.url,
@@ -117,7 +117,7 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
           id: taskId,
         });
       }
-    );
+    );*/
   }
 
   btnSetTicketIdentificator() {

@@ -8,7 +8,7 @@ export interface FormsCoordinacionLogistica {
   Tramos: Tramo[];
   Identificator: string;
   FechaNacimiento: Date;
-  EquipajeAdicional: boolean;
+  EquipajeAdicional: string;
   Email: string;
   Telefono: string;
   PasaporteFiles: FileItem[];

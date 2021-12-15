@@ -10,9 +10,15 @@ export class Utils {
     public sharedService: SharedService
   ) {}
 
-  static validateTramos(tramos: Tramo[]) {
+  static validateTramos(tramos: Tramo[], vuelta: boolean) {
     for (let tramo of tramos) {
-      if (!tramo.fechaIda || !tramo.horaIda) {
+      if (
+        !tramo.origen ||
+        !tramo.destino ||
+        !tramo.fechaIda ||
+        !tramo.horaIda ||
+        !(vuelta ? !tramo.fechaVuelta || !tramo.horaVuelta : true)
+      ) {
         return false;
       }
     }

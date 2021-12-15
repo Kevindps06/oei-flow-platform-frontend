@@ -77,6 +77,7 @@
                       name="radioIdaRuta"
                       id="radioIdaRuta"
                       value="Ida"
+                      [ngClass]="{ 'is-valid': ruta, 'is-invalid': !ruta }"
                     />
                     <label class="form-check-label" for="radioIdaRuta"
                       >Ida</label
@@ -91,6 +92,7 @@
                       name="radioIdaVueltaRuta"
                       id="radioIdaVueltaRuta"
                       value="Ida y vuelta"
+                      [ngClass]="{ 'is-valid': ruta, 'is-invalid': !ruta }"
                     />
                     <label class="form-check-label" for="radioIdaVueltaRuta"
                       >Ida y vuelta</label
@@ -105,6 +107,7 @@
                       name="radioMultidestinoRuta"
                       id="radioMultidestinoRuta"
                       value="Multidestino"
+                      [ngClass]="{ 'is-valid': ruta, 'is-invalid': !ruta }"
                     />
                     <label class="form-check-label" for="radioMultidestinoRuta"
                       >Multidestino</label
@@ -132,9 +135,13 @@
                     >
                       <h5 class="card-title">Tramo #{{ tramo + 1 }}</h5>
                     </div>
-                    <div *ngIf="ruta === 'Multidestino' && tramo > 1" class="col-2">
+                    <div
+                      *ngIf="ruta === 'Multidestino' && tramo > 1"
+                      class="col-2 d-grid gap-2"
+                    >
                       <button
                         (click)="btnRemoveTramoClick(tramo)"
+                        type="button"
                         class="btn btn-primary"
                       >
                         Remover tramo
@@ -218,7 +225,7 @@
                           <option value="11:00 - 14:00">11:00 - 14:00</option>
                           <option value="14:00 - 17:00">14:00 - 17:00</option>
                           <option value="17:00 - 20:00">17:00 - 20:00</option>
-                          <option value="20:00 - 24:00">17:00 - 20:00</option>
+                          <option value="20:00 - 24:00">20:00 - 24:00</option>
                         </select>
                         <label for="horaIda"
                           >Horario de Ida preferido<span class="text-danger"
@@ -262,7 +269,7 @@
                           <option value="11:00 - 14:00">11:00 - 14:00</option>
                           <option value="14:00 - 17:00">14:00 - 17:00</option>
                           <option value="17:00 - 20:00">17:00 - 20:00</option>
-                          <option value="20:00 - 24:00">17:00 - 20:00</option>
+                          <option value="20:00 - 24:00">20:00 - 24:00</option>
                         </select>
                         <label for="horaVuelta"
                           >Horario de Vuelta preferido<span class="text-danger"
@@ -280,13 +287,42 @@
             </div>
             <div
               *ngIf="ruta === 'Multidestino'"
-              class="d-grid gap-2 col-6 mx-auto mb-2"
+              class="d-grid gap-2 col-6 mx-auto"
             >
               <button (click)="btnAddTramoClick()" class="btn btn-primary">
                 Agregar tramo
               </button>
             </div>
             <div class="col-12">
+              <div class="form-floating">
+                <select
+                  [(ngModel)]="identificationType"
+                  class="form-select"
+                  id="identificationType"
+                  name="identificationType"
+                  [ngClass]="{
+                    'is-valid': identificationType,
+                    'is-invalid': !identificationType
+                  }"
+                >
+                  <option selected disabled></option>
+                  <option value="Cedula de ciudadania">
+                    Cedula de ciudadania
+                  </option>
+                  <option value="Pasaporte">Pasaporte</option>
+                  <option value="Tarjeta de identidad">
+                    Tarjeta de identidad
+                  </option>
+                </select>
+                <label for="identificationType"
+                  >Tipo de documento<span class="text-danger">*</span></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, seleccione una opcion.
+                </div>
+              </div>
+            </div>
+            <div *ngIf="identificationType" class="col-12">
               <div class="form-floating">
                 <input
                   [(ngModel)]="identification"
@@ -307,9 +343,8 @@
                   }"
                 />
                 <label for="inputIdentification"
-                  >Documento de identidad<span class="text-danger"
-                    >*</span
-                  ></label
+                  >{{ identificationType
+                  }}<span class="text-danger">*</span></label
                 >
                 <div class="invalid-feedback">
                   Este campo es (*) obligatorio, rellenelo.
@@ -333,9 +368,7 @@
               <div class="row g-3">
                 <div class="col-12">
                   <label for="inputEquipajeAdicional"
-                    >Equipaje<span class="text-danger"
-                      >*</span
-                    ></label
+                    >Equipaje<span class="text-danger">*</span></label
                   >
                 </div>
                 <div
@@ -348,13 +381,36 @@
                       [(ngModel)]="equipajeAdicional"
                       class="form-check-input"
                       type="radio"
-                      name="radioSiEquipajeAdicional"
-                      id="radioSiEquipajeAdicional"
-                      value="true"
+                      name="radioNingunoEquipajeAdicional"
+                      id="radioNingunoEquipajeAdicional"
+                      value="Ninguno"
+                      [ngClass]="{
+                        'is-valid': equipajeAdicional,
+                        'is-invalid': !equipajeAdicional
+                      }"
                     />
                     <label
                       class="form-check-label"
-                      for="radioSiEquipajeAdicional"
+                      for="radioNingunoEquipajeAdicional"
+                      >Ninguno</label
+                    >
+                  </div>
+                  <div class="form-check">
+                    <input
+                      [(ngModel)]="equipajeAdicional"
+                      class="form-check-input"
+                      type="radio"
+                      name="radio10EquipajeAdicional"
+                      id="radio10EquipajeAdicional"
+                      value="10 kg"
+                      [ngClass]="{
+                        'is-valid': equipajeAdicional,
+                        'is-invalid': !equipajeAdicional
+                      }"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="radio10EquipajeAdicional"
                       >10 kg</label
                     >
                   </div>
@@ -363,34 +419,37 @@
                       [(ngModel)]="equipajeAdicional"
                       class="form-check-input"
                       type="radio"
-                      name="radioNoEquipajeAdicional"
-                      id="radioNoEquipajeAdicional"
-                      value="false"
-                      checked
+                      name="radio23EquipajeAdicional"
+                      id="radio23EquipajeAdicional"
+                      value="23 kg"
+                      [ngClass]="{
+                        'is-valid': equipajeAdicional,
+                        'is-invalid': !equipajeAdicional
+                      }"
                     />
                     <label
                       class="form-check-label"
-                      for="radioNoEquipajeAdicional"
-                      >35 kg</label
+                      for="radio23EquipajeAdicional"
+                      >23 kg</label
                     >
-                    <div class="invalid-feedback">
-                      Este campo es (*) obligatorio, seleccione una opcion.
-                    </div>
                   </div>
                   <div class="form-check">
                     <input
                       [(ngModel)]="equipajeAdicional"
                       class="form-check-input"
                       type="radio"
-                      name="radioNoEquipajeAdicional"
-                      id="radioNoEquipajeAdicional"
-                      value="false"
-                      checked
+                      name="radio32EquipajeAdicional"
+                      id="radio32EquipajeAdicional"
+                      value="32 kg"
+                      [ngClass]="{
+                        'is-valid': equipajeAdicional,
+                        'is-invalid': !equipajeAdicional
+                      }"
                     />
                     <label
                       class="form-check-label"
-                      for="radioNoEquipajeAdicional"
-                      >65 kg</label
+                      for="radio32EquipajeAdicional"
+                      >32 kg</label
                     >
                     <div class="invalid-feedback">
                       Este campo es (*) obligatorio, seleccione una opcion.
@@ -452,14 +511,11 @@
             </div>
             <div class="col-12">
               <label for="uploadFilesPasaporte" class="form-label"
-                >Pasaporte<span class="text-danger">*</span></label
+                >Pasaporte</label
               >
               <app-upload-files
                 id="uploadFilesPasaporte"
                 name="uploadFilesPasaporte"
-                requiredFeedback="
-                  Este campo es (*) obligatorio, cargue almenos 1 archivo.
-                "
                 (onFilesChange)="setPasaporteFiles($event)"
               ></app-upload-files>
             </div>
@@ -470,7 +526,7 @@
               <app-upload-files
                 id="uploadFilesComprobantes"
                 name="uploadFilesComprobantes"
-                (onFilesChange)="setCedulaFiles($event)"
+                (onFilesChange)="setComprobantesFiles($event)"
               ></app-upload-files>
             </div>
             <div class="col-12">

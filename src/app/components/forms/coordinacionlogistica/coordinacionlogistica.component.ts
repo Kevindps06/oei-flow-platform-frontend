@@ -38,6 +38,7 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
     this.tramos[tramoIndex].fechaVuelta = fechaVuelta;
   }
 
+  identificationType: string = '';
   identification: string = '';
 
   fechaNacimiento!: Date;
@@ -46,7 +47,7 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
     this.fechaNacimiento = fechaNacimiento;
   }
 
-  equipajeAdicional: boolean = false;
+  equipajeAdicional: string = '';
   email: string = '';
   telefono: string = '';
 
@@ -56,10 +57,10 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
     this.pasaporteFiles = pasaporteFiles;
   }
 
-  cedulaFiles: FileItem[] = [];
+  comprobantesFiles: FileItem[] = [];
 
-  setCedulaFiles(cedulaFiles: FileItem[]) {
-    this.cedulaFiles = cedulaFiles;
+  setComprobantesFiles(comprobantesFiles: FileItem[]) {
+    this.comprobantesFiles = comprobantesFiles;
   }
 
   infoAdicional: string = '';
@@ -106,8 +107,6 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
   onRutaChange() {
     switch (this.ruta) {
       case 'Ida':
-        this.tramos = [{}];
-        break;
       case 'Ida y vuelta':
         this.tramos = [{}];
         break;
@@ -122,7 +121,7 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
   }
 
   btnRemoveTramoClick(tramoIndex: number) {
-    this.tramos.splice(tramoIndex, 1)
+    this.tramos.splice(tramoIndex, 1);
   }
 
   btnSubmitClick() {
@@ -137,7 +136,7 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
       Email: this.email,
       Telefono: this.telefono,
       PasaporteFiles: this.pasaporteFiles,
-      CedulaFiles: this.cedulaFiles,
+      CedulaFiles: this.comprobantesFiles,
       InformacionAdicional: this.infoAdicional,
       Requestor: history.state.userInfo,
     };
@@ -207,13 +206,17 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
     return (
       this.nombre &&
       this.convenio &&
-      Utils.validateTramos(this.tramos) &&
+      this.ruta &&
+      Utils.validateTramos(
+        this.tramos,
+        this.ruta === 'Ida y vuelta' ? true : false
+      ) &&
+      this.identificationType &&
       (this.identification.length === 8 || this.identification.length === 10) &&
       this.fechaNacimiento &&
+      this.equipajeAdicional &&
       Utils.validateEmail(this.email) &&
-      this.telefono.length === 10 &&
-      Utils.validateFiles(this.pasaporteFiles) &&
-      Utils.validateFiles(this.cedulaFiles)
+      this.telefono.length === 10
     );
   }
 }
