@@ -333,7 +333,7 @@
               <div class="row g-3">
                 <div class="col-12">
                   <label for="inputEquipajeAdicional"
-                    >¿Cuenta con equipaje adicional?<span class="text-danger"
+                    >Equipaje<span class="text-danger"
                       >*</span
                     ></label
                   >
@@ -355,7 +355,7 @@
                     <label
                       class="form-check-label"
                       for="radioSiEquipajeAdicional"
-                      >Si</label
+                      >10 kg</label
                     >
                   </div>
                   <div class="form-check">
@@ -371,7 +371,26 @@
                     <label
                       class="form-check-label"
                       for="radioNoEquipajeAdicional"
-                      >No</label
+                      >35 kg</label
+                    >
+                    <div class="invalid-feedback">
+                      Este campo es (*) obligatorio, seleccione una opcion.
+                    </div>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      [(ngModel)]="equipajeAdicional"
+                      class="form-check-input"
+                      type="radio"
+                      name="radioNoEquipajeAdicional"
+                      id="radioNoEquipajeAdicional"
+                      value="false"
+                      checked
+                    />
+                    <label
+                      class="form-check-label"
+                      for="radioNoEquipajeAdicional"
+                      >65 kg</label
                     >
                     <div class="invalid-feedback">
                       Este campo es (*) obligatorio, seleccione una opcion.
@@ -445,15 +464,12 @@
               ></app-upload-files>
             </div>
             <div class="col-12">
-              <label for="uploadFilesPasaporte" class="form-label"
-                >Cedula de ciudadania<span class="text-danger">*</span></label
+              <label for="uploadFilesComprobantes" class="form-label"
+                >Comprobantes</label
               >
               <app-upload-files
-                id="uploadFilesCedula"
-                name="uploadFilesCedula"
-                requiredFeedback="
-                  Este campo es (*) obligatorio, cargue almenos 1 archivo.
-                "
+                id="uploadFilesComprobantes"
+                name="uploadFilesComprobantes"
                 (onFilesChange)="setCedulaFiles($event)"
               ></app-upload-files>
             </div>
