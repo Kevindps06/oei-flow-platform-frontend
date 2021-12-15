@@ -5,6 +5,7 @@ import { Utils } from 'src/app/classes/utils';
 import { Convenio } from 'src/app/interfaces/Convenio';
 import { FileItem } from 'src/app/interfaces/FileItem';
 import { FormsCoordinacionLogistica } from 'src/app/interfaces/forms-coordinacionlogistica';
+import { Tramo } from 'src/app/interfaces/tramo';
 import { WaitTask } from 'src/app/interfaces/WaitTask';
 import { FormsService } from 'src/app/services/forms.service';
 import { SharedService } from 'src/app/services/shared.service';
@@ -20,21 +21,22 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
   nombre: string = '';
   convenio: string = '';
 
-  fechaIda!: Date;
+  ruta: string = '';
+  tramos: Tramo[] = [];
 
-  setFechaIda(fechaIda: Date) {
-    this.fechaIda = fechaIda;
+  setFechaIda(tramoIndex: number, fechaIda: Date) {
+    setTimeout(() => {
+      this.tramos[tramoIndex].fechaIda = fechaIda;
+    }, 0);
   }
 
-  horaIda!: String;
+  setFechaVuelta(tramoIndex: number, fechaVuelta: Date) {
+    setTimeout(() => {
+      this.tramos[tramoIndex].fechaVuelta = fechaVuelta;
+    }, 0);
 
-  fechaVuelta: Date | undefined;
-
-  setFechaVuelta(fechaVuelta: Date) {
-    this.fechaVuelta = fechaVuelta;
+    this.tramos[tramoIndex].fechaVuelta = fechaVuelta;
   }
-
-  horaVuelta!: String;
 
   identification: string = '';
 
@@ -71,7 +73,7 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (!history.state.userInfo || !history.state.plaftformInfo) {
+    /*if (!history.state.userInfo || !history.state.plaftformInfo) {
       this.router.navigate(['/login'], {
         state: {
           fromRoute: this.router.url,
@@ -98,7 +100,29 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
         Numero: history.state.plaftformInfo.fields.Convenios[i].fields.Numero,
         Mostrar: history.state.plaftformInfo.fields.Convenios[i].fields.Mostrar,
       });
+    }*/
+  }
+
+  onRutaChange() {
+    switch (this.ruta) {
+      case 'Ida':
+        this.tramos = [{}];
+        break;
+      case 'Ida y vuelta':
+        this.tramos = [{}];
+        break;
+      case 'Multidestino':
+        this.tramos = [{}, {}];
+        break;
     }
+  }
+
+  btnAddTramoClick() {
+    this.tramos.push({});
+  }
+
+  btnRemoveTramoClick(tramoIndex: number) {
+    this.tramos.splice(tramoIndex, 1)
   }
 
   btnSubmitClick() {
@@ -106,10 +130,7 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
       Id: Utils.makeRandomString(32),
       Nombre: this.nombre,
       Convenio: this.convenio,
-      Ida: this.fechaIda,
-      HorarioIda: this.horaIda,
-      Vuelta: this.fechaVuelta,
-      HorarioVuelta: this.horaVuelta,
+      Tramos: this.tramos,
       Identificator: this.identification,
       FechaNacimiento: this.fechaNacimiento,
       EquipajeAdicional: this.equipajeAdicional,
@@ -183,19 +204,16 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
   }
 
   isValid() {
-    return this.nombre &&
+    return (
+      this.nombre &&
       this.convenio &&
-      this.fechaIda &&
-      this.horaIda &&
-      this.fechaVuelta
-      ? this.horaVuelta
-      : true &&
-          (this.identification.length === 8 ||
-            this.identification.length === 10) &&
-          this.fechaNacimiento &&
-          Utils.validateEmail(this.email) &&
-          this.telefono.length === 10 &&
-          Utils.validateFiles(this.pasaporteFiles) &&
-          Utils.validateFiles(this.cedulaFiles);
+      Utils.validateTramos(this.tramos) &&
+      (this.identification.length === 8 || this.identification.length === 10) &&
+      this.fechaNacimiento &&
+      Utils.validateEmail(this.email) &&
+      this.telefono.length === 10 &&
+      Utils.validateFiles(this.pasaporteFiles) &&
+      Utils.validateFiles(this.cedulaFiles)
+    );
   }
 }

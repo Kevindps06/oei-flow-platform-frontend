@@ -1,13 +1,11 @@
 import { FileItem } from './FileItem';
+import { Tramo } from './tramo';
 
 export interface FormsCoordinacionLogistica {
   Id: string;
   Nombre: string;
   Convenio: string;
-  Ida: Date;
-  HorarioIda: String;
-  Vuelta?: Date;
-  HorarioVuelta?: String;
+  Tramos: Tramo[];
   Identificator: string;
   FechaNacimiento: Date;
   EquipajeAdicional: boolean;

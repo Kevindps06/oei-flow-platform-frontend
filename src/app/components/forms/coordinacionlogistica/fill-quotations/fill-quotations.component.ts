@@ -19,8 +19,10 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
   Id: string = '';
   formsCoordinacionLogistica: any;
 
+  ticketIdentificator: string = '';
   aerolinea: string = '';
-  trayecto: string = '';
+  horaSalida: string = '';
+  horaLlegada: string = '';
   costo: number | undefined;
 
   constructor(
@@ -118,18 +120,27 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
     );
   }
 
-  uploadingQuotations: boolean = false
+  btnSetTicketIdentificator() {
+    this.sharedService.pushToastMessage({
+      id: Utils.makeRandomString(4),
+      title: `Numero de tiquete actualizado`,
+      description: `Se ha establecido correctamente el numero del tiquete para esta peticion.`,
+    });
+  }
+
+  uploadingQuotations: boolean = false;
   btnAddClick() {
     if (!this.costo) {
-      return
+      return;
     }
 
-    this.uploadingQuotations = true
+    this.uploadingQuotations = true;
 
     this.quotations.push({
       Number: this.quotations.length + 1,
       Aerolinea: this.aerolinea,
-      Trayecto: this.trayecto,
+      HoraSalida: this.horaSalida,
+      HoraLlegada: this.horaLlegada,
       Costo: this.costo,
     });
 
@@ -143,14 +154,15 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
 
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
-                title: `Reservas actualizadas`,
-                description: `Se han actualizado las reservas de la peticion.`,
+                title: `Cotizaciones actualizadas`,
+                description: `Se han actualizado las cotizaciones de la peticion.`,
                 autohide: 4000,
               });
 
-              this.aerolinea = ''
-              this.trayecto = ''
-              this.costo = undefined
+              this.aerolinea = '';
+              this.horaSalida = '';
+              this.horaLlegada = '';
+              this.costo = undefined;
 
               this.uploadingQuotations = false;
               break;
@@ -161,8 +173,8 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
 
           this.sharedService.pushToastMessage({
             id: Utils.makeRandomString(4),
-            title: `Reservas no actualizadas`,
-            description: `Las reservas no ha podido ser actualizadas, intente añadir la reserva nuevamente.`,
+            title: `Cotizaciones no actualizadas`,
+            description: `Las cotizaciones no ha podido ser actualizadas, intente añadir la cotizacion nuevamente.`,
           });
 
           this.uploadingQuotations = false;
@@ -192,8 +204,8 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
 
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
-                title: `Reservas actualizadas`,
-                description: `Se han actualizado las reservas de la peticion.`,
+                title: `Cotizaciones actualizadas`,
+                description: `Se han actualizado las cotizaciones de la peticion.`,
                 autohide: 4000,
               });
               break;
@@ -204,14 +216,20 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
 
           this.sharedService.pushToastMessage({
             id: Utils.makeRandomString(4),
-            title: `Reservas no actualizadas`,
-            description: `Las reservas no han podido ser actualizadas, intente remover la reserva nuevamente.`,
+            title: `Cotizaciones no actualizadas`,
+            description: `Las cotizaciones no han podido ser actualizadas, intente remover la cotizacion nuevamente.`,
           });
         }
       );
   }
 
   isValid() {
-    return this.aerolinea && this.trayecto && this.costo && this.costo > 0;
+    return (
+      this.aerolinea &&
+      this.horaSalida &&
+      this.horaLlegada &&
+      this.costo &&
+      this.costo > 0
+    );
   }
 }

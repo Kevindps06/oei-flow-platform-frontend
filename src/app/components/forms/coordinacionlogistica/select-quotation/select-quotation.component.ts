@@ -131,8 +131,8 @@ export class FormsCoordinacionLogisticaSelectQuotationComponent
 
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
-                title: `Reserva #${selectedQuotation.Number} seleccionada correctamente`,
-                description: `Se ha seleccionado correctamente la reserva, ya puede seguir el flujo o cambiar de reserva.`,
+                title: `Cotizacion #${selectedQuotation.Number} seleccionada correctamente`,
+                description: `Se ha seleccionado correctamente la cotizacion, ya puede seguir el flujo o cambiar de cotizacion.`,
                 autohide: 4000,
               });
               break;
@@ -143,8 +143,8 @@ export class FormsCoordinacionLogisticaSelectQuotationComponent
 
           this.sharedService.pushToastMessage({
             id: Utils.makeRandomString(4),
-            title: `Reserva no seleccionada`,
-            description: `La reserva no ha podido ser seleccionada, intente seleccionar la reserva nuevamente.`,
+            title: `Cotizacion no seleccionada`,
+            description: `La cotizacion no ha podido ser seleccionada, intente seleccionar la cotizacion nuevamente.`,
           });
         }
       );

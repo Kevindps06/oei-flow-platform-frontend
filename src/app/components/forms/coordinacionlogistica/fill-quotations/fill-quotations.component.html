@@ -1,11 +1,43 @@
 <div id="firstElement" class="row g-3">
+  <div class="col-8 col-md-9 col-xl-10">
+    <div class="form-floating">
+      <input
+        [(ngModel)]="ticketIdentificator"
+        type="text"
+        class="form-control"
+        name="inputTicketIdentificator"
+        id="inputTicketIdentificator"
+        placeholder="\0"
+        maxlength="32"
+        [ngClass]="{
+          'is-valid': ticketIdentificator,
+          'is-invalid': !ticketIdentificator
+        }"
+      />
+      <label for="inputTicketIdentificator"
+        >Numero de tiquete<span class="text-danger">*</span></label
+      >
+      <div class="invalid-feedback">
+        Este campo es (*) obligatorio, rellenelo.
+      </div>
+    </div>
+  </div>
+  <div class="col-4 col-md-3 col-xl-2 d-grid grap-2 mx-auto">
+    <button
+      [disabled]="ticketIdentificator.length === 0"
+      (click)="btnSetTicketIdentificator()"
+      class="btn btn-primary"
+    >
+      Establecer
+    </button>
+  </div>
   <div [ngClass]="{ 'col-xl-6': quotations.length > 0 }" class="col-12">
     <div class="card">
       <div class="card-body">
         <div class="row g-3">
           <div class="col-12">
             <h5 class="card-title text-center">
-              Actualizar reservas de la peticion
+              Actualizar cotizaciones de la peticion
             </h5>
           </div>
           <div class="col-12">
@@ -31,26 +63,59 @@
               </div>
             </div>
           </div>
-          <div class="col-12">
+          <div class="col-6">
             <div class="form-floating">
-              <input
-                [(ngModel)]="trayecto"
-                type="text"
-                class="form-control"
-                name="inputTrayecto"
-                id="inputTrayecto"
-                placeholder="\0"
-                maxlength="255"
+              <select
+                [(ngModel)]="horaSalida"
+                class="form-select"
+                id="horaSalida"
+                name="horaSalida"
                 [ngClass]="{
-                  'is-valid': trayecto,
-                  'is-invalid': !trayecto
+                  'is-valid': horaSalida,
+                  'is-invalid': !horaSalida
                 }"
-              />
-              <label for="inputTrayecto"
-                >Trayecto<span class="text-danger">*</span></label
+              >
+                <option selected disabled></option>
+                <option value="05:00 - 8:00">05:00 - 8:00</option>
+                <option value="8:00 - 11:00">8:00 - 11:00</option>
+                <option value="11:00 - 14:00">11:00 - 14:00</option>
+                <option value="14:00 - 17:00">14:00 - 17:00</option>
+                <option value="17:00 - 20:00">17:00 - 20:00</option>
+                <option value="20:00 - 24:00">17:00 - 20:00</option>
+              </select>
+              <label for="horaSalida"
+                >Hora salida<span class="text-danger">*</span></label
               >
               <div class="invalid-feedback">
-                Este campo es (*) obligatorio, rellenelo.
+                Este campo es (*) obligatorio, seleccione una opcion.
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-floating">
+              <select
+                [(ngModel)]="horaLlegada"
+                class="form-select"
+                id="horaLlegada"
+                name="horaLlegada"
+                [ngClass]="{
+                  'is-valid': horaLlegada,
+                  'is-invalid': !horaLlegada
+                }"
+              >
+                <option selected disabled></option>
+                <option value="05:00 - 8:00">05:00 - 8:00</option>
+                <option value="8:00 - 11:00">8:00 - 11:00</option>
+                <option value="11:00 - 14:00">11:00 - 14:00</option>
+                <option value="14:00 - 17:00">14:00 - 17:00</option>
+                <option value="17:00 - 20:00">17:00 - 20:00</option>
+                <option value="20:00 - 24:00">17:00 - 20:00</option>
+              </select>
+              <label for="horaLlegada"
+                >Hora llegada<span class="text-danger">*</span></label
+              >
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, seleccione una opcion.
               </div>
             </div>
           </div>
@@ -67,7 +132,7 @@
                 maxlength="255"
                 [ngClass]="{
                   'is-valid': costo && costo > 0,
-                  'is-invalid': costo && costo < 1 || !costo
+                  'is-invalid': (costo && costo < 1) || !costo
                 }"
               />
               <label for="inputCosto"
@@ -95,23 +160,30 @@
   <div *ngIf="quotations.length > 0" class="table-responsive col-12 col-xl-6">
     <div class="card">
       <div class="card-body">
-        <table class="table table-borderless table-striped table-hover caption-top">
+        <table
+          class="table table-borderless table-striped table-hover caption-top"
+        >
           <caption>
-            Reservas, puede eliminar alguna haciendo doble click sobre ella.
+            Cotizaciones, puede eliminar alguna haciendo doble click sobre ella.
           </caption>
           <thead>
             <tr>
               <th scope="col">#</th>
               <th scope="col">Aerolinea</th>
-              <th scope="col">Trayecto</th>
+              <th scope="col">Hora Salida</th>
+              <th scope="col">Hora Llegada</th>
               <th scope="col">Costo</th>
             </tr>
           </thead>
           <tbody>
-            <tr (dblclick)="removeQuotation(quotation.Number)" *ngFor="let quotation of quotations">
+            <tr
+              (dblclick)="removeQuotation(quotation.Number)"
+              *ngFor="let quotation of quotations"
+            >
               <th scope="row">{{ quotation.Number }}</th>
               <td>{{ quotation.Aerolinea }}</td>
-              <td>{{ quotation.Trayecto }}</td>
+              <td>{{ quotation.HoraSalida }}</td>
+              <td>{{ quotation.HoraLlegada }}</td>
               <td>{{ quotation.Costo }}</td>
             </tr>
           </tbody>

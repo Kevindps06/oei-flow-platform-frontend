@@ -6,13 +6,14 @@
           class="table table-borderless table-striped table-hover caption-top"
         >
           <caption>
-            Reservas, seleccione una haciendo doble click sobre ella.
+            Cotizaciones, seleccione una haciendo doble click sobre ella.
           </caption>
           <thead>
             <tr>
               <th scope="col">#</th>
               <th scope="col">Aerolinea</th>
-              <th scope="col">Trayecto</th>
+              <th scope="col">Hora Salida</th>
+              <th scope="col">Hora Llegada</th>
               <th scope="col">Costo</th>
             </tr>
           </thead>
@@ -27,7 +28,8 @@
             >
               <th scope="row">{{ quotation.Number }}</th>
               <td>{{ quotation.Aerolinea }}</td>
-              <td>{{ quotation.Trayecto }}</td>
+              <td>{{ quotation.HoraSalida }}</td>
+              <td>{{ quotation.HoraLlegada }}</td>
               <td>{{ quotation.Costo }}</td>
             </tr>
           </tbody>

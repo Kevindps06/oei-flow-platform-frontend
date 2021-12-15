@@ -1,5 +1,6 @@
 import { HttpEventType } from '@angular/common/http';
 import { FileItem } from '../interfaces/FileItem';
+import { Tramo } from '../interfaces/tramo';
 import { FormsService } from '../services/forms.service';
 import { SharedService } from '../services/shared.service';
 
@@ -8,6 +9,16 @@ export class Utils {
     public formsService: FormsService,
     public sharedService: SharedService
   ) {}
+
+  static validateTramos(tramos: Tramo[]) {
+    for (let tramo of tramos) {
+      if (!tramo.fechaIda || !tramo.horaIda) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   static makeRandomString(length: number) {
     var result = '';

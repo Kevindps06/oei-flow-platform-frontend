@@ -1,6 +1,7 @@
 export interface FormsCoordinacionLogisticaFillQuotations {
     Number: number,
     Aerolinea: string,
-    Trayecto: string,
+    HoraSalida: string,
+    HoraLlegada: string,
     Costo: number
 }

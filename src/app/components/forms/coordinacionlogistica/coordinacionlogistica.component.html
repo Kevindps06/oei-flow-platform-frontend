@@ -61,98 +61,230 @@
               </div>
             </div>
             <div class="col-12">
-              <label for="fieldFechaIda" class="form-label"
-                >Fecha ida<span class="text-danger">*</span></label
-              >
-              <app-date-picker
-                [allowPass]="false"
-                (onDateChange)="setFechaIda($event)"
-                name="fieldFechaIda"
-                id="fieldFechaIda"
-                requiredFeedbackDay="Este campo es (*) obligatorio, seleccione el dia de ida."
-                requiredFeedbackMonth="Este campo es (*) obligatorio, seleccione el mes de ida."
-                requiredFeedbackYear="Este campo es (*) obligatorio, seleccione el año de ida."
-              ></app-date-picker>
-            </div>
-            <div class="col-12">
-              <div class="form-floating">
-                <select
-                  [(ngModel)]="horaIda"
-                  class="form-select"
-                  id="horaIda"
-                  name="horaIda"
-                  [ngClass]="{
-                    'is-valid': horaIda,
-                    'is-invalid': !horaIda
-                  }"
-                >
-                  <option selected disabled></option>
-                  <option value="Mañana (12 AM - 12 PM)">
-                    Mañana (12 AM - 12 PM)
-                  </option>
-                  <option value="Tarde (12 PM - 6 PM)">
-                    Tarde (12 PM - 6 PM)
-                  </option>
-                  <option value="Noche (6 PM - 12 AM)">
-                    Noche (6 PM - 12 AM)
-                  </option>
-                </select>
-                <label for="horaIda"
-                  >Horario de Ida preferido<span class="text-danger"
-                    >*</span
-                  ></label
-                >
-                <div class="invalid-feedback">
-                  Este campo es (*) obligatorio, seleccione una opcion.
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="inputRuta"
+                    >Ruta<span class="text-danger">*</span></label
+                  >
                 </div>
-              </div>
-            </div>
-            <div class="col-12">
-              <label for="fieldFechaVuelta" class="form-label"
-                >Fecha vuelta</label
-              >
-              <app-date-picker
-                [allowPass]="false"
-                (onDateChange)="setFechaVuelta($event)"
-                name="fieldFechaVuelta"
-                id="fieldFechaVuelta"
-              ></app-date-picker>
-            </div>
-            <div class="col-12">
-              <div class="form-floating">
-                <select
-                  [disabled]="!fechaVuelta"
-                  [(ngModel)]="horaVuelta"
-                  class="form-select"
-                  id="horaVuelta"
-                  name="horaVuelta"
-                  [ngClass]="{
-                    'is-valid': fechaVuelta && horaVuelta,
-                    'is-invalid': fechaVuelta && !horaVuelta
-                  }"
-                >
-                  <option selected disabled></option>
-                  <option value="Mañana (12 AM - 12 PM)">
-                    Mañana (12 AM - 12 PM)
-                  </option>
-                  <option value="Tarde (12 PM - 6 PM)">
-                    Tarde (12 PM - 6 PM)
-                  </option>
-                  <option value="Noche (6 PM - 12 AM)">
-                    Noche (6 PM - 12 AM)
-                  </option>
-                </select>
-                <label for="horaVuelta"
-                  >Horario de Vuelta preferido<span
-                    *ngIf="fechaVuelta"
+                <div id="inputRuta" name="inputRuta" class="col-12">
+                  <div class="form-check">
+                    <input
+                      [(ngModel)]="ruta"
+                      (change)="onRutaChange()"
+                      class="form-check-input"
+                      type="radio"
+                      name="radioIdaRuta"
+                      id="radioIdaRuta"
+                      value="Ida"
+                    />
+                    <label class="form-check-label" for="radioIdaRuta"
+                      >Ida</label
+                    >
+                  </div>
+                  <div class="form-check">
+                    <input
+                      [(ngModel)]="ruta"
+                      (change)="onRutaChange()"
+                      class="form-check-input"
+                      type="radio"
+                      name="radioIdaVueltaRuta"
+                      id="radioIdaVueltaRuta"
+                      value="Ida y vuelta"
+                    />
+                    <label class="form-check-label" for="radioIdaVueltaRuta"
+                      >Ida y vuelta</label
+                    >
+                  </div>
+                  <div class="form-check">
+                    <input
+                      [(ngModel)]="ruta"
+                      (change)="onRutaChange()"
+                      class="form-check-input"
+                      type="radio"
+                      name="radioMultidestinoRuta"
+                      id="radioMultidestinoRuta"
+                      value="Multidestino"
+                    />
+                    <label class="form-check-label" for="radioMultidestinoRuta"
+                      >Multidestino</label
+                    >
+                  </div>
+                  <div
+                    *ngIf="!ruta"
                     class="text-danger"
-                    >*</span
-                  ></label
-                >
-                <div class="invalid-feedback">
-                  Este campo es (*) obligatorio, seleccione una opcion.
+                    style="font-size: 0.875em"
+                  >
+                    Este campo es (*) obligatorio, seleccione una opcion.
+                  </div>
                 </div>
               </div>
+            </div>
+            <div *ngFor="let tramo of tramos.keys()" class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row g-3">
+                    <div
+                      [ngClass]="{
+                        'col-12': ruta !== 'Multidestino',
+                        'col-10': ruta === 'Multidestino'
+                      }"
+                    >
+                      <h5 class="card-title">Tramo #{{ tramo + 1 }}</h5>
+                    </div>
+                    <div *ngIf="ruta === 'Multidestino' && tramo > 1" class="col-2">
+                      <button
+                        (click)="btnRemoveTramoClick(tramo)"
+                        class="btn btn-primary"
+                      >
+                        Remover tramo
+                      </button>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-floating">
+                        <input
+                          [(ngModel)]="tramos[tramo].origen"
+                          type="text"
+                          class="form-control"
+                          name="inputOrigen{{ tramo }}"
+                          id="inputOrigen{{ tramo }}"
+                          placeholder="\0"
+                          maxlength="32"
+                          [ngClass]="{
+                            'is-valid': tramos[tramo].origen,
+                            'is-invalid': !tramos[tramo].origen
+                          }"
+                        />
+                        <label for="inputOrigen{{ tramo }}"
+                          >Origen<span class="text-danger">*</span></label
+                        >
+                        <div class="invalid-feedback">
+                          Este campo es (*) obligatorio, rellenelo.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-floating">
+                        <input
+                          [(ngModel)]="tramos[tramo].destino"
+                          type="text"
+                          class="form-control"
+                          name="inputDestino{{ tramo }}"
+                          id="inputDestino{{ tramo }}"
+                          placeholder="\0"
+                          maxlength="32"
+                          [ngClass]="{
+                            'is-valid': tramos[tramo].destino,
+                            'is-invalid': !tramos[tramo].destino
+                          }"
+                        />
+                        <label for="inputDestino{{ tramo }}"
+                          >Destino<span class="text-danger">*</span></label
+                        >
+                        <div class="invalid-feedback">
+                          Este campo es (*) obligatorio, rellenelo.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <label for="fieldFechaIda" class="form-label"
+                        >Fecha ida<span class="text-danger">*</span></label
+                      >
+                      <app-date-picker
+                        [allowPass]="false"
+                        (onDateChange)="setFechaIda(tramo, $event)"
+                        name="fieldFechaIda"
+                        id="fieldFechaIda"
+                        requiredFeedbackYear="Este campo es (*) obligatorio, seleccione el año de ida."
+                        requiredFeedbackMonth="Este campo es (*) obligatorio, seleccione el mes de ida."
+                        requiredFeedbackDay="Este campo es (*) obligatorio, seleccione el dia de ida."
+                      ></app-date-picker>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-floating">
+                        <select
+                          [(ngModel)]="tramos[tramo].horaIda"
+                          class="form-select"
+                          id="horaIda"
+                          name="horaIda"
+                          [ngClass]="{
+                            'is-valid': tramos[tramo].horaIda,
+                            'is-invalid': !tramos[tramo].horaIda
+                          }"
+                        >
+                          <option selected disabled></option>
+                          <option value="05:00 - 8:00">05:00 - 8:00</option>
+                          <option value="8:00 - 11:00">8:00 - 11:00</option>
+                          <option value="11:00 - 14:00">11:00 - 14:00</option>
+                          <option value="14:00 - 17:00">14:00 - 17:00</option>
+                          <option value="17:00 - 20:00">17:00 - 20:00</option>
+                          <option value="20:00 - 24:00">17:00 - 20:00</option>
+                        </select>
+                        <label for="horaIda"
+                          >Horario de Ida preferido<span class="text-danger"
+                            >*</span
+                          ></label
+                        >
+                        <div class="invalid-feedback">
+                          Este campo es (*) obligatorio, seleccione una opcion.
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="ruta === 'Ida y vuelta'" class="col-12">
+                      <label for="fieldFechaVuelta" class="form-label"
+                        >Fecha vuelta</label
+                      >
+                      <app-date-picker
+                        [allowPass]="false"
+                        (onDateChange)="setFechaVuelta(tramo, $event)"
+                        name="fieldFechaVuelta"
+                        id="fieldFechaVuelta"
+                        requiredFeedbackYear="Este campo es (*) obligatorio, seleccione el año de ida."
+                        requiredFeedbackMonth="Este campo es (*) obligatorio, seleccione el mes de ida."
+                        requiredFeedbackDay="Este campo es (*) obligatorio, seleccione el dia de ida."
+                      ></app-date-picker>
+                    </div>
+                    <div *ngIf="ruta === 'Ida y vuelta'" class="col-12">
+                      <div class="form-floating">
+                        <select
+                          [(ngModel)]="tramos[tramo].horaVuelta"
+                          class="form-select"
+                          id="horaVuelta"
+                          name="horaVuelta"
+                          [ngClass]="{
+                            'is-valid': tramos[tramo].horaVuelta,
+                            'is-invalid': !tramos[tramo].horaVuelta
+                          }"
+                        >
+                          <option selected disabled></option>
+                          <option value="05:00 - 8:00">05:00 - 8:00</option>
+                          <option value="8:00 - 11:00">8:00 - 11:00</option>
+                          <option value="11:00 - 14:00">11:00 - 14:00</option>
+                          <option value="14:00 - 17:00">14:00 - 17:00</option>
+                          <option value="17:00 - 20:00">17:00 - 20:00</option>
+                          <option value="20:00 - 24:00">17:00 - 20:00</option>
+                        </select>
+                        <label for="horaVuelta"
+                          >Horario de Vuelta preferido<span class="text-danger"
+                            >*</span
+                          ></label
+                        >
+                        <div class="invalid-feedback">
+                          Este campo es (*) obligatorio, seleccione una opcion.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              *ngIf="ruta === 'Multidestino'"
+              class="d-grid gap-2 col-6 mx-auto mb-2"
+            >
+              <button (click)="btnAddTramoClick()" class="btn btn-primary">
+                Agregar tramo
+              </button>
             </div>
             <div class="col-12">
               <div class="form-floating">
