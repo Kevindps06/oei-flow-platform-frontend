@@ -17,7 +17,7 @@ export class Utils {
         !tramo.destino ||
         !tramo.fechaIda ||
         !tramo.horaIda ||
-        !(vuelta ? !tramo.fechaVuelta || !tramo.horaVuelta : true)
+        !(vuelta ? tramo.fechaVuelta && tramo.horaVuelta : true)
       ) {
         return false;
       }

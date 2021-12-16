@@ -4,10 +4,8 @@ const schema = mongoose.Schema({
   Id: String,
   Nombre: String,
   Convenio: String,
-  Ida: String,
-  HorarioIda: String,
-  Vuelta: String,
-  HorarioVuelta: String,
+  Tramos: [],
+  IdentificatorType: String,
   Identificator: String,
   FechaNacimiento: String,
   EquipajeAdicional: Boolean,
@@ -20,8 +18,9 @@ const schema = mongoose.Schema({
   CoordinacionLogisticaPath: String,
   SharePointFiles: [],
   Keys: [],
+  TicketNumber: String,
   Quotations: [],
-  SelectedQuotation: Object
+  SelectedQuotation: Object,
 });
 
 module.exports = mongoose

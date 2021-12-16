@@ -302,10 +302,8 @@ router.get("/forms/coordinacioneslogisticas", async (req, res) => {
         req.query.Id,
         req.query.Nombre,
         req.query.Convenio,
-        req.query.Ida,
-        req.query.HorarioIda,
-        req.query.Vuelta,
-        req.query.HorarioVuelta,
+        req.query.Tramos,
+        req.query.IdentificatorType,
         req.query.Identificator,
         req.query.FechaNacimiento,
         req.query.EquipajeAdicional,
@@ -318,6 +316,7 @@ router.get("/forms/coordinacioneslogisticas", async (req, res) => {
         req.query.CoordinacionLogisticaPath,
         req.query.SharePointFiles,
         req.query.Keys,
+        req.query.TicketNumber,
         req.query.Quotations,
         req.query.SelectedQuotation
       )
@@ -337,10 +336,8 @@ router.put("/forms/coordinacioneslogisticas", async (req, res) => {
         req.query.Id,
         req.query.Nombre,
         req.query.Convenio,
-        req.query.Ida,
-        req.query.HorarioIda,
-        req.query.Vuelta,
-        req.query.HorarioVuelta,
+        req.query.Tramos,
+        req.query.IdentificatorType,
         req.query.Identificator,
         req.query.FechaNacimiento,
         req.query.EquipajeAdicional,
@@ -353,6 +350,7 @@ router.put("/forms/coordinacioneslogisticas", async (req, res) => {
         req.query.CoordinacionLogisticaPath,
         req.query.SharePointFiles,
         req.query.Keys,
+        req.query.TicketNumber,
         req.query.Quotations,
         req.query.SelectedQuotation
       ),
@@ -373,10 +371,8 @@ router.delete("/forms/coordinacioneslogisticas", async (req, res) => {
         req.query.Id,
         req.query.Nombre,
         req.query.Convenio,
-        req.query.Ida,
-        req.query.HorarioIda,
-        req.query.Vuelta,
-        req.query.HorarioVuelta,
+        req.query.Tramos,
+        req.query.IdentificatorType,
         req.query.Identificator,
         req.query.FechaNacimiento,
         req.query.EquipajeAdicional,
@@ -389,6 +385,7 @@ router.delete("/forms/coordinacioneslogisticas", async (req, res) => {
         req.query.CoordinacionLogisticaPath,
         req.query.SharePointFiles,
         req.query.Keys,
+        req.query.TicketNumber,
         req.query.Quotations,
         req.query.SelectedQuotation
       )
@@ -930,7 +927,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
 
   /* Save to database */
   const financieraInvoice = new FinancieraInvoice(formsFinancieraInvoice);
-  promises.push(financieraInvoice.save());
+  financieraInvoice.save();
 
   let retries = 0;
   do {
@@ -970,22 +967,8 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
       req.body.Id,
       req.body.Nombre,
       req.body.Convenio,
-      new Date(req.body.Ida).toLocaleDateString("es-CO", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }),
-      req.body.HorarioIda,
-      req.body.Vuelta
-        ? new Date(req.body.Vuelta).toLocaleDateString("es-CO", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })
-        : undefined,
-      req.body.HorarioVuelta,
+      req.body.Tramos,
+      req.body.IdentificatorType,
       req.body.Identificator,
       new Date(req.body.FechaNacimiento).toLocaleDateString("es-CO", {
         weekday: "long",

@@ -19,7 +19,7 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
   Id: string = '';
   formsCoordinacionLogistica: any;
 
-  ticketIdentificator: string = '';
+  ticketNumber: string = '';
   aerolinea: string = '';
   horaSalida: string = '';
   horaLlegada: string = '';
@@ -33,7 +33,7 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
   ) {}
 
   ngOnInit(): void {
-    /*if (!history.state.userInfo || !history.state.plaftformInfo) {
+    if (!history.state.userInfo || !history.state.plaftformInfo) {
       this.router.navigate(['/login'], {
         state: {
           fromRoute: this.router.url,
@@ -52,13 +52,13 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
 
     this.Id = this.activatedRoute.snapshot.paramMap.get('Id') as string;
 
-    let taskId: string;
+    let taskId: string = Utils.makeRandomString(4);
     this.formsService.getFormsCoordinacionLogistica(this.Id).subscribe(
       (event) => {
         switch (event.type) {
           case HttpEventType.Sent:
             this.sharedService.pushWaitTask({
-              id: (taskId = Utils.makeRandomString(4)),
+              id: taskId,
               description:
                 'Obteniendo informacion de la coordinacion logistica...',
               progress: 0,
@@ -85,6 +85,8 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
                 this.formsCoordinacionLogistica = event.body[0];
 
                 if (this.formsCoordinacionLogistica.Quotations.length > 0) {
+                  this.ticketNumber =
+                    this.formsCoordinacionLogistica.TicketNumber;
                   this.quotations = this.formsCoordinacionLogistica.Quotations;
                 }
 
@@ -117,15 +119,39 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
           id: taskId,
         });
       }
-    );*/
+    );
   }
 
-  btnSetTicketIdentificator() {
-    this.sharedService.pushToastMessage({
-      id: Utils.makeRandomString(4),
-      title: `Numero de tiquete actualizado`,
-      description: `Se ha establecido correctamente el numero del tiquete para esta peticion.`,
-    });
+  btnSetTicketNumber() {
+    this.formsService
+      .putFormsCoordinacionLogistica(
+        { TicketNumber: this.ticketNumber },
+        this.Id
+      )
+      .subscribe(
+        (event) => {
+          switch (event.type) {
+            case HttpEventType.Response:
+              this.formsCoordinacionLogistica.TicketNumber = this.ticketNumber;
+
+              this.sharedService.pushToastMessage({
+                id: Utils.makeRandomString(4),
+                title: `Numero de tiquete actualizado`,
+                description: `Se ha establecido correctamente el numero del tiquete para esta peticion.`,
+              });
+              break;
+          }
+        },
+        (err) => {
+          this.ticketNumber = this.formsCoordinacionLogistica.TicketNumber;
+
+          this.sharedService.pushToastMessage({
+            id: Utils.makeRandomString(4),
+            title: `Numero de tiquete no actualizado`,
+            description: `No se ha podido establecer el numero del tiquete para esta peticion, vuelva a intentarlo.`,
+          });
+        }
+      );
   }
 
   uploadingQuotations: boolean = false;
@@ -174,7 +200,7 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
           this.sharedService.pushToastMessage({
             id: Utils.makeRandomString(4),
             title: `Cotizaciones no actualizadas`,
-            description: `Las cotizaciones no ha podido ser actualizadas, intente añadir la cotizacion nuevamente.`,
+            description: `Las cotizaciones no ha podido ser actualizadas, vuelva a intentarlo.`,
           });
 
           this.uploadingQuotations = false;

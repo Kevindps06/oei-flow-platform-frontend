@@ -433,10 +433,8 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
   Id,
   Nombre,
   Convenio,
-  Ida,
-  HorarioIda,
-  Vuelta,
-  HorarioVuelta,
+  Tramos,
+  IdentificatorType,
   Identificator,
   FechaNacimiento,
   EquipajeAdicional,
@@ -449,6 +447,7 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
   CoordinacionLogisticaPath,
   SharePointFiles,
   Keys,
+  TicketNumber,
   Quotations,
   SelectedQuotation
 ) {
@@ -470,20 +469,31 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
     obj.Convenio = Convenio;
   }
 
-  if (Ida) {
-    obj.Ida = Ida;
+  if (Tramos) {
+    for (let tramo of Tramos) {
+      obj.Tramos.push({
+        origen: tramo.origen,
+        destino: tramo.destino,
+        fechaIda: new Date(tramo.fechaIda).toLocaleDateString("es-CO", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
+        horaIda: tramo.horaIda,
+        fechaVuelta: new Date(tramo.fechaVuelta).toLocaleDateString("es-CO", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
+        horaVuelta: tramo.horaVuelta,
+      });
+    }
   }
 
-  if (HorarioIda) {
-    obj.HorarioIda = HorarioIda;
-  }
-
-  if (Vuelta) {
-    obj.Vuelta = Vuelta;
-  }
-
-  if (HorarioVuelta) {
-    obj.HorarioVuelta = HorarioVuelta;
+  if (IdentificatorType) {
+    obj.IdentificatorType = IdentificatorType;
   }
 
   if (Identificator) {
@@ -532,6 +542,10 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
 
   if (Keys) {
     obj.Keys = Keys;
+  }
+
+  if (TicketNumber) {
+    obj.TicketNumber = TicketNumber;
   }
 
   if (Quotations) {

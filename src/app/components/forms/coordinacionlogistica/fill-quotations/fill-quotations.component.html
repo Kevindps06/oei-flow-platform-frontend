@@ -2,19 +2,19 @@
   <div class="col-8 col-md-9 col-xl-10">
     <div class="form-floating">
       <input
-        [(ngModel)]="ticketIdentificator"
+        [(ngModel)]="ticketNumber"
         type="text"
         class="form-control"
-        name="inputTicketIdentificator"
-        id="inputTicketIdentificator"
+        name="inputTicketNumber"
+        id="inputTicketNumber"
         placeholder="\0"
         maxlength="32"
         [ngClass]="{
-          'is-valid': ticketIdentificator,
-          'is-invalid': !ticketIdentificator
+          'is-valid': ticketNumber,
+          'is-invalid': !ticketNumber
         }"
       />
-      <label for="inputTicketIdentificator"
+      <label for="inputTicketNumber"
         >Numero de tiquete<span class="text-danger">*</span></label
       >
       <div class="invalid-feedback">
@@ -24,8 +24,8 @@
   </div>
   <div class="col-4 col-md-3 col-xl-2 d-grid grap-2 mx-auto">
     <button
-      [disabled]="ticketIdentificator.length === 0"
-      (click)="btnSetTicketIdentificator()"
+      [disabled]="ticketNumber.length === 0"
+      (click)="btnSetTicketNumber()"
       class="btn btn-primary"
     >
       Establecer

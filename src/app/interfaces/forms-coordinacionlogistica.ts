@@ -6,13 +6,14 @@ export interface FormsCoordinacionLogistica {
   Nombre: string;
   Convenio: string;
   Tramos: Tramo[];
+  IdentificatorType: string,
   Identificator: string;
   FechaNacimiento: Date;
   EquipajeAdicional: string;
   Email: string;
   Telefono: string;
   PasaporteFiles: FileItem[];
-  CedulaFiles: FileItem[];
+  ComprobantesFiles: FileItem[];
   InformacionAdicional: string;
   Requestor: any;
 }

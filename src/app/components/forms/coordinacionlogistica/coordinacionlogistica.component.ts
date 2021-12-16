@@ -130,25 +130,25 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
       Nombre: this.nombre,
       Convenio: this.convenio,
       Tramos: this.tramos,
+      IdentificatorType: this.identificationType,
       Identificator: this.identification,
       FechaNacimiento: this.fechaNacimiento,
       EquipajeAdicional: this.equipajeAdicional,
       Email: this.email,
       Telefono: this.telefono,
       PasaporteFiles: this.pasaporteFiles,
-      CedulaFiles: this.comprobantesFiles,
+      ComprobantesFiles: this.comprobantesFiles,
       InformacionAdicional: this.infoAdicional,
       Requestor: history.state.userInfo,
     };
 
-    var taskId: string;
+    var taskId: string = Utils.makeRandomString(4);
     this.formsService
       .postFormsCoordinacionLogistica(formsCoordinacionLogistica)
       .subscribe(
         (event) => {
           switch (event.type) {
             case HttpEventType.Sent:
-              taskId = Utils.makeRandomString(4);
               this.sharedService.pushWaitTask({
                 id: taskId,
                 description: `Enviando coordinacion logistica...`,
@@ -156,19 +156,6 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
               });
               break;
             case HttpEventType.UploadProgress:
-              this.sharedService.pushWaitTask({
-                id: taskId,
-                progress: Math.round((event.loaded * 100) / event.total),
-              });
-              break;
-            case HttpEventType.ResponseHeader:
-              this.sharedService.pushWaitTask({
-                id: taskId,
-                description: `Obteniendo la respuesta del envio de la coordinacion logistica...`,
-                progress: 0,
-              });
-              break;
-            case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
                 id: taskId,
                 progress: Math.round((event.loaded * 100) / event.total),
