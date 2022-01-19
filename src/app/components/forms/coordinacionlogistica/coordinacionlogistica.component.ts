@@ -3,12 +3,15 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Utils } from 'src/app/classes/utils';
 import { Convenio } from 'src/app/interfaces/Convenio';
+import { DropdownItem } from 'src/app/interfaces/dropdown-item';
 import { FileItem } from 'src/app/interfaces/FileItem';
 import { FormsCoordinacionLogistica } from 'src/app/interfaces/forms-coordinacionlogistica';
 import { Tramo } from 'src/app/interfaces/tramo';
 import { WaitTask } from 'src/app/interfaces/WaitTask';
 import { FormsService } from 'src/app/services/forms.service';
 import { SharedService } from 'src/app/services/shared.service';
+
+declare const Autocomplete: any;
 
 @Component({
   selector: 'app-forms-coordinacionlogistica',
@@ -24,17 +27,25 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
   ruta: string = '';
   tramos: Tramo[] = [];
 
-  setFechaIda(tramoIndex: number, fechaIda: Date) {
+  airports: DropdownItem[] = [];
+
+  setOrigen(tramoIndex: number, origen: any) {
     setTimeout(() => {
-      this.tramos[tramoIndex].fechaIda = fechaIda;
-    }, 0);
+      this.tramos[tramoIndex].origen = origen.originalTarget.value;
+    }, 100);
+  }
+
+  setDestino(tramoIndex: number, destino: any) {
+    setTimeout(() => {
+      this.tramos[tramoIndex].destino = destino.originalTarget.value;
+    }, 100);
+  }
+
+  setFechaIda(tramoIndex: number, fechaIda: Date) {
+    this.tramos[tramoIndex].fechaIda = fechaIda;
   }
 
   setFechaVuelta(tramoIndex: number, fechaVuelta: Date) {
-    setTimeout(() => {
-      this.tramos[tramoIndex].fechaVuelta = fechaVuelta;
-    }, 0);
-
     this.tramos[tramoIndex].fechaVuelta = fechaVuelta;
   }
 
@@ -105,19 +116,112 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
   }
 
   onRutaChange() {
+    const taskId: string = Utils.makeRandomString(4);
+
+    if (this.airports.length === 0) {
+      this.formsService.getAirports().subscribe((event) => {
+        switch (event.type) {
+          case HttpEventType.Sent:
+            this.sharedService.pushWaitTask({
+              id: taskId,
+              description: 'Cargando aeropuertos...',
+              progress: 0,
+            });
+            break;
+          case HttpEventType.DownloadProgress:
+            this.sharedService.pushWaitTask({
+              id: taskId,
+              progress: Math.round((event.loaded * 100) / event.total),
+            });
+            break;
+          case HttpEventType.Response:
+            for (const airport of event.body) {
+              this.airports.push({
+                label: `${airport.Country} | ${airport.City} | ${airport['Airport Name']} | ${airport.IATA}`,
+                value: airport._id,
+              });
+            }
+
+            this.sharedService.removeWaitTask({
+              id: taskId,
+            });
+            break;
+        }
+      });
+    }
+
     switch (this.ruta) {
       case 'Ida':
       case 'Ida y vuelta':
-        this.tramos = [{}];
+        this.tramos = [{ index: 0 }];
+
+        setTimeout(() => {
+          new Autocomplete(document.getElementById(`inputOrigen0`), {
+            data: this.airports,
+          }),
+            new Autocomplete(document.getElementById(`inputDestino0`), {
+              data: this.airports,
+            });
+        });
         break;
       case 'Multidestino':
-        this.tramos = [{}, {}];
+        this.tramos = [{ index: 0 }, { index: 1 }];
+
+        setTimeout(() => {
+          new Autocomplete(document.getElementById(`inputOrigen0`), {
+            data: this.airports,
+          });
+          new Autocomplete(document.getElementById(`inputDestino0`), {
+            data: this.airports,
+          });
+          new Autocomplete(document.getElementById(`inputOrigen1`), {
+            data: this.airports,
+          });
+          new Autocomplete(document.getElementById(`inputDestino1`), {
+            data: this.airports,
+          });
+        });
         break;
     }
   }
 
+  airportIsValid(_airport?: string) {
+    return this.airports.find((airport) => airport.label === _airport);
+  }
+
+  validateTramos(tramos: Tramo[], vuelta: boolean) {
+    for (let tramo of tramos) {
+      if (
+        !this.airportIsValid(tramo.origen) ||
+        !this.airportIsValid(tramo.destino) ||
+        !tramo.fechaIda ||
+        !tramo.horaIda ||
+        !(vuelta ? tramo.fechaVuelta && tramo.horaVuelta : true)
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   btnAddTramoClick() {
-    this.tramos.push({});
+    this.tramos.push({ index: this.tramos.length });
+
+    setTimeout(() => {
+      new Autocomplete(
+        document.getElementById(`inputOrigen${this.tramos.length - 1}`),
+        {
+          data: this.airports,
+        }
+      );
+      new Autocomplete(
+        document.getElementById(`inputDestino${this.tramos.length - 1}`),
+        {
+          data: this.airports,
+        }
+      );
+    });
   }
 
   btnRemoveTramoClick(tramoIndex: number) {
@@ -140,6 +244,7 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
       ComprobantesFiles: this.comprobantesFiles,
       InformacionAdicional: this.infoAdicional,
       Requestor: history.state.userInfo,
+      Status: 0
     };
 
     var taskId: string = Utils.makeRandomString(4);
@@ -194,7 +299,7 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
       this.nombre &&
       this.convenio &&
       this.ruta &&
-      Utils.validateTramos(
+      this.validateTramos(
         this.tramos,
         this.ruta === 'Ida y vuelta' ? true : false
       ) &&

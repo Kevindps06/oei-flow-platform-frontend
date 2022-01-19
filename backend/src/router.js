@@ -9,22 +9,25 @@ const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
 const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
 const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
 const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
+const Airport = require("./schemas/information/Airport");
 
 router.post("/request", async (req, res) => {
   res.status(200).send(req.body.length);
 });
 
+//
+
 // Upload file to server
 
 router.post("/uploadfile", (req, res) => {
   try {
-    const tmpPath = path.join(__dirname, "..", "tmp");
-
-    if (!fs.existsSync(tmpPath)) {
-      fs.mkdirSync(tmpPath);
+    if (!fs.existsSync(process.env.TEMP_PATH)) {
+      fs.mkdirSync(process.env.TEMP_PATH);
     }
 
-    const tmpFolderPath = fs.mkdtempSync(path.join(tmpPath, "webApp-"));
+    const tmpFolderPath = fs.mkdtempSync(
+      path.join(process.env.TEMP_PATH, "webApp-")
+    );
 
     fs.writeFileSync(path.join(tmpFolderPath, req.query.name), req.body);
 
@@ -397,6 +400,96 @@ router.delete("/forms/coordinacioneslogisticas", async (req, res) => {
   }
 });
 
+// Information - Airports
+
+router.post("/information/airports", async (req, res) => {
+  try {
+    const airport = new Airport(req.body);
+
+    await airport.save();
+
+    res.status(201).json(airport);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/information/airports", async (req, res) => {
+  try {
+    const airport = await Airport.find(
+      utils.informationAirportObjectWithoutUndefined(
+        req.query._id,
+        req.query.Code,
+        req.query.IATA,
+        req.query["Airport Name"],
+        req.query.City,
+        req.query["City 2"],
+        req.query.Country,
+        req.query["Country 2"],
+        req.query.Latitude,
+        req.query.Longitude,
+        req.query["Data 1"],
+        req.query["Data 2"]
+      )
+    );
+
+    res.status(200).json(airport);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.put("/information/airports", async (req, res) => {
+  try {
+    const airport = await Airport.updateMany(
+      utils.informationAirportObjectWithoutUndefined(
+        req.query._id,
+        req.query.Code,
+        req.query.IATA,
+        req.query["Airport Name"],
+        req.query.City,
+        req.query["City 2"],
+        req.query.Country,
+        req.query["Country 2"],
+        req.query.Latitude,
+        req.query.Longitude,
+        req.query["Data 1"],
+        req.query["Data 2"]
+      ),
+      req.body
+    );
+
+    res.status(200).json(airport);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.delete("/information/airports", async (req, res) => {
+  try {
+    const airport = await Airport.deleteMany(
+      utils.informationAirportObjectWithoutUndefined(
+        req.query._id,
+        req.query.Code,
+        req.query.IATA,
+        req.query["Airport Name"],
+        req.query.City,
+        req.query["City 2"],
+        req.query.Country,
+        req.query["Country 2"],
+        req.query.Latitude,
+        req.query.Longitude,
+        req.query["Data 1"],
+        req.query["Data 2"]
+      )
+    );
+
+    res.status(200).json(airport);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 router.get("/convenios", async (req, res) => {
   const authResponse = await auth.getToken(auth.tokenRequest);
 
@@ -502,6 +595,41 @@ router.get("/workflow/validateUser", async (req, res) => {
   } else {
     res.status(404).send();
   }
+});
+
+router.post("/workflow/inflateFlowSteps", async (req, res) => {
+  let response = req.body;
+
+  const convenio = await utils.getConvenioFromSharePointFromId(
+    req.body[0].ConvenioInformation.id
+  );
+
+  response[0].ConvenioInformation = convenio;
+
+  response[0].Configuration = await utils.inflateFlowSteps(
+    req.body[0].Configuration,
+    convenio
+  );
+
+  res.status(200).json(response);
+});
+
+/* Deprecated delete in next release */
+router.post("/workflow/validateConvenio", async (req, res) => {
+  let response = req.body;
+
+  const convenio = await utils.getConvenioFromSharePointFromId(
+    req.body[0].ConvenioInformation.id
+  );
+
+  response[0].ConvenioInformation = convenio;
+
+  response[0].Configuration = await utils.inflateFlowSteps(
+    req.body[0].Configuration,
+    convenio
+  );
+
+  res.status(200).json(response);
 });
 
 router.get("/platform/validateUser", async (req, res) => {
@@ -996,10 +1124,10 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
         ),
       },
       {
-        Name: "Cedula",
+        Name: "Comprobantes",
         Files: await utils.uploadFilesToSharePointWorkflow(
-          `${coordinacionLogisticaPath}/Cedula`,
-          req.body.CedulaFiles
+          `${coordinacionLogisticaPath}/Comprobantes`,
+          req.body.ComprobantesFiles
         ),
       },
     ],

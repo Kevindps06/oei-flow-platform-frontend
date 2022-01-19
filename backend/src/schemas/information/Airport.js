@@ -1,17 +1,17 @@
 const mongoose = require("mongoose");
 
 const schema = mongoose.Schema({
-  aliado: String,
-  numero: String,
-  administracion: String,
-  gerencia: String,
-  direccionAdjunta: String,
-  asistenciaContable: String,
-  tesoreriaDistribucion: String,
-  tesoreria: String,
-  tesoreriaConfirmacion: String,
-  direccionFinanciera: String,
-  enabled: Boolean,
+  Code: String,
+  IATA: String,
+  "Airport Name": String,
+  City: String,
+  "City 2": String,
+  Country: String,
+  "Country 2": String,
+  Latitude: Number,
+  Longitude: Number,
+  "Data 1": Number,
+  "Data 2": Number,
 });
 
 module.exports = mongoose
@@ -22,4 +22,4 @@ module.exports = mongoose
     readPreference: "secondaryPreferred",
     retryWrites: false,
   })
-  .model("convenio", schema, "convenios");
+  .model("airport", schema, "airports");

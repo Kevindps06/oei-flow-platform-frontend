@@ -8,11 +8,12 @@ const schema = mongoose.Schema({
   IdentificatorType: String,
   Identificator: String,
   FechaNacimiento: String,
-  EquipajeAdicional: Boolean,
+  EquipajeAdicional: String,
   Email: String,
   Telefono: String,
   InformacionAdicional: String,
   Requestor: Object,
+  Status: Number,
   ConvenioInformation: Object,
   Configuration: Object,
   CoordinacionLogisticaPath: String,
@@ -26,7 +27,7 @@ const schema = mongoose.Schema({
 module.exports = mongoose
   .createConnection(process.env.MONGODB_FORMS_URI, {
     tls: true,
-    tlsCAFile: `/home/ubuntu/rds-combined-ca-bundle.pem`,
+    tlsCAFile: process.env.MONGODB_TLSCAFILE_PATH,
     replicaSet: "rs0",
     readPreference: "secondaryPreferred",
     retryWrites: false,

@@ -6,7 +6,7 @@ export interface FormsCoordinacionLogistica {
   Nombre: string;
   Convenio: string;
   Tramos: Tramo[];
-  IdentificatorType: string,
+  IdentificatorType: string;
   Identificator: string;
   FechaNacimiento: Date;
   EquipajeAdicional: string;
@@ -16,4 +16,5 @@ export interface FormsCoordinacionLogistica {
   ComprobantesFiles: FileItem[];
   InformacionAdicional: string;
   Requestor: any;
+  Status: number;
 }

@@ -1,11 +1,8 @@
 const mongoose = require("mongoose");
 
 const schema = mongoose.Schema({
-  persona: String,
-  relacion: String,
-  gestion: String,
-  legalizacion: String,
-  steps: [],
+  clientId: String,
+  clientSecret: String
 });
 
 module.exports = mongoose
@@ -16,4 +13,4 @@ module.exports = mongoose
     readPreference: "secondaryPreferred",
     retryWrites: false,
   })
-  .model("FinancieraFlow", schema, "FinancieraFlow");
+  .model("APIClient", schema, "APIClients");

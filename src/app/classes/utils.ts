@@ -10,22 +10,6 @@ export class Utils {
     public sharedService: SharedService
   ) {}
 
-  static validateTramos(tramos: Tramo[], vuelta: boolean) {
-    for (let tramo of tramos) {
-      if (
-        !tramo.origen ||
-        !tramo.destino ||
-        !tramo.fechaIda ||
-        !tramo.horaIda ||
-        !(vuelta ? tramo.fechaVuelta && tramo.horaVuelta : true)
-      ) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
   static makeRandomString(length: number) {
     var result = '';
     var characters =

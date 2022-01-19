@@ -123,7 +123,7 @@
                 </div>
               </div>
             </div>
-            <div *ngFor="let tramo of tramos.keys()" class="col-12">
+            <div *ngFor="let tramo of tramos" class="col-12">
               <div class="card">
                 <div class="card-body">
                   <div class="row g-3">
@@ -133,14 +133,14 @@
                         'col-10': ruta === 'Multidestino'
                       }"
                     >
-                      <h5 class="card-title">Tramo #{{ tramo + 1 }}</h5>
+                      <h5 class="card-title">Tramo #{{ tramo.index + 1 }}</h5>
                     </div>
                     <div
-                      *ngIf="ruta === 'Multidestino' && tramo > 1"
+                      *ngIf="ruta === 'Multidestino' && tramo.index > 1"
                       class="col-2 d-grid gap-2"
                     >
                       <button
-                        (click)="btnRemoveTramoClick(tramo)"
+                        (click)="btnRemoveTramoClick(tramo.index)"
                         type="button"
                         class="btn btn-primary"
                       >
@@ -150,46 +150,46 @@
                     <div class="col-6">
                       <div class="form-floating">
                         <input
-                          [(ngModel)]="tramos[tramo].origen"
+                          (change)="setOrigen(tramo.index, $event)"
                           type="text"
                           class="form-control"
-                          name="inputOrigen{{ tramo }}"
-                          id="inputOrigen{{ tramo }}"
+                          name="inputOrigen{{ tramo.index }}"
+                          id="inputOrigen{{ tramo.index }}"
                           placeholder="\0"
                           maxlength="32"
                           [ngClass]="{
-                            'is-valid': tramos[tramo].origen,
-                            'is-invalid': !tramos[tramo].origen
+                            'is-valid': airportIsValid(tramos[tramo.index].origen),
+                            'is-invalid': !airportIsValid(tramos[tramo.index].origen)
                           }"
                         />
-                        <label for="inputOrigen{{ tramo }}"
+                        <label for="inputOrigen{{ tramo.index }}"
                           >Origen<span class="text-danger">*</span></label
                         >
                         <div class="invalid-feedback">
-                          Este campo es (*) obligatorio, rellenelo.
+                          Este campo es (*) obligatorio, rellenelo con una opcion correcta.
                         </div>
                       </div>
                     </div>
                     <div class="col-6">
                       <div class="form-floating">
                         <input
-                          [(ngModel)]="tramos[tramo].destino"
+                          (change)="setDestino(tramo.index, $event)"
                           type="text"
                           class="form-control"
-                          name="inputDestino{{ tramo }}"
-                          id="inputDestino{{ tramo }}"
+                          name="inputDestino{{ tramo.index }}"
+                          id="inputDestino{{ tramo.index }}"
                           placeholder="\0"
                           maxlength="32"
                           [ngClass]="{
-                            'is-valid': tramos[tramo].destino,
-                            'is-invalid': !tramos[tramo].destino
+                            'is-valid': airportIsValid(tramos[tramo.index].destino),
+                            'is-invalid': !airportIsValid(tramos[tramo.index].destino)
                           }"
                         />
-                        <label for="inputDestino{{ tramo }}"
+                        <label for="inputDestino{{ tramo.index }}"
                           >Destino<span class="text-danger">*</span></label
                         >
                         <div class="invalid-feedback">
-                          Este campo es (*) obligatorio, rellenelo.
+                          Este campo es (*) obligatorio, rellenelo con una opcion correcta.
                         </div>
                       </div>
                     </div>
@@ -199,7 +199,7 @@
                       >
                       <app-date-picker
                         [allowPass]="false"
-                        (onDateChange)="setFechaIda(tramo, $event)"
+                        (onDateChange)="setFechaIda(tramo.index, $event)"
                         name="fieldFechaIda"
                         id="fieldFechaIda"
                         requiredFeedbackYear="Este campo es (*) obligatorio, seleccione el año de ida."
@@ -210,13 +210,13 @@
                     <div class="col-12">
                       <div class="form-floating">
                         <select
-                          [(ngModel)]="tramos[tramo].horaIda"
+                          [(ngModel)]="tramos[tramo.index].horaIda"
                           class="form-select"
                           id="horaIda"
                           name="horaIda"
                           [ngClass]="{
-                            'is-valid': tramos[tramo].horaIda,
-                            'is-invalid': !tramos[tramo].horaIda
+                            'is-valid': tramos[tramo.index].horaIda,
+                            'is-invalid': !tramos[tramo.index].horaIda
                           }"
                         >
                           <option selected disabled></option>
@@ -243,7 +243,7 @@
                       >
                       <app-date-picker
                         [allowPass]="false"
-                        (onDateChange)="setFechaVuelta(tramo, $event)"
+                        (onDateChange)="setFechaVuelta(tramo.index, $event)"
                         name="fieldFechaVuelta"
                         id="fieldFechaVuelta"
                         requiredFeedbackYear="Este campo es (*) obligatorio, seleccione el año de ida."
@@ -254,13 +254,13 @@
                     <div *ngIf="ruta === 'Ida y vuelta'" class="col-12">
                       <div class="form-floating">
                         <select
-                          [(ngModel)]="tramos[tramo].horaVuelta"
+                          [(ngModel)]="tramos[tramo.index].horaVuelta"
                           class="form-select"
                           id="horaVuelta"
                           name="horaVuelta"
                           [ngClass]="{
-                            'is-valid': tramos[tramo].horaVuelta,
-                            'is-invalid': !tramos[tramo].horaVuelta
+                            'is-valid': tramos[tramo.index].horaVuelta,
+                            'is-invalid': !tramos[tramo.index].horaVuelta
                           }"
                         >
                           <option selected disabled></option>

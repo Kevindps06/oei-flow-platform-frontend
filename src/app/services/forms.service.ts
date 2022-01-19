@@ -42,7 +42,7 @@ export class FormsService {
     );
   }
 
-  postFormsTests(formsTests: any): Observable<any> {
+  postTest(formsTests: any): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'POST',
@@ -183,6 +183,18 @@ export class FormsService {
     );
   }
 
+  getAirports(): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.protocol}://${environment.backendAddress}/api/information/airports`,
+        {
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
   postFormsJuridicaContratacionConvenioRequest(
     formsJuridicaContratacionConvenioRequest: FormsJuridicaContratacionConvenioRequest
   ): Observable<any> {
@@ -243,7 +255,7 @@ export class FormsService {
             return throwError(err);
           })
         )
-        .toPromise()
+        .toPromise();
     });
   }
 }

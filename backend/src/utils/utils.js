@@ -43,6 +43,43 @@ async function getConvenioFromSharePoint(convenioNumber) {
   return convenioFromSharePoint;
 }
 
+async function getConvenioFromSharePointFromId(convenioId) {
+  let convenioFromSharePoint;
+
+  let retries = 0;
+  do {
+    try {
+      convenioFromSharePoint = (
+        await axios.default.get(
+          `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items/${convenioId}`,
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                (
+                  await auth.getToken(auth.tokenRequest)
+                ).accessToken,
+              Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+            },
+            params: {
+              $select: "id",
+              $expand: "fields",
+            },
+          }
+        )
+      ).data.fields;
+    } catch (err) {
+      console.log(`Try: ${retries} - Error:`, err);
+    }
+
+    retries++;
+  } while (!convenioFromSharePoint && retries < 5);
+
+  delete convenioFromSharePoint["@odata.etag"];
+
+  return convenioFromSharePoint;
+}
+
 async function getUserFromSharePoint(lookupId) {
   let user;
 
@@ -80,8 +117,9 @@ async function getUserFromSharePoint(lookupId) {
   return user;
 }
 
+/* Esta operacion asigna la informacion completa del usuario encargado en cada paso del flujo */
 async function inflateFlowSteps(flowSteps, convenio) {
-  let inflateFlowSteps = [];
+  let inflatedFlowSteps = [];
 
   for (let i = 0; flowSteps.length > i; i++) {
     if (
@@ -101,10 +139,10 @@ async function inflateFlowSteps(flowSteps, convenio) {
 
     flowSteps[i].encargado = encargado;
 
-    inflateFlowSteps.push(flowSteps[i]);
+    inflatedFlowSteps.push(flowSteps[i]);
   }
 
-  return inflateFlowSteps;
+  return inflatedFlowSteps;
 }
 
 async function getFinancieraFlowStepsWithEncargados(
@@ -470,8 +508,11 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
   }
 
   if (Tramos) {
+    obj.Tramos = [];
+
     for (let tramo of Tramos) {
       obj.Tramos.push({
+        index: tramo.index,
         origen: tramo.origen,
         destino: tramo.destino,
         fechaIda: new Date(tramo.fechaIda).toLocaleDateString("es-CO", {
@@ -481,12 +522,14 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
           day: "numeric",
         }),
         horaIda: tramo.horaIda,
-        fechaVuelta: new Date(tramo.fechaVuelta).toLocaleDateString("es-CO", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }),
+        fechaVuelta: tramo.fechaVuelta
+          ? new Date(tramo.fechaVuelta).toLocaleDateString("es-CO", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          : undefined,
         horaVuelta: tramo.horaVuelta,
       });
     }
@@ -559,6 +602,73 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
   return obj;
 }
 
+function informationAirportObjectWithoutUndefined(
+  _id,
+  Code,
+  IATA,
+  Airport_Name,
+  City,
+  City_2,
+  Country,
+  Country_2,
+  Latitude,
+  Longitude,
+  Data_1,
+  Data_2
+) {
+  var obj = {};
+
+  if (_id) {
+    obj._id = _id;
+  }
+
+  if (Code) {
+    obj.Code = Code;
+  }
+
+  if (IATA) {
+    obj.IATA = IATA;
+  }
+
+  if (Airport_Name) {
+    obj["Airport Name"] = Airport_Name;
+  }
+
+  if (City) {
+    obj.City = City;
+  }
+
+  if (City_2) {
+    obj["City 2"] = City_2;
+  }
+
+  if (Country) {
+    obj.Country = Country;
+  }
+
+  if (Country_2) {
+    obj["Country 2"] = Country_2;
+  }
+
+  if (Latitude) {
+    obj.Latitude = Latitude;
+  }
+
+  if (Longitude) {
+    obj.Longitude = Longitude;
+  }
+
+  if (Data_1) {
+    obj["Data 1"] = Data_1;
+  }
+
+  if (Data_2) {
+    obj["Data 2"] = Data_2;
+  }
+
+  return obj;
+}
+
 module.exports = {
   uploadFileToSharePoint: uploadFileToSharePoint,
   uploadFilesToSharePointWorkflow: uploadFilesToSharePointWorkflow,
@@ -575,4 +685,8 @@ module.exports = {
   getCoordinacionLogisticaFlowStepsWithEncargados:
     getCoordinacionLogisticaFlowStepsWithEncargados,
   getUserFromSharePoint: getUserFromSharePoint,
+  informationAirportObjectWithoutUndefined:
+    informationAirportObjectWithoutUndefined,
+  getConvenioFromSharePointFromId: getConvenioFromSharePointFromId,
+  inflateFlowSteps: inflateFlowSteps,
 };
