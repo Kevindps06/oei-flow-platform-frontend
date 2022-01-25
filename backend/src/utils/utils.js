@@ -133,6 +133,8 @@ async function inflateFlowSteps(flowSteps, convenio) {
       (exception) => exception.convenio == convenio.Numero
     );
 
+    console.log(convenio[flowSteps[i].key][exception ? exception.encargado : 0])
+
     const encargado = await getUserFromSharePoint(
       convenio[flowSteps[i].key][exception ? exception.encargado : 0].LookupId
     );
@@ -227,20 +229,21 @@ function makeRandomString(length) {
 }
 
 async function uploadFileToSharePoint(path, buffer) {
-  const authResponse = await auth.getToken(auth.tokenRequest);
-
   var response = await axios.default.post(
     `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/drive/root:${path}:/createUploadSession`,
     {},
     {
       headers: {
-        Authorization: "Bearer " + authResponse.accessToken,
+        Authorization: "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
       },
     }
   );
 
   const data = buffer;
-  const dataLength = data.length;
+  const dataLength = data.length === 0 ? 1 : data.length;
+
+  console.log("Data length: " + dataLength)
+
   //const chunkSize = 327680; // 320 KiB * 1
   //const chunkSize = 655360; // 640 KiB * 2
   //const chunkSize = 983040; // 960 KiB * 3
@@ -259,9 +262,11 @@ async function uploadFileToSharePoint(path, buffer) {
   //const chunkSize = 5242880; // 5 MiB * 16
   const chunks = Math.ceil(dataLength / chunkSize, dataLength) - 1;
 
-  var uploadResponse;
+  console.log("Data length: " + dataLength)
 
-  var chunk = 0;
+  let uploadResponse;
+
+  let chunk = 0;
   while (chunks >= chunk) {
     const chunkOffset = chunk * chunkSize;
     const chunkData = data.slice(chunkOffset, chunkOffset + chunkSize);
@@ -285,6 +290,8 @@ async function uploadFileToSharePoint(path, buffer) {
 
     chunk++;
   }
+
+  console.log("Upload Response: " + uploadResponse)
 
   delete uploadResponse.data["@odata.context"];
   delete uploadResponse.data["@content.downloadUrl"];
@@ -524,11 +531,11 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
         horaIda: tramo.horaIda,
         fechaVuelta: tramo.fechaVuelta
           ? new Date(tramo.fechaVuelta).toLocaleDateString("es-CO", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
           : undefined,
         horaVuelta: tramo.horaVuelta,
       });
