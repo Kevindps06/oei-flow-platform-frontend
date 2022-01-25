@@ -62,7 +62,7 @@
             </li>
           </ul>
         </li>
-        <li *ngIf="ifLogeedIn()" class="nav-item">
+        <li *ngIf="isLoggedIn()" class="nav-item">
           <a
             [ngClass]="{ active: isRoute('/forms/coordinacionlogistica') }"
             class="nav-link text-white"
@@ -72,7 +72,7 @@
             >Coordinacion logistica</a
           >
         </li>
-        <li *ngIf="ifLogeedIn()" class="nav-item dropdown">
+        <li *ngIf="isLoggedIn()" class="nav-item dropdown">
           <a
             [ngClass]="{ active: startWithRoute('/forms/juridica/') }"
             class="nav-link dropdown-toggle text-white"
@@ -106,13 +106,13 @@
           (mouseover)="onMouseOverLoginButton()"
           (mouseout)="onMouseOutLoginButton()"
           [routerLink]="['/login']"
-          (click)="onIniciarSesionBtnClick()"
+          (click)="userLogout()"
           [ngClass]="{
             'text-light': !mouseOverLoginButton,
             'text-dark': mouseOverLoginButton
           }"
           class="btn btn-outline-light"
-          >{{ loggedUser ? "Cerrar sesion" : "Iniciar sesion" }}</a
+          >{{ isLoggedIn() ? "Cerrar sesion" : "Iniciar sesion" }}</a
         >
       </div>
     </div>

@@ -10,12 +10,27 @@ const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionL
 const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
 const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
 const Airport = require("./schemas/information/Airport");
+const APIClient = require("./schemas/auth/APIClient");
+const jwt = require("jsonwebtoken");
 
-router.post("/request", async (req, res) => {
-  res.status(200).send(req.body.length);
+router.get("/token", async (req, res) => {
+  const client = await APIClient.find({
+    ClientId: req.query.ClientId,
+    ClientSecret: req.query.ClientSecret,
+  });
+
+  if (!client) {
+    res.status(404).json();
+  }
+
+  jwt.sign(client, "secretkey", (err, token) => {
+    res.json({
+      token,
+    });
+  });
 });
 
-//
+router.get("/request", (req, res) => {});
 
 // Upload file to server
 
@@ -490,6 +505,71 @@ router.delete("/information/airports", async (req, res) => {
   }
 });
 
+// Auth - APIClient
+
+router.post("/auth/apiclients", async (req, res) => {
+  try {
+    const airport = new Airport(req.body);
+
+    await airport.save();
+
+    res.status(201).json(airport);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/auth/apiclients", async (req, res) => {
+  try {
+    const apiClient = await APIClient.find(
+      utils.authAPIClientObjectWithoutUndefined(
+        req.query._id,
+        req.query.ClientId,
+        req.query.ClientSecret
+      )
+    );
+
+    res.status(200).json(apiClient);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.put("/auth/apiclients", async (req, res) => {
+  try {
+    const apiClient = await APIClient.updateMany(
+      utils.authAPIClientObjectWithoutUndefined(
+        req.query._id,
+        req.query.ClientId,
+        req.query.ClientSecret
+      ),
+      req.body
+    );
+
+    res.status(200).json(apiClient);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.delete("/auth/apiclients", async (req, res) => {
+  try {
+    const apiClient = await APIClient.deleteMany(
+      utils.authAPIClientObjectWithoutUndefined(
+        req.query._id,
+        req.query.ClientId,
+        req.query.ClientSecret
+      )
+    );
+
+    res.status(200).json(apiClient);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//
+
 router.get("/convenios", async (req, res) => {
   const authResponse = await auth.getToken(auth.tokenRequest);
 
@@ -748,7 +828,7 @@ router.post("/forms/financiera/registration", async (req, res) => {
     ),
   });
 
-  const response = await axios.default.post(
+  await axios.default.post(
     `https://prod-20.brazilsouth.logic.azure.com:443/workflows/d86f74b4e4374001a78424d69cc15240/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4gnntmoLVSwLIKE6lvawvpgJ_Z3Xq9u5hTj0Iof4qQI`,
     [formsFinancieraRegistration]
   );

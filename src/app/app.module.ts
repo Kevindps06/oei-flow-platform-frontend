@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -27,6 +28,20 @@ import { DatePickerComponent } from './components/date-picker/date-picker.compon
 import { FormsCoordinacionLogisticaFillQuotationsComponent } from './components/forms/coordinacionlogistica/fill-quotations/fill-quotations.component';
 import { FormsCoordinacionLogisticaSelectQuotationComponent } from './components/forms/coordinacionlogistica/select-quotation/select-quotation.component';
 import { TestsComponent } from './components/forms/tests/tests.component';
+import { MsalModule, MsalService, MSAL_INSTANCE } from '@azure/msal-angular';
+import {
+  IPublicClientApplication,
+  PublicClientApplication,
+} from '@azure/msal-browser';
+
+export function MSALInstanceFactory(): IPublicClientApplication {
+  return new PublicClientApplication({
+    auth: {
+      clientId: '9e2a6e76-ec14-4ca5-ab54-d1c55a12545c',
+      redirectUri: `${environment.protocol}://${environment.frontendAddress}`,
+    },
+  });
+}
 
 @NgModule({
   declarations: [
@@ -53,13 +68,24 @@ import { TestsComponent } from './components/forms/tests/tests.component';
     FormsCoordinacionLogisticaSelectQuotationComponent,
     TestsComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+    MsalModule,
+  ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: GlobalHttpInterceptorService,
       multi: true,
     },
+    {
+      provide: MSAL_INSTANCE,
+      useFactory: MSALInstanceFactory,
+    },
+    MsalService
   ],
   bootstrap: [AppComponent],
 })

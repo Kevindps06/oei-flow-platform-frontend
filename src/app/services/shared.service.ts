@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MsalService } from '@azure/msal-angular';
 import { Subject } from 'rxjs';
 import { ToastMessage } from '../interfaces/toast-message';
 import { WaitTask } from '../interfaces/WaitTask';

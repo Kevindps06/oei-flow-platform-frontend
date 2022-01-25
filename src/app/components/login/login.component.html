@@ -14,10 +14,10 @@
                 <h3 class="my-3">Hola, bienvenido! 👋👋</h3>
                 <p class="text-muted text-sm mb-5">
                   Ingrese con sus credenciales asignadas para realizar procesos
-                  y gestiones que necesiten de una autorización.
+                  y gestiones.
                 </p>
                 <form id="loginForm">
-                  <div class="form-floating mb-3">
+                  <!--<div class="form-floating mb-3">
                     <input
                       (input)="invalidateUser()"
                       [(ngModel)]="email"
@@ -69,7 +69,7 @@
                       }}
                     </div>
                   </div>
-                  <!--<div class="form-check mb-3">
+                  <div class="form-check mb-3">
                     <input
                       class="form-check-input"
                       type="checkbox"
@@ -83,7 +83,7 @@
                   <div class="d-grid gap-2 col-6 mx-auto mb-2">
                     <button
                       class="btn btn-primary"
-                      (click)="validateUser()"
+                      (click)="userLogin()"
                       [disabled]="!isValid()"
                     >
                       Iniciar sesion
@@ -105,7 +105,7 @@
         />
         <h1>OEI<br class="d-inline" />Code</h1>
         <p class="lead text-muted">
-          Aumentamos la eficiencia con tranformacion digital.
+          Aumentamos la eficiencia con transformacion digital.
         </p>
       </div>
     </div>

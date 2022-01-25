@@ -5,7 +5,7 @@ const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const router = require("./router");
-const morgan = require('morgan')
+const jwt = require("jsonwebtoken");
 
 var app = express();
 
@@ -26,6 +26,22 @@ app.use(
 );
 
 //app.use(morgan("tiny"));
+
+const verifyToken = (req, res, next) => {
+  const token = req.header("authorization");
+
+  if (!token) {
+    return res.status(401).json({ error: "Acceso denegado" });
+  }
+
+  try {
+    const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+    req.user = verified;
+    next();
+  } catch (error) {
+    res.status(400).json({ error: "token no es válido" });
+  }
+};
 
 app.use("/api", router);
 

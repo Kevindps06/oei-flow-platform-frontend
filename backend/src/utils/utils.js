@@ -669,6 +669,24 @@ function informationAirportObjectWithoutUndefined(
   return obj;
 }
 
+function authAPIClientObjectWithoutUndefined(_id, ClientId, ClientSecret) {
+  var obj = {};
+
+  if (_id) {
+    obj._id = _id;
+  }
+
+  if (ClientId) {
+    obj.ClientId = ClientId;
+  }
+
+  if (ClientSecret) {
+    obj.ClientSecret = ClientSecret;
+  }
+
+  return obj;
+}
+
 module.exports = {
   uploadFileToSharePoint: uploadFileToSharePoint,
   uploadFilesToSharePointWorkflow: uploadFilesToSharePointWorkflow,
@@ -689,4 +707,5 @@ module.exports = {
     informationAirportObjectWithoutUndefined,
   getConvenioFromSharePointFromId: getConvenioFromSharePointFromId,
   inflateFlowSteps: inflateFlowSteps,
+  authAPIClientObjectWithoutUndefined: authAPIClientObjectWithoutUndefined,
 };

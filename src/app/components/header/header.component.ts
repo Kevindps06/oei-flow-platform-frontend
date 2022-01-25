@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LoginService } from 'src/app/services/login.service';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
@@ -10,24 +11,32 @@ import { SharedService } from 'src/app/services/shared.service';
 export class HeaderComponent implements OnInit {
   @Input() loggedUser: any;
 
-  constructor(private router: Router, private sharedService: SharedService) {}
+  constructor(
+    private router: Router,
+    private loginService: LoginService
+  ) {}
 
   ngOnInit(): void {}
 
-  onIniciarSesionBtnClick() {
-    this.sharedService.setLoggedUser(undefined)
-  }
-
-  isRoute(route: string) {
+  isRoute(route: string): Boolean {
     return this.router.url === route;
   }
 
-  startWithRoute(route: string) {
+  startWithRoute(route: string): Boolean {
     return this.router.url.startsWith(route);
   }
 
-  ifLogeedIn() {
-    return this.loggedUser;
+  isLoggedIn(): Boolean {
+    const user = this.loginService.loggedInUser();
+    console.log(user);
+
+    return user != null;
+  }
+
+  userLogout() {
+    if (this.isLoggedIn()) {
+      this.loginService.userLogout();
+    }
   }
 
   mouseOverLoginButton: boolean = false;
