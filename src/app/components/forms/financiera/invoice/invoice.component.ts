@@ -1743,7 +1743,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
             'Legalizacion'
               ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
               : formsFinancieraInvoice.TipoGestion
-            ).toLowerCase()} ha sido ingresada correctamente y sera procesada en un plazo maximo de 10 dias habiles*, este atento de su correo electronico por el cual se le notificara del estado y manera de validacion de la peticion.`,
+            ).toLowerCase()} ha sido ingresada correctamente y sera procesada en la mayor brevedad posible, este atento al correo electronico registrado por el cual se le notificara del estado y manera de validacion de la peticion.`,
             autohide: 30000,
           });
         }

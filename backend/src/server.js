@@ -13,7 +13,7 @@ app.set("views", path.join(__dirname, "../dist"));
 
 app.use(
   cors({
-    origin: "*",
+    origin: "https://oeiprojectflow.org",
   })
 );
 

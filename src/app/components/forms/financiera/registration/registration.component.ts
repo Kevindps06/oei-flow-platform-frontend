@@ -215,7 +215,7 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
                 title: `Registro enviado satisfactoriamente`,
-                description: `Su registro ha sido ingresado correctamente y sera procesado en un plazo maximo de 10 dias habiles*, este atento de su correo electronico por el cual se le notificara del estado y manera de validacion de la peticion.`,
+                description: `Su registro ha sido ingresado correctamente y sera procesado en la mayor brevedad posible, este atento al correo electronico registrado por el cual se le notificara del estado y manera de validacion de la peticion.`,
                 autohide: 30000,
               });
               break;

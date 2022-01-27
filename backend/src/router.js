@@ -1142,7 +1142,7 @@ router.post("/forms/financiera/invoice", async (req, res) => {
     try {
       /* Send to MS FLOW */
       await axios.default.post(
-        `https://prod-10.brazilsouth.logic.azure.com:443/workflows/224c1c2ba11641eca0c380112b3f45f7/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ixU2jDh0rBt2Ynx9nyOE_b4N0rP0p-q7b9shJ2qKeII`,
+        `https://prod-19.brazilsouth.logic.azure.com:443/workflows/9bfaeed0571245f6a95ccc899b977cf3/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Fp5TYWlLf42Z87phAM_d5tsXtazqBe1Z5cjiydsr-Ms`,
         [formsFinancieraInvoice]
       );
 
