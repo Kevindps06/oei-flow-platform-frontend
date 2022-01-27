@@ -85,7 +85,7 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (!history.state.userInfo || !history.state.plaftformInfo) {
+    /*if (!history.state.userInfo || !history.state.plaftformInfo) {
       this.router.navigate(['/login'], {
         state: {
           fromRoute: this.router.url,
@@ -112,7 +112,7 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
         Numero: history.state.plaftformInfo.fields.Convenios[i].fields.Numero,
         Mostrar: history.state.plaftformInfo.fields.Convenios[i].fields.Mostrar,
       });
-    }
+    }*/
   }
 
   onRutaChange() {
