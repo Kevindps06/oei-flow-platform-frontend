@@ -33,6 +33,7 @@ import {
   IPublicClientApplication,
   PublicClientApplication,
 } from '@azure/msal-browser';
+import { CertificacionesLaboralesComponent } from './components/forms/certificacioneslaborales/certificacioneslaborales.component';
 
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
@@ -67,6 +68,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FormsCoordinacionLogisticaFillQuotationsComponent,
     FormsCoordinacionLogisticaSelectQuotationComponent,
     TestsComponent,
+    CertificacionesLaboralesComponent,
   ],
   imports: [
     BrowserModule,

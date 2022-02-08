@@ -571,31 +571,27 @@ router.delete("/auth/apiclients", async (req, res) => {
 //
 
 router.get("/convenios", async (req, res) => {
-  const authResponse = await auth.getToken(auth.tokenRequest);
-
-  let query = `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items?$select=id&$expand=fields($select=Aliado,Numero,Mostrar)`;
-
-  if (!req.query.showAll) {
-    query = query.concat("&filter=fields/Mostrar eq 1");
-  }
-
-  const response = await axios.default.get(query, {
-    headers: {
-      Authorization: "Bearer " + authResponse.accessToken,
-      Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
-    },
-  });
+  const response = await axios.default.get(
+    `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items?$select=id&$expand=fields($select=Aliado,Numero,Mostrar)&$filter=fields/Mostrar eq 1`,
+    {
+      headers: {
+        Authorization:
+          "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
+        Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+      },
+    }
+  );
 
   res.status(response.status).json(response.data);
 });
 
 router.get("/sites/:siteName", async (req, res) => {
-  const authResponse = await auth.getToken(auth.tokenRequest);
   const response = await axios.default.get(
     `https://graph.microsoft.com/v1.0/sites/oei1.sharepoint.com:/sites/${req.params.siteName}`,
     {
       headers: {
-        Authorization: "Bearer " + authResponse.accessToken,
+        Authorization:
+          "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
       },
     }
   );
@@ -604,12 +600,12 @@ router.get("/sites/:siteName", async (req, res) => {
 });
 
 router.get("/sites/:siteId/lists", async (req, res) => {
-  const authResponse = await auth.getToken(auth.tokenRequest);
   const response = await axios.default.get(
     `https://graph.microsoft.com/v1.0/sites/${req.params.siteId}/lists`,
     {
       headers: {
-        Authorization: "Bearer " + authResponse.accessToken,
+        Authorization:
+          "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
       },
     }
   );
@@ -617,12 +613,12 @@ router.get("/sites/:siteId/lists", async (req, res) => {
 });
 
 router.get("/sites/:siteId/lists/:listId/items/:itemId", async (req, res) => {
-  const authResponse = await auth.getToken(auth.tokenRequest);
   const response = await axios.default.get(
     `https://graph.microsoft.com/v1.0/sites/${req.params.siteId}/lists/${req.params.listId}/items/${req.params.itemId}`,
     {
       headers: {
-        Authorization: "Bearer " + authResponse.accessToken,
+        Authorization:
+          "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
       },
     }
   );
@@ -630,12 +626,12 @@ router.get("/sites/:siteId/lists/:listId/items/:itemId", async (req, res) => {
 });
 
 router.get("/sites/:siteId/lists/:listId/:operation", async (req, res) => {
-  const authResponse = await auth.getToken(auth.tokenRequest);
   const response = await axios.default.get(
     `https://graph.microsoft.com/v1.0/sites/${req.params.siteId}/lists/${req.params.listId}/${req.params.operation}`,
     {
       headers: {
-        Authorization: "Bearer " + authResponse.accessToken,
+        Authorization:
+          "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
       },
     }
   );

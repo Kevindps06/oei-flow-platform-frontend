@@ -168,15 +168,12 @@ export class FormsService {
     );
   }
 
-  getConvenios(showAll: boolean = false): Observable<any> {
+  getConvenios(): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
         `${environment.protocol}://${environment.backendAddress}/api/convenios`,
         {
-          params: new HttpParams().appendAll({
-            showAll: showAll,
-          }),
           reportProgress: true,
         }
       )

@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   protocol: 'http',
-  backendAddress: '192.168.0.11',
-  frontendAddress: '192.168.0.11',
+  backendAddress: 'localhost',
+  frontendAddress: 'localhost:4200',
 };
 
 /*

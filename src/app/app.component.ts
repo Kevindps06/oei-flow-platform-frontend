@@ -112,7 +112,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  inMaintenance: boolean = false;
+  inMaintenance: boolean = true;
 
   maintenanceScreenAnimationStart(event: AnimationEvent) {
     if (event.animationName === 'fadeIn') {

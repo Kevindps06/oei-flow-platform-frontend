@@ -62,6 +62,15 @@
             </li>
           </ul>
         </li>
+        <li class="nav-item">
+          <a
+            [ngClass]="{ active: isRoute('/forms/certificacioneslaborales') }"
+            class="nav-link text-white"
+            aria-current="page"
+            [routerLink]="['/forms/certificacioneslaborales']"
+            >Certificaciones laborales</a
+          >
+        </li>
         <li *ngIf="isLoggedIn()" class="nav-item">
           <a
             [ngClass]="{ active: isRoute('/forms/coordinacionlogistica') }"

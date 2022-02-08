@@ -133,8 +133,6 @@ async function inflateFlowSteps(flowSteps, convenio) {
       (exception) => exception.convenio == convenio.Numero
     );
 
-    console.log(convenio[flowSteps[i].key][exception ? exception.encargado : 0])
-
     const encargado = await getUserFromSharePoint(
       convenio[flowSteps[i].key][exception ? exception.encargado : 0].LookupId
     );
@@ -242,8 +240,6 @@ async function uploadFileToSharePoint(path, buffer) {
   const data = buffer;
   const dataLength = data.length === 0 ? 1 : data.length;
 
-  console.log("Data length: " + dataLength)
-
   //const chunkSize = 327680; // 320 KiB * 1
   //const chunkSize = 655360; // 640 KiB * 2
   //const chunkSize = 983040; // 960 KiB * 3
@@ -261,8 +257,6 @@ async function uploadFileToSharePoint(path, buffer) {
   //const chunkSize = 4915200; // 4.68 MiB * 15
   //const chunkSize = 5242880; // 5 MiB * 16
   const chunks = Math.ceil(dataLength / chunkSize, dataLength) - 1;
-
-  console.log("Data length: " + dataLength)
 
   let uploadResponse;
 
@@ -290,8 +284,6 @@ async function uploadFileToSharePoint(path, buffer) {
 
     chunk++;
   }
-
-  console.log("Upload Response: " + uploadResponse)
 
   delete uploadResponse.data["@odata.context"];
   delete uploadResponse.data["@content.downloadUrl"];

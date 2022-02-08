@@ -1,13 +1,13 @@
 require("dotenv").config();
 
+const express = require("express");
 const bytes = require("bytes");
 const path = require("path");
-const express = require("express");
 const cors = require("cors");
 const router = require("./router");
 const jwt = require("jsonwebtoken");
 
-var app = express();
+const app = express();
 
 app.set("views", path.join(__dirname, "../dist"));
 
