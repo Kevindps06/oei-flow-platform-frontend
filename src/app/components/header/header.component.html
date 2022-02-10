@@ -18,9 +18,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarScroll">
-      <ul
-        class="navbar-nav me-auto mb-2 mb-lg-0"
-      >
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a
             [ngClass]="{ active: isRoute('/') }"
@@ -110,8 +108,17 @@
           </ul>
         </li>
       </ul>
+      <a *ngIf="isLoggedIn()" class="navbar-brand" href="#">
+        <img
+          src="/src/assets/bootstrap-docs.png"
+          alt=""
+          width="30"
+          height="24"
+          class="d-inline-block align-text-top"
+        />
+        {{ loggedInUserName() }}
+      </a>
       <div class="d-flex">
-        <a *ngIf="isLoggedIn()" class="navbar-brand text-light" href="#">{{ loggedInUserName() }}</a>
         <a
           (mouseover)="onMouseOverLoginButton()"
           (mouseout)="onMouseOutLoginButton()"
