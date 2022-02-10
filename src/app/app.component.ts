@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MsalService } from '@azure/msal-angular';
 import { ToastMessage } from './interfaces/toast-message';
 import { WaitTask } from './interfaces/WaitTask';
 import { SharedService } from './services/shared.service';
@@ -15,12 +16,17 @@ export class AppComponent implements OnInit {
   waitTasks: WaitTask[] = [];
   toastMessages: ToastMessage[] = [];
 
-  constructor(private sharedService: SharedService) {}
+  constructor(
+    private sharedService: SharedService,
+    private msalService: MsalService
+  ) {}
 
   ngOnInit(): void {
-    this.sharedService.onSetLoggedUser.subscribe((loggedUser: any) => {
-      this.loggedUser = loggedUser;
-    });
+    /*this.msalService.instance.handleRedirectPromise().then((res) => {
+      if (res != null && res.account != null) {
+        this.msalService.instance.setActiveAccount(res.account);
+      }
+    });*/
 
     this.sharedService.onPushWaitTask.subscribe((waitTask: WaitTask) => {
       const taskIndex = this.waitTasks.findIndex(

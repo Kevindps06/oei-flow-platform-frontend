@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MsalService } from '@azure/msal-angular';
 import { Subject } from 'rxjs';
 import { ToastMessage } from '../interfaces/toast-message';
 import { WaitTask } from '../interfaces/WaitTask';
@@ -8,12 +7,6 @@ import { WaitTask } from '../interfaces/WaitTask';
   providedIn: 'root',
 })
 export class SharedService {
-  private setLoggedUserSource = new Subject<any>();
-  onSetLoggedUser = this.setLoggedUserSource.asObservable();
-  setLoggedUser(loggedUser: any) {
-    this.setLoggedUserSource.next(loggedUser);
-  }
-
   private pushWaitTaskSource = new Subject<WaitTask>();
   onPushWaitTask = this.pushWaitTaskSource.asObservable();
   pushWaitTask(waitTask: WaitTask) {

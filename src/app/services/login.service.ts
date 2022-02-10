@@ -47,13 +47,13 @@ export class LoginService {
 
     this.msalService
       .loginPopup()
-      .subscribe((response: AuthenticationResult) => {
+      .subscribe((res: AuthenticationResult) => {
         this.sharedService.pushWaitTask({
           id: taskId,
           progress: 100,
         });
 
-        this.msalService.instance.setActiveAccount(response.account);
+        this.msalService.instance.setActiveAccount(res.account);
 
         this.sharedService.removeWaitTask({
           id: taskId,
@@ -62,7 +62,7 @@ export class LoginService {
         this.sharedService.pushToastMessage({
           id: Utils.makeRandomString(4),
           title: `Bienvenido`,
-          description: `Hola, esperamos tengas la mejor de las estancias.`,
+          description: `Hola ${this.msalService.instance.getActiveAccount()?.name}, esperamos tengas la mejor de las estancias.`,
         });
       });
   }

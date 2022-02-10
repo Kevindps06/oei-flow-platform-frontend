@@ -26,8 +26,16 @@ export class LoginComponent implements OnInit {
     return Utils.validateEmail(email);
   }
 
-  userLogin() {
-    this.loginService.userLogin();
+  isLoggedIn(): Boolean {
+    return this.loginService.loggedInUser() != null;
+  }
+
+  userLoginLogout() {
+    if (this.loginService.loggedInUser() != null) {
+      this.loginService.userLogin();
+    } else {
+      this.loginService.userLogout();
+    }
   }
 
   isValid() {
