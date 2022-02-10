@@ -110,6 +110,7 @@
           </ul>
         </li>
       </ul>
+      <a *ngIf="isLoggedIn()" class="navbar-brand" href="#">{{ loggedInUserName() }}</a>
       <div class="d-flex">
         <a
           (mouseover)="onMouseOverLoginButton()"

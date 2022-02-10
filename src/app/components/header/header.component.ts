@@ -27,10 +27,11 @@ export class HeaderComponent implements OnInit {
   }
 
   isLoggedIn(): Boolean {
-    const user = this.loginService.loggedInUser();
-    console.log(user);
+    return this.loginService.loggedInUser() != null;
+  }
 
-    return user != null;
+  loggedInUserName(): String | undefined {
+    return this.loginService.loggedInUser()?.name;
   }
 
   userLogout() {
