@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  protocol: 'http',
+  protocol: 'https',
   //backendAddress: 'oeiprojectflow.org',
   //frontendAddress: 'oeiprojectflow.org',
   backendAddress: 'lab.oeiprojectflow.org',
