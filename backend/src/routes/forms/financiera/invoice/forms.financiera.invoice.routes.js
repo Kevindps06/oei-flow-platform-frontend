@@ -1,16 +1,16 @@
 import { Router } from "express";
 const router = Router();
 
-import * as formsFinancieraInvoiceController from "../../../../controllers/forms/financiera/forms.financiera.invoice.controller"
+import * as formsFinancieraInvoiceController from "../../../../controllers/forms/financiera/invoice/forms.financiera.invoice.controller"
 
 // Forms - Financiera - Invoice
 
-router.post("/", formsFinancieraInvoiceController.save());
+router.post("/", formsFinancieraInvoiceController.save);
 
-router.get("/", formsFinancieraInvoiceController.find());
+router.get("/", formsFinancieraInvoiceController.find);
 
-router.put("/", formsFinancieraInvoiceController.updateMany());
+router.put("/", formsFinancieraInvoiceController.updateMany);
 
-router.delete("/", formsFinancieraInvoiceController.deleteMany());
+router.delete("/", formsFinancieraInvoiceController.deleteMany);
 
 export default router

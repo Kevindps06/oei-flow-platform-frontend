@@ -4,9 +4,8 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "start": "nodemon src/server.js --exec babel-node",
-    "dev": "babel-node src/server.js",
-    "build": "babel src --out-dir dist --copy-files"
+    "start": "nodemon dist/server.js",
+    "build": "babel src --out-dir dist --copy-files --plugins inline-dotenv"
   },
   "author": "Kevin Paternina",
   "license": "ISC",
@@ -15,6 +14,7 @@
     "@microsoft/microsoft-graph-client": "^3.0.0",
     "@microsoft/microsoft-graph-types": "^2.8.0",
     "axios": "^0.22.0",
+    "babel-plugin-inline-dotenv": "^1.6.0",
     "bcryptjs": "^2.4.3",
     "bytes": "^3.1.0",
     "cors": "^2.8.5",
