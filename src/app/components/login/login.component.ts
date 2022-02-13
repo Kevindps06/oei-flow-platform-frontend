@@ -31,10 +31,10 @@ export class LoginComponent implements OnInit {
   }
 
   userLoginLogout() {
-    if (this.loginService.loggedInUser() != null) {
-      this.loginService.userLogin();
-    } else {
+    if (this.isLoggedIn()) {
       this.loginService.userLogout();
+    } else {
+      this.loginService.userLogin();
     }
   }
 

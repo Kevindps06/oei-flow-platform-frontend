@@ -8,6 +8,8 @@ RUN npm install
 
 COPY ./backend ./
 
+RUN npm run build
+
 EXPOSE 80
 
-CMD [ "node", "src/server.js" ]
+CMD [ "node", "dist/server.js" ]

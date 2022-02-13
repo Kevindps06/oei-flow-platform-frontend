@@ -1,36 +1,21 @@
-const express = require("express");
-const axios = require("axios");
-const router = express.Router();
-const auth = require("./apis/microsoft/auth");
-const utils = require("./utils/utils");
+import axios from "axios";
+import { Router } from "express";
+const router = Router();
+const auth = require("../apis/microsoft/auth");
+const utils = require("../utils/utils");
 const fs = require("fs");
 const path = require("path");
-const FinancieraFlow = require("./schemas/configuration/FinancieraFlow");
-const CoordinacionLogisticaFlow = require("./schemas/configuration/CoordinacionLogisticaFlow");
-const FinancieraInvoice = require("./schemas/forms/FinancieraInvoice");
-const CoordinacionLogistica = require("./schemas/forms/CoordinacionLogistica");
-const Airport = require("./schemas/information/Airport");
-const APIClient = require("./schemas/auth/APIClient");
-const jwt = require("jsonwebtoken");
+const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
+const CoordinacionLogisticaFlow = require("../schemas/configuration/CoordinacionLogisticaFlow");
+const FinancieraInvoice = require("../schemas/forms/FinancieraInvoice");
+const CoordinacionLogistica = require("../schemas/forms/CoordinacionLogistica");
+const Airport = require("../schemas/information/Airport");
+const APIClient = require("../schemas/auth/APIClient");
+import formsRoutes from "./forms/forms.routes"
 
-router.get("/token", async (req, res) => {
-  const client = await APIClient.find({
-    ClientId: req.query.ClientId,
-    ClientSecret: req.query.ClientSecret,
-  });
+// Forms
 
-  if (!client) {
-    res.status(404).json();
-  }
-
-  jwt.sign(client, "secretkey", (err, token) => {
-    res.json({
-      token,
-    });
-  });
-});
-
-router.get("/request", (req, res) => {});
+router.use("/forms", formsRoutes);
 
 // Upload file to server
 
@@ -191,225 +176,6 @@ router.delete("/configuration/coordinacionlogisticaflow", async (req, res) => {
       );
 
     res.status(200).json(coordinacionLogisticaFlow);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-// Forms - FinancieraInvoices
-
-router.post("/forms/financiera/invoices", async (req, res) => {
-  try {
-    const financieraInvoice = new FinancieraInvoice(req.body);
-
-    await financieraInvoice.save();
-
-    res.status(201).json(financieraInvoice);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.get("/forms/financiera/invoices", async (req, res) => {
-  try {
-    const financieraInvoice = await FinancieraInvoice.find(
-      utils.formsFinancieraInvoiceObjectWithoutUndefined(
-        req.query._id,
-        req.query.Id,
-        req.query.TipoPersona,
-        req.query.TipoRelacion,
-        req.query.Identificator,
-        req.query.Email,
-        req.query.TipoGestion,
-        req.query.TipoLegalizacion,
-        req.query.Convenio,
-        req.query.InformacionAdicional,
-        req.query.Requestor,
-        req.query.ConvenioInformation,
-        req.query.Configuration,
-        req.query.GestionPath,
-        req.query.SharePointFiles,
-        req.query.Keys
-      )
-    );
-
-    res.status(200).json(financieraInvoice);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.put("/forms/financiera/invoices", async (req, res) => {
-  try {
-    const financieraInvoice = await FinancieraInvoice.updateMany(
-      utils.formsFinancieraInvoiceObjectWithoutUndefined(
-        req.query._id,
-        req.query.Id,
-        req.query.TipoPersona,
-        req.query.TipoRelacion,
-        req.query.Identificator,
-        req.query.Email,
-        req.query.TipoGestion,
-        req.query.TipoLegalizacion,
-        req.query.Convenio,
-        req.query.InformacionAdicional,
-        req.query.Requestor,
-        req.query.ConvenioInformation,
-        req.query.Configuration,
-        req.query.GestionPath,
-        req.query.SharePointFiles,
-        req.query.Keys
-      ),
-      req.body
-    );
-
-    res.status(200).json(financieraInvoice);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.delete("/forms/financiera/invoices", async (req, res) => {
-  try {
-    const financieraInvoice = await FinancieraInvoice.deleteMany(
-      utils.formsFinancieraInvoiceObjectWithoutUndefined(
-        req.query._id,
-        req.query.Id,
-        req.query.TipoPersona,
-        req.query.TipoRelacion,
-        req.query.Identificator,
-        req.query.Email,
-        req.query.TipoGestion,
-        req.query.TipoLegalizacion,
-        req.query.Convenio,
-        req.query.InformacionAdicional,
-        req.query.Requestor,
-        req.query.ConvenioInformation,
-        req.query.Configuration,
-        req.query.GestionPath,
-        req.query.SharePointFiles,
-        req.query.Keys
-      )
-    );
-
-    res.status(200).json(financieraInvoice);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-// Forms - CoordinacionesLogisticas
-
-router.post("/forms/coordinacioneslogisticas", async (req, res) => {
-  try {
-    const coordinacionLogistica = new CoordinacionLogistica(req.body);
-
-    await coordinacionLogistica.save();
-
-    res.status(201).json(coordinacionLogistica);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.get("/forms/coordinacioneslogisticas", async (req, res) => {
-  try {
-    const coordinacionLogistica = await CoordinacionLogistica.find(
-      utils.formsCoordinacionLogisticaObjectWithoutUndefined(
-        req.query._id,
-        req.query.Id,
-        req.query.Nombre,
-        req.query.Convenio,
-        req.query.Tramos,
-        req.query.IdentificatorType,
-        req.query.Identificator,
-        req.query.FechaNacimiento,
-        req.query.EquipajeAdicional,
-        req.query.Email,
-        req.query.Telefono,
-        req.query.InformacionAdicional,
-        req.query.Requestor,
-        req.query.ConvenioInformation,
-        req.query.Configuration,
-        req.query.CoordinacionLogisticaPath,
-        req.query.SharePointFiles,
-        req.query.Keys,
-        req.query.TicketNumber,
-        req.query.Quotations,
-        req.query.SelectedQuotation
-      )
-    );
-
-    res.status(200).json(coordinacionLogistica);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.put("/forms/coordinacioneslogisticas", async (req, res) => {
-  try {
-    const coordinacionLogistica = await CoordinacionLogistica.updateMany(
-      utils.formsCoordinacionLogisticaObjectWithoutUndefined(
-        req.query._id,
-        req.query.Id,
-        req.query.Nombre,
-        req.query.Convenio,
-        req.query.Tramos,
-        req.query.IdentificatorType,
-        req.query.Identificator,
-        req.query.FechaNacimiento,
-        req.query.EquipajeAdicional,
-        req.query.Email,
-        req.query.Telefono,
-        req.query.InformacionAdicional,
-        req.query.Requestor,
-        req.query.ConvenioInformation,
-        req.query.Configuration,
-        req.query.CoordinacionLogisticaPath,
-        req.query.SharePointFiles,
-        req.query.Keys,
-        req.query.TicketNumber,
-        req.query.Quotations,
-        req.query.SelectedQuotation
-      ),
-      req.body
-    );
-
-    res.status(200).json(coordinacionLogistica);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.delete("/forms/coordinacioneslogisticas", async (req, res) => {
-  try {
-    const coordinacionLogistica = await CoordinacionLogistica.deleteMany(
-      utils.formsCoordinacionLogisticaObjectWithoutUndefined(
-        req.query._id,
-        req.query.Id,
-        req.query.Nombre,
-        req.query.Convenio,
-        req.query.Tramos,
-        req.query.IdentificatorType,
-        req.query.Identificator,
-        req.query.FechaNacimiento,
-        req.query.EquipajeAdicional,
-        req.query.Email,
-        req.query.Telefono,
-        req.query.InformacionAdicional,
-        req.query.Requestor,
-        req.query.ConvenioInformation,
-        req.query.Configuration,
-        req.query.CoordinacionLogisticaPath,
-        req.query.SharePointFiles,
-        req.query.Keys,
-        req.query.TicketNumber,
-        req.query.Quotations,
-        req.query.SelectedQuotation
-      )
-    );
-
-    res.status(200).json(coordinacionLogistica);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -1238,4 +1004,4 @@ router.post("/forms/coordinacionlogistica", async (req, res) => {
   } while (retries < 5);
 });
 
-module.exports = router;
+export default router;

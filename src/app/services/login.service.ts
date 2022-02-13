@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
 import { AccountInfo, AuthenticationResult } from '@azure/msal-browser';
 import { Observable } from 'rxjs';
@@ -12,6 +13,7 @@ import { SharedService } from './shared.service';
 })
 export class LoginService {
   constructor(
+    private router: Router,
     private http: HttpClient,
     private sharedService: SharedService,
     private msalService: MsalService
@@ -45,29 +47,33 @@ export class LoginService {
       progress: 0,
     });
 
-    this.msalService
-      .loginPopup()
-      .subscribe((res: AuthenticationResult) => {
-        this.sharedService.pushWaitTask({
-          id: taskId,
-          progress: 100,
-        });
-
-        this.msalService.instance.setActiveAccount(res.account);
-
-        this.sharedService.removeWaitTask({
-          id: taskId,
-        });
-
-        this.sharedService.pushToastMessage({
-          id: Utils.makeRandomString(4),
-          title: `Bienvenido`,
-          description: `Hola ${this.msalService.instance.getActiveAccount()?.name}, esperamos tengas la mejor de las estancias.`,
-        });
+    this.msalService.loginPopup().subscribe((res: AuthenticationResult) => {
+      this.sharedService.pushWaitTask({
+        id: taskId,
+        progress: 100,
       });
+
+      this.msalService.instance.setActiveAccount(res.account);
+
+      this.sharedService.removeWaitTask({
+        id: taskId,
+      });
+
+      this.sharedService.pushToastMessage({
+        id: Utils.makeRandomString(4),
+        title: `Bienvenido`,
+        description: `Hola ${
+          this.msalService.instance.getActiveAccount()?.name
+        }, esperamos tengas la mejor de las estancias.`,
+      });
+
+      this.router.navigate(['/']);
+    });
   }
 
   userLogout() {
     this.msalService.logout();
+
+    this.router.navigate(['/']);
   }
 }
