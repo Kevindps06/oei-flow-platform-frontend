@@ -2,18 +2,7 @@
 
 # customs
 .angular
-backend/dist
 backend/node_modules
-src
-.editorconfig
-.prettierrc
-angular.json
-karma.conf.js
-package*.json
-README.md
-tsconfig.app.json
-tsconfig.json
-tsconfig.spec.json
 
 # compiled output
 /dist

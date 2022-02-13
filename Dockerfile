@@ -6,10 +6,8 @@ COPY ./backend/package*.json ./
 
 RUN npm install
 
-COPY ./backend ./
-
-RUN npm run build
+COPY ./backend/dist ./
 
 EXPOSE 80
 
-CMD [ "node", "dist/server.js" ]
+CMD [ "node", "server.js" ]
