@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-export const getCertificacionLaboralByIdentificator = (req, res) => {
+export const getCertificadoIngresosRetencionesByIdentificator = (req, res) => {
   const fileNames = fs.readdirSync(path.join(__dirname, "files"));
 
   const fileName = fileNames.find(

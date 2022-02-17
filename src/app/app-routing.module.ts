@@ -26,7 +26,7 @@ const routes: Routes = [
     component: FormsComponent,
   },
   {
-    path: 'forms/certificacioneslaborales',
+    path: 'forms/certificadosingresosretenciones',
     component: FormsComponent,
   },
   {

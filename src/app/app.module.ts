@@ -32,7 +32,7 @@ import {
   IPublicClientApplication,
   PublicClientApplication,
 } from '@azure/msal-browser';
-import { FormsCertificacionesLaboralesComponent } from './components/forms/certificacioneslaborales/certificacioneslaborales.component';
+import { FormsCertificadosIngresosRetencionesComponent } from './components/forms/certificadosingresosretenciones/certificadosingresosretenciones.component';
 import { OAuthSettings } from 'src/oauth';
 
 let msalInstance: IPublicClientApplication | undefined = undefined;
@@ -78,7 +78,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FormsCoordinacionLogisticaFillQuotationsComponent,
     FormsCoordinacionLogisticaSelectQuotationComponent,
     TestsComponent,
-    FormsCertificacionesLaboralesComponent,
+    FormsCertificadosIngresosRetencionesComponent,
   ],
   imports: [
     BrowserModule,

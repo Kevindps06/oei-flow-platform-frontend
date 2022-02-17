@@ -7,11 +7,14 @@ import financieraRoutes from "./financiera/forms.financiera.routes";
 
 router.use("/financiera", financieraRoutes);
 
-// api/forms/certificacioneslaborales
+// api/forms/certificadosingresosretenciones
 
-import certificacionesLaboralesRoutes from "./certificacioneslaborales/forms.certificacioneslaborales.routes";
+import certificadosIngresosRetencionesRoutes from "./certificadosingresosretenciones/forms.certificadosingresosretenciones.routes";
 
-router.use("/certificacioneslaborales", certificacionesLaboralesRoutes);
+router.use(
+  "/certificadosingresosretenciones",
+  certificadosIngresosRetencionesRoutes
+);
 
 // api/forms/coordinacioneslogisticas
 

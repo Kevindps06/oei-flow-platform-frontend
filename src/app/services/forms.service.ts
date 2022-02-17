@@ -113,11 +113,11 @@ export class FormsService {
     );
   }
 
-  getFormsCertificacionesLaborales(identificator: string): Observable<any> {
+  getFormsCertificadosIngresosRetenciones(identificator: string): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/certificacioneslaborales`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/certificadosingresosretenciones`,
         {
           params: new HttpParams().appendAll({
             identificator,

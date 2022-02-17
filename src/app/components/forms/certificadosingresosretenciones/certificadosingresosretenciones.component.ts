@@ -7,11 +7,11 @@ import { SharedService } from 'src/app/services/shared.service';
 import { saveAs } from 'file-saver';
 
 @Component({
-  selector: 'app-forms-certificacioneslaborales',
-  templateUrl: './certificacioneslaborales.component.html',
-  styleUrls: ['./certificacioneslaborales.component.css'],
+  selector: 'app-forms-certificadosingresosretenciones',
+  templateUrl: './certificadosingresosretenciones.component.html',
+  styleUrls: ['./certificadosingresosretenciones.component.css'],
 })
-export class FormsCertificacionesLaboralesComponent implements OnInit {
+export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
   identificator: string = '';
 
   constructor(
@@ -26,14 +26,15 @@ export class FormsCertificacionesLaboralesComponent implements OnInit {
     const taskId = Utils.makeRandomString(4);
 
     this.formsService
-      .getFormsCertificacionesLaborales(this.identificator)
+      .getFormsCertificadosIngresosRetenciones(this.identificator)
       .subscribe(
         async (event) => {
           switch (event.type) {
             case HttpEventType.Sent:
               this.sharedService.pushWaitTask({
                 id: taskId,
-                description: 'Validando certificacion laboral...',
+                description:
+                  'Validando certificado de ingresos y retenciones...',
                 progress: 0,
               });
               break;
@@ -50,8 +51,8 @@ export class FormsCertificacionesLaboralesComponent implements OnInit {
 
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
-                title: 'Certificacion laboral encontrada',
-                description: `Su certificacion laboral identificada con el numero de cedula de ciudadania ${this.identificator} ha sido encontrada e iniciara su descarga en breves.`,
+                title: 'Certificado de ingresos y retenciones encontrada',
+                description: `Su certificado de ingresos y retenciones identificada con el numero de cedula de ciudadania ${this.identificator} ha sido encontrada e iniciara su descarga en breves.`,
               });
 
               this.sharedService.removeWaitTask({
@@ -63,8 +64,8 @@ export class FormsCertificacionesLaboralesComponent implements OnInit {
         (err) => {
           this.sharedService.pushToastMessage({
             id: Utils.makeRandomString(4),
-            title: 'Certificacion laboral no encontrada',
-            description: `Su certificacion laboral identificada con el numero de cedula de ciudadania ${this.identificator} no ha sido encontrada en el sistema.`,
+            title: 'Certificado de ingresos y retenciones no encontrada',
+            description: `Su certificado de ingresos y retenciones identificada con el numero de cedula de ciudadania ${this.identificator} no ha sido encontrada en el sistema.`,
           });
 
           this.sharedService.removeWaitTask({
