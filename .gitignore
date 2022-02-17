@@ -4,6 +4,7 @@
 .angular
 backend/dist
 backend/node_modules
+backend/src/controllers/forms/certificacioneslaborales/files
 
 # compiled output
 /dist
