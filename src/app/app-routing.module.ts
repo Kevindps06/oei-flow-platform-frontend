@@ -26,6 +26,10 @@ const routes: Routes = [
     component: FormsComponent,
   },
   {
+    path: 'forms/certificacioneslaborales',
+    component: FormsComponent,
+  },
+  {
     path: 'forms/coordinacionlogistica',
     component: FormsComponent,
   },

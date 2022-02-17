@@ -1,14 +1,6 @@
 <div class="container">
   <div
-    class="
-      card
-      shadow-lg
-      bg-body
-      rounded
-      border-primary border-0 border border-5
-      my-3
-      border-start
-    "
+    class="card shadow-lg bg-body rounded border-primary border-0 border border-5 my-3 border-start"
   >
     <img src="../../../assets/banner.png" class="card-img-top" />
     <div class="card-body">
@@ -33,6 +25,9 @@
           <app-forms-financiera-invoice
             *ngIf="isRoute('/forms/financiera/invoice')"
           ></app-forms-financiera-invoice>
+          <app-forms-certificacioneslaborales
+            *ngIf="isRoute('/forms/certificacioneslaborales')"
+          ></app-forms-certificacioneslaborales>
           <app-forms-coordinacionlogistica
             *ngIf="isRoute('/forms/coordinacionlogistica')"
           >
@@ -58,8 +53,6 @@
           ></app-forms-juridica-contratacion-convenio-request>
           <app-forms-juridica-contratacion-request
             *ngIf="isRoute('/forms/juridica/contratacion/request')"
-            [convenios]="convenios"
-            (onWaitTasksChange)="setWaitTasks($event)"
           ></app-forms-juridica-contratacion-request>
         </div>
       </div>

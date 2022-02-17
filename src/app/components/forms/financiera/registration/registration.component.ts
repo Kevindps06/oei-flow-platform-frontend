@@ -156,7 +156,7 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
       RutFiles: this.rutFiles,
       CedulaFiles: this.cedulaFiles,
       CertificacionBancariaFiles: this.certificacionBancariaFiles,
-      InformacionAdicional: this.informacionAdicional,
+      InformacionAdicional: this.informacionAdicional.replace('"', "'"),
     };
 
     // Cleaning fields because information has been saved

@@ -45,8 +45,7 @@ export class FormsComponent implements OnInit {
     switch (this.router.url) {
       case '/forms/tests':
         this.title = 'Test';
-        this.description =
-          '';
+        this.description = '';
         return;
       case '/forms/financiera/registration':
         this.title = 'Registro colaborador o proveedor';
@@ -57,6 +56,11 @@ export class FormsComponent implements OnInit {
         this.title = 'Gestion de cuentas colaborador o proveedor';
         this.description =
           'Aqui podra realizar los siguientes procesos:\n- Envio de cuentas de cobro\n- Facturas\n- Anticipos\n- Pagos directos\n- Legalizaciones';
+        return;
+      case '/forms/certificacioneslaborales':
+        this.title = 'Gestion de certificaciones laborales';
+        this.description =
+          'Aqui podra realizar procesos como:\n- Descarga de certificacion laboral';
         return;
       case '/forms/coordinacionlogistica':
         this.title = 'Coordinacion logistica';

@@ -1,13 +1,19 @@
 import { Router } from "express";
 const router = Router();
 
-// Forms - Financiera
+// api/forms/financiera
 
 import financieraRoutes from "./financiera/forms.financiera.routes";
 
 router.use("/financiera", financieraRoutes);
 
-// Forms - CoordinacionesLogisticas
+// api/forms/certificacioneslaborales
+
+import certificacionesLaboralesRoutes from "./certificacioneslaborales/forms.certificacioneslaborales.routes";
+
+router.use("/certificacioneslaborales", certificacionesLaboralesRoutes);
+
+// api/forms/coordinacioneslogisticas
 
 router.post("/coordinacioneslogisticas", async (req, res) => {
   try {

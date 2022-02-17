@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { SafeUrl } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
-import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-header',
@@ -9,14 +9,13 @@ import { SharedService } from 'src/app/services/shared.service';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-  @Input() loggedUser: any;
+  constructor(private router: Router, private loginService: LoginService) {}
 
-  constructor(
-    private router: Router,
-    private loginService: LoginService
-  ) {}
-
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (!this.loginService.user) {
+      this.loginService.loadUser();
+    }
+  }
 
   isRoute(route: string): Boolean {
     return this.router.url === route;
@@ -27,11 +26,15 @@ export class HeaderComponent implements OnInit {
   }
 
   isLoggedIn(): Boolean {
-    return this.loginService.loggedInUser() != null;
+    return this.loginService.loggedInUser() !== undefined;
   }
 
   loggedInUserName(): String | undefined {
-    return this.loginService.loggedInUser()?.name;
+    return this.loginService.user?.displayName;
+  }
+
+  loggedInUserAvatar(): SafeUrl | String | undefined {
+    return this.loginService.user?.avatar;
   }
 
   userLogout() {

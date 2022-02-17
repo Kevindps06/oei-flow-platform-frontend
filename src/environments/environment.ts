@@ -4,9 +4,10 @@
 
 export const environment = {
   production: false,
-  protocol: 'http',
-  backendAddress: 'localhost',
+  frontendProtocol: 'http',
   frontendAddress: 'localhost:4200',
+  backendProtocol: 'https',
+  backendAddress: 'lab.oeiprojectflow.org',
 };
 
 /*

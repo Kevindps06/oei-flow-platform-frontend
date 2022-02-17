@@ -60,7 +60,7 @@
             </li>
           </ul>
         </li>
-        <!--<li class="nav-item">
+        <li class="nav-item">
           <a
             [ngClass]="{ active: isRoute('/forms/certificacioneslaborales') }"
             class="nav-link text-white"
@@ -68,14 +68,13 @@
             [routerLink]="['/forms/certificacioneslaborales']"
             >Certificaciones laborales</a
           >
-        </li>-->
+        </li>
         <li *ngIf="isLoggedIn()" class="nav-item">
           <a
             [ngClass]="{ active: isRoute('/forms/coordinacionlogistica') }"
             class="nav-link text-white"
             aria-current="page"
             [routerLink]="['/forms/coordinacionlogistica']"
-            [state]="loggedUser"
             >Coordinacion logistica</a
           >
         </li>
@@ -110,9 +109,10 @@
       </ul>
       <a *ngIf="isLoggedIn()" class="navbar-brand" href="#">
         <img
-          src="../../../assets/bootstrap-docs.png"
+          class="me-lg-1 me-lg-2 mb-2 mb-lg-0 border border-ligth rounded-circle border-3"
+          [src]="loggedInUserAvatar()"
           alt=""
-          height="30px"
+          height="40px"
         />
         {{ loggedInUserName() }}
       </a>

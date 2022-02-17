@@ -242,7 +242,7 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
       Telefono: this.telefono,
       PasaporteFiles: this.pasaporteFiles,
       ComprobantesFiles: this.comprobantesFiles,
-      InformacionAdicional: this.infoAdicional,
+      InformacionAdicional: this.infoAdicional.replace('"', "'"),
       Requestor: history.state.userInfo,
       Status: 0
     };

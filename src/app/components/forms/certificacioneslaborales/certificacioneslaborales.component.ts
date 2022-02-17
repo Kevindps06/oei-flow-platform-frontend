@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-certificacioneslaborales',
+  selector: 'app-forms-certificacioneslaborales',
   templateUrl: './certificacioneslaborales.component.html',
-  styleUrls: ['./certificacioneslaborales.component.css']
+  styleUrls: ['./certificacioneslaborales.component.css'],
 })
-export class CertificacionesLaboralesComponent implements OnInit {
+export class FormsCertificacionesLaboralesComponent implements OnInit {
+  identificator: string = '';
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
+  btnValidarDocumento() {}
 }

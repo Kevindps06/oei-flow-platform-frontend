@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "nodemon dist/server.js",
-    "build": "babel src --out-dir dist --copy-files --plugins inline-dotenv"
+    "build": "babel src --out-dir dist --copy-files"
   },
   "author": "Kevin Paternina",
   "license": "ISC",

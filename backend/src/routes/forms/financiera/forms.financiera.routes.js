@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = Router();
 
-// Forms - Financiera - Invoice
+// api/forms/financiera/invoices
 
 import invoiceRoutes from "./invoice/forms.financiera.invoice.routes";
 

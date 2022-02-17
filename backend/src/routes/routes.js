@@ -3,275 +3,31 @@ import { Router } from "express";
 const router = Router();
 const auth = require("../apis/microsoft/auth");
 const utils = require("../utils/utils");
-const fs = require("fs");
-const path = require("path");
-const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
-const CoordinacionLogisticaFlow = require("../schemas/configuration/CoordinacionLogisticaFlow");
 const FinancieraInvoice = require("../schemas/forms/FinancieraInvoice");
 const CoordinacionLogistica = require("../schemas/forms/CoordinacionLogistica");
-const Airport = require("../schemas/information/Airport");
 const APIClient = require("../schemas/auth/APIClient");
 import formsRoutes from "./forms/forms.routes"
+import filesRoutes from "./files/files.routes"
+import configurationRoutes from "./configuration/configuration.routes"
+import informationRoutes from "./information/information.routes"
 
 // Forms
 
 router.use("/forms", formsRoutes);
 
-// Upload file to server
+// Files
 
-router.post("/uploadfile", (req, res) => {
-  try {
-    if (!fs.existsSync(process.env.TEMP_PATH)) {
-      fs.mkdirSync(process.env.TEMP_PATH);
-    }
+router.use("/files", filesRoutes)
 
-    const tmpFolderPath = fs.mkdtempSync(
-      path.join(process.env.TEMP_PATH, "webApp-")
-    );
+// API - Configuration
 
-    fs.writeFileSync(path.join(tmpFolderPath, req.query.name), req.body);
+router.use("/configuration", configurationRoutes);
 
-    setTimeout(() => {
-      if (fs.existsSync(tmpFolderPath)) {
-        fs.rm(tmpFolderPath, { recursive: true }, (err) => {
-          if (err) {
-            console.log(`File auto delete error: ${err}`);
-          }
-        });
-      }
-    }, 21600000);
+// API - Information
 
-    res.status(201).json(tmpFolderPath);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.use("/information", informationRoutes)
 
-// Configuration - FinancieraFlow
-
-router.post("/configuration/financieraflow", async (req, res) => {
-  try {
-    const financieraFlow = new FinancieraFlow(req.body);
-
-    await financieraFlow.save();
-
-    res.status(201).json(financieraFlow);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.get("/configuration/financieraflow", async (req, res) => {
-  try {
-    const financieraFlow = await FinancieraFlow.find(
-      utils.financieraFlowObjectWithoutUndefined(
-        req.query._id,
-        req.query.persona,
-        req.query.relacion,
-        req.query.gestion,
-        req.query.legalizacion,
-        req.query.steps
-      )
-    );
-
-    res.status(200).json(financieraFlow);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.put("/configuration/financieraflow", async (req, res) => {
-  try {
-    const financieraFlow = await FinancieraFlow.updateMany(
-      utils.financieraFlowObjectWithoutUndefined(
-        req.query._id,
-        req.query.persona,
-        req.query.relacion,
-        req.query.gestion,
-        req.query.legalizacion,
-        req.query.steps
-      ),
-      req.body
-    );
-
-    res.status(200).json(financieraFlow);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.delete("/configuration/financieraflow", async (req, res) => {
-  try {
-    const financieraFlow = await FinancieraFlow.deleteMany(
-      utils.financieraFlowObjectWithoutUndefined(
-        req.query._id,
-        req.query.persona,
-        req.query.relacion,
-        req.query.gestion,
-        req.query.legalizacion,
-        req.query.steps
-      )
-    );
-
-    res.status(200).json(financieraFlow);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-// Configuration - CoordinacionLogisticaFlow
-
-router.post("/configuration/coordinacionlogisticaflow", async (req, res) => {
-  try {
-    const coordinacionLogisticaFlow = new CoordinacionLogisticaFlow(req.body);
-
-    await coordinacionLogisticaFlow.save();
-
-    res.status(201).json(coordinacionLogisticaFlow);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.get("/configuration/coordinacionlogisticaflow", async (req, res) => {
-  try {
-    const coordinacionLogisticaFlow = await CoordinacionLogisticaFlow.find(
-      utils.coordinacionLogisticaFlowObjectWithoutUndefined(
-        req.query._id,
-        req.query.steps
-      )
-    );
-
-    res.status(200).json(coordinacionLogisticaFlow);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.put("/configuration/coordinacionlogisticaflow", async (req, res) => {
-  try {
-    const coordinacionLogisticaFlow =
-      await CoordinacionLogisticaFlow.updateMany(
-        utils.coordinacionLogisticaFlowObjectWithoutUndefined(
-          req.query._id,
-          req.query.steps
-        ),
-        req.body
-      );
-
-    res.status(200).json(coordinacionLogisticaFlow);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.delete("/configuration/coordinacionlogisticaflow", async (req, res) => {
-  try {
-    const coordinacionLogisticaFlow =
-      await CoordinacionLogisticaFlow.deleteMany(
-        utils.coordinacionLogisticaFlowObjectWithoutUndefined(
-          req.query._id,
-          req.query.steps
-        )
-      );
-
-    res.status(200).json(coordinacionLogisticaFlow);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-// Information - Airports
-
-router.post("/information/airports", async (req, res) => {
-  try {
-    const airport = new Airport(req.body);
-
-    await airport.save();
-
-    res.status(201).json(airport);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.get("/information/airports", async (req, res) => {
-  try {
-    const airport = await Airport.find(
-      utils.informationAirportObjectWithoutUndefined(
-        req.query._id,
-        req.query.Code,
-        req.query.IATA,
-        req.query["Airport Name"],
-        req.query.City,
-        req.query["City 2"],
-        req.query.Country,
-        req.query["Country 2"],
-        req.query.Latitude,
-        req.query.Longitude,
-        req.query["Data 1"],
-        req.query["Data 2"]
-      )
-    );
-
-    res.status(200).json(airport);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.put("/information/airports", async (req, res) => {
-  try {
-    const airport = await Airport.updateMany(
-      utils.informationAirportObjectWithoutUndefined(
-        req.query._id,
-        req.query.Code,
-        req.query.IATA,
-        req.query["Airport Name"],
-        req.query.City,
-        req.query["City 2"],
-        req.query.Country,
-        req.query["Country 2"],
-        req.query.Latitude,
-        req.query.Longitude,
-        req.query["Data 1"],
-        req.query["Data 2"]
-      ),
-      req.body
-    );
-
-    res.status(200).json(airport);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.delete("/information/airports", async (req, res) => {
-  try {
-    const airport = await Airport.deleteMany(
-      utils.informationAirportObjectWithoutUndefined(
-        req.query._id,
-        req.query.Code,
-        req.query.IATA,
-        req.query["Airport Name"],
-        req.query.City,
-        req.query["City 2"],
-        req.query.Country,
-        req.query["Country 2"],
-        req.query.Latitude,
-        req.query.Longitude,
-        req.query["Data 1"],
-        req.query["Data 2"]
-      )
-    );
-
-    res.status(200).json(airport);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-// Auth - APIClient
+// Auth - Client
 
 router.post("/auth/apiclients", async (req, res) => {
   try {

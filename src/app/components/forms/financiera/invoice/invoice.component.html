@@ -1,50 +1,48 @@
 <div id="firstElement" name="firstElement" class="row g-3">
   <div *ngIf="formIndex === 0" class="col-12">
-    <div class="card">
-      <div class="card-body">
-        <div class="row g-3">
-          <div class="col-12">
-            <h5 class="card-title text-center">Tipo de persona</h5>
+    <div class="card card-body">
+      <div class="row g-3">
+        <div class="col-12">
+          <h5 class="card-title text-center">Tipo de persona</h5>
+        </div>
+        <div class="col-12">
+          <div class="form-check">
+            <input
+              [(ngModel)]="tipoPersona"
+              (change)="invalidateFlowUser()"
+              class="form-check-input"
+              type="radio"
+              name="tipoPersonaNatural"
+              id="tipoPersonaNatural"
+              value="Natural"
+              [ngClass]="{
+                'is-valid': tipoPersona,
+                'is-invalid': !tipoPersona || validacionUsuarioError
+              }"
+            />
+            <label class="form-check-label" for="tipoPersonaNatural">
+              Natural
+            </label>
           </div>
-          <div class="col-12">
-            <div class="form-check">
-              <input
-                [(ngModel)]="tipoPersona"
-                (change)="invalidateFlowUser()"
-                class="form-check-input"
-                type="radio"
-                name="tipoPersonaNatural"
-                id="tipoPersonaNatural"
-                value="Natural"
-                [ngClass]="{
-                  'is-valid': tipoPersona,
-                  'is-invalid': !tipoPersona || validacionUsuarioError
-                }"
-              />
-              <label class="form-check-label" for="tipoPersonaNatural">
-                Natural
-              </label>
-            </div>
-            <div class="form-check">
-              <input
-                [(ngModel)]="tipoPersona"
-                (change)="invalidateFlowUser()"
-                class="form-check-input"
-                type="radio"
-                name="tipoPersonaJuridica"
-                id="tipoPersonaJuridica"
-                value="Juridica"
-                [ngClass]="{
-                  'is-valid': tipoPersona,
-                  'is-invalid': !tipoPersona || validacionUsuarioError
-                }"
-              />
-              <label class="form-check-label" for="tipoPersonaJuridica">
-                Juridica
-              </label>
-              <div class="invalid-feedback">
-                Este campo es (*) obligatorio, rellenelo.
-              </div>
+          <div class="form-check">
+            <input
+              [(ngModel)]="tipoPersona"
+              (change)="invalidateFlowUser()"
+              class="form-check-input"
+              type="radio"
+              name="tipoPersonaJuridica"
+              id="tipoPersonaJuridica"
+              value="Juridica"
+              [ngClass]="{
+                'is-valid': tipoPersona,
+                'is-invalid': !tipoPersona || validacionUsuarioError
+              }"
+            />
+            <label class="form-check-label" for="tipoPersonaJuridica">
+              Juridica
+            </label>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, seleccione una opcion.
             </div>
           </div>
         </div>
@@ -95,7 +93,7 @@
                 >Proveedor</label
               >
               <div class="invalid-feedback">
-                Este campo es (*) obligatorio, rellenelo.
+                Este campo es (*) obligatorio, seleccione una opcion.
               </div>
             </div>
           </div>
@@ -278,7 +276,12 @@
             Dieta
           </label>
         </div>
-        <div *ngIf="!(tipoPersona === 'Juridica' && tipoRelacion === 'Contratista')" class="form-check">
+        <div
+          *ngIf="
+            !(tipoPersona === 'Juridica' && tipoRelacion === 'Contratista')
+          "
+          class="form-check"
+        >
           <input
             [(ngModel)]="tipoGestion"
             class="form-check-input"
@@ -302,7 +305,10 @@
             <h5 class="card-title text-center">Tipo de legalizacion</h5>
           </div>
         </div>
-        <div *ngIf="tipoPersona === 'Natural' && tipoRelacion === 'Contratista'" class="form-check">
+        <div
+          *ngIf="tipoPersona === 'Natural' && tipoRelacion === 'Contratista'"
+          class="form-check"
+        >
           <input
             [(ngModel)]="tipoLegalizacion"
             class="form-check-input"

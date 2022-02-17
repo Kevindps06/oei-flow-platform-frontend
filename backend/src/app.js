@@ -22,7 +22,9 @@ app.use(
   express.urlencoded({ limit: bytes(1024 * 1024 * 128), extended: true })
 );
 
-app.set("views", "./views");
+app.use("/api", routes);
+
+app.set("views", path.join(__dirname, "views"));
 
 app.use(express.static(app.get("views")));
 
@@ -30,7 +32,5 @@ app.get("/*", (req, res) => {
   res.setHeader("X-UA-Compatible", "IE=Edge");
   res.status(200).sendFile(path.join(app.get("views"), "index.html"));
 });
-
-app.use("/api", routes);
 
 export default app;

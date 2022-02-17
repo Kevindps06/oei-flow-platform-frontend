@@ -2,19 +2,26 @@ const mongoose = require("mongoose");
 
 const schema = mongoose.Schema({
   Id: String,
-  TipoPersona: String,
-  TipoRelacion: String,
-  Identificator: String,
-  Email: String,
-  TipoGestion: String,
-  TipoLegalizacion: String,
+  Nombre: String,
   Convenio: String,
+  Tramos: [],
+  IdentificatorType: String,
+  Identificator: String,
+  FechaNacimiento: String,
+  EquipajeAdicional: String,
+  Email: String,
+  Telefono: String,
   InformacionAdicional: String,
+  Requestor: Object,
+  Status: Number,
   ConvenioInformation: Object,
-  Configuration: [],
-  GestionPath: String,
+  Configuration: Object,
+  CoordinacionLogisticaPath: String,
   SharePointFiles: [],
   Keys: [],
+  TicketNumber: String,
+  Quotations: [],
+  SelectedQuotation: Object,
 });
 
 module.exports = mongoose
@@ -25,4 +32,4 @@ module.exports = mongoose
     readPreference: "secondaryPreferred",
     retryWrites: false,
   })
-  .model("FinancieraInvoice", schema, "FinancieraInvoices");
+  .model("CoordinacionLogistica", schema, "CoordinacionesLogisticas");

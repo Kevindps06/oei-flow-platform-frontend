@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
   }
 
   isLoggedIn(): Boolean {
-    return this.loginService.loggedInUser() != null;
+    return this.loginService.loggedInUser() !== undefined;
   }
 
   userLoginLogout() {

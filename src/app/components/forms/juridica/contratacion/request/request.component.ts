@@ -1,8 +1,12 @@
+import { HttpEventType } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Utils } from 'src/app/classes/utils';
 import { Convenio } from 'src/app/interfaces/Convenio';
 import { FileItem } from 'src/app/interfaces/FileItem';
-import { FormsJuridicaContratacionRequest } from 'src/app/interfaces/forms-juridica-contratacion-request';
+import { ToastMessage } from 'src/app/interfaces/toast-message';
 import { WaitTask } from 'src/app/interfaces/WaitTask';
+import { FormsService } from 'src/app/services/forms.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-forms-juridica-contratacion-request',
@@ -10,463 +14,236 @@ import { WaitTask } from 'src/app/interfaces/WaitTask';
   styleUrls: ['./request.component.css'],
 })
 export class FormsJuridicaContratacionRequestComponent implements OnInit {
-  @Input() convenios: Convenio[] = [];
+  formIndex: number = 0;
 
-  waitTasks: WaitTask[] = [];
+  // 0
+  tipoContratacion: string = '';
 
-  tipoDePersona!: string;
-  tipoDeRelacion!: string;
-  convenio!: string;
-  identificacion!: string;
-  ocupacion!: string;
-  valorContrato!: string;
-  nombresApellidos!: string;
-  direccion!: string;
-  telefono!: string;
-  fotocopiaCedulaFiles: FileItem[] = [];
-  rutFiles: FileItem[] = [];
+  // 1
+  tipoAdquisicion: string = '';
+  tipoAdquisicionOtro: string = '';
+
+  convenios: Convenio[] = [];
+
+  convenioResponsable: string = '';
+  justificacionContratacion: string = '';
+  objetivoContratacion: string = '';
+  especificacionesTecnicasMinimas: string = '';
+  perfilRequerido: string = '';
+  factoresEvaluacion: string = '';
+
+  objeto: string = '';
+  obligacionesEspecificas: string = '';
+  productosEntregables: string = '';
+  presupuestoEstimado: number = 0;
+  formaPago: string = '';
+  plazo: string = '';
+  manejoDatos: string = '';
+  categoriaInteresado: string = '';
+  categoriaDatos: string = ''
+
+  tipoPersona: string = '';
+  tipoRelacion: string = '';
+
+  identificator: string = '';
+  digitoVerificacion: string = '';
+
+  ocupacion: string = '';
+  valorContrato: string = '';
+  nombresApellidos: string = '';
+  direccion: string = '';
+  telefono: string = '';
+
+  cedulaCiudadaniaFiles: FileItem[] = [];
+
+  setCedulaCiudadaniaFiles(cedulaCiudadaniaFiles: FileItem[]) {
+    this.cedulaCiudadaniaFiles = cedulaCiudadaniaFiles;
+  }
+
+  RUTFiles: FileItem[] = [];
+
+  setRUTFiles(RUTFiles: FileItem[]) {
+    this.RUTFiles = RUTFiles;
+  }
+
   certificacionBancariaFiles: FileItem[] = [];
-  afiliacionSaludFiles: FileItem[] = [];
-  afiliacionPensionFiles: FileItem[] = [];
-  ARLFiles: FileItem[] = [];
+
+  setCertificacionBancariaFiles(certificacionBancariaFiles: FileItem[]) {
+    this.certificacionBancariaFiles = certificacionBancariaFiles;
+  }
+
+  constanciaAfiliacionSaludFiles: FileItem[] = [];
+
+  setConstanciaAfiliacionSaludFiles(
+    constanciaAfiliacionSaludFiles: FileItem[]
+  ) {
+    this.constanciaAfiliacionSaludFiles = constanciaAfiliacionSaludFiles;
+  }
+
+  constanciaAfiliacionPensionFiles: FileItem[] = [];
+
+  setConstanciaAfiliacionPensionFiles(
+    constanciaAfiliacionPensionFiles: FileItem[]
+  ) {
+    this.constanciaAfiliacionPensionFiles = constanciaAfiliacionPensionFiles;
+  }
+
   tarjetaProfesionalFiles: FileItem[] = [];
-  hojaDeVidaFiles: FileItem[] = [];
-  soportesHojaDeVidaFiles: FileItem[] = [];
-  terminosDeReferenciaFiles: FileItem[] = [];
-  justificacionContratistaFiles: FileItem[] = [];
+
+  setTarjetaProfesionalFiles(tarjetaProfesionalFiles: FileItem[]) {
+    this.tarjetaProfesionalFiles = tarjetaProfesionalFiles;
+  }
+
   examenSaludOcupacionalFiles: FileItem[] = [];
-  actaCumplimientoYConocimientoFiles: FileItem[] = [];
+
+  setExamenSaludOcupacionalFiles(examenSaludOcupacionalFiles: FileItem[]) {
+    this.examenSaludOcupacionalFiles = examenSaludOcupacionalFiles;
+  }
+
+  formatoActaCumplimientoConocimientoFiles: FileItem[] = [];
+
+  setFormatoActaCumplimientoConocimientoFiles(
+    formatoActaCumplimientoConocimientoFiles: FileItem[]
+  ) {
+    this.formatoActaCumplimientoConocimientoFiles =
+      formatoActaCumplimientoConocimientoFiles;
+  }
+
+  experienciaLaboralFiles: FileItem[] = [];
+
+  setExperienciaLaboralFiles(experienciaLaboralFiles: FileItem[]) {
+    this.experienciaLaboralFiles = experienciaLaboralFiles;
+  }
+
+  hojaVidaFiles: FileItem[] = [];
+
+  setHojaVidaFiles(hojaVidaFiles: FileItem[]) {
+    this.hojaVidaFiles = hojaVidaFiles;
+  }
+
+  certificadoARLFiles: FileItem[] = [];
+
+  setCertificadoARLFiles(certificadoARLFiles: FileItem[]) {
+    this.certificadoARLFiles = certificadoARLFiles;
+  }
+
+  camaraComercioFiles: FileItem[] = [];
+
+  setCamaraComercioFiles(camaraComercioFiles: FileItem[]) {
+    this.camaraComercioFiles = camaraComercioFiles;
+  }
+
+  cedulaCiudadaniaRepresentanteLegalFiles: FileItem[] = [];
+
+  setCedulaCiudadaniaRepresentanteLegalFiles(
+    cedulaCiudadaniaRepresentanteLegalFiles: FileItem[]
+  ) {
+    this.cedulaCiudadaniaRepresentanteLegalFiles =
+      cedulaCiudadaniaRepresentanteLegalFiles;
+  }
+
+  seguridadSocialParafiscalesFiles: FileItem[] = [];
+
+  setSeguridadSocialParafiscalesFiles(
+    seguridadSocialParafiscalesFiles: FileItem[]
+  ) {
+    this.seguridadSocialParafiscalesFiles = seguridadSocialParafiscalesFiles;
+  }
+
+  solicitudContratacionFiles: FileItem[] = [];
+
+  setSolicitudContratacionFiles(solicitudContratacionFiles: FileItem[]) {
+    this.solicitudContratacionFiles = solicitudContratacionFiles;
+  }
+
+  justificacionContratacionFiles: FileItem[] = [];
+
+  setJustificacionContratacionFiles(
+    justificacionContratacionFiles: FileItem[]
+  ) {
+    this.justificacionContratacionFiles = justificacionContratacionFiles;
+  }
+
+  cotizacionOfertaFiles: FileItem[] = [];
+
+  setCotizacionOfertaFiles(cotizacionOfertaFiles: FileItem[]) {
+    this.cotizacionOfertaFiles = cotizacionOfertaFiles;
+  }
 
   @Output() onWaitTasksChange = new EventEmitter<WaitTask[]>();
+  @Output() onToastMessagesChange = new EventEmitter<ToastMessage>();
 
-  constructor() {}
+  constructor(
+    private formsService: FormsService,
+    private sharedService: SharedService
+  ) {}
 
   ngOnInit(): void {}
 
-  getBase64(file: File) {
-    const reader = new FileReader();
-    return new Promise((resolve) => {
-      reader.onload = function (e) {
-        resolve((reader.result as string).split(',')[1]);
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  whenFileFotocopiaCedulaChange(event: any) {
-    let currentFilesLength = this.fotocopiaCedulaFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.fotocopiaCedulaFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.fotocopiaCedulaFiles[currentFilesLength + i].Bytes =
-          result as string;
-        this.fotocopiaCedulaFiles[currentFilesLength + i].Uploaded = true;
-      });
+  btnPreviousClick() {
+    switch (this.formIndex) {
+      case 1:
+        // Reset form index 0 values
+        this.tipoContratacion = '';
+        break;
     }
 
-    event.target.value = null;
+    // Reduce form index by 1
+    this.formIndex--;
   }
 
-  onDeleteFileFotocopiaCedulaClick(index: number) {
-    if (this.fotocopiaCedulaFiles[index].Uploaded === true) {
-      this.fotocopiaCedulaFiles.splice(index, 1);
+  btnNextClick() {
+    const taskId: string = Utils.makeRandomString(4);
 
-      for (let i = 0; this.fotocopiaCedulaFiles.length > i; i++) {
-        this.fotocopiaCedulaFiles[i].Index = i;
-      }
+    switch (this.formIndex) {
+      case 0:
+        // Reset form index 1 values
+        this.tipoAdquisicion = '';
+        this.tipoAdquisicionOtro = '';
+
+        this.formsService.getConvenios().subscribe((event) => {
+          switch (event.type) {
+            case HttpEventType.Sent:
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                description: 'Cargando convenios...',
+                progress: 0,
+              });
+              break;
+            case HttpEventType.DownloadProgress:
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                progress: Math.round((event.loaded * 100) / event.total),
+              });
+              break;
+            case HttpEventType.Response:
+              this.convenios = [];
+
+              event.body.value.forEach((convenio: any) => {
+                this.convenios.push({
+                  Id: convenio.id,
+                  Aliado: convenio.fields.Aliado,
+                  Numero: convenio.fields.Numero,
+                  Mostrar: convenio.fields.Mostrar,
+                });
+              });
+
+              this.sharedService.removeWaitTask({
+                id: taskId,
+              });
+              break;
+          }
+        });
+        break;
     }
+
+    // Increment form index by 1
+    this.formIndex++;
   }
 
-  whenFileRUTChange(event: any) {
-    let currentFilesLength = this.rutFiles.length;
+  btnSubmitClick() {}
 
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.rutFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.rutFiles[currentFilesLength + i].Bytes = result as string;
-        this.rutFiles[currentFilesLength + i].Uploaded = true;
-      });
-    }
-
-    event.target.value = null;
-  }
-
-  onDeleteFileRUTClick(index: number) {
-    if (this.rutFiles[index].Uploaded === true) {
-      this.rutFiles.splice(index, 1);
-
-      for (let i = 0; this.rutFiles.length > i; i++) {
-        this.rutFiles[i].Index = i;
-      }
-    }
-  }
-
-  whenFileCertificacionBancariaChange(event: any) {
-    let currentFilesLength = this.certificacionBancariaFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.certificacionBancariaFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.certificacionBancariaFiles[currentFilesLength + i].Bytes =
-          result as string;
-        this.certificacionBancariaFiles[currentFilesLength + i].Uploaded = true;
-      });
-    }
-
-    event.target.value = null;
-  }
-
-  onDeleteFileCertificacionBancariaClick(index: number) {
-    if (this.certificacionBancariaFiles[index].Uploaded === true) {
-      this.certificacionBancariaFiles.splice(index, 1);
-
-      for (let i = 0; this.certificacionBancariaFiles.length > i; i++) {
-        this.certificacionBancariaFiles[i].Index = i;
-      }
-    }
-  }
-
-  whenFileAfiliacionSaludChange(event: any) {
-    let currentFilesLength = this.afiliacionSaludFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.afiliacionSaludFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.afiliacionSaludFiles[currentFilesLength + i].Bytes =
-          result as string;
-        this.afiliacionSaludFiles[currentFilesLength + i].Uploaded = true;
-      });
-    }
-
-    event.target.value = null;
-  }
-
-  onDeleteFileAfiliacionSaludClick(index: number) {
-    if (this.afiliacionSaludFiles[index].Uploaded === true) {
-      this.afiliacionSaludFiles.splice(index, 1);
-
-      for (let i = 0; this.afiliacionSaludFiles.length > i; i++) {
-        this.afiliacionSaludFiles[i].Index = i;
-      }
-    }
-  }
-
-  whenFileAfiliacionPensionChange(event: any) {
-    let currentFilesLength = this.afiliacionPensionFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.afiliacionPensionFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.afiliacionPensionFiles[currentFilesLength + i].Bytes =
-          result as string;
-        this.afiliacionPensionFiles[currentFilesLength + i].Uploaded = true;
-      });
-    }
-
-    event.target.value = null;
-  }
-
-  onDeleteFileAfiliacionPensionClick(index: number) {
-    if (this.afiliacionPensionFiles[index].Uploaded === true) {
-      this.afiliacionPensionFiles.splice(index, 1);
-
-      for (let i = 0; this.afiliacionPensionFiles.length > i; i++) {
-        this.afiliacionPensionFiles[i].Index = i;
-      }
-    }
-  }
-
-  whenFileARLChange(event: any) {
-    let currentFilesLength = this.ARLFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.ARLFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.ARLFiles[currentFilesLength + i].Bytes = result as string;
-        this.ARLFiles[currentFilesLength + i].Uploaded = true;
-      });
-    }
-
-    event.target.value = null;
-  }
-
-  onDeleteFileARLClick(index: number) {
-    if (this.ARLFiles[index].Uploaded === true) {
-      this.ARLFiles.splice(index, 1);
-
-      for (let i = 0; this.ARLFiles.length > i; i++) {
-        this.ARLFiles[i].Index = i;
-      }
-    }
-  }
-
-  whenFileTarjetaProfesionalChange(event: any) {
-    let currentFilesLength = this.tarjetaProfesionalFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.tarjetaProfesionalFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.tarjetaProfesionalFiles[currentFilesLength + i].Bytes =
-          result as string;
-        this.tarjetaProfesionalFiles[currentFilesLength + i].Uploaded = true;
-      });
-    }
-
-    event.target.value = null;
-  }
-
-  onDeleteFileTarjetaProfesionalClick(index: number) {
-    if (this.tarjetaProfesionalFiles[index].Uploaded === true) {
-      this.tarjetaProfesionalFiles.splice(index, 1);
-
-      for (let i = 0; this.tarjetaProfesionalFiles.length > i; i++) {
-        this.tarjetaProfesionalFiles[i].Index = i;
-      }
-    }
-  }
-
-  whenFileHojaDeVidaChange(event: any) {
-    let currentFilesLength = this.hojaDeVidaFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.hojaDeVidaFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.hojaDeVidaFiles[currentFilesLength + i].Bytes = result as string;
-        this.hojaDeVidaFiles[currentFilesLength + i].Uploaded = true;
-      });
-    }
-
-    event.target.value = null;
-  }
-
-  onDeleteFileHojaDeVidaClick(index: number) {
-    if (this.hojaDeVidaFiles[index].Uploaded === true) {
-      this.hojaDeVidaFiles.splice(index, 1);
-
-      for (let i = 0; this.hojaDeVidaFiles.length > i; i++) {
-        this.hojaDeVidaFiles[i].Index = i;
-      }
-    }
-  }
-
-  whenFileSoportesHojaDeVidaChange(event: any) {
-    let currentFilesLength = this.soportesHojaDeVidaFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.soportesHojaDeVidaFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.soportesHojaDeVidaFiles[currentFilesLength + i].Bytes =
-          result as string;
-        this.soportesHojaDeVidaFiles[currentFilesLength + i].Uploaded = true;
-      });
-    }
-
-    event.target.value = null;
-  }
-
-  onDeleteFileSoportesHojaDeVidaClick(index: number) {
-    if (this.soportesHojaDeVidaFiles[index].Uploaded === true) {
-      this.soportesHojaDeVidaFiles.splice(index, 1);
-
-      for (let i = 0; this.soportesHojaDeVidaFiles.length > i; i++) {
-        this.soportesHojaDeVidaFiles[i].Index = i;
-      }
-    }
-  }
-
-  whenFileTerminosDeReferenciaChange(event: any) {
-    let currentFilesLength = this.terminosDeReferenciaFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.terminosDeReferenciaFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.terminosDeReferenciaFiles[currentFilesLength + i].Bytes =
-          result as string;
-        this.terminosDeReferenciaFiles[currentFilesLength + i].Uploaded = true;
-      });
-    }
-
-    event.target.value = null;
-  }
-
-  onDeleteFileTerminosDeReferenciaClick(index: number) {
-    if (this.terminosDeReferenciaFiles[index].Uploaded === true) {
-      this.terminosDeReferenciaFiles.splice(index, 1);
-
-      for (let i = 0; this.terminosDeReferenciaFiles.length > i; i++) {
-        this.terminosDeReferenciaFiles[i].Index = i;
-      }
-    }
-  }
-
-  whenFileJustificacionContratistaChange(event: any) {
-    let currentFilesLength = this.justificacionContratistaFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.justificacionContratistaFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.justificacionContratistaFiles[currentFilesLength + i].Bytes =
-          result as string;
-        this.justificacionContratistaFiles[currentFilesLength + i].Uploaded =
-          true;
-      });
-    }
-
-    event.target.value = null;
-  }
-
-  onDeleteFileJustificacionContratistaClick(index: number) {
-    if (this.justificacionContratistaFiles[index].Uploaded === true) {
-      this.justificacionContratistaFiles.splice(index, 1);
-
-      for (let i = 0; this.justificacionContratistaFiles.length > i; i++) {
-        this.justificacionContratistaFiles[i].Index = i;
-      }
-    }
-  }
-
-  whenFileExamenSaludOcupacionalChange(event: any) {
-    let currentFilesLength = this.examenSaludOcupacionalFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.examenSaludOcupacionalFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.examenSaludOcupacionalFiles[currentFilesLength + i].Bytes =
-          result as string;
-        this.examenSaludOcupacionalFiles[currentFilesLength + i].Uploaded =
-          true;
-      });
-    }
-
-    event.target.value = null;
-  }
-
-  onDeleteFileExamenSaludOcupacionalClick(index: number) {
-    if (this.examenSaludOcupacionalFiles[index].Uploaded === true) {
-      this.examenSaludOcupacionalFiles.splice(index, 1);
-
-      for (let i = 0; this.examenSaludOcupacionalFiles.length > i; i++) {
-        this.examenSaludOcupacionalFiles[i].Index = i;
-      }
-    }
-  }
-
-  whenFileActaCumplimientoYConocimientoChange(event: any) {
-    let currentFilesLength = this.actaCumplimientoYConocimientoFiles.length;
-
-    for (let i = 0; event.target.files.length > i; i++) {
-      this.actaCumplimientoYConocimientoFiles.push({
-        Index: currentFilesLength + i,
-        Name: event.target.files[i].name,
-        Size: event.target.files[i].size,
-        Type: event.target.files[i].type,
-        Uploaded: false,
-      });
-
-      this.getBase64(event.target.files[i]).then((result) => {
-        this.actaCumplimientoYConocimientoFiles[currentFilesLength + i].Bytes =
-          result as string;
-        this.actaCumplimientoYConocimientoFiles[
-          currentFilesLength + i
-        ].Uploaded = true;
-      });
-    }
-
-    event.target.value = null;
-  }
-
-  onDeleteFileActaCumplimientoYConocimientoClick(index: number) {
-    if (this.actaCumplimientoYConocimientoFiles[index].Uploaded === true) {
-      this.actaCumplimientoYConocimientoFiles.splice(index, 1);
-
-      for (let i = 0; this.actaCumplimientoYConocimientoFiles.length > i; i++) {
-        this.actaCumplimientoYConocimientoFiles[i].Index = i;
-      }
-    }
+  isValid(): boolean {
+    return true;
   }
 }

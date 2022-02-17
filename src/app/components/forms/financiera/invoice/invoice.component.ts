@@ -257,10 +257,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   }
 
   btnPreviousClick() {
-    document.getElementById('firstElement')?.scrollIntoView({
-      behavior: 'smooth',
-    });
-
     switch (this.formIndex) {
       case 1:
         // Reset form index 0 values
@@ -300,10 +296,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   }
 
   btnNextClick() {
-    document.getElementById('firstElement')?.scrollIntoView({
-      behavior: 'smooth',
-    });
-
     const taskId: string = Utils.makeRandomString(4);
 
     switch (this.formIndex) {
@@ -479,7 +471,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
       TipoGestion: this.tipoGestion,
       TipoLegalizacion: this.tipoLegalizacion,
       Convenio: this.convenio,
-      InformacionAdicional: this.infoAdicional,
+      InformacionAdicional: this.infoAdicional.replace('"', "'"),
       Requestor: this.contratistaProveedorInformation,
     };
 

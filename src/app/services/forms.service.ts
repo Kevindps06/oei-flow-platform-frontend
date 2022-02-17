@@ -29,7 +29,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.protocol}://${environment.backendAddress}/api/workflow/validateUser`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/workflow/validateUser`,
         {
           params: new HttpParams().appendAll({
             tipoPersona: tipoDePersona,
@@ -46,7 +46,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'POST',
-        `${environment.protocol}://${environment.backendAddress}/api/request`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/request`,
         formsTests,
         {
           headers: new HttpHeaders({
@@ -62,7 +62,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'POST',
-        `${environment.protocol}://${environment.backendAddress}/api/uploadfile`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/files`,
         data,
         {
           headers: new HttpHeaders({
@@ -83,7 +83,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'POST',
-        `${environment.protocol}://${environment.backendAddress}/api/forms/financiera/registration`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/financiera/registration`,
         formsFinancieraRegistration,
         {
           headers: new HttpHeaders({
@@ -101,7 +101,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'POST',
-        `${environment.protocol}://${environment.backendAddress}/api/forms/financiera/invoice`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/financiera/invoice`,
         formsFinancieraInvoice,
         {
           headers: new HttpHeaders({
@@ -119,7 +119,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'POST',
-        `${environment.protocol}://${environment.backendAddress}/api/forms/coordinacionlogistica`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/coordinacionlogistica`,
         formsCoordinacionLogistica,
         {
           headers: new HttpHeaders({
@@ -135,7 +135,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.protocol}://${environment.backendAddress}/api/forms/coordinacioneslogisticas`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/coordinacioneslogisticas`,
         {
           params: new HttpParams().appendAll({
             Id: Id,
@@ -153,7 +153,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'PUT',
-        `${environment.protocol}://${environment.backendAddress}/api/forms/coordinacioneslogisticas`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/coordinacioneslogisticas`,
         formsCoordinacionLogistica,
         {
           headers: new HttpHeaders({
@@ -172,7 +172,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.protocol}://${environment.backendAddress}/api/convenios`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/convenios`,
         {
           reportProgress: true,
         }
@@ -184,7 +184,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.protocol}://${environment.backendAddress}/api/information/airports`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/information/airport`,
         {
           reportProgress: true,
         }

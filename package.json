@@ -11,6 +11,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "~13.0.2",
+    "@angular/cdk": "^13.2.2",
     "@angular/common": "~13.0.2",
     "@angular/compiler": "~13.0.2",
     "@angular/core": "~13.0.2",
@@ -21,6 +22,8 @@
     "@azure/msal-angular": "^2.1.0",
     "@azure/msal-browser": "^2.21.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
+    "@microsoft/microsoft-graph-client": "^3.0.2",
+    "@microsoft/microsoft-graph-types": "^2.13.0",
     "@popperjs/core": "^2.10.2",
     "@types/bootstrap": "^5.1.6",
     "body-parser": "^1.19.0",

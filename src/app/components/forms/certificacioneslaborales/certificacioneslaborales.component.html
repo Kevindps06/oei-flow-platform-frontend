@@ -1,1 +1,50 @@
-<p>certificacioneslaborales works!</p>
+<div id="firstElement" name="firstElement" class="row g-3">
+  <div class="col-12">
+    <div class="card card-body">
+      <div class="row g-3">
+        <div class="col-12">
+          <h5 class="card-title text-center">
+            Busqueda de certificion laboral
+          </h5>
+        </div>
+        <div class="col-9 col-md-10 col-xl-11">
+          <div class="form-floating">
+            <input
+              [(ngModel)]="identificator"
+              type="text"
+              class="form-control"
+              name="inputTextIdentificator"
+              id="inputTextIdentificator"
+              placeholder="\0"
+              [ngClass]="{
+                'is-valid':
+                  identificator.length === 8 || identificator.length === 10,
+                'is-invalid':
+                  identificator.length !== 8 && identificator.length !== 10
+              }"
+              maxlength="10"
+              [OnlyNumbers]="true"
+            />
+            <label for="inputTextIdentificator"
+              >Cedula de ciudadania<strong class="text-danger">*</strong></label
+            >
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div class="col-3 col-md-2 col-xl-1 d-grid grap-2 mx-auto">
+          <button
+            [disabled]="
+              identificator.length !== 8 && identificator.length !== 10
+            "
+            (click)="btnValidarDocumento()"
+            class="btn btn-primary"
+          >
+            Validar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

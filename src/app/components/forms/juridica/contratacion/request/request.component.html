@@ -1,23 +1,1068 @@
 <form>
   <div class="row g-3">
-    <div class="col-sm-6">
+    <div *ngIf="formIndex === 0" class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <h5 class="card-title text-center">
+                Tipo de contratacion<strong class="text-danger">*</strong>
+              </h5>
+            </div>
+            <div class="col-12">
+              <div class="form-check">
+                <input
+                  [(ngModel)]="tipoContratacion"
+                  class="form-check-input"
+                  type="radio"
+                  name="checkInputTipoContratacionDirecta"
+                  id="checkInputTipoContratacionDirecta"
+                  value="Directa"
+                  [ngClass]="{
+                    'is-valid': tipoContratacion,
+                    'is-invalid': !tipoContratacion
+                  }"
+                />
+                <label
+                  class="form-check-label"
+                  for="checkInputTipoContratacionDirecta"
+                >
+                  Directa
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  [(ngModel)]="tipoContratacion"
+                  class="form-check-input"
+                  type="radio"
+                  name="checkInputTipoContratacionDirectaExtencion"
+                  id="checkInputTipoContratacionDirectaExtencion"
+                  value="Directa por extencion"
+                  [ngClass]="{
+                    'is-valid': tipoContratacion,
+                    'is-invalid': !tipoContratacion
+                  }"
+                />
+                <label
+                  class="form-check-label"
+                  for="checkInputTipoContratacionDirectaExtencion"
+                >
+                  Directa por excepcion
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  [(ngModel)]="tipoContratacion"
+                  class="form-check-input"
+                  type="radio"
+                  name="checkInputTipoContratacionComparativa"
+                  id="checkInputTipoContratacionComparativa"
+                  value="Comparativa de precios"
+                  [ngClass]="{
+                    'is-valid': tipoContratacion,
+                    'is-invalid': !tipoContratacion
+                  }"
+                />
+                <label
+                  class="form-check-label"
+                  for="checkInputTipoContratacionComparativa"
+                >
+                  Comparativa de precios
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  [(ngModel)]="tipoContratacion"
+                  class="form-check-input"
+                  type="radio"
+                  name="checkInputTipoContratacionSuperSimplificado"
+                  id="checkInputTipoContratacionSuperSimplificado"
+                  value="Procedimiento super simplificado"
+                  [ngClass]="{
+                    'is-valid': tipoContratacion,
+                    'is-invalid': !tipoContratacion
+                  }"
+                />
+                <label
+                  class="form-check-label"
+                  for="checkInputTipoContratacionSuperSimplificado"
+                >
+                  Procedimiento super simplificado
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  [(ngModel)]="tipoContratacion"
+                  class="form-check-input"
+                  type="radio"
+                  name="checkInputTipoContratacionSimplificado"
+                  id="checkInputTipoContratacionSimplificado"
+                  value="Procedimiento simplificado"
+                  [ngClass]="{
+                    'is-valid': tipoContratacion,
+                    'is-invalid': !tipoContratacion
+                  }"
+                />
+                <label
+                  class="form-check-label"
+                  for="checkInputTipoContratacionSimplificado"
+                >
+                  Procedimiento simplificado
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  [(ngModel)]="tipoContratacion"
+                  class="form-check-input"
+                  type="radio"
+                  name="checkInputTipoContratacionMarco"
+                  id="checkInputTipoContratacionMarco"
+                  value="Contrato marco"
+                  [ngClass]="{
+                    'is-valid': tipoContratacion,
+                    'is-invalid': !tipoContratacion
+                  }"
+                />
+                <label
+                  class="form-check-label"
+                  for="checkInputTipoContratacionMarco"
+                >
+                  Contrato marco
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  [(ngModel)]="tipoContratacion"
+                  class="form-check-input"
+                  type="radio"
+                  name="checkInputTipoContratacionLicitacion"
+                  id="checkInputTipoContratacionLicitacion"
+                  value="Licitacion"
+                  [ngClass]="{
+                    'is-valid': tipoContratacion,
+                    'is-invalid': !tipoContratacion
+                  }"
+                />
+                <label
+                  class="form-check-label"
+                  for="checkInputTipoContratacionLicitacion"
+                >
+                  Licitacion
+                </label>
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, seleccione una opcion.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="formIndex === 1" class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <h5 class="card-title text-center">
+                Tipo de adquisicion<strong class="text-danger">*</strong>
+              </h5>
+            </div>
+            <div class="col-12">
+              <div class="form-check">
+                <input
+                  [(ngModel)]="tipoAdquisicion"
+                  class="form-check-input"
+                  type="radio"
+                  name="checkInputTipoAdquisicionBienes"
+                  id="checkInputTipoAdquisicionBienes"
+                  value="Bienes"
+                  [ngClass]="{
+                    'is-valid': tipoAdquisicion,
+                    'is-invalid': !tipoAdquisicion
+                  }"
+                />
+                <label
+                  class="form-check-label"
+                  for="checkInputTipoAdquisicionBienes"
+                >
+                  Bienes
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  [(ngModel)]="tipoAdquisicion"
+                  class="form-check-input"
+                  type="radio"
+                  name="checkInputTipoAdquisicionSuministro"
+                  id="checkInputTipoAdquisicionSuministro"
+                  value="Suministro"
+                  [ngClass]="{
+                    'is-valid': tipoAdquisicion,
+                    'is-invalid': !tipoAdquisicion
+                  }"
+                />
+                <label
+                  class="form-check-label"
+                  for="checkInputTipoAdquisicionSuministro"
+                >
+                  Suministro
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  [(ngModel)]="tipoAdquisicion"
+                  class="form-check-input"
+                  type="radio"
+                  name="checkInputTipoAdquisicionServicios"
+                  id="checkInputTipoAdquisicionServicios"
+                  value="Servicios"
+                  [ngClass]="{
+                    'is-valid': tipoAdquisicion,
+                    'is-invalid': !tipoAdquisicion
+                  }"
+                />
+                <label
+                  class="form-check-label"
+                  for="checkInputTipoAdquisicionServicios"
+                >
+                  Servicios
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  [(ngModel)]="tipoAdquisicion"
+                  class="form-check-input"
+                  type="radio"
+                  name="checkInputTipoAdquisicionOtro"
+                  id="checkInputTipoAdquisicionOtro"
+                  value="Otro"
+                  [ngClass]="{
+                    'is-valid': tipoAdquisicion,
+                    'is-invalid': !tipoAdquisicion
+                  }"
+                />
+                <label
+                  class="form-check-label"
+                  for="checkInputTipoAdquisicionOtro"
+                >
+                  Otro
+                </label>
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, seleccione una opcion.
+                </div>
+              </div>
+            </div>
+            <div *ngIf="tipoAdquisicion === 'Otro'" class="col-12">
+              <div class="form-floating">
+                <input
+                  [(ngModel)]="tipoAdquisicionOtro"
+                  type="text"
+                  class="form-control"
+                  name="floatingTextInputTipoAdquisicionOtro"
+                  id="floatingTextInputTipoAdquisicionOtro"
+                  placeholder="\0"
+                  [ngClass]="{
+                    'is-valid': tipoAdquisicionOtro,
+                    'is-invalid': !tipoAdquisicionOtro
+                  }"
+                />
+                <label for="floatingTextInputTipoAdquisicionOtro"
+                  >Tipo de adquisicion<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="formIndex === 1" class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <h5 class="card-title text-center"></h5>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <select
+                  [(ngModel)]="convenioResponsable"
+                  name="selectConvenioResponsable"
+                  class="form-select"
+                  id="selectConvenioResponsable"
+                  required
+                  [ngClass]="{
+                    'is-valid': convenioResponsable,
+                    'is-invalid': !convenioResponsable
+                  }"
+                >
+                  <option selected disabled></option>
+                  <option
+                    *ngFor="let convenio of convenios"
+                    [value]="convenio.Aliado + ' | ' + convenio.Numero"
+                  >
+                    {{ convenio.Aliado }} | {{ convenio.Numero }}
+                  </option>
+                </select>
+                <label for="selectConvenioResponsable"
+                  >Convenio responsable<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, seleccione una opcion.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="textareaJustificacionContratacion"
+                >Justificacion de contratacion<strong class="text-danger"
+                  >*</strong
+                ><button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseJustificacionContratacion"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapseJustificacionContratacion"
+                name="collapseJustificacionContratacion"
+              >
+                <div class="card card-body">
+                  La justificación nace de la necesidad del bien/servicio en el
+                  marco del Convenio de Cooperación celebrado, por ejemplo, si
+                  se requiere un profesional pedagogo, la justificación debe
+                  estar relacionada con la necesidad que nace de las
+                  obligaciones y productos del Convenio relacionados con
+                  procesos de formación y creación de contenidos curriculares.
+                  Si se requiere una empresa que realice pautas publicitarias,
+                  la necesidad nace de obligaciones y productos relacionados con
+                  difusión, comunicación.
+                </div>
+              </div>
+              <textarea
+                [(ngModel)]="justificacionContratacion"
+                name="textareaJustificacionContratacion"
+                id="textareaJustificacionContratacion"
+                class="form-control"
+                [ngClass]="{
+                  'is-valid': justificacionContratacion,
+                  'is-invalid': !justificacionContratacion
+                }"
+              ></textarea>
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="textareaObjetivoContratacion"
+                >Objetivo de la contratacion<strong class="text-danger"
+                  >*</strong
+                ><button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseObjetivoContratacion"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapseObjetivoContratacion"
+                name="collapseObjetivoContratacion"
+              >
+                <div class="card card-body">
+                  El objetivo se encuentra relacionado con el fin que voy a
+                  cumplir con la contratación a realizar. Por ejemplo, contratar
+                  el profesional en pedagogía, me permitirá cumplir con la
+                  obligación del Convenio, con la actividad del POA y con la
+                  entrega del producto: Metodología y contenidos curriculares.
+                </div>
+              </div>
+              <textarea
+                [(ngModel)]="objetivoContratacion"
+                name="textareaObjetivoContratacion"
+                id="textareaObjetivoContratacion"
+                class="form-control"
+                [ngClass]="{
+                  'is-valid': objetivoContratacion,
+                  'is-invalid': !objetivoContratacion
+                }"
+              ></textarea>
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+            </div>
+            <div class="col-12">
+              <label
+                class="form-label"
+                for="textareaEspecificacionesTecnicasMinimas"
+                >Especificaciones tecnicas minimas (Si aplica)<button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseEspecificacionesTecnicasMinimas"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapseEspecificacionesTecnicasMinimas"
+                name="collapseEspecificacionesTecnicasMinimas"
+              >
+                <div class="card card-body">
+                  Este ítem debe diligenciarse solo en los casos que aplique.<br />
+                  Las especificaciones técnicas son las condiciones que deben
+                  tenerse en cuenta para poder prestar el servicio o las
+                  condiciones que debe cumplir del bien. Por ejemplo, se van a
+                  comprar agendas, debe señalarse el tamaño de la misma, el tipo
+                  de impresión, la cantidad, el tipo de papel, etc.
+                </div>
+              </div>
+              <textarea
+                [(ngModel)]="especificacionesTecnicasMinimas"
+                name="textareaEspecificacionesTecnicasMinimas"
+                id="textareaEspecificacionesTecnicasMinimas"
+                class="form-control"
+              ></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="textareaPerfilRequerido"
+                >Perfil requerido (Si aplica)<button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapsePerfilRequerido"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapsePerfilRequerido"
+                name="collapsePerfilRequerido"
+              >
+                <div class="card card-body">
+                  ​Este ítem debe diligenciarse solo en los casos que
+                  aplique.<br />
+                  Se encuentra relacionado con el perfil que debe cumplir la
+                  persona natural o jurídica a contratar. Por ejemplo,
+                  Profesional en ciencias sociales, con estudios de posgrado,
+                  con 3 años de experiencia general, especifica, relacionada
+                  en……. ​Para una persona jurídica, empresa con 3 años de
+                  experiencia en impresión de material publicitario.
+                </div>
+              </div>
+              <textarea
+                [(ngModel)]="perfilRequerido"
+                name="textareaPerfilRequerido"
+                id="textareaPerfilRequerido"
+                class="form-control"
+              ></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="textareaFactoresEvaluacion"
+                >Factores de evaluacion (Si aplica)<button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseFactoresEvaluacion"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapseFactoresEvaluacion"
+                name="collapseFactoresEvaluacion"
+              >
+                <div class="card card-body">
+                  Este ítem debe diligenciarse solo en los casos que aplique.<br />
+                  Estos factores aplican para los procesos de selección y
+                  convocatoria.
+                </div>
+              </div>
+              <textarea
+                [(ngModel)]="factoresEvaluacion"
+                name="textareaFactoresEvaluacion"
+                id="textareaFactoresEvaluacion"
+                class="form-control"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="formIndex === 1" class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <h5 class="card-title text-center">Condiciones del contrato</h5>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="textareaObjeto"
+                >Objeto<strong class="text-danger">*</strong
+                ><button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseObjeto"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapseObjeto"
+                name="collapseObjeto"
+              >
+                <div class="card card-body">
+                  Se debe señalar el objeto contractual que deberá cumplir el
+                  contratista.
+                </div>
+              </div>
+              <textarea
+                [(ngModel)]="objeto"
+                name="textareaObjeto"
+                id="textareaObjeto"
+                class="form-control"
+                [ngClass]="{
+                  'is-valid': objeto,
+                  'is-invalid': !objeto
+                }"
+              ></textarea>
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="textareaObligacionesEspecificas"
+                >Obligaciones especificas<strong class="text-danger">*</strong
+                ><button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseObligacionesEspecificas"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapseObligacionesEspecificas"
+                name="collapseObligacionesEspecificas"
+              >
+                <div class="card card-body">
+                  Se deben detallar cada una de las obligaciones especificas que
+                  el contratista deberá cumplir para cumplir con el objeto
+                  contractual, incluido asistencia a reuniones, elaboración de
+                  informes, etc.
+                </div>
+              </div>
+              <textarea
+                [(ngModel)]="obligacionesEspecificas"
+                name="textareaObligacionesEspecificas"
+                id="textareaObligacionesEspecificas"
+                class="form-control"
+                [ngClass]="{
+                  'is-valid': obligacionesEspecificas,
+                  'is-invalid': !obligacionesEspecificas
+                }"
+              ></textarea>
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="textareaProductosEntregables"
+                >Productos entregables<strong class="text-danger">*</strong
+                ><button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseProductosEntregables"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapseProductosEntregables"
+                name="collapseProductosEntregables"
+              >
+                <div class="card card-body">
+                  Las obligaciones especificas estarán relacionadas a la
+                  elaboración de un producto, producto que debe ir encaminado al
+                  cumplimiento de las obligaciones y productos del Convenio de
+                  Cooperación celebrado. Deben detallarse cada uno de los
+                  productos que el contratista debe entregar para los pagos y
+                  ejecución del objeto contractual a cabalidad.
+                </div>
+              </div>
+              <textarea
+                [(ngModel)]="productosEntregables"
+                name="textareaProductosEntregables"
+                id="textareaProductosEntregables"
+                class="form-control"
+                [ngClass]="{
+                  'is-valid': productosEntregables,
+                  'is-invalid': !productosEntregables
+                }"
+              ></textarea>
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="inputPresupuestoEstimado"
+                >Presupuesto estimado<strong class="text-danger">*</strong
+                ><button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapsePresupuestoEstimado"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapsePresupuestoEstimado"
+                name="collapsePresupuestoEstimado"
+              >
+                <div class="card card-body">
+                  Es el presupuesto disponible dentro del proyecto para la
+                  contratación.
+                </div>
+              </div>
+              <input
+                [(ngModel)]="presupuestoEstimado"
+                name="inputPresupuestoEstimado"
+                id="inputPresupuestoEstimado"
+                type="text"
+                class="form-control"
+                [ngClass]="{
+                  'is-valid': presupuestoEstimado,
+                  'is-invalid': !presupuestoEstimado
+                }"
+                [OnlyNumbers]="true"
+              />
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="textareaFormaPago"
+                >Forma de pago<strong class="text-danger">*</strong
+                ><button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseFormaPago"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapseFormaPago"
+                name="collapseFormaPago"
+              >
+                <div class="card card-body">
+                  Debe señalarse la forma en que se realizaran los pagos,
+                  recordándose siempre que los pagos deben estar supeditados a
+                  la entrega de productos. Los productos deben ser directamente
+                  proporcionales al porcentaje de pago que se va a realizar, es
+                  decir no se puede pagar un porcentaje del 40% del contrato
+                  contraentrega del plan operativo y firma del contrato, pues no
+                  hay un avance proporcional en los productos VS el valor a
+                  entregar.
+                </div>
+              </div>
+              <textarea
+                [(ngModel)]="formaPago"
+                name="textareaFormaPago"
+                id="textareaFormaPago"
+                class="form-control"
+                [ngClass]="{
+                  'is-valid': formaPago,
+                  'is-invalid': !formaPago
+                }"
+              ></textarea>
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="inputPlazo"
+                >Plazo<strong class="text-danger">*</strong
+                ><button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapsePlazo"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapsePlazo"
+                name="collapsePlazo"
+              >
+                <div class="card card-body">
+                  Es el presupuesto disponible dentro del proyecto para la
+                  contratación.
+                </div>
+              </div>
+              <input
+                [(ngModel)]="plazo"
+                name="inputPlazo"
+                id="inputPlazo"
+                type="text"
+                class="form-control"
+                [ngClass]="{
+                  'is-valid': plazo,
+                  'is-invalid': !plazo
+                }"
+              />
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+            </div>
+            <div class="row-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <h5 class="card-title text-center">
+                        ¿El contratista sera encargado de manejo de
+                        datos?<strong class="text-danger">*</strong
+                        ><button
+                          type="button"
+                          class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseManejoDatos"
+                        >
+                          ?
+                        </button>
+                      </h5>
+                    </div>
+                    <div class="col-12">
+                      <div
+                        class="collapse mb-2"
+                        id="collapseManejoDatos"
+                        name="collapseManejoDatos"
+                      >
+                        <div class="card card-body">
+                          En la medida en que las obligaciones y el cumplimiento
+                          del contrato impliquen un acceso del contratista a
+                          datos de carácter personal de cuyo tratamiento sea
+                          responsable la Organización de Estados Iberoamericanos
+                          para la Educación, Ciencia y Cultura (OEI), aquel
+                          tendrá la condición de encargado de tratamiento de
+                          datos.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-check">
+                        <input
+                          [(ngModel)]="manejoDatos"
+                          class="form-check-input"
+                          type="radio"
+                          name="radioManejoDatosSi"
+                          id="radioManejoDatosSi"
+                          value="Si"
+                          [ngClass]="{
+                            'is-valid': manejoDatos,
+                            'is-invalid': !manejoDatos
+                          }"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="radioManejoDatosSi"
+                        >
+                          Si
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input
+                          [(ngModel)]="manejoDatos"
+                          class="form-check-input"
+                          type="radio"
+                          name="radioManejoDatosNo"
+                          id="radioManejoDatosNo"
+                          value="No"
+                          [ngClass]="{
+                            'is-valid': manejoDatos,
+                            'is-invalid': !manejoDatos
+                          }"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="radioManejoDatosNo"
+                        >
+                          No
+                        </label>
+                        <div class="invalid-feedback">
+                          Este campo es (*) obligatorio, seleccione una opcion.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="manejoDatos === 'Si'" class="col-12">
+              <label class="form-label" for="textareaCategoriaInteresado"
+                >Categoria del interesado<strong class="text-danger">*</strong
+                ><button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseCategoriaInteresado"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapseCategoriaInteresado"
+                name="collapseCategoriaInteresado"
+              >
+                <div class="card card-body">
+                  Debe especificarse los datos de que tipo de personas se
+                  manejarán, por ejemplo, victimas del conflicto armado,
+                  contratistas de la OEI, niños, niñas, mujeres, jóvenes
+                  pertenecientes a colectivos sociales, lideres sociales,
+                  personal de las fuerzas armadas de Colombia, estudiantes,
+                  etc...
+                </div>
+              </div>
+              <textarea
+                [(ngModel)]="categoriaInteresado"
+                name="textareaCategoriaInteresado"
+                id="textareaCategoriaInteresado"
+                class="form-control"
+                [ngClass]="{
+                  'is-valid': categoriaInteresado,
+                  'is-invalid': !categoriaInteresado
+                }"
+              ></textarea>
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+            </div>
+            <div *ngIf="manejoDatos === 'Si'" class="row-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <h5 class="card-title text-center">
+                        Categoria de datos<strong class="text-danger">*</strong>
+                      </h5>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-check">
+                        <input
+                          [(ngModel)]="categoriaDatos"
+                          class="form-check-input"
+                          type="radio"
+                          name="radioCategoriaDatosSensibles"
+                          id="radioCategoriaDatosSensibles"
+                          value="Sensibles"
+                          [ngClass]="{
+                            'is-valid': categoriaDatos,
+                            'is-invalid': !categoriaDatos
+                          }"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="radioCategoriaDatosSensibles"
+                        >
+                          Sensibles: se entiende todo dato de especial cuidado y
+                          que podría tener el carácter de reservado, es victima
+                          del conflicto, tiene esquema de protección. sexo,
+                          género, grupo étnico y/o social, medios de transporte,
+                          posición en el hogar, problemáticas que afectan las
+                          dinámicas familiares, relación de pareja u hogar,
+                          enfermedades de alto costo o terminales, cuidado del
+                          hogar, oficios del hogar, mantenimiento y reparación
+                          en el hogar, actividades de cuidado de  niños, niñas y
+                          adolescentes y adultos mayores.
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input
+                          [(ngModel)]="categoriaDatos"
+                          class="form-check-input"
+                          type="radio"
+                          name="radioCategoriaDatosIdentificativos"
+                          id="radioCategoriaDatosIdentificativos"
+                          value="Identificativos"
+                          [ngClass]="{
+                            'is-valid': categoriaDatos,
+                            'is-invalid': !categoriaDatos
+                          }"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="radioCategoriaDatosIdentificativos"
+                        >
+                          Identificativos: número de cédula, nombre.
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input
+                          [(ngModel)]="categoriaDatos"
+                          class="form-check-input"
+                          type="radio"
+                          name="radioCategoriaDatosCaracteristicasPersonales"
+                          id="radioCategoriaDatosCaracteristicasPersonales"
+                          value="Caracteristicas personales"
+                          [ngClass]="{
+                            'is-valid': categoriaDatos,
+                            'is-invalid': !categoriaDatos
+                          }"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="radioCategoriaDatosCaracteristicasPersonales"
+                        >
+                          Caracteristicas personales: profesión, pertenece a una
+                          población especial (indígena, ROM), tiene algún tipo
+                          de discapacidad.
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input
+                          [(ngModel)]="categoriaDatos"
+                          class="form-check-input"
+                          type="radio"
+                          name="radioCategoriaDatosCaracteristicasCircunstanciasSociales"
+                          id="radioCategoriaDatosCaracteristicasCircunstanciasSociales"
+                          value="Circunstancias sociales"
+                          [ngClass]="{
+                            'is-valid': categoriaDatos,
+                            'is-invalid': !categoriaDatos
+                          }"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="radioCategoriaDatosCaracteristicasCircunstanciasSociales"
+                        >
+                          Circunstancias sociales: estrato donde vive, tiene
+                          servicios públicos, información del núcleo familiar.
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input
+                          [(ngModel)]="categoriaDatos"
+                          class="form-check-input"
+                          type="radio"
+                          name="radioCategoriaDatosCaracteristicasDetallesEmpleo"
+                          id="radioCategoriaDatosCaracteristicasDetallesEmpleo"
+                          value="Detalles de empleo"
+                          [ngClass]="{
+                            'is-valid': categoriaDatos,
+                            'is-invalid': !categoriaDatos
+                          }"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="radioCategoriaDatosCaracteristicasDetallesEmpleo"
+                        >
+                          Detalles de empleo: tiene empleo formal o informal,
+                          valor de sus ingresos.
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input
+                          [(ngModel)]="categoriaDatos"
+                          class="form-check-input"
+                          type="radio"
+                          name="radioCategoriaDatosEconomicosFinancierosSeguros"
+                          id="radioCategoriaDatosEconomicosFinancierosSeguros"
+                          value="Economicos, financieros y de seguros"
+                          [ngClass]="{
+                            'is-valid': categoriaDatos,
+                            'is-invalid': !categoriaDatos
+                          }"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="radioCategoriaDatosEconomicosFinancierosSeguros"
+                        >
+                          Economicos, financieros y de seguros: recibe subsidios
+                          o ayudas del Estado, número de cuenta bancaria.
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="formIndex > 0" class="d-grid gap-2 col-6 mx-auto mb-2">
+      <a class="btn btn-primary" (click)="btnPreviousClick()" role="button"
+        >Anterior</a
+      >
+    </div>
+    <div
+      *ngIf="formIndex !== 1"
+      [ngClass]="{ 'col-12': formIndex === 0 }"
+      class="d-grid gap-2 col-6 mx-auto mb-2"
+    >
+      <a
+        class="btn btn-primary"
+        (click)="btnNextClick()"
+        role="button"
+        [ngClass]="{ disabled: !isValid() }"
+        >Siguiente</a
+      >
+    </div>
+    <div *ngIf="formIndex === 1" class="d-grid gap-2 col-6 mx-auto mb-2">
+      <a
+        class="btn btn-primary"
+        (click)="btnSubmitClick()"
+        role="button"
+        [ngClass]="{ disabled: !isValid() }"
+        >Enviar</a
+      >
+    </div>
+    <!--<div class="col-sm-6">
       <div class="form-floating">
         <select
-          [(ngModel)]="tipoDePersona"
-          name="floatingSelectGridTipoDePersona"
+          [(ngModel)]="tipoPersona"
+          name="floatingSelectGridTipoPersona"
           class="form-select"
-          id="floatingSelectGridTipoDePersona"
+          id="floatingSelectGridTipoPersona"
           required
           [ngClass]="{
-            'is-valid': tipoDePersona,
-            'is-invalid': !tipoDePersona
+            'is-valid': tipoPersona,
+            'is-invalid': !tipoPersona
           }"
         >
           <option selected disabled></option>
           <option value="Natural">Natural</option>
           <option value="Juridica">Juridica</option>
         </select>
-        <label for="floatingSelectGridTipoDePersona"
+        <label for="floatingSelectGridTipoPersona"
           >Tipo de persona<span class="text-danger">*</span></label
         >
         <div class="invalid-feedback">
@@ -28,21 +1073,21 @@
     <div class="col-sm-6">
       <div class="form-floating">
         <select
-          [(ngModel)]="tipoDeRelacion"
-          name="floatingSelectGridTipoDeRelacion"
+          [(ngModel)]="tipoRelacion"
+          name="floatingSelectGridTipoRelacion"
           class="form-select"
-          id="floatingSelectGridTipoDeRelacion"
+          id="floatingSelectGridTipoRelacion"
           required
           [ngClass]="{
-            'is-valid': tipoDeRelacion,
-            'is-invalid': !tipoDeRelacion
+            'is-valid': tipoRelacion,
+            'is-invalid': !tipoRelacion
           }"
         >
           <option selected disabled></option>
           <option value="Contratista">Contratista</option>
           <option value="Proveedor">Proveedor</option>
         </select>
-        <label for="floatingSelectGridTipoDeRelacion"
+        <label for="floatingSelectGridtipoRelacion"
           >Tipo de relacion<span class="text-danger">*</span></label
         >
         <div class="invalid-feedback">
@@ -71,7 +1116,7 @@
             {{ convenio.Aliado }} | {{ convenio.Numero }}
           </option>
         </select>
-        <label for="floatingSelectGridTipoDeRelacion"
+        <label for="floatingSelectGridtipoRelacion"
           >Convenio<span class="text-danger">*</span></label
         >
         <div class="invalid-feedback">
@@ -79,929 +1124,276 @@
         </div>
       </div>
     </div>
-    <div *ngIf="tipoDePersona !== undefined" class="col-12">
-      <div *ngIf="tipoDePersona === 'Natural'" class="form-floating">
-        <input
-          [(ngModel)]="identificacion"
-          type="text"
-          class="form-control"
-          name="floatingInputIdentificacion"
-          id="floatingInputIdentificacion"
-          placeholder="x"
-          required
-          [ngClass]="{
-            'is-valid':
-              identificacion?.length === 8 || identificacion?.length === 10,
-            'is-invalid':
-              identificacion?.length !== 8 && identificacion?.length !== 10
-          }"
-          maxlength="10"
-          [OnlyNumbers]="true"
-        />
-        <label for="floatingInputIdentificacion"
-          >Numero de cedula de ciudadania<span class="text-danger"
-            >*</span
-          ></label
-        >
-        <div class="invalid-feedback">
-          Este campo es (*) obligatorio, rellenelo.
-        </div>
-      </div>
-      <label
-        *ngIf="tipoDePersona === 'Juridica'"
-        for="formFileMultipleRUT"
-        class="form-label"
-        >NIT (Con digito de verificacion) Ej. 890507890-4<span
-          class="text-danger"
-          >*</span
-        ></label
-      >
-      <div
-        *ngIf="tipoDePersona === 'Juridica'"
-        class="input-group input-group-lg has-validation"
-      >
-        <input
-          [(ngModel)]="identificacion"
-          type="text"
-          class="form-control"
-          placeholder="NIT Ej. 890507890-4"
-          aria-label="NIT Ej. 890507890-4"
-          [ngClass]="{
-            'is-valid': identificacion,
-            'is-invalid': !identificacion
-          }"
-          maxlength="9"
-          [OnlyNumbers]="true"
-        />
-        <span class="input-group-text">-</span>
-        <input
-          [(ngModel)]="identificacion"
-          type="text"
-          class="form-control"
-          placeholder="Digito de verificacion Ej. 890507890-4"
-          aria-label="Digito de verificacion Ej. 890507890-4"
-          [ngClass]="{
-            'is-valid': identificacion,
-            'is-invalid': !identificacion
-          }"
-          maxlength="1"
-          [OnlyNumbers]="true"
-        />
-      </div>
-      <div class="invalid-feedback">
-        Este campo es (*) obligatorio, rellenelo.
-      </div>
-    </div>
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header text-center">
-          Datos del contratista
-        </div>
-        <div class="card-body">
-          <div class="col-12">
-            <div class="form-floating mb-3">
-              <input [(ngModel)]="nombresApellidos" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-              <label for="floatingInput">Nombre y Apellidos del contratista</label>
-            </div>
-          </div>
-          <div class="col-12">
-            <div class="form-floating mb-3">
-              <input [(ngModel)]="direccion" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-              <label for="floatingInput">Dirección</label>
-            </div>
-          </div>
-          <div class="col-12">
-            <div class="form-floating mb-3">
-              <input [(ngModel)]="telefono" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-              <label for="floatingInput">Telefono</label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header text-center">
-          Documentos
-        </div>
-
-        <div class="card-body">
-          <!-- FOTOCOPIA CEDULA -->
-          <div class="col-12">
-            <label for="formFileMultipleFotocopiaCedula" class="form-label"
-              >Fotocopia cedula<span class="text-danger">*</span></label
-            >
+    <div *ngIf="tipoPersona === 'Natural'" class="col-12">
+      <div class="row g-3">
+        <div class="col-12">
+          <div class="form-floating">
             <input
-              (change)="whenFileFotocopiaCedulaChange($event)"
-              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+              [(ngModel)]="identificator"
+              type="text"
               class="form-control"
-              type="file"
-              id="formFileMultipleFotocopiaCedula"
-              multiple
+              name="floatingInputIdentificator"
+              id="floatingInputIdentificator"
+              placeholder="\0"
               [ngClass]="{
-                'is-valid': fotocopiaCedulaFiles.length > 0,
-                'is-invalid': fotocopiaCedulaFiles.length === 0
+                'is-valid':
+                  identificator.length === 8 || identificator.length === 10,
+                'is-invalid':
+                  identificator.length !== 8 && identificator.length !== 10
               }"
+              maxlength="10"
+              [OnlyNumbers]="true"
             />
+            <label for="floatingInputIdentificator"
+              >Cedula de ciudadania<span class="text-danger">*</span></label
+            >
             <div class="invalid-feedback">
-              Este campo es (*) obligatorio, cargue almenos 1 archivo.
+              Este campo es (*) obligatorio, seleccione una opcion.
             </div>
-            <div *ngIf="fotocopiaCedulaFiles.length > 0" class="container">
-              <div
-                *ngFor="let fotocopiaCedulaFile of fotocopiaCedulaFiles"
-                class="
-                  row
-                  justify-content-center
-                  align-items-center
-                  mt-3
-                  border-start border-top border-primary border-1
-                "
-              >
-                <div class="col-11">
-                  <h5 class="mb-0">
-                    {{ fotocopiaCedulaFile.Index }}.
-                    {{ fotocopiaCedulaFile.Name }}
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-12">
+                  <h5 class="card-title text-center">Datos del contratista</h5>
+                </div>
+                <div class="col-12">
+                  <div class="form-floating mb-3">
+                    <input
+                      [(ngModel)]="nombresApellidos"
+                      type="text"
+                      class="form-control"
+                      id="floatingInputNombresApellidos"
+                      name="floatingInputNombresApellidos"
+                      placeholder="\0"
+                    />
+                    <label for="floatingInputNombresApellidos"
+                      >Nombres y apellidos del contratista</label
+                    >
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-floating mb-3">
+                    <input
+                      [(ngModel)]="direccion"
+                      type="text"
+                      class="form-control"
+                      id="floatingInputDireccion"
+                      name="floatingInputDireccion"
+                      placeholder="\0"
+                    />
+                    <label for="floatingInputDireccion">Dirección</label>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-floating mb-3">
+                    <input
+                      [(ngModel)]="telefono"
+                      type="text"
+                      class="form-control"
+                      id="floatingInputTelefono"
+                      name="floatingInputTelefono"
+                      placeholder="\0"
+                    />
+                    <label for="floatingInputTelefono">Telefono</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        Natural
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-12">
+                  <h5 class="card-title text-center">
+                    Persona {{ tipoPersona }} - Documentos
                   </h5>
                 </div>
-                <div class="col-1 gx-0">
-                  <a href="javascript:;">
-                    <img
-                      (click)="onDeleteFileFotocopiaCedulaClick(
-                          fotocopiaCedulaFile.Index
-                        )"
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        fotocopiaCedulaFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </a>
+                <div class="col-12">
+                  <label for="uploadFilesCedulaCiudadania" class="form-label"
+                    >Fotocopia cedula de ciudadania<span class="text-danger"
+                      >*</span
+                    >
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesCedulaCiudadania"
+                    id="uploadFilesCedulaCiudadania"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="setCedulaCiudadaniaFiles($event)"
+                  ></app-upload-files>
                 </div>
-              </div>
-            </div>
-          </div>
-          <!-- RUT -->
-          <div class="col-12">
-            <label for="formFileMultipleRUT" class="form-label"
-              >RUT<span class="text-danger">*</span></label
-            >
-            <input
-              (change)="whenFileRUTChange($event)"
-              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-              class="form-control"
-              type="file"
-              id="formFileMultipleRUT"
-              multiple
-              [ngClass]="{
-                'is-valid': rutFiles.length > 0,
-                'is-invalid': rutFiles.length === 0
-              }"
-            />
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, cargue almenos 1 archivo.
-            </div>
-            <div *ngIf="rutFiles.length > 0" class="container">
-              <div
-                *ngFor="let rutFile of rutFiles"
-                class="
-                  row
-                  justify-content-center
-                  align-items-center
-                  mt-3
-                  border-start border-top border-primary border-1
-                "
-              >
-                <div *ngIf="false" class="col-1">
-                  <img
-                    width="50px"
-                    height="50px"
-                    src="{{
-                      rutFile.Uploaded
-                        ? '../../../../assets/delete.png'
-                        : '../../../../assets/loading.svg'
-                    }}"
-                    class="img-fluid"
-                  />
+                <div class="col-12">
+                  <label for="uploadFilesRUT" class="form-label"
+                    >RUT<span class="text-danger">*</span>
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesRUT"
+                    id="uploadFilesRUT"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="setRUTFiles($event)"
+                  ></app-upload-files>
                 </div>
-                <div class="col-11">
-                  <h5 class="mb-0">{{ rutFile.Index }}. {{ rutFile.Name }}</h5>
+                <div class="col-12">
+                  <label
+                    for="uploadFilesCertificacionBancaria"
+                    class="form-label"
+                    >Certificacion bancaria<span class="text-danger">*</span>
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesCertificacionBancaria"
+                    id="uploadFilesCertificacionBancaria"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="setCertificacionBancariaFiles($event)"
+                  ></app-upload-files>
                 </div>
-                <div class="col-1 gx-0">
-                  <a href="javascript:;">
-                    <img
-                      (click)="onDeleteFileRUTClick(rutFile.Index)"
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        rutFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </a>
+                <div class="col-12">
+                  <label
+                    for="uploadFilesConstanciaAfiliacionSalud"
+                    class="form-label"
+                    >Constancia de afiliacion a salud (Fechas no superiores a 1
+                    mes) (Contributivo - Independiente - Activo)<span
+                      class="text-danger"
+                      >*</span
+                    >
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesConstanciaAfiliacionSalud"
+                    id="uploadFilesConstanciaAfiliacionSalud"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="setConstanciaAfiliacionSaludFiles($event)"
+                  ></app-upload-files>
                 </div>
-              </div>
-            </div>
-          </div>
-          <!-- CERTIFICACION BANCARIA -->
-          <div class="col-12">
-            <label for="formFileMultipleCertificacionBancaria" class="form-label"
-              >Certificacion bancaria<span class="text-danger">*</span></label
-            >
-            <input
-              (change)="whenFileCertificacionBancariaChange($event)"
-              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-              class="form-control"
-              type="file"
-              id="formFileMultipleCertificacionBancaria"
-              multiple
-              [ngClass]="{
-                'is-valid': certificacionBancariaFiles.length > 0,
-                'is-invalid': certificacionBancariaFiles.length === 0
-              }"
-            />
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, cargue almenos 1 archivo.
-            </div>
-            <div *ngIf="certificacionBancariaFiles.length > 0" class="container">
-              <div
-                *ngFor="let certificacionBancariaFile of certificacionBancariaFiles"
-                class="
-                  row
-                  justify-content-center
-                  align-items-center
-                  mt-3
-                  border-start border-top border-primary border-1
-                "
-              >
-                <div class="col-11">
-                  <h5 class="mb-0">
-                    {{ certificacionBancariaFile.Index }}.
-                    {{ certificacionBancariaFile.Name }}
-                  </h5>
+                <div class="col-12">
+                  <label
+                    for="uploadFilesConstanciaAfiliacionPension"
+                    class="form-label"
+                    >Constancia de afiliacion a pension (Fechas no superiores a
+                    1 mes)<span class="text-danger">*</span>
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesConstanciaAfiliacionPension"
+                    id="uploadFilesConstanciaAfiliacionPension"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="
+                      setConstanciaAfiliacionPensionFiles($event)
+                    "
+                  ></app-upload-files>
                 </div>
-                <div class="col-1 gx-0">
-                  <a href="javascript:;">
-                    <img
-                      (click)="
-                        onDeleteFileCertificacionBancariaClick(
-                          certificacionBancariaFile.Index
-                        )
-                      "
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        certificacionBancariaFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </a>
+                <div class="col-12">
+                  <label for="uploadFilesTarjetaProfesional" class="form-label"
+                    >Tarjeta profesional (Cuando aplique)
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesTarjetaProfesional"
+                    id="uploadFilesTarjetaProfesional"
+                    [contentAsArrayBuffer]="true"
+                    (onFilesChange)="setTarjetaProfesionalFiles($event)"
+                  ></app-upload-files>
                 </div>
-              </div>
-            </div>
-          </div>
-          <!-- CONSTANCIA DE AFILIACIÓN A SALUD -->
-          <div class="col-12">
-            <label for="formFileMultipleAfiliacionSalud" class="form-label"
-              >Constacia de afiliación a salud<span class="text-danger">*</span></label
-            >
-            <input
-              (change)="whenFileAfiliacionSaludChange($event)"
-              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-              class="form-control"
-              type="file"
-              id="formFileMultipleafiliacionSalud"
-              multiple
-              [ngClass]="{
-                'is-valid': afiliacionSaludFiles.length > 0,
-                'is-invalid': afiliacionSaludFiles.length === 0
-              }"
-            />
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, cargue almenos 1 archivo.
-            </div>
-            <div *ngIf="afiliacionSaludFiles.length > 0" class="container">
-              <div
-                *ngFor="let afiliacionSaludFile of afiliacionSaludFiles"
-                class="
-                  row
-                  justify-content-center
-                  align-items-center
-                  mt-3
-                  border-start border-top border-primary border-1
-                "
-              >
-                <div *ngIf="false" class="col-1">
-                  <img
-                    width="50px"
-                    height="50px"
-                    src="{{
-                      afiliacionSaludFile.Uploaded
-                        ? '../../../../assets/delete.png'
-                        : '../../../../assets/loading.svg'
-                    }}"
-                    class="img-fluid"
-                  />
+                <div class="col-12">
+                  <label
+                    for="uploadFilesExamenSaludOcupacional"
+                    class="form-label"
+                    >Examen salud ocupacional (No mayor a 3 años)<span
+                      class="text-danger"
+                      >*</span
+                    >
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesExamenSaludOcupacional"
+                    id="uploadFilesExamenSaludOcupacional"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="setExamenSaludOcupacionalFiles($event)"
+                  ></app-upload-files>
                 </div>
-                <div class="col-11">
-                  <h5 class="mb-0">{{ afiliacionSaludFile.Index }}. {{ afiliacionSaludFile.Name }}</h5>
+                <div class="col-12">
+                  <label
+                    for="uploadFilesFormatoActaCumplimientoConocimiento"
+                    class="form-label"
+                    >Formato acta de cumplimiento y conocimiento del SG-SST<span
+                      class="text-danger"
+                      >*</span
+                    >
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesFormatoActaCumplimientoConocimiento"
+                    id="uploadFilesFormatoActaCumplimientoConocimiento"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="
+                      setFormatoActaCumplimientoConocimientoFiles($event)
+                    "
+                  ></app-upload-files>
                 </div>
-                <div class="col-1 gx-0">
-                  <a href="javascript:;">
-                    <img
-                      (click)="onDeleteFileAfiliacionSaludClick(afiliacionSaludFile.Index)"
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        afiliacionSaludFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </a>
+                <div class="col-12">
+                  <label for="uploadFilesExperienciaLaboral" class="form-label"
+                    >Experiencia Laboral<span class="text-danger">*</span>
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesExperienciaLaboral"
+                    id="uploadFilesExperienciaLaboral"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="setExperienciaLaboralFiles($event)"
+                  ></app-upload-files>
                 </div>
-              </div>
-            </div>
-          </div>
-          <!-- CONSTANCIA DE AFILIACIÓN PENSIÓN -->
-          <div class="col-12">
-            <label for="formFileMultipleAfiliacionPension" class="form-label"
-              >Constancia de afiliación a pensión<span class="text-danger">*</span></label
-            >
-            <input
-              (change)="whenFileAfiliacionPensionChange($event)"
-              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-              class="form-control"
-              type="file"
-              id="formFileMultipleAfiliacionPension"
-              multiple
-              [ngClass]="{
-                'is-valid': afiliacionPensionFiles.length > 0,
-                'is-invalid': afiliacionPensionFiles.length === 0
-              }"
-            />
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, cargue almenos 1 archivo.
-            </div>
-            <div *ngIf="afiliacionPensionFiles.length > 0" class="container">
-              <div
-                *ngFor="let afiliacionPensionFile of afiliacionPensionFiles"
-                class="
-                  row
-                  justify-content-center
-                  align-items-center
-                  mt-3
-                  border-start border-top border-primary border-1
-                "
-              >
-                <div *ngIf="false" class="col-1">
-                  <img
-                    width="50px"
-                    height="50px"
-                    src="{{
-                      afiliacionPensionFile.Uploaded
-                        ? '../../../../assets/delete.png'
-                        : '../../../../assets/loading.svg'
-                    }}"
-                    class="img-fluid"
-                  />
+                <div class="col-12">
+                  <label for="uploadFilesHojaVida" class="form-label"
+                    >Hoja de vida (Debidamente soportada)<span
+                      class="text-danger"
+                      >*</span
+                    >
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesHojaVida"
+                    id="uploadFilesHojaVida"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="setHojaVidaFiles($event)"
+                  ></app-upload-files>
                 </div>
-                <div class="col-11">
-                  <h5 class="mb-0">{{ afiliacionPensionFile.Index }}. {{ afiliacionPensionFile.Name }}</h5>
-                </div>
-                <div class="col-1 gx-0">
-                  <a href="javascript:;">
-                    <img
-                      (click)="onDeleteFileAfiliacionPensionClick(afiliacionPensionFile.Index)"
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        afiliacionPensionFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- CONSTANCIA AFILIACIÓN ARL  PARA CONTRATOS SUPERIOR DE UN MES  -->
-          <div class="col-12">
-            <label for="formFileMultipleARL" class="form-label"
-              >Constancia de afiliación ARL para contratos superior de un mes<span class="text-danger">*</span></label
-            >
-            <input
-              (change)="whenFileARLChange($event)"
-              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-              class="form-control"
-              type="file"
-              id="formFileMultipleARL"
-              multiple
-              [ngClass]="{
-                'is-valid': ARLFiles.length > 0,
-                'is-invalid': ARLFiles.length === 0
-              }"
-            />
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, cargue almenos 1 archivo.
-            </div>
-            <div *ngIf="ARLFiles.length > 0" class="container">
-              <div
-                *ngFor="let ARLFile of ARLFiles"
-                class="
-                  row
-                  justify-content-center
-                  align-items-center
-                  mt-3
-                  border-start border-top border-primary border-1
-                "
-              >
-                <div *ngIf="false" class="col-1">
-                  <img
-                    width="50px"
-                    height="50px"
-                    src="{{
-                      ARLFile.Uploaded
-                        ? '../../../../assets/delete.png'
-                        : '../../../../assets/loading.svg'
-                    }}"
-                    class="img-fluid"
-                  />
-                </div>
-                <div class="col-11">
-                  <h5 class="mb-0">{{ ARLFile.Index }}. {{ ARLFile.Name }}</h5>
-                </div>
-                <div class="col-1 gx-0">
-                  <a href="javascript:;">
-                    <img
-                      (click)="onDeleteFileARLClick(ARLFile.Index)"
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        ARLFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- TARJETA PROFESIONAL (CUANDO APLIQUE)  -->
-          <div class="col-12">
-            <label for="formFileMultipleTarjetaProfesional" class="form-label"
-              >Tarjeta Profesional<span class="text-danger">*</span></label
-            >
-            <input
-              (change)="whenFileTarjetaProfesionalChange($event)"
-              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-              class="form-control"
-              type="file"
-              id="formFileMultipletarjetaProfesional"
-              multiple
-              [ngClass]="{
-                'is-valid': tarjetaProfesionalFiles.length > 0,
-                'is-invalid': tarjetaProfesionalFiles.length === 0
-              }"
-            />
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, cargue almenos 1 archivo.
-            </div>
-            <div *ngIf="tarjetaProfesionalFiles.length > 0" class="container">
-              <div
-                *ngFor="let tarjetaProfesionalFile of tarjetaProfesionalFiles"
-                class="
-                  row
-                  justify-content-center
-                  align-items-center
-                  mt-3
-                  border-start border-top border-primary border-1
-                "
-              >
-                <div *ngIf="false" class="col-1">
-                  <img
-                    width="50px"
-                    height="50px"
-                    src="{{
-                      tarjetaProfesionalFile.Uploaded
-                        ? '../../../../assets/delete.png'
-                        : '../../../../assets/loading.svg'
-                    }}"
-                    class="img-fluid"
-                  />
-                </div>
-                <div class="col-11">
-                  <h5 class="mb-0">{{ tarjetaProfesionalFile.Index }}. {{ tarjetaProfesionalFile.Name }}</h5>
-                </div>
-                <div class="col-1 gx-0">
-                  <a href="javascript:;">
-                    <img
-                      (click)="onDeleteFileTarjetaProfesionalClick(tarjetaProfesionalFile.Index)"
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        tarjetaProfesionalFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- HOJA DE VIDA -->
-          <div class="col-12">
-            <label for="formFileMultipHojaDeVida" class="form-label"
-              >Hoja de vida<span class="text-danger">*</span></label
-            >
-            <input
-              (change)="whenFileHojaDeVidaChange($event)"
-              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-              class="form-control"
-              type="file"
-              id="formFileMultiplehojaDeVida"
-              multiple
-              [ngClass]="{
-                'is-valid': hojaDeVidaFiles.length > 0,
-                'is-invalid': hojaDeVidaFiles.length === 0
-              }"
-            />
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, cargue almenos 1 archivo.
-            </div>
-            <div *ngIf="hojaDeVidaFiles.length > 0" class="container">
-              <div
-                *ngFor="let hojaDeVidaFile of hojaDeVidaFiles"
-                class="
-                  row
-                  justify-content-center
-                  align-items-center
-                  mt-3
-                  border-start border-top border-primary border-1
-                "
-              >
-                <div *ngIf="false" class="col-1">
-                  <img
-                    width="50px"
-                    height="50px"
-                    src="{{
-                      hojaDeVidaFile.Uploaded
-                        ? '../../../../assets/delete.png'
-                        : '../../../../assets/loading.svg'
-                    }}"
-                    class="img-fluid"
-                  />
-                </div>
-                <div class="col-11">
-                  <h5 class="mb-0">{{ hojaDeVidaFile.Index }}. {{ hojaDeVidaFile.Name }}</h5>
-                </div>
-                <div class="col-1 gx-0">
-                  <a href="javascript:;">
-                    <img
-                      (click)="onDeleteFileHojaDeVidaClick(hojaDeVidaFile.Index)"
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        hojaDeVidaFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- SOPORTES HOJA DE VIDA (Estudio, Laborales) -->
-          <div class="col-12">
-            <label for="formFileMultipleSoportesHojaDeVida" class="form-label"
-              >Soportes hoja de vida (Estudio, Laborales)<span class="text-danger">*</span></label
-            >
-            <input
-              (change)="whenFileSoportesHojaDeVidaChange($event)"
-              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-              class="form-control"
-              type="file"
-              id="formFileMultiplesoportesHojaDeVida"
-              multiple
-              [ngClass]="{
-                'is-valid': soportesHojaDeVidaFiles.length > 0,
-                'is-invalid': soportesHojaDeVidaFiles.length === 0
-              }"
-            />
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, cargue almenos 1 archivo.
-            </div>
-            <div *ngIf="soportesHojaDeVidaFiles.length > 0" class="container">
-              <div
-                *ngFor="let soportesHojaDeVidaFile of soportesHojaDeVidaFiles"
-                class="
-                  row
-                  justify-content-center
-                  align-items-center
-                  mt-3
-                  border-start border-top border-primary border-1
-                "
-              >
-                <div *ngIf="false" class="col-1">
-                  <img
-                    width="50px"
-                    height="50px"
-                    src="{{
-                      soportesHojaDeVidaFile.Uploaded
-                        ? '../../../../assets/delete.png'
-                        : '../../../../assets/loading.svg'
-                    }}"
-                    class="img-fluid"
-                  />
-                </div>
-                <div class="col-11">
-                  <h5 class="mb-0">{{ soportesHojaDeVidaFile.Index }}. {{ soportesHojaDeVidaFile.Name }}</h5>
-                </div>
-                <div class="col-1 gx-0">
-                  <a href="javascript:;">
-                    <img
-                      (click)="onDeleteFileSoportesHojaDeVidaClick(soportesHojaDeVidaFile.Index)"
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        soportesHojaDeVidaFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- TERMINOS DE REFERENCIA FIRMADOS -->
-          <div class="col-12">
-            <label for="formFileMultipleTerminosDeReferencia" class="form-label"
-              >Terminos de referencia Firmados<span class="text-danger">*</span></label
-            >
-            <input
-              (change)="whenFileTerminosDeReferenciaChange($event)"
-              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-              class="form-control"
-              type="file"
-              id="formFileMultipleterminosDeReferencia"
-              multiple
-              [ngClass]="{
-                'is-valid': terminosDeReferenciaFiles.length > 0,
-                'is-invalid': terminosDeReferenciaFiles.length === 0
-              }"
-            />
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, cargue almenos 1 archivo.
-            </div>
-            <div *ngIf="terminosDeReferenciaFiles.length > 0" class="container">
-              <div
-                *ngFor="let terminosDeReferenciaFile of terminosDeReferenciaFiles"
-                class="
-                  row
-                  justify-content-center
-                  align-items-center
-                  mt-3
-                  border-start border-top border-primary border-1
-                "
-              >
-                <div *ngIf="false" class="col-1">
-                  <img
-                    width="50px"
-                    height="50px"
-                    src="{{
-                      terminosDeReferenciaFile.Uploaded
-                        ? '../../../../assets/delete.png'
-                        : '../../../../assets/loading.svg'
-                    }}"
-                    class="img-fluid"
-                  />
-                </div>
-                <div class="col-11">
-                  <h5 class="mb-0">{{ terminosDeReferenciaFile.Index }}. {{ terminosDeReferenciaFile.Name }}</h5>
-                </div>
-                <div class="col-1 gx-0">
-                  <a href="javascript:;">
-                    <img
-                      (click)="onDeleteFileTerminosDeReferenciaClick(terminosDeReferenciaFile.Index)"
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        terminosDeReferenciaFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- SOPORTE JUSTIFICACIÓN DE LA SELECCIÓN DEL CONTRATISTA -->
-          <div class="col-12">
-            <label for="formFileMultipleJustificacionContratista" class="form-label"
-              >Soporte justificación de la selección del contratista<span class="text-danger">*</span></label
-            >
-            <input
-              (change)="whenFileJustificacionContratistaChange($event)"
-              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-              class="form-control"
-              type="file"
-              id="formFileMultiplejustificacionContratista"
-              multiple
-              [ngClass]="{
-                'is-valid': justificacionContratistaFiles.length > 0,
-                'is-invalid': justificacionContratistaFiles.length === 0
-              }"
-            />
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, cargue almenos 1 archivo.
-            </div>
-            <div *ngIf="justificacionContratistaFiles.length > 0" class="container">
-              <div
-                *ngFor="let justificacionContratistaFile of justificacionContratistaFiles"
-                class="
-                  row
-                  justify-content-center
-                  align-items-center
-                  mt-3
-                  border-start border-top border-primary border-1
-                "
-              >
-                <div *ngIf="false" class="col-1">
-                  <img
-                    width="50px"
-                    height="50px"
-                    src="{{
-                      justificacionContratistaFile.Uploaded
-                        ? '../../../../assets/delete.png'
-                        : '../../../../assets/loading.svg'
-                    }}"
-                    class="img-fluid"
-                  />
-                </div>
-                <div class="col-11">
-                  <h5 class="mb-0">{{ justificacionContratistaFile.Index }}. {{ justificacionContratistaFile.Name }}</h5>
-                </div>
-                <div class="col-1 gx-0">
-                  <a href="javascript:;">
-                    <img
-                      (click)="onDeleteFileJustificacionContratistaClick(justificacionContratistaFile.Index)"
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        justificacionContratistaFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- EXMANEN SALUD OCUPACIONAL -->
-          <div class="col-12">
-            <label for="formFileMultipleExamenSaludOcupacional" class="form-label"
-              >Examen salud ocupacional<span class="text-danger">*</span></label
-            >
-            <input
-              (change)="whenFileExamenSaludOcupacionalChange($event)"
-              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-              class="form-control"
-              type="file"
-              id="formFileMultipleexamenSaludOcupacional"
-              multiple
-              [ngClass]="{
-                'is-valid': examenSaludOcupacionalFiles.length > 0,
-                'is-invalid': examenSaludOcupacionalFiles.length === 0
-              }"
-            />
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, cargue almenos 1 archivo.
-            </div>
-            <div *ngIf="examenSaludOcupacionalFiles.length > 0" class="container">
-              <div
-                *ngFor="let examenSaludOcupacionalFile of examenSaludOcupacionalFiles"
-                class="
-                  row
-                  justify-content-center
-                  align-items-center
-                  mt-3
-                  border-start border-top border-primary border-1
-                "
-              >
-                <div *ngIf="false" class="col-1">
-                  <img
-                    width="50px"
-                    height="50px"
-                    src="{{
-                      examenSaludOcupacionalFile.Uploaded
-                        ? '../../../../assets/delete.png'
-                        : '../../../../assets/loading.svg'
-                    }}"
-                    class="img-fluid"
-                  />
-                </div>
-                <div class="col-11">
-                  <h5 class="mb-0">{{ examenSaludOcupacionalFile.Index }}. {{ examenSaludOcupacionalFile.Name }}</h5>
-                </div>
-                <div class="col-1 gx-0">
-                  <a href="javascript:;">
-                    <img
-                      (click)="onDeleteFileExamenSaludOcupacionalClick(examenSaludOcupacionalFile.Index)"
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        examenSaludOcupacionalFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- FORMATO ACTA DE CUMPLIMIENTO Y CONOCIMIENTO DEL SG-SST -->
-          <div class="col-12">
-            <label for="formFileMultipleActaCumplimientoYConocimiento" class="form-label"
-              >Formato acta de cumplimiento y conocimiento del SG-SST<span class="text-danger">*</span></label
-            >
-            <input
-              (change)="whenFileActaCumplimientoYConocimientoChange($event)"
-              accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
-              class="form-control"
-              type="file"
-              id="formFileMultipleactaCumplimientoYConocimiento"
-              multiple
-              [ngClass]="{
-                'is-valid': actaCumplimientoYConocimientoFiles.length > 0,
-                'is-invalid': actaCumplimientoYConocimientoFiles.length === 0
-              }"
-            />
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, cargue almenos 1 archivo.
-            </div>
-            <div *ngIf="actaCumplimientoYConocimientoFiles.length > 0" class="container">
-              <div
-                *ngFor="let actaCumplimientoYConocimientoFile of actaCumplimientoYConocimientoFiles"
-                class="
-                  row
-                  justify-content-center
-                  align-items-center
-                  mt-3
-                  border-start border-top border-primary border-1
-                "
-              >
-                <div *ngIf="false" class="col-1">
-                  <img
-                    width="50px"
-                    height="50px"
-                    src="{{
-                      actaCumplimientoYConocimientoFile.Uploaded
-                        ? '../../../../assets/delete.png'
-                        : '../../../../assets/loading.svg'
-                    }}"
-                    class="img-fluid"
-                  />
-                </div>
-                <div class="col-11">
-                  <h5 class="mb-0">{{ actaCumplimientoYConocimientoFile.Index }}. {{ actaCumplimientoYConocimientoFile.Name }}</h5>
-                </div>
-                <div class="col-1 gx-0">
-                  <a href="javascript:;">
-                    <img
-                      (click)="onDeleteFileActaCumplimientoYConocimientoClick(actaCumplimientoYConocimientoFile.Index)"
-                      width="50px"
-                      height="50px"
-                      src="{{
-                        actaCumplimientoYConocimientoFile.Uploaded
-                          ? '../../../../assets/delete.png'
-                          : '../../../../assets/loading.svg'
-                      }}"
-                      class="img-fluid"
-                    />
-                  </a>
+                <div class="col-12">
+                  <label for="uploadFilesHojaVida" class="form-label"
+                    >Certificado ARL<span class="text-danger">*</span>
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesHojaVida"
+                    id="uploadFilesHojaVida"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="setCertificadoARLFiles($event)"
+                  ></app-upload-files>
                 </div>
               </div>
             </div>
@@ -1009,6 +1401,210 @@
         </div>
       </div>
     </div>
+    <div *ngIf="tipoPersona === 'Juridica'" class="col-12">
+      <div class="row g-3">
+        <div class="col-12">
+          <label for="inputNIT1" class="form-label"
+            >NIT (Con digito de verificacion) Ej. 890507890-4<span
+              class="text-danger"
+              >*</span
+            ></label
+          >
+          <div class="input-group">
+            <input
+              [(ngModel)]="identificator"
+              type="text"
+              class="form-control"
+              placeholder="NIT Ej. 890507890"
+              aria-label="NIT Ej. 890507890"
+              [ngClass]="{
+                'is-valid': identificator.length === 9,
+                'is-invalid': identificator.length !== 9
+              }"
+              style="z-index: 0"
+              name="inputNIT1"
+              maxlength="9"
+              [OnlyNumbers]="true"
+            />
+            <span class="input-group-text">-</span>
+            <input
+              [(ngModel)]="digitoVerificacion"
+              type="text"
+              class="form-control"
+              placeholder="Digito de verificacion Ej. 4"
+              aria-label="Digito de verificacion Ej. 4"
+              [ngClass]="{
+                'is-valid': digitoVerificacion.length === 1,
+                'is-invalid': digitoVerificacion.length !== 1
+              }"
+              style="z-index: 0"
+              name="inputNIT2"
+              maxlength="1"
+              [OnlyNumbers]="true"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, seleccione una opcion.
+            </div>
+          </div>
+        </div>
+        Juridica
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-12">
+                  <h5 class="card-title text-center">
+                    Persona {{ tipoPersona }} - Documentos
+                  </h5>
+                </div>
+                <div class="col-12">
+                  <label for="uploadFilesCamaraComercio" class="form-label"
+                    >Camara de comercio (No anterior a un mes)<span
+                      class="text-danger"
+                      >*</span
+                    >
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesCamaraComercio"
+                    id="uploadFilesCamaraComercio"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="setCamaraComercioFiles($event)"
+                  ></app-upload-files>
+                </div>
+                <div class="col-12">
+                  <label
+                    for="uploadFilesCedulaCiudadaniaRepresentanteLegal"
+                    class="form-label"
+                    >Fotocopia cedula de ciudadania representante legal<span
+                      class="text-danger"
+                      >*</span
+                    >
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesCedulaCiudadaniaRepresentanteLegal"
+                    id="uploadFilesCedulaCiudadaniaRepresentanteLegal"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="
+                      setCedulaCiudadaniaRepresentanteLegalFiles($event)
+                    "
+                  ></app-upload-files>
+                </div>
+                <div class="col-12">
+                  <label for="uploadFilesRUT" class="form-label"
+                    >RUT (Actualizado)<span class="text-danger">*</span>
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesRUT"
+                    id="uploadFilesRUT"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="setRUTFiles($event)"
+                  ></app-upload-files>
+                </div>
+                <div class="col-12">
+                  <label
+                    for="uploadFilesCertificacionBancaria"
+                    class="form-label"
+                    >Certificacion bancaria<span class="text-danger">*</span>
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesCertificacionBancaria"
+                    id="uploadFilesCertificacionBancaria"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="setCertificacionBancariaFiles($event)"
+                  ></app-upload-files>
+                </div>
+                <div class="col-12">
+                  <label
+                    for="uploadFilesSeguridadSocialParafiscales"
+                    class="form-label"
+                    >Certificacion de estar al dia en el pago de aportes al
+                    sistema de SEGURIDAD SOCIAL y PARAFISCALES<span
+                      class="text-danger"
+                      >*</span
+                    >
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesSeguridadSocialParafiscales"
+                    id="uploadFilesSeguridadSocialParafiscales"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="
+                      setSeguridadSocialParafiscalesFiles($event)
+                    "
+                  ></app-upload-files>
+                </div>
+                <div class="col-12">
+                  <label
+                    for="uploadFilesSolicitudContratacion"
+                    class="form-label"
+                    >Solicitud de contratacion y terminos de referencia firmados
+                    por el solicitante y por el organo de contratacion<span
+                      class="text-danger"
+                      >*</span
+                    >
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesSolicitudContratacion"
+                    id="uploadFilesSolicitudContratacion"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="setSolicitudContratacionFiles($event)"
+                  ></app-upload-files>
+                </div>
+                <div class="col-12">
+                  <label
+                    for="uploadFilesJustificacionContratacion"
+                    class="form-label"
+                    >Soporte justificacion de la seleccion del contratista<span
+                      class="text-danger"
+                      >*</span
+                    >
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesJustificacionContratacion"
+                    id="uploadFilesJustificacionContratacion"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="setJustificacionContratacionFiles($event)"
+                  ></app-upload-files>
+                </div>
+                <div class="col-12">
+                  <label for="uploadFilesCotizacionOferta" class="form-label"
+                    >Cotizacion / Oferta<span class="text-danger">*</span>
+                  </label>
+                  <app-upload-files
+                    name="uploadFilesCotizacionOferta"
+                    id="uploadFilesCotizacionOferta"
+                    [contentAsArrayBuffer]="true"
+                    [requiredFeedback]="
+                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
+                    "
+                    (onFilesChange)="setCotizacionOfertaFiles($event)"
+                  ></app-upload-files>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>-->
   </div>
-  <br>
 </form>

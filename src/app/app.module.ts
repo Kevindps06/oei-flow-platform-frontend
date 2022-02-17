@@ -1,13 +1,11 @@
-import { environment } from 'src/environments/environment';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { FormsComponent } from './components/forms/forms.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { OnlyNumbersDirective } from './directives/onlynumber.directive';
 import { DirectaComponent } from './components/forms/juridica/contratacion/directa/directa/directa.component';
@@ -30,18 +28,30 @@ import { FormsCoordinacionLogisticaSelectQuotationComponent } from './components
 import { TestsComponent } from './components/forms/tests/tests.component';
 import { MsalModule, MsalService, MSAL_INSTANCE } from '@azure/msal-angular';
 import {
+  BrowserCacheLocation,
   IPublicClientApplication,
   PublicClientApplication,
 } from '@azure/msal-browser';
-import { CertificacionesLaboralesComponent } from './components/forms/certificacioneslaborales/certificacioneslaborales.component';
+import { FormsCertificacionesLaboralesComponent } from './components/forms/certificacioneslaborales/certificacioneslaborales.component';
+import { OAuthSettings } from 'src/oauth';
+
+let msalInstance: IPublicClientApplication | undefined = undefined;
 
 export function MSALInstanceFactory(): IPublicClientApplication {
-  return new PublicClientApplication({
-    auth: {
-      clientId: '9e2a6e76-ec14-4ca5-ab54-d1c55a12545c',
-      redirectUri: `${environment.protocol}://${environment.frontendAddress}`,
-    },
-  });
+  msalInstance =
+    msalInstance ??
+    new PublicClientApplication({
+      auth: {
+        clientId: OAuthSettings.appId,
+        redirectUri: OAuthSettings.redirectUri,
+        postLogoutRedirectUri: OAuthSettings.redirectUri,
+      },
+      cache: {
+        cacheLocation: BrowserCacheLocation.LocalStorage,
+      },
+    });
+
+  return msalInstance;
 }
 
 @NgModule({
@@ -68,7 +78,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FormsCoordinacionLogisticaFillQuotationsComponent,
     FormsCoordinacionLogisticaSelectQuotationComponent,
     TestsComponent,
-    CertificacionesLaboralesComponent,
+    FormsCertificacionesLaboralesComponent,
   ],
   imports: [
     BrowserModule,
@@ -76,6 +86,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FormsModule,
     HttpClientModule,
     MsalModule,
+    ReactiveFormsModule,
   ],
   providers: [
     {
@@ -87,7 +98,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
       provide: MSAL_INSTANCE,
       useFactory: MSALInstanceFactory,
     },
-    MsalService
+    MsalService,
   ],
   bootstrap: [AppComponent],
 })
