@@ -113,6 +113,22 @@ export class FormsService {
     );
   }
 
+  getFormsCertificacionesLaborales(identificator: string): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/certificacioneslaborales`,
+        {
+          params: new HttpParams().appendAll({
+            identificator,
+          }),
+          reportProgress: true,
+          responseType: 'blob',
+        }
+      )
+    );
+  }
+
   postFormsCoordinacionLogistica(
     formsCoordinacionLogistica: FormsCoordinacionLogistica
   ): Observable<any> {
