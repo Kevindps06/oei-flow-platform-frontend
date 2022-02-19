@@ -51,8 +51,8 @@ export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
 
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
-                title: 'Certificado de ingresos y retenciones encontrada',
-                description: `Su certificado de ingresos y retenciones identificada con el numero de cedula de ciudadania ${this.identificator} ha sido encontrada e iniciara su descarga en breves.`,
+                title: 'Certificado de ingresos y retenciones encontrado',
+                description: `Su certificado de ingresos y retenciones identificado con el numero de cedula de ciudadania ${this.identificator} ha sido encontrado e iniciara su descarga en momento.`,
               });
 
               this.sharedService.removeWaitTask({
@@ -64,8 +64,8 @@ export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
         (err) => {
           this.sharedService.pushToastMessage({
             id: Utils.makeRandomString(4),
-            title: 'Certificado de ingresos y retenciones no encontrada',
-            description: `Su certificado de ingresos y retenciones identificada con el numero de cedula de ciudadania ${this.identificator} no ha sido encontrada en el sistema.`,
+            title: 'Certificado de ingresos y retenciones no encontrado',
+            description: `Su certificado de ingresos y retenciones identificado con el numero de cedula de ciudadania ${this.identificator} no ha sido encontrado en el sistema.`,
           });
 
           this.sharedService.removeWaitTask({

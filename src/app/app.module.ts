@@ -8,13 +8,7 @@ import { FormsComponent } from './components/forms/forms.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { OnlyNumbersDirective } from './directives/onlynumber.directive';
-import { DirectaComponent } from './components/forms/juridica/contratacion/directa/directa/directa.component';
-import { SimplificadaysupersimplificadaComponent } from './components/forms/juridica/contratacion/simplificadaysupersimplificada/simplificadaysupersimplificada.component';
-import { LicitacionComponent } from './components/forms/juridica/contratacion/licitacion/licitacion.component';
-import { ConsultoresComponent } from './components/forms/juridica/contratacion/directa/excepcion/consultores/consultores.component';
-import { SinlimiteComponent } from './components/forms/juridica/contratacion/directa/excepcion/sinlimite/sinlimite.component';
-import { FormsJuridicaContratacionConvenioRequestComponent } from './components/forms/juridica/contratacion/convenio/request/request.component';
-import { FormsJuridicaContratacionRequestComponent } from './components/forms/juridica/contratacion/request/request.component';
+import { FormsJuridicaRequestComponent } from './components/forms/juridica/request/request.component';
 import { LoginComponent } from './components/login/login.component';
 import { FormsFinancieraRegistrationComponent } from './components/forms/financiera/registration/registration.component';
 import { FormsFinancieraInvoiceComponent } from './components/forms/financiera/invoice/invoice.component';
@@ -34,6 +28,8 @@ import {
 } from '@azure/msal-browser';
 import { FormsCertificadosIngresosRetencionesComponent } from './components/forms/certificadosingresosretenciones/certificadosingresosretenciones.component';
 import { OAuthSettings } from 'src/oauth';
+import { MaxOnlyPriceNumbersDirective } from './directives/max-only-price-numbers.directive';
+import { MinOnlyPriceNumbersDirective } from './directives/min-only-price-numbers.directive';
 
 let msalInstance: IPublicClientApplication | undefined = undefined;
 
@@ -61,13 +57,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FooterComponent,
     FormsComponent,
     OnlyNumbersDirective,
-    DirectaComponent,
-    SimplificadaysupersimplificadaComponent,
-    LicitacionComponent,
-    ConsultoresComponent,
-    SinlimiteComponent,
-    FormsJuridicaContratacionRequestComponent,
-    FormsJuridicaContratacionConvenioRequestComponent,
+    FormsJuridicaRequestComponent,
     LoginComponent,
     FormsFinancieraRegistrationComponent,
     FormsFinancieraInvoiceComponent,
@@ -79,6 +69,8 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FormsCoordinacionLogisticaSelectQuotationComponent,
     TestsComponent,
     FormsCertificadosIngresosRetencionesComponent,
+    MaxOnlyPriceNumbersDirective,
+    MinOnlyPriceNumbersDirective,
   ],
   imports: [
     BrowserModule,

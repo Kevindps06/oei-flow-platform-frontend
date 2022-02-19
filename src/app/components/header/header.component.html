@@ -78,33 +78,14 @@
             >Coordinacion logistica</a
           >
         </li>
-        <li *ngIf="isLoggedIn()" class="nav-item dropdown">
+        <li *ngIf="isLoggedIn()" class="nav-item">
           <a
-            [ngClass]="{ active: startWithRoute('/forms/juridica/') }"
-            class="nav-link dropdown-toggle text-white"
-            id="navbarScrollingDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
+            [ngClass]="{ active: isRoute('/forms/juridica/request') }"
+            class="nav-link text-white"
+            aria-current="page"
+            [routerLink]="['/forms/juridica/request']"
+            >Gestion juridica</a
           >
-            Gestion juridica
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-            <li>
-              <a
-                class="dropdown-item"
-                [routerLink]="['/forms/juridica/contratacion/convenio/request']"
-                >Subscripcion convenio</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                [routerLink]="['/forms/juridica/contratacion/request']"
-                >Contratacion
-              </a>
-            </li>
-          </ul>
         </li>
       </ul>
       <a *ngIf="isLoggedIn()" class="navbar-brand" href="#">

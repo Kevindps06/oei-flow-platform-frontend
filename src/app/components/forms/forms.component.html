@@ -46,14 +46,9 @@
             "
           >
           </app-forms-coordinacionlogistica-selectquotation>
-          <app-forms-juridica-contratacion-convenio-request
-            *ngIf="isRoute('/forms/juridica/contratacion/convenio/request')"
-            [convenios]="convenios"
-            (onWaitTasksChange)="setWaitTasks($event)"
-          ></app-forms-juridica-contratacion-convenio-request>
-          <app-forms-juridica-contratacion-request
-            *ngIf="isRoute('/forms/juridica/contratacion/request')"
-          ></app-forms-juridica-contratacion-request>
+          <app-forms-juridica-request
+            *ngIf="isRoute('/forms/juridica/request')"
+          ></app-forms-juridica-request>
         </div>
       </div>
     </div>

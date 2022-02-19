@@ -6,152 +6,32 @@
           <div class="row g-3">
             <div class="col-12">
               <h5 class="card-title text-center">
-                Tipo de contratacion<strong class="text-danger">*</strong>
+                Tipo de peticion<strong class="text-danger">*</strong>
               </h5>
             </div>
             <div class="col-12">
-              <div class="form-check">
+              <div
+                *ngFor="let mapItem of juridicaRequestMap | keyvalue"
+                class="form-check"
+              >
                 <input
-                  [(ngModel)]="tipoContratacion"
+                  [(ngModel)]="tipoPeticion"
                   class="form-check-input"
                   type="radio"
-                  name="checkInputTipoContratacionDirecta"
-                  id="checkInputTipoContratacionDirecta"
-                  value="Directa"
+                  name="checkInputTipoPeticion{{ mapItem.key }}"
+                  id="checkInputTipoPeticion{{ mapItem.key }}"
+                  [value]="mapItem.key"
                   [ngClass]="{
-                    'is-valid': tipoContratacion,
-                    'is-invalid': !tipoContratacion
+                    'is-valid': tipoPeticion,
+                    'is-invalid': !tipoPeticion
                   }"
                 />
                 <label
                   class="form-check-label"
-                  for="checkInputTipoContratacionDirecta"
+                  for="checkInputTipoPeticion{{ mapItem.key }}"
                 >
-                  Directa
+                  {{ mapItem.key }}
                 </label>
-              </div>
-              <div class="form-check">
-                <input
-                  [(ngModel)]="tipoContratacion"
-                  class="form-check-input"
-                  type="radio"
-                  name="checkInputTipoContratacionDirectaExtencion"
-                  id="checkInputTipoContratacionDirectaExtencion"
-                  value="Directa por extencion"
-                  [ngClass]="{
-                    'is-valid': tipoContratacion,
-                    'is-invalid': !tipoContratacion
-                  }"
-                />
-                <label
-                  class="form-check-label"
-                  for="checkInputTipoContratacionDirectaExtencion"
-                >
-                  Directa por excepcion
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  [(ngModel)]="tipoContratacion"
-                  class="form-check-input"
-                  type="radio"
-                  name="checkInputTipoContratacionComparativa"
-                  id="checkInputTipoContratacionComparativa"
-                  value="Comparativa de precios"
-                  [ngClass]="{
-                    'is-valid': tipoContratacion,
-                    'is-invalid': !tipoContratacion
-                  }"
-                />
-                <label
-                  class="form-check-label"
-                  for="checkInputTipoContratacionComparativa"
-                >
-                  Comparativa de precios
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  [(ngModel)]="tipoContratacion"
-                  class="form-check-input"
-                  type="radio"
-                  name="checkInputTipoContratacionSuperSimplificado"
-                  id="checkInputTipoContratacionSuperSimplificado"
-                  value="Procedimiento super simplificado"
-                  [ngClass]="{
-                    'is-valid': tipoContratacion,
-                    'is-invalid': !tipoContratacion
-                  }"
-                />
-                <label
-                  class="form-check-label"
-                  for="checkInputTipoContratacionSuperSimplificado"
-                >
-                  Procedimiento super simplificado
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  [(ngModel)]="tipoContratacion"
-                  class="form-check-input"
-                  type="radio"
-                  name="checkInputTipoContratacionSimplificado"
-                  id="checkInputTipoContratacionSimplificado"
-                  value="Procedimiento simplificado"
-                  [ngClass]="{
-                    'is-valid': tipoContratacion,
-                    'is-invalid': !tipoContratacion
-                  }"
-                />
-                <label
-                  class="form-check-label"
-                  for="checkInputTipoContratacionSimplificado"
-                >
-                  Procedimiento simplificado
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  [(ngModel)]="tipoContratacion"
-                  class="form-check-input"
-                  type="radio"
-                  name="checkInputTipoContratacionMarco"
-                  id="checkInputTipoContratacionMarco"
-                  value="Contrato marco"
-                  [ngClass]="{
-                    'is-valid': tipoContratacion,
-                    'is-invalid': !tipoContratacion
-                  }"
-                />
-                <label
-                  class="form-check-label"
-                  for="checkInputTipoContratacionMarco"
-                >
-                  Contrato marco
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  [(ngModel)]="tipoContratacion"
-                  class="form-check-input"
-                  type="radio"
-                  name="checkInputTipoContratacionLicitacion"
-                  id="checkInputTipoContratacionLicitacion"
-                  value="Licitacion"
-                  [ngClass]="{
-                    'is-valid': tipoContratacion,
-                    'is-invalid': !tipoContratacion
-                  }"
-                />
-                <label
-                  class="form-check-label"
-                  for="checkInputTipoContratacionLicitacion"
-                >
-                  Licitacion
-                </label>
-                <div class="invalid-feedback">
-                  Este campo es (*) obligatorio, seleccione una opcion.
-                </div>
               </div>
             </div>
           </div>
@@ -159,6 +39,56 @@
       </div>
     </div>
     <div *ngIf="formIndex === 1" class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <h5 class="card-title text-center">
+                Tipo de {{ tipoPeticion.toLowerCase()
+                }}<strong class="text-danger">*</strong>
+              </h5>
+            </div>
+            <div class="col-12">
+              <div
+                *ngFor="
+                  let mapItem of juridicaRequestMap.get(tipoPeticion)
+                    | keyvalue: originalOrder
+                "
+                class="form-check"
+              >
+                <input
+                  [(ngModel)]="tipoCompraContratacion"
+                  class="form-check-input"
+                  type="radio"
+                  name="checkInputTipoCompraContratacion{{ mapItem.key }}"
+                  id="checkInputTipoCompraContratacion{{ mapItem.key }}"
+                  [value]="mapItem.key"
+                  [ngClass]="{
+                    'is-valid': tipoCompraContratacion,
+                    'is-invalid': !tipoCompraContratacion
+                  }"
+                />
+                <label
+                  class="form-check-label"
+                  for="checkInputTipoCompraContratacion{{ mapItem.key }}"
+                >
+                  {{ mapItem.key }}
+                  {{
+                    mapItem.value
+                      ? "- Min: " +
+                        numberWithPriceSpaces(mapItem.value.get("Min")) +
+                        " - Max: " +
+                        numberWithPriceSpaces(mapItem.value.get("Max"))
+                      : "- Limite no definido"
+                  }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="formIndex === 2" class="col-12">
       <div class="card">
         <div class="card-body">
           <div class="row g-3">
@@ -280,7 +210,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="formIndex === 1" class="col-12">
+    <div *ngIf="formIndex === 2" class="col-12">
       <div class="card">
         <div class="card-body">
           <div class="row g-3">
@@ -503,7 +433,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="formIndex === 1" class="col-12">
+    <div *ngIf="formIndex === 2" class="col-12">
       <div class="card">
         <div class="card-body">
           <div class="row g-3">
@@ -626,7 +556,26 @@
             </div>
             <div class="col-12">
               <label class="form-label" for="inputPresupuestoEstimado"
-                >Presupuesto estimado<strong class="text-danger">*</strong
+                >Presupuesto estimado {{
+                  juridicaRequestMap
+                    .get(tipoPeticion)
+                    ?.get(tipoCompraContratacion)
+                    ? "- Min: " +
+                      numberWithPriceSpaces(
+                        juridicaRequestMap
+                          .get(tipoPeticion)
+                          ?.get(tipoCompraContratacion)
+                          ?.get("Min")
+                      ) +
+                      " - Max: " +
+                      numberWithPriceSpaces(
+                        juridicaRequestMap
+                          .get(tipoPeticion)
+                          ?.get(tipoCompraContratacion)
+                          ?.get("Max")
+                      )
+                    : "- Limite no definido"
+                }}<strong class="text-danger">*</strong
                 ><button
                   type="button"
                   class="btn btn-sm btn-outline-info ms-2 rounded-pill"
@@ -653,10 +602,15 @@
                 type="text"
                 class="form-control"
                 [ngClass]="{
-                  'is-valid': presupuestoEstimado,
-                  'is-invalid': !presupuestoEstimado
+                  'is-valid': parseInt(presupuestoEstimado) >= presupuestoEstimadoMin,
+                  'is-invalid': !presupuestoEstimado || parseInt(presupuestoEstimado) < presupuestoEstimadoMin
                 }"
-                [OnlyNumbers]="true"
+                [MaxOnlyPriceNumbers]="
+                  juridicaRequestMap
+                    .get(tipoPeticion)
+                    ?.get(tipoCompraContratacion)
+                    ?.get('Max')
+                "
               />
               <div class="invalid-feedback">
                 Este campo es (*) obligatorio, rellenelo.
@@ -1024,7 +978,7 @@
       >
     </div>
     <div
-      *ngIf="formIndex !== 1"
+      *ngIf="formIndex !== 2"
       [ngClass]="{ 'col-12': formIndex === 0 }"
       class="d-grid gap-2 col-6 mx-auto mb-2"
     >
@@ -1036,7 +990,7 @@
         >Siguiente</a
       >
     </div>
-    <div *ngIf="formIndex === 1" class="d-grid gap-2 col-6 mx-auto mb-2">
+    <div *ngIf="formIndex === 2" class="d-grid gap-2 col-6 mx-auto mb-2">
       <a
         class="btn btn-primary"
         (click)="btnSubmitClick()"

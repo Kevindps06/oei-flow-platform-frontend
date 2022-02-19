@@ -42,35 +42,7 @@ const routes: Routes = [
     component: FormsComponent,
   },
   {
-    path: 'forms/juridica/contratacion/convenio/request',
-    component: FormsComponent,
-  },
-  {
-    path: 'forms/juridica/contratacion/request',
-    component: FormsComponent,
-  },
-  {
-    path: 'forms/juridica/contratacion/directa/:id',
-    component: FormsComponent,
-  },
-  {
-    path: 'forms/juridica/contratacion/directa/excepcion/consultores/:id',
-    component: FormsComponent,
-  },
-  {
-    path: 'forms/juridica/contratacion/directa/excepcion/sinlimite/:id',
-    component: FormsComponent,
-  },
-  {
-    path: 'forms/juridica/contratacion/directa/comparativadeprecios/:id',
-    component: FormsComponent,
-  },
-  {
-    path: 'forms/juridica/contratacion/simplificadaysupersimplificada/:id',
-    component: FormsComponent,
-  },
-  {
-    path: 'forms/juridica/contratacion/licitacion/:id',
+    path: 'forms/juridica/request',
     component: FormsComponent,
   },
 ];
