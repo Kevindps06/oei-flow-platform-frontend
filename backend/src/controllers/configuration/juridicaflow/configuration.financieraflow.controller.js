@@ -1,5 +1,5 @@
 import JuridicaFlow from "../../../schemas/configuration/juridicaflow/configuration.juridicaflow.schema";
-import utils from "../../../utils/utils";
+import { juridicaFlowObjectWithoutUndefined } from "../../../utils/utils";
 
 export const save = async (req, res) => {
   try {
@@ -16,7 +16,7 @@ export const save = async (req, res) => {
 export const find = async (req, res) => {
   try {
     const juridicaFlow = await JuridicaFlow.find(
-      utils.juridicaFlowObjectWithoutUndefined(
+      juridicaFlowObjectWithoutUndefined(
         req.query._id,
         req.query.tipo,
         req.query.steps
@@ -32,7 +32,7 @@ export const find = async (req, res) => {
 export const updateMany = async (req, res) => {
   try {
     const juridicaFlow = await JuridicaFlow.updateMany(
-      utils.juridicaFlowObjectWithoutUndefined(
+      juridicaFlowObjectWithoutUndefined(
         req.query._id,
         req.query.tipo,
         req.query.steps
@@ -49,7 +49,7 @@ export const updateMany = async (req, res) => {
 export const deleteMany = async (req, res) => {
   try {
     const juridicaFlow = await JuridicaFlow.deleteMany(
-      utils.juridicaFlowObjectWithoutUndefined(
+      juridicaFlowObjectWithoutUndefined(
         req.query._id,
         req.query.tipo,
         req.query.steps
