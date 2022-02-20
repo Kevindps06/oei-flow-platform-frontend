@@ -2,13 +2,11 @@ FROM node:16.13.0
 
 WORKDIR /web-app
 
-COPY ./package*.json ./
+COPY ../package*.json ./
 
 RUN npm install
 
-RUN npm run build
-
-COPY ./dist ./
+COPY ./ ./
 
 EXPOSE 80
 
