@@ -1,4 +1,4 @@
-import FinancieraFlow from "../../../schemas/configuration/FinancieraFlow";
+import FinancieraFlow from "../../../schemas/configuration/financieraflow/configuration.financieraflow.schema";
 
 export const save = async (req, res) => {
   try {

@@ -2,8 +2,8 @@ const axios = require("axios");
 const auth = require("../apis/microsoft/auth");
 const fs = require("fs");
 const path = require("path");
-const FinancieraFlow = require("../schemas/configuration/FinancieraFlow");
-const CoordinacionLogisticaFlow = require("../schemas/configuration/CoordinacionLogisticaFlow");
+const FinancieraFlow = require("../schemas/configuration/financieraflow/configuration.financieraflow.schema");
+const CoordinacionLogisticaFlow = require("../schemas/configuration/coordinacionlogisticaflow/configuration.coordinacionlogisticaflow.schema");
 
 async function getConvenioFromSharePoint(convenioNumber) {
   let convenioFromSharePoint;

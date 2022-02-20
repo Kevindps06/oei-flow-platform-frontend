@@ -3,8 +3,8 @@ import { Router } from "express";
 const router = Router();
 const auth = require("../apis/microsoft/auth");
 const utils = require("../utils/utils");
-const FinancieraInvoice = require("../schemas/forms/FinancieraInvoice");
-const CoordinacionLogistica = require("../schemas/forms/CoordinacionLogistica");
+const FinancieraInvoice = require("../schemas/forms/financiera/invoice/forms.financiera.invoice.schema");
+const CoordinacionLogistica = require("../schemas/forms/coordinacionlogistica/forms.coordinacionlogistica.schema");
 const APIClient = require("../schemas/auth/APIClient");
 import formsRoutes from "./forms/forms.routes"
 import filesRoutes from "./files/files.routes"
