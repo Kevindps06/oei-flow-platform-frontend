@@ -1,4 +1,5 @@
-import FinancieraFlow from "../../../schemas/configuration/coordinacionlogisticaflow/configuration.coordinacionlogisticaflow.schema.js";
+import CoordinacionLogisticaFlow from "../../../schemas/configuration/coordinacionlogisticaflow/configuration.coordinacionlogisticaflow.schema.js";
+import utils from "../../../utils/utils";
 
 export const save = async (req, res) => {
   try {
