@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = Router();
 
-// API - Configuration - FinancieraFlow
+// /api/configuration/financieraflow
 
 import * as configurationFinancieraFlowController from "../../../controllers/configuration/financieraflow/configuration.financieraflow.controller";
 

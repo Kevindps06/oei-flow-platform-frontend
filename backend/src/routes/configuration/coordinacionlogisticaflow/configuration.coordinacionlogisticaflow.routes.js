@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = Router();
 
-// API - Configuration - CoordinacionLogisticaFlow
+// /api/configuration/coordinacionlogisticaflow
 
 import * as configurationCoordinacionLogisticaFlowController from "../../../controllers/configuration/coordinacionlogisticaflow/configuration.coordinacionlogisticaflow.controller";
 

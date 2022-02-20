@@ -1,11 +1,11 @@
-const axios = require("axios");
-const auth = require("../apis/microsoft/auth");
-const fs = require("fs");
-const path = require("path");
-const FinancieraFlow = require("../schemas/configuration/financieraflow/configuration.financieraflow.schema");
-const CoordinacionLogisticaFlow = require("../schemas/configuration/coordinacionlogisticaflow/configuration.coordinacionlogisticaflow.schema");
+import axios from "axios";
+import { getToken, tokenRequest } from "../apis/microsoft/auth";
+import fs from "fs";
+import path from "path";
+import configurationFinancieraFlowSchema from "../schemas/configuration/financieraflow/configuration.financieraflow.schema";
+import configurationCoordinacionLogisticaFlowSchema from "../schemas/configuration/coordinacionlogisticaflow/configuration.coordinacionlogisticaflow.schema";
 
-async function getConvenioFromSharePoint(convenioNumber) {
+export const getConvenioFromSharePoint = async (convenioNumber) => {
   let convenioFromSharePoint;
 
   let retries = 0;
@@ -19,7 +19,7 @@ async function getConvenioFromSharePoint(convenioNumber) {
               Authorization:
                 "Bearer " +
                 (
-                  await auth.getToken(auth.tokenRequest)
+                  await getToken(tokenRequest)
                 ).accessToken,
               Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
             },
@@ -41,9 +41,9 @@ async function getConvenioFromSharePoint(convenioNumber) {
   delete convenioFromSharePoint["@odata.etag"];
 
   return convenioFromSharePoint;
-}
+};
 
-async function getConvenioFromSharePointFromId(convenioId) {
+export const getConvenioFromSharePointFromId = async (convenioId) => {
   let convenioFromSharePoint;
 
   let retries = 0;
@@ -57,7 +57,7 @@ async function getConvenioFromSharePointFromId(convenioId) {
               Authorization:
                 "Bearer " +
                 (
-                  await auth.getToken(auth.tokenRequest)
+                  await getToken(tokenRequest)
                 ).accessToken,
               Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
             },
@@ -78,9 +78,9 @@ async function getConvenioFromSharePointFromId(convenioId) {
   delete convenioFromSharePoint["@odata.etag"];
 
   return convenioFromSharePoint;
-}
+};
 
-async function getUserFromSharePoint(lookupId) {
+export const getUserFromSharePoint = async (lookupId) => {
   let user;
 
   let retries = 0;
@@ -94,7 +94,7 @@ async function getUserFromSharePoint(lookupId) {
               Authorization:
                 "Bearer " +
                 (
-                  await auth.getToken(auth.tokenRequest)
+                  await getToken(tokenRequest)
                 ).accessToken,
               Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
             },
@@ -115,10 +115,10 @@ async function getUserFromSharePoint(lookupId) {
   delete user["@odata.etag"];
 
   return user;
-}
+};
 
 /* Esta operacion asigna la informacion completa del usuario encargado en cada paso del flujo */
-async function inflateFlowSteps(flowSteps, convenio) {
+export const inflateFlowSteps = async (flowSteps, convenio) => {
   let inflatedFlowSteps = [];
 
   for (let i = 0; flowSteps.length > i; i++) {
@@ -143,9 +143,9 @@ async function inflateFlowSteps(flowSteps, convenio) {
   }
 
   return inflatedFlowSteps;
-}
+};
 
-async function getFinancieraFlowStepsWithEncargados(
+export const getFinancieraFlowStepsWithEncargados = async (
   _id,
   TipoPersona,
   TipoRelacion,
@@ -153,7 +153,7 @@ async function getFinancieraFlowStepsWithEncargados(
   TipoLegalizacion,
   steps,
   convenio
-) {
+) => {
   // For localhost testing only
   /*let stepsFromConfiguration = (
     await axios.default.get(
@@ -173,8 +173,8 @@ async function getFinancieraFlowStepsWithEncargados(
 
   // Production direct with database
   let stepsFromConfiguration = (
-    await FinancieraFlow.find(
-      financieraFlowObjectWithoutUndefined(
+    await configurationFinancieraFlowSchema.find(
+      configurationFinancieraFlowObjectWithoutUndefined(
         _id,
         TipoPersona,
         TipoRelacion,
@@ -186,13 +186,13 @@ async function getFinancieraFlowStepsWithEncargados(
   )[0].steps;
 
   return await inflateFlowSteps(stepsFromConfiguration, convenio);
-}
+};
 
-async function getCoordinacionLogisticaFlowStepsWithEncargados(
+export const getCoordinacionLogisticaFlowStepsWithEncargados = async (
   _id,
   steps,
   convenio
-) {
+) => {
   // For localhost testing only
   /*let stepsFromConfiguration = (
     await axios.default.get(
@@ -205,15 +205,15 @@ async function getCoordinacionLogisticaFlowStepsWithEncargados(
 
   // Production direct with database
   let stepsFromConfiguration = (
-    await CoordinacionLogisticaFlow.find(
-      coordinacionLogisticaFlowObjectWithoutUndefined(_id, steps)
+    await configurationCoordinacionLogisticaFlowSchema.find(
+      configurationCoordinacionLogisticaFlowObjectWithoutUndefined(_id, steps)
     )
   )[0].steps;
 
   return await inflateFlowSteps(stepsFromConfiguration, convenio);
-}
+};
 
-function makeRandomString(length) {
+export const makeRandomString = (length) => {
   var result = "";
   var characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -224,16 +224,16 @@ function makeRandomString(length) {
   }
 
   return result;
-}
+};
 
-async function uploadFileToSharePoint(path, buffer) {
+export const uploadFileToSharePoint = async (path, buffer) => {
   var response = await axios.default.post(
     `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/drive/root:${path}:/createUploadSession`,
     {},
     {
       headers: {
         Authorization:
-          "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
+          "Bearer " + (await getToken(tokenRequest)).accessToken,
       },
     }
   );
@@ -290,9 +290,9 @@ async function uploadFileToSharePoint(path, buffer) {
   delete uploadResponse.data["@content.downloadUrl"];
 
   return uploadResponse.data;
-}
+};
 
-async function uploadFilesToSharePointWorkflow(filesPath, files) {
+export const uploadFilesToSharePointWorkflow = async (filesPath, files) => {
   if (!files) {
     return [];
   }
@@ -326,7 +326,7 @@ async function uploadFilesToSharePointWorkflow(filesPath, files) {
   }
 
   return filesUploadResponses;
-}
+};
 
 export const configurationFinancieraFlowObjectWithoutUndefined = (
   _id,
@@ -365,7 +365,10 @@ export const configurationFinancieraFlowObjectWithoutUndefined = (
   return obj;
 };
 
-export const configurationCoordinacionLogisticaFlowObjectWithoutUndefined = (_id, steps) => {
+export const configurationCoordinacionLogisticaFlowObjectWithoutUndefined = (
+  _id,
+  steps
+) => {
   const obj = {};
 
   if (_id) {
@@ -379,7 +382,11 @@ export const configurationCoordinacionLogisticaFlowObjectWithoutUndefined = (_id
   return obj;
 };
 
-export const configurationJuridicaFlowObjectWithoutUndefined = (_id, tipo, steps) => {
+export const configurationJuridicaFlowObjectWithoutUndefined = (
+  _id,
+  tipo,
+  steps
+) => {
   const obj = {};
 
   if (_id) {
@@ -397,7 +404,21 @@ export const configurationJuridicaFlowObjectWithoutUndefined = (_id, tipo, steps
   return obj;
 };
 
-function formsFinancieraInvoiceObjectWithoutUndefined(
+export const authClientObjectWithoutUndefined = (_id, secret) => {
+  const obj = {};
+
+  if (_id) {
+    obj._id = _id;
+  }
+
+  if (secret) {
+    obj.secret = secret;
+  }
+
+  return obj;
+};
+
+export const formsFinancieraInvoiceObjectWithoutUndefined = (
   _id,
   Id,
   TipoPersona,
@@ -414,7 +435,7 @@ function formsFinancieraInvoiceObjectWithoutUndefined(
   GestionPath,
   SharePointFiles,
   Keys
-) {
+) => {
   var obj = {};
 
   if (_id) {
@@ -482,9 +503,9 @@ function formsFinancieraInvoiceObjectWithoutUndefined(
   }
 
   return obj;
-}
+};
 
-function formsCoordinacionLogisticaObjectWithoutUndefined(
+export const formsCoordinacionLogisticaObjectWithoutUndefined = (
   _id,
   Id,
   Nombre,
@@ -506,7 +527,7 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
   TicketNumber,
   Quotations,
   SelectedQuotation
-) {
+) => {
   var obj = {};
 
   if (_id) {
@@ -618,9 +639,9 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
   }
 
   return obj;
-}
+};
 
-function informationAirportObjectWithoutUndefined(
+export const informationAirportObjectWithoutUndefined = (
   _id,
   Code,
   IATA,
@@ -633,7 +654,7 @@ function informationAirportObjectWithoutUndefined(
   Longitude,
   Data_1,
   Data_2
-) {
+) => {
   var obj = {};
 
   if (_id) {
@@ -685,42 +706,4 @@ function informationAirportObjectWithoutUndefined(
   }
 
   return obj;
-}
-
-function authAPIClientObjectWithoutUndefined(_id, ClientId, ClientSecret) {
-  var obj = {};
-
-  if (_id) {
-    obj._id = _id;
-  }
-
-  if (ClientId) {
-    obj.ClientId = ClientId;
-  }
-
-  if (ClientSecret) {
-    obj.ClientSecret = ClientSecret;
-  }
-
-  return obj;
-}
-
-module.exports = {
-  uploadFileToSharePoint: uploadFileToSharePoint,
-  uploadFilesToSharePointWorkflow: uploadFilesToSharePointWorkflow,
-  makeRandomString: makeRandomString,
-  formsFinancieraInvoiceObjectWithoutUndefined:
-    formsFinancieraInvoiceObjectWithoutUndefined,
-  formsCoordinacionLogisticaObjectWithoutUndefined:
-    formsCoordinacionLogisticaObjectWithoutUndefined,
-  getConvenioFromSharePoint: getConvenioFromSharePoint,
-  getFinancieraFlowStepsWithEncargados: getFinancieraFlowStepsWithEncargados,
-  getCoordinacionLogisticaFlowStepsWithEncargados:
-    getCoordinacionLogisticaFlowStepsWithEncargados,
-  getUserFromSharePoint: getUserFromSharePoint,
-  informationAirportObjectWithoutUndefined:
-    informationAirportObjectWithoutUndefined,
-  getConvenioFromSharePointFromId: getConvenioFromSharePointFromId,
-  inflateFlowSteps: inflateFlowSteps,
-  authAPIClientObjectWithoutUndefined: authAPIClientObjectWithoutUndefined,
 };

@@ -1,10 +1,16 @@
 import { Router } from "express";
 const router = Router();
 
-// api/forms/financiera/invoices
+// api/forms/financiera/registration
 
-import invoiceRoutes from "./invoice/forms.financiera.invoice.routes";
+import formsFinancieraRegistrationRoutes from "./registration/forms.financiera.registration.routes";
 
-router.use("/invoices", invoiceRoutes);
+router.use("/registration", formsFinancieraRegistrationRoutes);
+
+// api/forms/financiera/invoice
+
+import formsFinancieraInvoiceRoutes from "./invoice/forms.financiera.invoice.routes";
+
+router.use("/invoice", formsFinancieraInvoiceRoutes);
 
 export default router

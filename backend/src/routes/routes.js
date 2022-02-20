@@ -1,165 +1,56 @@
 import axios from "axios";
+import { getToken, tokenRequest } from "../apis/microsoft/auth";
+import {
+  getConvenioFromSharePointFromId,
+  inflateFlowSteps,
+} from "../utils/utils";
+
 import { Router } from "express";
 const router = Router();
-const auth = require("../apis/microsoft/auth");
-const utils = require("../utils/utils");
-const FinancieraInvoice = require("../schemas/forms/financiera/invoice/forms.financiera.invoice.schema");
-const CoordinacionLogistica = require("../schemas/forms/coordinacionlogistica/forms.coordinacionlogistica.schema");
-const APIClient = require("../schemas/auth/APIClient");
-import formsRoutes from "./forms/forms.routes"
-import filesRoutes from "./files/files.routes"
-import configurationRoutes from "./configuration/configuration.routes"
-import informationRoutes from "./information/information.routes"
 
-// Forms
+// /api/forms
+
+import formsRoutes from "./forms/forms.routes";
 
 router.use("/forms", formsRoutes);
 
-// Files
+// /api/files
 
-router.use("/files", filesRoutes)
+import filesRoutes from "./files/files.routes";
 
-// API - Configuration
+router.use("/files", filesRoutes);
+
+// /api/configuration
+
+import configurationRoutes from "./configuration/configuration.routes";
 
 router.use("/configuration", configurationRoutes);
 
-// API - Information
+// /api/information
 
-router.use("/information", informationRoutes)
+import informationRoutes from "./information/information.routes";
 
-// Auth - Client
+router.use("/information", informationRoutes);
 
-router.post("/auth/apiclients", async (req, res) => {
-  try {
-    const airport = new Airport(req.body);
+// /api/auth
 
-    await airport.save();
+import authRoutes from "./information/information.routes";
 
-    res.status(201).json(airport);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.use("/auth", authRoutes);
 
-router.get("/auth/apiclients", async (req, res) => {
-  try {
-    const apiClient = await APIClient.find(
-      utils.authAPIClientObjectWithoutUndefined(
-        req.query._id,
-        req.query.ClientId,
-        req.query.ClientSecret
-      )
-    );
+// /api/convenios
 
-    res.status(200).json(apiClient);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+import conveniosRoutes from "./convenios/convenios.routes";
 
-router.put("/auth/apiclients", async (req, res) => {
-  try {
-    const apiClient = await APIClient.updateMany(
-      utils.authAPIClientObjectWithoutUndefined(
-        req.query._id,
-        req.query.ClientId,
-        req.query.ClientSecret
-      ),
-      req.body
-    );
+router.use("/convenios", conveniosRoutes);
 
-    res.status(200).json(apiClient);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+// /api/sharepoint
 
-router.delete("/auth/apiclients", async (req, res) => {
-  try {
-    const apiClient = await APIClient.deleteMany(
-      utils.authAPIClientObjectWithoutUndefined(
-        req.query._id,
-        req.query.ClientId,
-        req.query.ClientSecret
-      )
-    );
+import sharepointRoutes from "./sharepoint/sharepoint.routes";
 
-    res.status(200).json(apiClient);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.use("/sharepoint", sharepointRoutes);
 
-//
-
-router.get("/convenios", async (req, res) => {
-  const response = await axios.default.get(
-    `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONVENIOS_LIST_ID}/items?$select=id&$expand=fields($select=Aliado,Numero,Mostrar)&$filter=fields/Mostrar eq 1`,
-    {
-      headers: {
-        Authorization:
-          "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
-        Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
-      },
-    }
-  );
-
-  res.status(response.status).json(response.data);
-});
-
-router.get("/sites/:siteName", async (req, res) => {
-  const response = await axios.default.get(
-    `https://graph.microsoft.com/v1.0/sites/oei1.sharepoint.com:/sites/${req.params.siteName}`,
-    {
-      headers: {
-        Authorization:
-          "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
-      },
-    }
-  );
-
-  res.status(response.status).json(response.data);
-});
-
-router.get("/sites/:siteId/lists", async (req, res) => {
-  const response = await axios.default.get(
-    `https://graph.microsoft.com/v1.0/sites/${req.params.siteId}/lists`,
-    {
-      headers: {
-        Authorization:
-          "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
-      },
-    }
-  );
-  res.status(response.status).json(response.data);
-});
-
-router.get("/sites/:siteId/lists/:listId/items/:itemId", async (req, res) => {
-  const response = await axios.default.get(
-    `https://graph.microsoft.com/v1.0/sites/${req.params.siteId}/lists/${req.params.listId}/items/${req.params.itemId}`,
-    {
-      headers: {
-        Authorization:
-          "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
-      },
-    }
-  );
-  res.status(response.status).json(response.data);
-});
-
-router.get("/sites/:siteId/lists/:listId/:operation", async (req, res) => {
-  const response = await axios.default.get(
-    `https://graph.microsoft.com/v1.0/sites/${req.params.siteId}/lists/${req.params.listId}/${req.params.operation}`,
-    {
-      headers: {
-        Authorization:
-          "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
-      },
-    }
-  );
-
-  res.status(response.status).json(response.data);
-});
+// Future!!
 
 router.get("/workflow/validateUser", async (req, res) => {
   const contratistaProveedorResponse = (
@@ -167,8 +58,7 @@ router.get("/workflow/validateUser", async (req, res) => {
       `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_CONTRATISTASPROVEEDORES_LIST_ID}/items`,
       {
         headers: {
-          Authorization:
-            "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
+          Authorization: "Bearer " + (await getToken(tokenRequest)).accessToken,
           Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
         },
         params: {
@@ -198,13 +88,13 @@ router.get("/workflow/validateUser", async (req, res) => {
 router.post("/workflow/inflateFlowSteps", async (req, res) => {
   let response = req.body;
 
-  const convenio = await utils.getConvenioFromSharePointFromId(
+  const convenio = await getConvenioFromSharePointFromId(
     req.body[0].ConvenioInformation.id
   );
 
   response[0].ConvenioInformation = convenio;
 
-  response[0].Configuration = await utils.inflateFlowSteps(
+  response[0].Configuration = await inflateFlowSteps(
     req.body[0].Configuration,
     convenio
   );
@@ -216,13 +106,13 @@ router.post("/workflow/inflateFlowSteps", async (req, res) => {
 router.post("/workflow/validateConvenio", async (req, res) => {
   let response = req.body;
 
-  const convenio = await utils.getConvenioFromSharePointFromId(
+  const convenio = await getConvenioFromSharePointFromId(
     req.body[0].ConvenioInformation.id
   );
 
   response[0].ConvenioInformation = convenio;
 
-  response[0].Configuration = await utils.inflateFlowSteps(
+  response[0].Configuration = await inflateFlowSteps(
     req.body[0].Configuration,
     convenio
   );
@@ -303,461 +193,6 @@ router.get("/platform/validateUser", async (req, res) => {
     userInfo: userInformationResponse,
     plaftformInfo: platformUserInformationResponse,
   });
-});
-
-router.post("/forms/financiera/registration", async (req, res) => {
-  res.status(200).send();
-
-  let formsFinancieraRegistration = {
-    ID: req.body.Id,
-    "Tipo de persona": req.body.TipoPersona,
-    "Tipo de relacion": req.body.TipoRelacion,
-    "Tipo de soporte contable": req.body.TipoSoporteContable,
-    Email: req.body.Email,
-    Convenio: req.body.Convenio,
-    Nombre: req.body.Nombre,
-  };
-
-  if (req.body.TipoPersona === "Natural") {
-    formsFinancieraRegistration = Object.assign(formsFinancieraRegistration, {
-      "Numero de cedula de ciudadania": req.body.Identificator,
-      RUT: req.body.RutFiles,
-      Cedula: req.body.CedulaFiles,
-      "Certificacion bancaria": req.body.CertificacionBancariaFiles,
-    });
-  } else {
-    formsFinancieraRegistration = Object.assign(formsFinancieraRegistration, {
-      "NIT (Con digito de verificacion y previamente registrado) Ej. 890507890-4":
-        req.body.Identificator,
-      RUT: req.body.RutFiles,
-      "Cedula representante legal": req.body.CedulaFiles,
-      "Certificacion bancaria": req.body.CertificacionBancariaFiles,
-    });
-  }
-
-  formsFinancieraRegistration = Object.assign(formsFinancieraRegistration, {
-    "Informacion adicional": req.body.InformacionAdicional,
-  });
-
-  formsFinancieraRegistration = Object.assign(formsFinancieraRegistration, {
-    Keys: Object.keys(formsFinancieraRegistration),
-    ConvenioInformation: await utils.getConvenioFromSharePoint(
-      req.body.Convenio
-    ),
-  });
-
-  await axios.default.post(
-    `https://prod-20.brazilsouth.logic.azure.com:443/workflows/d86f74b4e4374001a78424d69cc15240/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4gnntmoLVSwLIKE6lvawvpgJ_Z3Xq9u5hTj0Iof4qQI`,
-    [formsFinancieraRegistration]
-  );
-});
-
-router.post("/forms/financiera/invoice", async (req, res) => {
-  res.status(200).send();
-
-  const convenio = await utils.getConvenioFromSharePoint(req.body.Convenio);
-
-  const configuration = await utils.getFinancieraFlowStepsWithEncargados(
-    req.body._id,
-    req.body.TipoPersona,
-    req.body.TipoRelacion,
-    req.body.TipoGestion,
-    req.body.TipoLegalizacion,
-    req.body.steps,
-    convenio
-  );
-
-  const gestionPath = `/Gestion/${req.body.TipoPersona}/${req.body.TipoRelacion}/${req.body.TipoGestion}/${req.body.Id}`;
-
-  let formsFinancieraInvoice =
-    utils.formsFinancieraInvoiceObjectWithoutUndefined(
-      req.body._id,
-      req.body.Id,
-      req.body.TipoPersona,
-      req.body.TipoRelacion,
-      req.body.Identificator,
-      req.body.Email,
-      req.body.TipoGestion,
-      req.body.TipoLegalizacion,
-      req.body.Convenio,
-      req.body.InformacionAdicional,
-      req.body.Requestor,
-      convenio,
-      configuration,
-      gestionPath
-    );
-
-  if (req.body.TipoPersona === "Natural") {
-    switch (req.body.TipoGestion) {
-      case "Cuenta de cobro":
-        formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-          SharePointFiles: [
-            {
-              Name: "Cuenta de cobro o factura",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Cuenta de cobro o factura`,
-                req.body.CuentaCobroFiles
-              ),
-            },
-            {
-              Name: "Factura equivalente",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Factura equivalente`,
-                req.body.FacturaEquivalenteFiles
-              ),
-            },
-            {
-              Name: "Seguridad social",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Seguridad Social`,
-                req.body.SeguridadSocialFiles
-              ),
-            },
-            {
-              Name: "Informe de actividades",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Informe de actividades`,
-                req.body.InformeActividadesFiles
-              ),
-            },
-          ],
-        });
-        break;
-      case "Anticipo":
-        formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-          SharePointFiles: [
-            {
-              Name: "Formato de solicitud de avances",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Formato de solicitud de avances`,
-                req.body.FormatoSolicitudAvancesFiles
-              ),
-            },
-            {
-              Name: "Cotizaciones",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Cotizaciones`,
-                req.body.CotizacionesFiles
-              ),
-            },
-            {
-              Name: "Solicitudes de comision",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Solicitudes de comision`,
-                req.body.SolicitudesComisionFiles
-              ),
-            },
-          ],
-        });
-        break;
-      case "Dieta":
-        formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-          SharePointFiles: [
-            {
-              Name: "Formato de solicitud de viajes",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Formato de solicitud de viajes`,
-                req.body.FormatoSolicitudViajesFiles
-              ),
-            },
-          ],
-        });
-        break;
-      case "Legalizacion":
-        switch (req.body.TipoLegalizacion) {
-          case "Desplazamiento":
-            formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-              SharePointFiles: [
-                {
-                  Name: "Formato de legalizacion de viajes",
-                  Files: await utils.uploadFilesToSharePointWorkflow(
-                    `${gestionPath}/Formato de legalizacion de viajes`,
-                    req.body.FormatoLegalizacionViajesFiles
-                  ),
-                },
-                {
-                  Name: "Soportes facturas",
-                  Files: await utils.uploadFilesToSharePointWorkflow(
-                    `${gestionPath}/Soportes facturas`,
-                    req.body.SoportesFacturasFiles
-                  ),
-                },
-                {
-                  Name: "Pasabordos tiquetes aereos",
-                  Files: await utils.uploadFilesToSharePointWorkflow(
-                    `${gestionPath}/Pasabordos tiquetes aereos`,
-                    req.body.PasabordosTiquetesAereosFiles
-                  ),
-                },
-                {
-                  Name: "Informe de actividades",
-                  Files: await utils.uploadFilesToSharePointWorkflow(
-                    `${gestionPath}/Informe de actividades`,
-                    req.body.InformeActividadesFiles
-                  ),
-                },
-              ],
-            });
-            break;
-          case "Suministro y servicios":
-            formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-              SharePointFiles: [
-                {
-                  Name: "Formato de legalizacion",
-                  Files: await utils.uploadFilesToSharePointWorkflow(
-                    `${gestionPath}/Formato de legalizacion`,
-                    req.body.FormatoLegalizacionFiles
-                  ),
-                },
-                {
-                  Name: "Cuenta de cobro o factura",
-                  Files: await utils.uploadFilesToSharePointWorkflow(
-                    `${gestionPath}/Cuenta de cobro o factura`,
-                    req.body.CuentaCobroFiles
-                  ),
-                },
-                {
-                  Name: "Soportes facturas",
-                  Files: await utils.uploadFilesToSharePointWorkflow(
-                    `${gestionPath}/Soportes facturas`,
-                    req.body.SoportesFacturasFiles
-                  ),
-                },
-              ],
-            });
-            break;
-        }
-        break;
-    }
-  } else {
-    switch (req.body.TipoGestion) {
-      case "Cuenta de cobro":
-        formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-          SharePointFiles: [
-            {
-              Name: "Cuenta de cobro o factura",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Cuenta de cobro o factura`,
-                req.body.CuentaCobroFiles
-              ),
-            },
-            {
-              Name: "Factura equivalente",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Factura equivalente`,
-                req.body.FacturaEquivalenteFiles
-              ),
-            },
-            {
-              Name: "Certificado de parafiscales",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Certificado de parafiscales`,
-                req.body.CertificadoParafiscalesFiles
-              ),
-            },
-            {
-              Name: "Informe de actividades",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Informe de actividades`,
-                req.body.InformeActividadesFiles
-              ),
-            },
-            {
-              Name: "Poliza de anticipo y cumpliento",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Poliza de anticipo y cumpliento`,
-                req.body.PolizaAnticipoCumplientoFiles
-              ),
-            },
-          ],
-        });
-        break;
-      case "Anticipo":
-        formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-          SharePointFiles: [
-            {
-              Name: "Camara de comercio",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Camara de comercio`,
-                req.body.CamaraComercioFiles
-              ),
-            },
-            {
-              Name: "Formato de solicitud de avances",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Formato de solicitud de avances`,
-                req.body.FormatoSolicitudAvancesFiles
-              ),
-            },
-            {
-              Name: "Cotizaciones",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Cotizaciones`,
-                req.body.CotizacionesFiles
-              ),
-            },
-            {
-              Name: "Solicitudes de comision",
-              Files: await utils.uploadFilesToSharePointWorkflow(
-                `${gestionPath}/Solicitudes de comision`,
-                req.body.SolicitudesComisionFiles
-              ),
-            },
-          ],
-        });
-        break;
-      case "Legalizacion":
-        switch (req.body.TipoLegalizacion) {
-          case "Suministro y servicios":
-            formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-              SharePointFiles: [
-                {
-                  Name: "Formato de legalizacion",
-                  Files: await utils.uploadFilesToSharePointWorkflow(
-                    `${gestionPath}/Formato de legalizacion`,
-                    req.body.FormatoLegalizacionFiles
-                  ),
-                },
-                {
-                  Name: "Cuenta de cobro o factura",
-                  Files: await utils.uploadFilesToSharePointWorkflow(
-                    `${gestionPath}/Cuenta de cobro o factura`,
-                    req.body.CuentaCobroFiles
-                  ),
-                },
-                {
-                  Name: "Soportes facturas",
-                  Files: await utils.uploadFilesToSharePointWorkflow(
-                    `${gestionPath}/Soportes facturas`,
-                    req.body.SoportesFacturasFiles
-                  ),
-                },
-                {
-                  Name: "Certificado de parafiscales",
-                  Files: await utils.uploadFilesToSharePointWorkflow(
-                    `${gestionPath}/Certificado de parafiscales`,
-                    req.body.CertificadoParafiscalesFiles
-                  ),
-                },
-              ],
-            });
-            break;
-        }
-        break;
-    }
-  }
-
-  formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
-    Keys: Object.keys(formsFinancieraInvoice),
-  });
-
-  /* Save to database */
-  const financieraInvoice = new FinancieraInvoice(formsFinancieraInvoice);
-  financieraInvoice.save();
-
-  let retries = 0;
-  do {
-    try {
-      /* Send to MS FLOW */
-      await axios.default.post(
-        `https://prod-10.brazilsouth.logic.azure.com:443/workflows/224c1c2ba11641eca0c380112b3f45f7/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ixU2jDh0rBt2Ynx9nyOE_b4N0rP0p-q7b9shJ2qKeII`,
-        [formsFinancieraInvoice]
-      );
-
-      break;
-    } catch (err) {
-      console.log(`Try ${retries} - Error:`, err);
-    }
-
-    retries++;
-  } while (retries < 5);
-});
-
-router.post("/forms/coordinacionlogistica", async (req, res) => {
-  res.status(200).send();
-
-  const convenio = await utils.getConvenioFromSharePoint(req.body.Convenio);
-
-  const configuration =
-    await utils.getCoordinacionLogisticaFlowStepsWithEncargados(
-      req.body._id,
-      req.body.steps,
-      convenio
-    );
-
-  const coordinacionLogisticaPath = `/Coordinacion Logistica/${req.body.Id}`;
-
-  let formsCoordinacionLogistica =
-    utils.formsCoordinacionLogisticaObjectWithoutUndefined(
-      req.body._id,
-      req.body.Id,
-      req.body.Nombre,
-      req.body.Convenio,
-      req.body.Tramos,
-      req.body.IdentificatorType,
-      req.body.Identificator,
-      new Date(req.body.FechaNacimiento).toLocaleDateString("es-CO", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }),
-      req.body.EquipajeAdicional,
-      req.body.Email,
-      req.body.Telefono,
-      req.body.InformacionAdicional,
-      req.body.Requestor,
-      convenio,
-      configuration,
-      coordinacionLogisticaPath
-    );
-
-  formsCoordinacionLogistica = Object.assign(formsCoordinacionLogistica, {
-    SharePointFiles: [
-      {
-        Name: "Pasaporte",
-        Files: await utils.uploadFilesToSharePointWorkflow(
-          `${coordinacionLogisticaPath}/Pasaporte`,
-          req.body.PasaporteFiles
-        ),
-      },
-      {
-        Name: "Comprobantes",
-        Files: await utils.uploadFilesToSharePointWorkflow(
-          `${coordinacionLogisticaPath}/Comprobantes`,
-          req.body.ComprobantesFiles
-        ),
-      },
-    ],
-  });
-
-  formsCoordinacionLogistica = Object.assign(formsCoordinacionLogistica, {
-    Keys: Object.keys(formsCoordinacionLogistica),
-  });
-
-  /* Save to database */
-  const coordinacionLogistica = new CoordinacionLogistica(
-    formsCoordinacionLogistica
-  );
-
-  await coordinacionLogistica.save();
-
-  let retries = 0;
-  do {
-    try {
-      /* Send to MS FLOW */
-      await axios.default.post(
-        `https://prod-10.brazilsouth.logic.azure.com:443/workflows/d9284b8deff34c34b78c7309cbeb0f45/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xt5QdZEYOiWUAmAfu-ykUU1oMDBm2bKT9yUBS0k63sw`,
-        [formsCoordinacionLogistica]
-      );
-
-      break;
-    } catch (err) {
-      console.log(`Try ${retries} - Error:`, err);
-    }
-
-    retries++;
-  } while (retries < 5);
 });
 
 export default router;

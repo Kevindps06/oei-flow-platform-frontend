@@ -18,7 +18,7 @@ const msalConfig = {
  * The scope is always in the format '<resource>/.default'. For more, visit:
  * https://docs.microsoft.com/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow
  */
-const tokenRequest = {
+export const tokenRequest = {
   scopes: ["https://graph.microsoft.com/.default"],
 };
 
@@ -32,7 +32,7 @@ const cca = new msal.ConfidentialClientApplication(msalConfig);
  * Acquires token with client credentials.
  * @param {object} tokenRequest
  */
-async function getToken(tokenRequest) {
+export const getToken = async (tokenRequest) => {
   while (true) {
     try {
       return await cca.acquireTokenByClientCredential(tokenRequest);
@@ -40,9 +40,4 @@ async function getToken(tokenRequest) {
       console.log(err);
     }
   }
-}
-
-module.exports = {
-  tokenRequest: tokenRequest,
-  getToken: getToken,
 };

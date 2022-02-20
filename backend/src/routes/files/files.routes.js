@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = Router();
 
-// API - Files
+// /api/files
 
 import * as filesController from "../../controllers/files/files.controller";
 

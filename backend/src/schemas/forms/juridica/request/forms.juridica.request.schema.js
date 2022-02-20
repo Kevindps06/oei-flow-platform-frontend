@@ -25,4 +25,4 @@ export default mongoose
     readPreference: "secondaryPreferred",
     retryWrites: false,
   })
-  .model("FinancieraInvoice", schema, "FinancieraInvoices");
+  .model("JuridicaRequest", schema, "JuridicaRequest");

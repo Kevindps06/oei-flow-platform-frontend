@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = Router();
 
-// API - Information - Airport
+// /api/information/airport
 
 import airportRoutes from "./airport/informacion.airport.routes"
 

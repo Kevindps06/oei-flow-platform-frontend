@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const schema = mongoose.Schema({
   Code: String,
@@ -14,7 +14,7 @@ const schema = mongoose.Schema({
   "Data 2": Number,
 });
 
-module.exports = mongoose
+export default mongoose
   .createConnection(process.env.MONGODB_INFORMATION_URI, {
     tls: true,
     tlsCAFile: process.env.MONGODB_TLSCAFILE_PATH,

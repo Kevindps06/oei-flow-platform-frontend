@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const schema = mongoose.Schema({
   aliado: String,
@@ -14,7 +14,7 @@ const schema = mongoose.Schema({
   enabled: Boolean,
 });
 
-module.exports = mongoose
+export default mongoose
   .createConnection(process.env.MONGODB_INFORMATION_URI, {
     tls: true,
     tlsCAFile: process.env.MONGODB_TLSCAFILE_PATH,
@@ -22,4 +22,4 @@ module.exports = mongoose
     readPreference: "secondaryPreferred",
     retryWrites: false,
   })
-  .model("convenio", schema, "convenios");
+  .model("convenio", schema, "convenio");

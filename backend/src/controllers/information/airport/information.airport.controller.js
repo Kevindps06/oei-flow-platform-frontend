@@ -1,8 +1,9 @@
-const airportSchema = require("../../../schemas/information/Airport");
+import informationAirportSchema from "../../../schemas/information/airport/information.airport.schema";
+import { informationAirportObjectWithoutUndefined } from "../../../utils/utils";
 
 export const save = async (req, res) => {
   try {
-    const airport = new airportSchema(req.body);
+    const airport = new informationAirportSchema(req.body);
 
     await airport.save();
 
@@ -14,8 +15,8 @@ export const save = async (req, res) => {
 
 export const find = async (req, res) => {
   try {
-    const airport = await airportSchema.find(
-      utils.informationAirportObjectWithoutUndefined(
+    const airport = await informationAirportSchema.find(
+      informationAirportObjectWithoutUndefined(
         req.query._id,
         req.query.Code,
         req.query.IATA,
@@ -39,8 +40,8 @@ export const find = async (req, res) => {
 
 export const updateMany = async (req, res) => {
   try {
-    const airport = await airportSchema.updateMany(
-      utils.informationAirportObjectWithoutUndefined(
+    const airport = await informationAirportSchema.updateMany(
+      informationAirportObjectWithoutUndefined(
         req.query._id,
         req.query.Code,
         req.query.IATA,
@@ -65,8 +66,8 @@ export const updateMany = async (req, res) => {
 
 export const deleteMany = async (req, res) => {
   try {
-    const airport = await Airport.deleteMany(
-      utils.informationAirportObjectWithoutUndefined(
+    const airport = await informationAirportSchema.deleteMany(
+      informationAirportObjectWithoutUndefined(
         req.query._id,
         req.query.Code,
         req.query.IATA,

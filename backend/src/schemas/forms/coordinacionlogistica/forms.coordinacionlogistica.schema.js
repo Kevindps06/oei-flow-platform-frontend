@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const schema = mongoose.Schema({
   Id: String,
@@ -24,7 +24,7 @@ const schema = mongoose.Schema({
   SelectedQuotation: Object,
 });
 
-module.exports = mongoose
+export default mongoose
   .createConnection(process.env.MONGODB_FORMS_URI, {
     tls: true,
     tlsCAFile: process.env.MONGODB_TLSCAFILE_PATH,
