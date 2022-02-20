@@ -1,5 +1,5 @@
 import FinancieraFlow from "../../../schemas/configuration/financieraflow/configuration.financieraflow.schema";
-import utils from "../../../utils/utils";
+import { configurationFinancieraFlowObjectWithoutUndefined } from "../../../utils/utils";
 
 export const save = async (req, res) => {
   try {
@@ -16,7 +16,7 @@ export const save = async (req, res) => {
 export const find = async (req, res) => {
   try {
     const financieraFlow = await FinancieraFlow.find(
-      utils.financieraFlowObjectWithoutUndefined(
+      configurationFinancieraFlowObjectWithoutUndefined(
         req.query._id,
         req.query.persona,
         req.query.relacion,
@@ -35,7 +35,7 @@ export const find = async (req, res) => {
 export const updateMany = async (req, res) => {
   try {
     const financieraFlow = await FinancieraFlow.updateMany(
-      utils.financieraFlowObjectWithoutUndefined(
+      configurationFinancieraFlowObjectWithoutUndefined(
         req.query._id,
         req.query.persona,
         req.query.relacion,
@@ -55,7 +55,7 @@ export const updateMany = async (req, res) => {
 export const deleteMany = async (req, res) => {
   try {
     const financieraFlow = await FinancieraFlow.deleteMany(
-      utils.financieraFlowObjectWithoutUndefined(
+      configurationFinancieraFlowObjectWithoutUndefined(
         req.query._id,
         req.query.persona,
         req.query.relacion,

@@ -1,5 +1,5 @@
 import CoordinacionLogisticaFlow from "../../../schemas/configuration/coordinacionlogisticaflow/configuration.coordinacionlogisticaflow.schema.js";
-import utils from "../../../utils/utils";
+import { configurationCoordinacionLogisticaFlowObjectWithoutUndefined } from "../../../utils/utils";
 
 export const save = async (req, res) => {
   try {
@@ -16,7 +16,7 @@ export const save = async (req, res) => {
 export const find = async (req, res) => {
   try {
     const coordinacionLogisticaFlow = await CoordinacionLogisticaFlow.find(
-      utils.coordinacionLogisticaFlowObjectWithoutUndefined(
+      configurationCoordinacionLogisticaFlowObjectWithoutUndefined(
         req.query._id,
         req.query.steps
       )
@@ -32,7 +32,7 @@ export const updateMany = async (req, res) => {
   try {
     const coordinacionLogisticaFlow =
       await CoordinacionLogisticaFlow.updateMany(
-        utils.coordinacionLogisticaFlowObjectWithoutUndefined(
+        configurationCoordinacionLogisticaFlowObjectWithoutUndefined(
           req.query._id,
           req.query.steps
         ),
@@ -49,7 +49,7 @@ export const deleteMany = async (req, res) => {
   try {
     const coordinacionLogisticaFlow =
       await CoordinacionLogisticaFlow.deleteMany(
-        utils.coordinacionLogisticaFlowObjectWithoutUndefined(
+        configurationCoordinacionLogisticaFlowObjectWithoutUndefined(
           req.query._id,
           req.query.steps
         )

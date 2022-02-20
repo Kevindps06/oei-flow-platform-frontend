@@ -328,15 +328,15 @@ async function uploadFilesToSharePointWorkflow(filesPath, files) {
   return filesUploadResponses;
 }
 
-function financieraFlowObjectWithoutUndefined(
+export const configurationFinancieraFlowObjectWithoutUndefined = (
   _id,
   persona,
   relacion,
   gestion,
   legalizacion,
   steps
-) {
-  var obj = {};
+) => {
+  const obj = {};
 
   if (_id) {
     obj._id = _id;
@@ -363,10 +363,10 @@ function financieraFlowObjectWithoutUndefined(
   }
 
   return obj;
-}
+};
 
-function coordinacionLogisticaFlowObjectWithoutUndefined(_id, steps) {
-  var obj = {};
+export const configurationCoordinacionLogisticaFlowObjectWithoutUndefined = (_id, steps) => {
+  const obj = {};
 
   if (_id) {
     obj._id = _id;
@@ -377,9 +377,9 @@ function coordinacionLogisticaFlowObjectWithoutUndefined(_id, steps) {
   }
 
   return obj;
-}
+};
 
-export const juridicaFlowObjectWithoutUndefined = (_id, tipo, steps) => {
+export const configurationJuridicaFlowObjectWithoutUndefined = (_id, tipo, steps) => {
   const obj = {};
 
   if (_id) {
@@ -709,9 +709,6 @@ module.exports = {
   uploadFileToSharePoint: uploadFileToSharePoint,
   uploadFilesToSharePointWorkflow: uploadFilesToSharePointWorkflow,
   makeRandomString: makeRandomString,
-  financieraFlowObjectWithoutUndefined: financieraFlowObjectWithoutUndefined,
-  coordinacionLogisticaFlowObjectWithoutUndefined:
-    coordinacionLogisticaFlowObjectWithoutUndefined,
   formsFinancieraInvoiceObjectWithoutUndefined:
     formsFinancieraInvoiceObjectWithoutUndefined,
   formsCoordinacionLogisticaObjectWithoutUndefined:
