@@ -1,3 +1,5 @@
+import { getConvenioFromSharePoint } from "../../../../utils/utils"
+
 export const post = async (req, res) => {
   res.status(200).send();
 
@@ -34,7 +36,7 @@ export const post = async (req, res) => {
 
   formsFinancieraRegistration = Object.assign(formsFinancieraRegistration, {
     Keys: Object.keys(formsFinancieraRegistration),
-    ConvenioInformation: await utils.getConvenioFromSharePoint(
+    ConvenioInformation: await getConvenioFromSharePoint(
       req.body.Convenio
     ),
   });

@@ -1,4 +1,5 @@
 import FinancieraInvoice from "../../../../schemas/forms/financiera/invoice/forms.financiera.invoice.schema"
+import { formsFinancieraInvoiceObjectWithoutUndefined } from "../../../../utils/utils"
 
 export const save = async (req, res) => {
     try {
@@ -15,7 +16,7 @@ export const save = async (req, res) => {
 export const find = async (req, res) => {
   try {
     const financieraInvoice = await FinancieraInvoice.find(
-      utils.formsFinancieraInvoiceObjectWithoutUndefined(
+      formsFinancieraInvoiceObjectWithoutUndefined(
         req.query._id,
         req.query.Id,
         req.query.TipoPersona,
@@ -44,7 +45,7 @@ export const find = async (req, res) => {
 export const updateMany = async (req, res) => {
   try {
     const financieraInvoice = await FinancieraInvoice.updateMany(
-      utils.formsFinancieraInvoiceObjectWithoutUndefined(
+      formsFinancieraInvoiceObjectWithoutUndefined(
         req.query._id,
         req.query.Id,
         req.query.TipoPersona,
@@ -74,7 +75,7 @@ export const updateMany = async (req, res) => {
 export const deleteMany = async (req, res) => {
   try {
     const financieraInvoice = await FinancieraInvoice.deleteMany(
-      utils.formsFinancieraInvoiceObjectWithoutUndefined(
+      formsFinancieraInvoiceObjectWithoutUndefined(
         req.query._id,
         req.query.Id,
         req.query.TipoPersona,

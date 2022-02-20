@@ -1,0 +1,3 @@
+npm run build
+docker build . --tag kevindps06/web-app:preproduction
+docker push kevindps06/web-app:preproduction
