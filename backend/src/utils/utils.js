@@ -232,7 +232,8 @@ async function uploadFileToSharePoint(path, buffer) {
     {},
     {
       headers: {
-        Authorization: "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
+        Authorization:
+          "Bearer " + (await auth.getToken(auth.tokenRequest)).accessToken,
       },
     }
   );
@@ -377,6 +378,24 @@ function coordinacionLogisticaFlowObjectWithoutUndefined(_id, steps) {
 
   return obj;
 }
+
+export const juridicaFlowObjectWithoutUndefined = (_id, tipo, steps) => {
+  const obj = {};
+
+  if (_id) {
+    obj._id = _id;
+  }
+
+  if (tipo) {
+    obj.tipo = tipo;
+  }
+
+  if (steps) {
+    obj.steps = steps;
+  }
+
+  return obj;
+};
 
 function formsFinancieraInvoiceObjectWithoutUndefined(
   _id,
@@ -523,11 +542,11 @@ function formsCoordinacionLogisticaObjectWithoutUndefined(
         horaIda: tramo.horaIda,
         fechaVuelta: tramo.fechaVuelta
           ? new Date(tramo.fechaVuelta).toLocaleDateString("es-CO", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
           : undefined,
         horaVuelta: tramo.horaVuelta,
       });

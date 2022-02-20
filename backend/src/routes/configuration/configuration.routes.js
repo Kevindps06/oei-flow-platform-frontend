@@ -1,13 +1,19 @@
 import { Router } from "express";
 const router = Router();
 
-// API - Configuration - FinancieraFlow
+// /api/configuration/financieraflow
 
 import financieraFlowRoutes from "./financieraflow/configuration.financieraflow.routes"
 
 router.use("/financieraflow", financieraFlowRoutes);
 
-// API - Configuration - CoordinacionLogisticaFlow
+// /api/configuration/juridicaflow
+
+import juridicaFlowRoutes from "./juridicaflow/configuration.juridicaflow.routes"
+
+router.use("/juridicaflow", juridicaFlowRoutes);
+
+// /api/configuration/coordinacionlogisticaflow
 
 import coordinacionLogisticaFlowRoutes from "./financieraflow/configuration.financieraflow.routes"
 

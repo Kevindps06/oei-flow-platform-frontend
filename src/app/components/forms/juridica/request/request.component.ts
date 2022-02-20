@@ -1,4 +1,3 @@
-import { KeyValue } from '@angular/common';
 import { HttpEventType } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Utils } from 'src/app/classes/utils';

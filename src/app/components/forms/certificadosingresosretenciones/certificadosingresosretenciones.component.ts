@@ -83,8 +83,6 @@ export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
               });
               break;
             case HttpEventType.Response:
-              //window.open(window.URL.createObjectURL(event.body));
-
               saveAs(event.body, `${this.identificator}.pdf`);
 
               this.sharedService.pushToastMessage({
