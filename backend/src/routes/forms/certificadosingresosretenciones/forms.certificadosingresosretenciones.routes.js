@@ -7,7 +7,13 @@ import * as certificadosIngresosRetencionesController from "../../../controllers
 
 router.get(
   "/",
-  certificadosIngresosRetencionesController.getCertificadoIngresosRetencionesByIdentificator
+  certificadosIngresosRetencionesController.getCertificadoIngresosRetencionesByYearAndIdentificator
 );
+
+// api/forms/certificadosingresosretenciones/years
+
+import certificadosIngresosRetencionesYearsRoutes from "./years/forms.certificadosingresosretenciones.years.routes";
+
+router.use("/years", certificadosIngresosRetencionesYearsRoutes);
 
 export default router;

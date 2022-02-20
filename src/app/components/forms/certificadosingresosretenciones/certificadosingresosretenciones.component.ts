@@ -12,12 +12,12 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./certificadosingresosretenciones.component.css'],
 })
 export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
+  
   identificator: string = '';
 
   constructor(
     private formsService: FormsService,
-    private sharedService: SharedService,
-    private sanitizer: DomSanitizer
+    private sharedService: SharedService
   ) {}
 
   ngOnInit(): void {}
