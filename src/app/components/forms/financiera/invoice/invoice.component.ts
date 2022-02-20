@@ -1680,7 +1680,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
     this.formIndex = 0;
 
     this.formsService
-      .postFormsFinancieraInvoice(formsFinancieraInvoice)
+      .postFormsFinancieraInvoiceFlow(formsFinancieraInvoice)
       .subscribe(
         (event) => {
           switch (event.type) {

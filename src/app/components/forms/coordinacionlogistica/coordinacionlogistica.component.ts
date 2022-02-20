@@ -249,7 +249,7 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
 
     var taskId: string = Utils.makeRandomString(4);
     this.formsService
-      .postFormsCoordinacionLogistica(formsCoordinacionLogistica)
+      .postFormsCoordinacionLogisticaFlow(formsCoordinacionLogistica)
       .subscribe(
         (event) => {
           switch (event.type) {

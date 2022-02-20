@@ -95,13 +95,13 @@ export class FormsService {
     );
   }
 
-  postFormsFinancieraInvoice(
+  postFormsFinancieraInvoiceFlow(
     formsFinancieraInvoice: FormsFinancieraInvoice
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'POST',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/financiera/invoice`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/financiera/invoice/flow`,
         formsFinancieraInvoice,
         {
           headers: new HttpHeaders({
@@ -145,13 +145,13 @@ export class FormsService {
     );
   }
 
-  postFormsCoordinacionLogistica(
+  postFormsCoordinacionLogisticaFlow(
     formsCoordinacionLogistica: FormsCoordinacionLogistica
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'POST',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/coordinacionlogistica`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/coordinacionlogistica/flow`,
         formsCoordinacionLogistica,
         {
           headers: new HttpHeaders({
@@ -167,7 +167,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/coordinacioneslogisticas`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/coordinacionlogistica`,
         {
           params: new HttpParams().appendAll({
             Id: Id,
@@ -185,7 +185,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'PUT',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/coordinacioneslogisticas`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/coordinacionlogistica`,
         formsCoordinacionLogistica,
         {
           headers: new HttpHeaders({
