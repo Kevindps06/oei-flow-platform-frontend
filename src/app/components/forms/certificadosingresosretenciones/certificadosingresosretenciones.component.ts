@@ -12,7 +12,14 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./certificadosingresosretenciones.component.css'],
 })
 export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
-  
+  years: string[] = [];
+
+  year: string = '';
+
+  setYear(year: string) {
+    this.year = year
+  }
+
   identificator: string = '';
 
   constructor(
@@ -20,13 +27,44 @@ export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
     private sharedService: SharedService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const taskId = Utils.makeRandomString(4);
+
+    this.formsService
+      .getFormsCertificadosIngresosRetencionesYears()
+      .subscribe(async (event) => {
+        switch (event.type) {
+          case HttpEventType.Sent:
+            this.sharedService.pushWaitTask({
+              id: taskId,
+              description: 'Obteniendo informacion...',
+              progress: 0,
+            });
+            break;
+          case HttpEventType.DownloadProgress:
+            this.sharedService.pushWaitTask({
+              id: taskId,
+              progress: Math.round((event.loaded * 100) / event.total),
+            });
+            break;
+          case HttpEventType.Response:
+            this.years = event.body;
+
+            this.year = this.years[0]
+
+            this.sharedService.removeWaitTask({
+              id: taskId,
+            });
+            break;
+        }
+      });
+  }
 
   btnValidarDocumento() {
     const taskId = Utils.makeRandomString(4);
 
     this.formsService
-      .getFormsCertificadosIngresosRetenciones(this.identificator)
+      .getFormsCertificadosIngresosRetenciones(this.year, this.identificator)
       .subscribe(
         async (event) => {
           switch (event.type) {
@@ -52,7 +90,7 @@ export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
                 title: 'Certificado de ingresos y retenciones encontrado',
-                description: `Su certificado de ingresos y retenciones identificado con el numero de cedula de ciudadania ${this.identificator} ha sido encontrado e iniciara su descarga en momento.`,
+                description: `Su certificado de ingresos y retenciones identificado con el numero de cedula de ciudadania ${this.identificator} ha sido encontrado e iniciara su descarga en un momento.`,
               });
 
               this.sharedService.removeWaitTask({

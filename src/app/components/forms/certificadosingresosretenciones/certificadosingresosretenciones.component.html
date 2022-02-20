@@ -3,15 +3,20 @@
     <div class="card card-body">
       <div class="row g-3">
         <div class="col-12">
-          <ul class="nav nav-tabs">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Active</a>
+          <ul class="nav nav-pills nav-fill">
+            <li *ngFor="let avaibleYear of years" class="nav-item">
+              <a
+                (click)="setYear(avaibleYear)"
+                class="btn nav-link"
+                [ngClass]="{ active: year === avaibleYear }"
+                >{{ avaibleYear }}</a
+              >
             </li>
           </ul>
         </div>
         <div class="col-12">
           <h5 class="card-title text-center">
-            Busqueda de certificados de ingresos y retenciones
+            Busqueda de certificados de ingresos y retenciones año {{ year }}
           </h5>
         </div>
         <div class="col-9 col-md-10 col-xl-11">

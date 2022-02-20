@@ -113,13 +113,29 @@ export class FormsService {
     );
   }
 
-  getFormsCertificadosIngresosRetenciones(identificator: string): Observable<any> {
+  getFormsCertificadosIngresosRetencionesYears(): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/certificadosingresosretenciones/years`,
+        {
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  getFormsCertificadosIngresosRetenciones(
+    year: string,
+    identificator: string
+  ): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
         `${environment.backendProtocol}://${environment.backendAddress}/api/forms/certificadosingresosretenciones`,
         {
           params: new HttpParams().appendAll({
+            year,
             identificator,
           }),
           reportProgress: true,
