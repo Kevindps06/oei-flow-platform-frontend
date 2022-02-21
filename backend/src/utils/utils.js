@@ -231,6 +231,7 @@ export const inflateFlowStepsJuridicaOEI = async (flowSteps, convenio) => {
     );
 
     console.log("Convenio", convenio)
+    console.log("Key", flowSteps[i].key);
 
     const encargado = await getUserFromSharePointJuridicaOEI(
       convenio[flowSteps[i].key][exception ? exception.encargado : 0].LookupId
