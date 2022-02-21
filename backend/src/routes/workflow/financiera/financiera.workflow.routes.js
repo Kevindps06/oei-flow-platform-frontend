@@ -3,8 +3,8 @@ const router = Router();
 
 // /api/workflow/financiera/inflateFlowSteps
 
-import * as workflowFInancieraController from "../../../controllers/workflow/financiera/financiera.workflow.controller"
+import * as workflowFinancieraController from "../../../controllers/workflow/financiera/financiera.workflow.controller"
 
-router.get("/inflateFlowSteps", workflowFInancieraController);
+router.get("/inflateFlowSteps", workflowFinancieraController.inflateFlowSteps);
 
 export default router;
