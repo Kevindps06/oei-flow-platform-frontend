@@ -5,6 +5,6 @@ const router = Router();
 
 import * as workflowFinancieraController from "../../../controllers/workflow/financiera/financiera.workflow.controller"
 
-router.get("/inflateFlowSteps", workflowFinancieraController.inflateFlowSteps);
+router.post("/inflateFlowSteps", workflowFinancieraController.inflateFlowSteps);
 
 export default router;

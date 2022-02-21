@@ -2,7 +2,7 @@ import axios from "axios";
 import { getToken, tokenRequest } from "../apis/microsoft/auth";
 import {
   getConvenioFromSharePointById,
-  inflateFlowSteps,
+  inflateFlowStepsFinancieraOEI,
 } from "../utils/utils";
 
 import { Router } from "express";
@@ -101,7 +101,7 @@ router.post("/workflow/inflateFlowSteps", async (req, res) => {
 
   response[0].ConvenioInformation = convenio;
 
-  response[0].Configuration = await inflateFlowSteps(
+  response[0].Configuration = await inflateFlowStepsFinancieraOEI(
     req.body[0].Configuration,
     convenio
   );
@@ -119,7 +119,7 @@ router.post("/workflow/validateConvenio", async (req, res) => {
 
   response[0].ConvenioInformation = convenio;
 
-  response[0].Configuration = await inflateFlowSteps(
+  response[0].Configuration = await inflateFlowStepsFinancieraOEI(
     req.body[0].Configuration,
     convenio
   );

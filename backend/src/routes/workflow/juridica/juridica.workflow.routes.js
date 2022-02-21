@@ -5,6 +5,6 @@ const router = Router();
 
 import * as workflowJuridicaController from "../../../controllers/workflow/juridica/juridica.workflow.controller";
 
-router.get("/inflateFlowSteps", workflowJuridicaController.inflateFlowSteps);
+router.post("/inflateFlowSteps", workflowJuridicaController.inflateFlowSteps);
 
 export default router;
