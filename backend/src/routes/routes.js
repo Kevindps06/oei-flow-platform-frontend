@@ -50,6 +50,12 @@ import sharepointRoutes from "./sharepoint/sharepoint.routes";
 
 router.use("/sharepoint", sharepointRoutes);
 
+// /api/workflow
+
+import workflowRoutes from "./workflow/workflow.routes"
+
+router.use("/workflow", workflowRoutes);
+
 // Future!!
 
 router.get("/workflow/validateUser", async (req, res) => {
@@ -85,6 +91,7 @@ router.get("/workflow/validateUser", async (req, res) => {
   }
 });
 
+/* Deprecated delete in future release */
 router.post("/workflow/inflateFlowSteps", async (req, res) => {
   let response = req.body;
 
@@ -102,7 +109,7 @@ router.post("/workflow/inflateFlowSteps", async (req, res) => {
   res.status(200).json(response);
 });
 
-/* Deprecated delete in next release */
+/* Deprecated delete in future release */
 router.post("/workflow/validateConvenio", async (req, res) => {
   let response = req.body;
 
