@@ -38,10 +38,10 @@ export const getConvenioFromSharePoint = async (convenioNumber) => {
 
   delete convenioFromSharePoint["@odata.etag"];
 
-  return convenioFromSharePoint;
+  return getConvenioFromSharePointById(convenioFromSharePoint.id);
 };
 
-export const getConvenioFromSharePointFromId = async (convenioId) => {
+export const getConvenioFromSharePointById = async (convenioId) => {
   let convenioFromSharePoint;
 
   let retries = 0;
@@ -111,7 +111,7 @@ export const getUserFromSharePointFinancieraOEI = async (lookupId) => {
 
 /* Esta funcion asigna la informacion completa del usuario encargado en cada paso de la configuracion del flujo */
 export const inflateFlowStepsFinancieraOEI = async (flowSteps, convenio) => {
-  let inflatedFlowSteps = [];
+  const inflatedFlowSteps = [];
 
   for (let i = 0; flowSteps.length > i; i++) {
     if (
@@ -216,7 +216,7 @@ export const getUserFromSharePointJuridicaOEI = async (lookupId) => {
 
 /* Esta funcion asigna la informacion completa del usuario encargado en cada paso de la configuracion del flujo */
 export const inflateFlowStepsJuridicaOEI = async (flowSteps, convenio) => {
-  let inflatedFlowSteps = [];
+  const inflatedFlowSteps = [];
 
   for (let i = 0; flowSteps.length > i; i++) {
     if (
@@ -229,9 +229,6 @@ export const inflateFlowStepsJuridicaOEI = async (flowSteps, convenio) => {
     const exception = flowSteps[i].exceptions?.find(
       (exception) => exception.convenio == convenio.Numero
     );
-
-    console.log("Convenio", convenio)
-    console.log("Key", flowSteps[i].key);
 
     const encargado = await getUserFromSharePointJuridicaOEI(
       convenio[flowSteps[i].key][exception ? exception.encargado : 0].LookupId
