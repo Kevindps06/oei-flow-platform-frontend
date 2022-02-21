@@ -13,9 +13,11 @@ export const post = async (req, res) => {
     req.body.ConvenioResponsable
   );
 
+    console.log(req.body.steps);
+
   const configuration = await getConfigurationJuridicaFlowStepsWithEncargados(
     req.body._id,
-    req.body.TipoPeticion,
+    req.body.TipoCompraContratacion,
     req.body.steps,
     convenio
   );

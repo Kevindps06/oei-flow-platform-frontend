@@ -164,7 +164,7 @@ export const getFinancieraFlowStepsWithEncargados = async (
   ).data[0].steps;*/
 
   // Production direct with database
-  let stepsFromConfiguration = (
+  const stepsFromConfiguration = (
     await configurationFinancieraFlowSchema.find(
       configurationFinancieraFlowObjectWithoutUndefined(
         _id,
@@ -244,7 +244,7 @@ export const inflateFlowStepsJuridicaOEI = async (flowSteps, convenio) => {
 
 export const getConfigurationJuridicaFlowStepsWithEncargados = async (
   _id,
-  TipoPeticion,
+  TipoCompraContratacion,
   steps,
   convenio
 ) => {
@@ -266,9 +266,13 @@ export const getConfigurationJuridicaFlowStepsWithEncargados = async (
   ).data[0].steps;*/
 
   // Production direct with database
-  let stepsFromConfiguration = (
+  const stepsFromConfiguration = (
     await configurationJuridicaFlowSchema.find(
-      configurationJuridicaFlowObjectWithoutUndefined(_id, TipoPeticion, steps)
+      configurationJuridicaFlowObjectWithoutUndefined(
+        _id,
+        TipoCompraContratacion,
+        steps
+      )
     )
   )[0].steps;
 
@@ -291,7 +295,7 @@ export const getCoordinacionLogisticaFlowStepsWithEncargados = async (
   ).data[0].steps;*/
 
   // Production direct with database
-  let stepsFromConfiguration = (
+  const stepsFromConfiguration = (
     await configurationCoordinacionLogisticaFlowSchema.find(
       configurationCoordinacionLogisticaFlowObjectWithoutUndefined(_id, steps)
     )

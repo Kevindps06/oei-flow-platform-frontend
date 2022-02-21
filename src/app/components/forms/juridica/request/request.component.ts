@@ -335,7 +335,7 @@ export class FormsJuridicaRequestComponent implements OnInit {
         this.categoriaInteresado = '';
         this.categoriaDatos = '';
 
-        this.formsService.getConvenios().subscribe((event) => {
+        this.formsService.getConveniosJuridica().subscribe((event) => {
           switch (event.type) {
             case HttpEventType.Sent:
               this.sharedService.pushWaitTask({

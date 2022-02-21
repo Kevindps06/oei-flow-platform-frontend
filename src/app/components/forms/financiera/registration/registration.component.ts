@@ -101,7 +101,7 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
 
         // Load form index 2 values
         let taskId: string;
-        this.formsService.getConvenios().subscribe((event) => {
+        this.formsService.getConveniosFinanciera().subscribe((event) => {
           switch (event.type) {
             case HttpEventType.Sent:
               taskId = Utils.makeRandomString(4);

@@ -217,11 +217,23 @@ export class FormsService {
     );
   }
 
-  getConvenios(): Observable<any> {
+  getConveniosFinanciera(): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/convenios`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/convenios/financiera`,
+        {
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  getConveniosJuridica(): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/convenios/juridica`,
         {
           reportProgress: true,
         }

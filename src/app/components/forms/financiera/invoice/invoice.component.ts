@@ -341,7 +341,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
             break;
         }
         // Load form index 3 values
-        this.formsService.getConvenios().subscribe((event) => {
+        this.formsService.getConveniosFinanciera().subscribe((event) => {
           switch (event.type) {
             case HttpEventType.Sent:
               this.sharedService.pushWaitTask({
@@ -405,7 +405,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
             break;
         }
         // Load form index 3 values
-        this.formsService.getConvenios().subscribe((event) => {
+        this.formsService.getConveniosFinanciera().subscribe((event) => {
           switch (event.type) {
             case HttpEventType.Sent:
               this.sharedService.pushWaitTask({
