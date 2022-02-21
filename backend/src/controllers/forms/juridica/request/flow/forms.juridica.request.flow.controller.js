@@ -13,8 +13,6 @@ export const post = async (req, res) => {
     req.body.ConvenioResponsable
   );
 
-    console.log(req.body.steps);
-
   const configuration = await getConfigurationJuridicaFlowStepsWithEncargados(
     req.body._id,
     req.body.TipoCompraContratacion,
@@ -25,7 +23,6 @@ export const post = async (req, res) => {
   const gestionPath = `/Gestion/${req.body.TipoPeticion}/${req.body.Id}`;
 
   let formsJuridicaRequest = formsJuridicaRequestObjectWithoutUndefined(
-    req.body._id,
     req.body._id,
     req.body.Id,
     req.body.TipoPeticion,

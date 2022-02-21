@@ -230,7 +230,7 @@ export const inflateFlowStepsJuridicaOEI = async (flowSteps, convenio) => {
       (exception) => exception.convenio == convenio.Numero
     );
 
-    const encargado = await getUserFromSharePointJurudicaOEI(
+    const encargado = await getUserFromSharePointJuridicaOEI(
       convenio[flowSteps[i].key][exception ? exception.encargado : 0].LookupId
     );
 
