@@ -4,7 +4,7 @@ import {
   getConvenioFromSharePoint,
   getFinancieraFlowStepsWithEncargados,
   formsFinancieraInvoiceObjectWithoutUndefined,
-  uploadFilesToSharePointWorkflow,
+  uploadFilesToSharePointFinanciera,
 } from "../../../../../utils/utils";
 
 export const post = async (req, res) => {
@@ -49,28 +49,28 @@ export const post = async (req, res) => {
           SharePointFiles: [
             {
               Name: "Cuenta de cobro o factura",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Cuenta de cobro o factura`,
                 req.body.CuentaCobroFiles
               ),
             },
             {
               Name: "Factura equivalente",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Factura equivalente`,
                 req.body.FacturaEquivalenteFiles
               ),
             },
             {
               Name: "Seguridad social",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Seguridad Social`,
                 req.body.SeguridadSocialFiles
               ),
             },
             {
               Name: "Informe de actividades",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Informe de actividades`,
                 req.body.InformeActividadesFiles
               ),
@@ -83,21 +83,21 @@ export const post = async (req, res) => {
           SharePointFiles: [
             {
               Name: "Formato de solicitud de avances",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Formato de solicitud de avances`,
                 req.body.FormatoSolicitudAvancesFiles
               ),
             },
             {
               Name: "Cotizaciones",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Cotizaciones`,
                 req.body.CotizacionesFiles
               ),
             },
             {
               Name: "Solicitudes de comision",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Solicitudes de comision`,
                 req.body.SolicitudesComisionFiles
               ),
@@ -110,7 +110,7 @@ export const post = async (req, res) => {
           SharePointFiles: [
             {
               Name: "Formato de solicitud de viajes",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Formato de solicitud de viajes`,
                 req.body.FormatoSolicitudViajesFiles
               ),
@@ -125,28 +125,28 @@ export const post = async (req, res) => {
               SharePointFiles: [
                 {
                   Name: "Formato de legalizacion de viajes",
-                  Files: await uploadFilesToSharePointWorkflow(
+                  Files: await uploadFilesToSharePointFinanciera(
                     `${gestionPath}/Formato de legalizacion de viajes`,
                     req.body.FormatoLegalizacionViajesFiles
                   ),
                 },
                 {
                   Name: "Soportes facturas",
-                  Files: await uploadFilesToSharePointWorkflow(
+                  Files: await uploadFilesToSharePointFinanciera(
                     `${gestionPath}/Soportes facturas`,
                     req.body.SoportesFacturasFiles
                   ),
                 },
                 {
                   Name: "Pasabordos tiquetes aereos",
-                  Files: await uploadFilesToSharePointWorkflow(
+                  Files: await uploadFilesToSharePointFinanciera(
                     `${gestionPath}/Pasabordos tiquetes aereos`,
                     req.body.PasabordosTiquetesAereosFiles
                   ),
                 },
                 {
                   Name: "Informe de actividades",
-                  Files: await uploadFilesToSharePointWorkflow(
+                  Files: await uploadFilesToSharePointFinanciera(
                     `${gestionPath}/Informe de actividades`,
                     req.body.InformeActividadesFiles
                   ),
@@ -159,21 +159,21 @@ export const post = async (req, res) => {
               SharePointFiles: [
                 {
                   Name: "Formato de legalizacion",
-                  Files: await uploadFilesToSharePointWorkflow(
+                  Files: await uploadFilesToSharePointFinanciera(
                     `${gestionPath}/Formato de legalizacion`,
                     req.body.FormatoLegalizacionFiles
                   ),
                 },
                 {
                   Name: "Cuenta de cobro o factura",
-                  Files: await uploadFilesToSharePointWorkflow(
+                  Files: await uploadFilesToSharePointFinanciera(
                     `${gestionPath}/Cuenta de cobro o factura`,
                     req.body.CuentaCobroFiles
                   ),
                 },
                 {
                   Name: "Soportes facturas",
-                  Files: await uploadFilesToSharePointWorkflow(
+                  Files: await uploadFilesToSharePointFinanciera(
                     `${gestionPath}/Soportes facturas`,
                     req.body.SoportesFacturasFiles
                   ),
@@ -191,35 +191,35 @@ export const post = async (req, res) => {
           SharePointFiles: [
             {
               Name: "Cuenta de cobro o factura",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Cuenta de cobro o factura`,
                 req.body.CuentaCobroFiles
               ),
             },
             {
               Name: "Factura equivalente",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Factura equivalente`,
                 req.body.FacturaEquivalenteFiles
               ),
             },
             {
               Name: "Certificado de parafiscales",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Certificado de parafiscales`,
                 req.body.CertificadoParafiscalesFiles
               ),
             },
             {
               Name: "Informe de actividades",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Informe de actividades`,
                 req.body.InformeActividadesFiles
               ),
             },
             {
               Name: "Poliza de anticipo y cumpliento",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Poliza de anticipo y cumpliento`,
                 req.body.PolizaAnticipoCumplientoFiles
               ),
@@ -232,28 +232,28 @@ export const post = async (req, res) => {
           SharePointFiles: [
             {
               Name: "Camara de comercio",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Camara de comercio`,
                 req.body.CamaraComercioFiles
               ),
             },
             {
               Name: "Formato de solicitud de avances",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Formato de solicitud de avances`,
                 req.body.FormatoSolicitudAvancesFiles
               ),
             },
             {
               Name: "Cotizaciones",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Cotizaciones`,
                 req.body.CotizacionesFiles
               ),
             },
             {
               Name: "Solicitudes de comision",
-              Files: await uploadFilesToSharePointWorkflow(
+              Files: await uploadFilesToSharePointFinanciera(
                 `${gestionPath}/Solicitudes de comision`,
                 req.body.SolicitudesComisionFiles
               ),
@@ -268,28 +268,28 @@ export const post = async (req, res) => {
               SharePointFiles: [
                 {
                   Name: "Formato de legalizacion",
-                  Files: await uploadFilesToSharePointWorkflow(
+                  Files: await uploadFilesToSharePointFinanciera(
                     `${gestionPath}/Formato de legalizacion`,
                     req.body.FormatoLegalizacionFiles
                   ),
                 },
                 {
                   Name: "Cuenta de cobro o factura",
-                  Files: await uploadFilesToSharePointWorkflow(
+                  Files: await uploadFilesToSharePointFinanciera(
                     `${gestionPath}/Cuenta de cobro o factura`,
                     req.body.CuentaCobroFiles
                   ),
                 },
                 {
                   Name: "Soportes facturas",
-                  Files: await uploadFilesToSharePointWorkflow(
+                  Files: await uploadFilesToSharePointFinanciera(
                     `${gestionPath}/Soportes facturas`,
                     req.body.SoportesFacturasFiles
                   ),
                 },
                 {
                   Name: "Certificado de parafiscales",
-                  Files: await uploadFilesToSharePointWorkflow(
+                  Files: await uploadFilesToSharePointFinanciera(
                     `${gestionPath}/Certificado de parafiscales`,
                     req.body.CertificadoParafiscalesFiles
                   ),

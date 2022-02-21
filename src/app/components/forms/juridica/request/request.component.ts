@@ -1,5 +1,7 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Utils } from 'src/app/classes/utils';
 import { Convenio } from 'src/app/interfaces/Convenio';
 import { FileItem } from 'src/app/interfaces/FileItem';
@@ -140,6 +142,13 @@ export class FormsJuridicaRequestComponent implements OnInit {
   manejoDatos: string = '';
   categoriaInteresado: string = '';
   categoriaDatos: string = '';
+
+  Files: FileItem[] = [];
+
+  setFiles(Files: FileItem[]) {
+    this.Files = Files;
+  }
+
   informacionAdicional: string = '';
 
   tipoPersona: string = '';
@@ -419,6 +428,46 @@ export class FormsJuridicaRequestComponent implements OnInit {
       InformacionAdicional: this.informacionAdicional,
       Requestor: {},
     };
+
+    this.sharedService.pushWaitTask({
+      id: taskId,
+      description: `Subiendo archivos...`,
+      progress: 0,
+    });
+
+    for (let i = 0; this.Files.length > i; i++) {
+      await this.formsService
+        .postUploadFile(this.Files[i].Name, this.Files[i].Bytes as ArrayBuffer)
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: taskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.Files[i].Bytes;
+                this.Files[i].ServerPath = httpEvent.body;
+                break;
+            }
+          }),
+          catchError((err) => {
+            return throwError(err);
+          })
+        )
+        .toPromise();
+    }
+
+    formsJuridicaRequest = Object.assign(formsJuridicaRequest, {
+      Files: this.Files,
+    });
+
+    // Cleaning fields because information has been saved
+    this.Files = [];
 
     // Cleaning fields because information has been saved
     this.informacionAdicional = '';

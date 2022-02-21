@@ -1,3 +1,5 @@
+import { FileItem } from "./FileItem";
+
 export interface FormsJuridicaRequest {
   Id: string;
   TipoPeticion: string;
@@ -19,6 +21,7 @@ export interface FormsJuridicaRequest {
   ManejoDatos: string;
   CategoriaInteresado?: string;
   CategoriaDatos?: string;
+  Files?: FileItem[];
   InformacionAdicional: string;
   Requestor: any;
 }

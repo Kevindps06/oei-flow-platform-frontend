@@ -556,7 +556,8 @@
             </div>
             <div class="col-12">
               <label class="form-label" for="inputPresupuestoEstimado"
-                >Presupuesto estimado {{
+                >Presupuesto estimado
+                {{
                   juridicaRequestMap
                     .get(tipoPeticion)
                     ?.get(tipoCompraContratacion)
@@ -602,8 +603,11 @@
                 type="text"
                 class="form-control"
                 [ngClass]="{
-                  'is-valid': parseInt(presupuestoEstimado) >= presupuestoEstimadoMin,
-                  'is-invalid': !presupuestoEstimado || parseInt(presupuestoEstimado) < presupuestoEstimadoMin
+                  'is-valid':
+                    parseInt(presupuestoEstimado) >= presupuestoEstimadoMin,
+                  'is-invalid':
+                    !presupuestoEstimado ||
+                    parseInt(presupuestoEstimado) < presupuestoEstimadoMin
                 }"
                 [MaxOnlyPriceNumbers]="
                   juridicaRequestMap
@@ -819,7 +823,7 @@
                 Este campo es (*) obligatorio, rellenelo.
               </div>
             </div>
-            <div *ngIf="manejoDatos === 'Si'" class="row-12">
+            <div *ngIf="manejoDatos === 'Si'" class="col-12">
               <div class="card">
                 <div class="card-body">
                   <div class="row g-3">
@@ -967,6 +971,15 @@
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="col-12">
+              <label for="uploadFiles" class="form-label">Files</label>
+              <app-upload-files
+                name="uploadFiles"
+                id="uploadFiles"
+                [contentAsArrayBuffer]="true"
+                (onFilesChange)="setFiles($event)"
+              ></app-upload-files>
             </div>
           </div>
         </div>

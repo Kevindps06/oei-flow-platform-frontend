@@ -4,6 +4,7 @@ import {
   getConvenioFromSharePoint,
   getConfigurationJuridicaFlowStepsWithEncargados,
   formsJuridicaRequestObjectWithoutUndefined,
+  uploadFilesToSharePointJuridica,
 } from "../../../../../utils/utils";
 
 export const post = async (req, res) => {
@@ -20,7 +21,7 @@ export const post = async (req, res) => {
     convenio
   );
 
-  const gestionPath = `/Gestion/${req.body.TipoPeticion}/${req.body.Id}`;
+  const gestionPath = `/Gestion/${req.body.TipoPeticion}/${req.body.TipoCompraContratacion}/${req.body.Id}`;
 
   let formsJuridicaRequest = formsJuridicaRequestObjectWithoutUndefined(
     req.body._id,
@@ -50,6 +51,18 @@ export const post = async (req, res) => {
     configuration,
     gestionPath
   );
+
+  formsJuridicaRequest = Object.assign(formsJuridicaRequest, {
+    SharePointFiles: [
+      {
+        Name: "Files",
+        Files: await uploadFilesToSharePointJuridica(
+          `${gestionPath}/Files`,
+          req.body.Files
+        ),
+      },
+    ],
+  });
 
   formsJuridicaRequest = Object.assign(formsJuridicaRequest, {
     Keys: Object.keys(formsJuridicaRequest),

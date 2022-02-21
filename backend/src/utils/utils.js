@@ -317,7 +317,7 @@ export const makeRandomString = (length) => {
   return result;
 };
 
-export const uploadFileToSharePoint = async (path, buffer) => {
+export const uploadFileToSharePointFinanciera = async (path, buffer) => {
   var response = await axios.default.post(
     `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/drive/root:${path}:/createUploadSession`,
     {},
@@ -382,7 +382,7 @@ export const uploadFileToSharePoint = async (path, buffer) => {
   return uploadResponse.data;
 };
 
-export const uploadFilesToSharePointWorkflow = async (filesPath, files) => {
+export const uploadFilesToSharePointFinanciera = async (filesPath, files) => {
   if (!files) {
     return [];
   }
@@ -394,7 +394,7 @@ export const uploadFilesToSharePointWorkflow = async (filesPath, files) => {
       const tmpFilePath = path.join(files[i].ServerPath, files[i].Name);
 
       filesUploadResponses.push(
-        await uploadFileToSharePoint(
+        await uploadFileToSharePointFinanciera(
           `${filesPath}/${i}. ${files[i].Name}`,
           fs.readFileSync(tmpFilePath)
         )
@@ -407,7 +407,108 @@ export const uploadFilesToSharePointWorkflow = async (filesPath, files) => {
       });
     } else {
       filesUploadResponses.push(
-        await uploadFileToSharePoint(
+        await uploadFileToSharePointFinanciera(
+          `${filesPath}/${i}. ${files[i].Name}`,
+          Buffer.from(files[i].Bytes, "base64")
+        )
+      );
+    }
+  }
+
+  return filesUploadResponses;
+};
+
+export const uploadFileToSharePointJuridica = async (path, buffer) => {
+  var response = await axios.default.post(
+    `https://graph.microsoft.com/v1.0/sites/${process.env.JURIDICA_OEI_SITE_ID}/drive/root:${path}:/createUploadSession`,
+    {},
+    {
+      headers: {
+        Authorization: "Bearer " + (await getToken(tokenRequest)).accessToken,
+      },
+    }
+  );
+
+  const data = buffer;
+  const dataLength = data.length === 0 ? 1 : data.length;
+
+  //const chunkSize = 327680; // 320 KiB * 1
+  //const chunkSize = 655360; // 640 KiB * 2
+  //const chunkSize = 983040; // 960 KiB * 3
+  //const chunkSize = 1310720; // 1.25 MiB * 4
+  //const chunkSize = 1638400; // 1.56 MiB * 5
+  //const chunkSize = 1966080; // 1.87 MiB * 6
+  //const chunkSize = 2293760; // 2.18 MiB * 7
+  const chunkSize = 2621440; // 2.5 MiB * 8
+  //const chunkSize = 2949120; // 2.81 MiB * 9
+  //const chunkSize = 327680; // 3.12 MiB * 10
+  //const chunkSize = 3604480; // 3.43 MiB * 11
+  //const chunkSize = 3932160; // 3.75 MiB * 12
+  //const chunkSize = 4259840; // 4.06 MiB * 13
+  //const chunkSize = 4587520; // 4.37 MiB * 14
+  //const chunkSize = 4915200; // 4.68 MiB * 15
+  //const chunkSize = 5242880; // 5 MiB * 16
+  const chunks = Math.ceil(dataLength / chunkSize, dataLength) - 1;
+
+  let uploadResponse;
+
+  let chunk = 0;
+  while (chunks >= chunk) {
+    const chunkOffset = chunk * chunkSize;
+    const chunkData = data.slice(chunkOffset, chunkOffset + chunkSize);
+    const chunkDataLength = chunkData.length;
+    const chunkEndRange = chunkOffset + chunkDataLength - 1;
+
+    try {
+      uploadResponse = await axios.default.put(
+        response.data.uploadUrl,
+        chunkData,
+        {
+          headers: {
+            "Content-Length": chunkDataLength,
+            "Content-Range": `bytes ${chunkOffset}-${chunkEndRange}/${dataLength}`,
+          },
+        }
+      );
+    } catch (err) {
+      continue;
+    }
+
+    chunk++;
+  }
+
+  delete uploadResponse.data["@odata.context"];
+  delete uploadResponse.data["@content.downloadUrl"];
+
+  return uploadResponse.data;
+};
+
+export const uploadFilesToSharePointJuridica = async (filesPath, files) => {
+  if (!files) {
+    return [];
+  }
+
+  let filesUploadResponses = [];
+
+  for (let i = 0; files.length > i; i++) {
+    if (files[i].ServerPath) {
+      const tmpFilePath = path.join(files[i].ServerPath, files[i].Name);
+
+      filesUploadResponses.push(
+        await uploadFileToSharePointJuridica(
+          `${filesPath}/${i}. ${files[i].Name}`,
+          fs.readFileSync(tmpFilePath)
+        )
+      );
+
+      fs.rm(path.dirname(tmpFilePath), { recursive: true }, (err) => {
+        if (err) {
+          console.log(`File delete error: ${err}`);
+        }
+      });
+    } else {
+      filesUploadResponses.push(
+        await uploadFileToSharePointJuridica(
           `${filesPath}/${i}. ${files[i].Name}`,
           Buffer.from(files[i].Bytes, "base64")
         )
