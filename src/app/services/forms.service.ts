@@ -9,11 +9,10 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { FormsFinancieraRegistration } from '../interfaces/forms-financiera-registration';
-import { FormsJuridicaContratacion } from '../interfaces/forms-juridica-contratacion';
-import { FormsJuridicaContratacionConvenioRequest } from '../interfaces/forms-juridica-contratacion-convenio-request';
 import { environment } from 'src/environments/environment';
 import { FormsFinancieraInvoice } from '../interfaces/forms-financiera-invoice';
 import { FormsCoordinacionLogistica } from '../interfaces/forms-coordinacionlogistica';
+import { FormsJuridicaRequest } from '../interfaces/forms-juridica-request';
 
 @Injectable({
   providedIn: 'root',
@@ -103,6 +102,24 @@ export class FormsService {
         'POST',
         `${environment.backendProtocol}://${environment.backendAddress}/api/forms/financiera/invoice/flow`,
         formsFinancieraInvoice,
+        {
+          headers: new HttpHeaders({
+            'content-type': 'application/json',
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  postFormsJuridicaRequestFlow(
+    formsJuridicaRequest: FormsJuridicaRequest
+  ): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'POST',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/flow`,
+        formsJuridicaRequest,
         {
           headers: new HttpHeaders({
             'content-type': 'application/json',
@@ -222,69 +239,5 @@ export class FormsService {
         }
       )
     );
-  }
-
-  postFormsJuridicaContratacionConvenioRequest(
-    formsJuridicaContratacionConvenioRequest: FormsJuridicaContratacionConvenioRequest
-  ): Observable<any> {
-    return new Observable((success) => {
-      this.http
-        .request(
-          new HttpRequest(
-            'POST',
-            `https://prod-24.brazilsouth.logic.azure.com:443/workflows/f4f00890eb194d0da62fe26c2d6616d0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=NdC4fjPyl1wYTOgWTBOSEqUvdeKEZPPO3ycToyQhRzA`,
-            [formsJuridicaContratacionConvenioRequest],
-            {
-              reportProgress: true,
-            }
-          )
-        )
-        .pipe(
-          map((event) => {
-            success.next(event);
-            switch (event.type) {
-              case HttpEventType.Response:
-                success.complete();
-                break;
-            }
-          }),
-          catchError((err) => {
-            return throwError(err);
-          })
-        )
-        .subscribe();
-    });
-  }
-
-  submitFormsJuridicaContratacion(
-    formsJuridicaContratacion: FormsJuridicaContratacion
-  ): Observable<any> {
-    return new Observable((success) => {
-      this.http
-        .request(
-          new HttpRequest(
-            'POST',
-            `https://prod-25.brazilsouth.logic.azure.com:443/workflows/82f03002773e4a20a0d73d782d39ef18/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=h2Bpo6-VDFhG5WJxdRj-DbEqgk76ojBKiM-5wJuMBBc`,
-            formsJuridicaContratacion,
-            {
-              reportProgress: true,
-            }
-          )
-        )
-        .pipe(
-          map((event) => {
-            success.next(event);
-            switch (event.type) {
-              case HttpEventType.Response:
-                success.complete();
-                break;
-            }
-          }),
-          catchError((err) => {
-            return throwError(err);
-          })
-        )
-        .toPromise();
-    });
   }
 }

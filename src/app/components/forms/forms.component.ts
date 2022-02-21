@@ -1,10 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsService } from 'src/app/services/forms.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Convenio } from 'src/app/interfaces/Convenio';
@@ -12,9 +6,6 @@ import { FormsFinancieraRegistration } from 'src/app/interfaces/forms-financiera
 import { WaitTask } from 'src/app/interfaces/WaitTask';
 import { HttpEventType } from '@angular/common/http';
 import { Utils } from 'src/app/classes/utils';
-import { FormsJuridicaContratacion } from 'src/app/interfaces/forms-juridica-contratacion';
-import { FormsJuridicaContratacionRequest } from 'src/app/interfaces/forms-juridica-contratacion-request';
-import { ToastMessage } from 'src/app/interfaces/toast-message';
 
 @Component({
   selector: 'app-forms',
@@ -104,52 +95,6 @@ export class FormsComponent implements OnInit {
     var taskId: string;
     this.formsService
       .postFormsFinancieraRegistration(financieraRegistrationForm)
-      .subscribe((event) => {
-        switch (event.type) {
-          case HttpEventType.Sent:
-            taskId = Utils.makeRandomString(4);
-            this.waitTasks.push({
-              id: taskId,
-              description: 'Subiendo información...',
-              total: 0,
-              current: 0,
-              progress: 0,
-            });
-            break;
-          case HttpEventType.UploadProgress:
-            let taskIndex = this.waitTasks.findIndex(
-              (element) => element.id === taskId
-            );
-            this.waitTasks[taskIndex].total = event.total;
-            this.waitTasks[taskIndex].current = event.loaded;
-            this.waitTasks[taskIndex].progress = Math.round(
-              (event.loaded * 100) / event.total
-            );
-            break;
-          case HttpEventType.Response:
-            this.waitTasks.splice(
-              this.waitTasks.findIndex((element) => element.id === taskId),
-              1
-            );
-            break;
-        }
-      });
-  }
-
-  onSubmitFormsJuridicaContratacionConvenioRequest(
-    formsJuridicaContratacionConvenioRequest: any
-  ) {}
-
-  onSubmitFormsJuridicaContratacionRequest(
-    formsJuridicaContratacionRequest: FormsJuridicaContratacionRequest
-  ) {}
-
-  onSubmitFormsJuridicaContratacion(
-    formsJuridicaContratacion: FormsJuridicaContratacion
-  ) {
-    var taskId: string;
-    this.formsService
-      .submitFormsJuridicaContratacion(formsJuridicaContratacion)
       .subscribe((event) => {
         switch (event.type) {
           case HttpEventType.Sent:

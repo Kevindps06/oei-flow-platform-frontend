@@ -3,9 +3,15 @@ const router = Router();
 
 // api/forms/financiera
 
-import financieraRoutes from "./financiera/forms.financiera.routes";
+import formsFinancieraRoutes from "./financiera/forms.financiera.routes";
 
-router.use("/financiera", financieraRoutes);
+router.use("/financiera", formsFinancieraRoutes);
+
+// api/forms/juridica
+
+import formsJuridicaRoutes from "./juridica/forms.juridica.routes";
+
+router.use("/juridica", formsJuridicaRoutes);
 
 // api/forms/certificadosingresosretenciones
 

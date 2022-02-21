@@ -3,6 +3,7 @@ import { getToken, tokenRequest } from "../apis/microsoft/auth";
 import fs from "fs";
 import path from "path";
 import configurationFinancieraFlowSchema from "../schemas/configuration/financieraflow/configuration.financieraflow.schema";
+import configurationJuridicaFlowSchema from "../schemas/configuration/juridicaflow/configuration.juridicaflow.schema";
 import configurationCoordinacionLogisticaFlowSchema from "../schemas/configuration/coordinacionlogisticaflow/configuration.coordinacionlogisticaflow.schema";
 
 export const getConvenioFromSharePoint = async (convenioNumber) => {
@@ -17,10 +18,7 @@ export const getConvenioFromSharePoint = async (convenioNumber) => {
           {
             headers: {
               Authorization:
-                "Bearer " +
-                (
-                  await getToken(tokenRequest)
-                ).accessToken,
+                "Bearer " + (await getToken(tokenRequest)).accessToken,
               Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
             },
             params: {
@@ -55,10 +53,7 @@ export const getConvenioFromSharePointFromId = async (convenioId) => {
           {
             headers: {
               Authorization:
-                "Bearer " +
-                (
-                  await getToken(tokenRequest)
-                ).accessToken,
+                "Bearer " + (await getToken(tokenRequest)).accessToken,
               Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
             },
             params: {
@@ -80,7 +75,7 @@ export const getConvenioFromSharePointFromId = async (convenioId) => {
   return convenioFromSharePoint;
 };
 
-export const getUserFromSharePoint = async (lookupId) => {
+export const getUserFromSharePointFinancieraOEI = async (lookupId) => {
   let user;
 
   let retries = 0;
@@ -92,10 +87,7 @@ export const getUserFromSharePoint = async (lookupId) => {
           {
             headers: {
               Authorization:
-                "Bearer " +
-                (
-                  await getToken(tokenRequest)
-                ).accessToken,
+                "Bearer " + (await getToken(tokenRequest)).accessToken,
               Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
             },
             params: {
@@ -117,8 +109,8 @@ export const getUserFromSharePoint = async (lookupId) => {
   return user;
 };
 
-/* Esta operacion asigna la informacion completa del usuario encargado en cada paso del flujo */
-export const inflateFlowSteps = async (flowSteps, convenio) => {
+/* Esta funcion asigna la informacion completa del usuario encargado en cada paso de la configuracion del flujo */
+export const inflateFlowStepsFinancieraOEI = async (flowSteps, convenio) => {
   let inflatedFlowSteps = [];
 
   for (let i = 0; flowSteps.length > i; i++) {
@@ -133,7 +125,7 @@ export const inflateFlowSteps = async (flowSteps, convenio) => {
       (exception) => exception.convenio == convenio.Numero
     );
 
-    const encargado = await getUserFromSharePoint(
+    const encargado = await getUserFromSharePointFinancieraOEI(
       convenio[flowSteps[i].key][exception ? exception.encargado : 0].LookupId
     );
 
@@ -185,7 +177,102 @@ export const getFinancieraFlowStepsWithEncargados = async (
     )
   )[0].steps;
 
-  return await inflateFlowSteps(stepsFromConfiguration, convenio);
+  return await inflateFlowStepsFinancieraOEI(stepsFromConfiguration, convenio);
+};
+
+export const getUserFromSharePointJuridicaOEI = async (lookupId) => {
+  let user;
+
+  let retries = 0;
+  do {
+    try {
+      user = (
+        await axios.default.get(
+          `https://graph.microsoft.com/v1.0/sites/${process.env.JURIDICA_OEI_SITE_ID}/lists/${process.env.JURIDICA_OEI_SITE_USERINFORMATION_LIST_ID}/items/${lookupId}`,
+          {
+            headers: {
+              Authorization:
+                "Bearer " + (await getToken(tokenRequest)).accessToken,
+              Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+            },
+            params: {
+              $select: "id",
+              $expand: "fields",
+            },
+          }
+        )
+      ).data.fields;
+    } catch (err) {
+      console.log(`Try: ${retries} - Error:`, err);
+    }
+
+    retries++;
+  } while (!user && retries < 5);
+
+  delete user["@odata.etag"];
+
+  return user;
+};
+
+/* Esta funcion asigna la informacion completa del usuario encargado en cada paso de la configuracion del flujo */
+export const inflateFlowStepsJuridicaOEI = async (flowSteps, convenio) => {
+  let inflatedFlowSteps = [];
+
+  for (let i = 0; flowSteps.length > i; i++) {
+    if (
+      flowSteps[i].doWhen &&
+      !flowSteps[i].doWhen.find((doWhen) => doWhen.convenio == convenio.Numero)
+    ) {
+      continue;
+    }
+
+    const exception = flowSteps[i].exceptions?.find(
+      (exception) => exception.convenio == convenio.Numero
+    );
+
+    const encargado = await getUserFromSharePointJurudicaOEI(
+      convenio[flowSteps[i].key][exception ? exception.encargado : 0].LookupId
+    );
+
+    flowSteps[i].encargado = encargado;
+
+    inflatedFlowSteps.push(flowSteps[i]);
+  }
+
+  return inflatedFlowSteps;
+};
+
+export const getConfigurationJuridicaFlowStepsWithEncargados = async (
+  _id,
+  TipoPeticion,
+  steps,
+  convenio
+) => {
+  // For localhost testing only
+  /*let stepsFromConfiguration = (
+    await axios.default.get(
+      `https://oeiprojectflow.org/api/configuration/financieraflow`,
+      {
+        params: financieraFlowObjectWithoutUndefined(
+          _id,
+          TipoPersona,
+          TipoRelacion,
+          TipoGestion,
+          TipoLegalizacion,
+          steps
+        ),
+      }
+    )
+  ).data[0].steps;*/
+
+  // Production direct with database
+  let stepsFromConfiguration = (
+    await configurationJuridicaFlowSchema.find(
+      configurationJuridicaFlowObjectWithoutUndefined(_id, TipoPeticion, steps)
+    )
+  )[0].steps;
+
+  return await inflateFlowStepsJuridicaOEI(stepsFromConfiguration, convenio);
 };
 
 export const getCoordinacionLogisticaFlowStepsWithEncargados = async (
@@ -232,8 +319,7 @@ export const uploadFileToSharePoint = async (path, buffer) => {
     {},
     {
       headers: {
-        Authorization:
-          "Bearer " + (await getToken(tokenRequest)).accessToken,
+        Authorization: "Bearer " + (await getToken(tokenRequest)).accessToken,
       },
     }
   );
@@ -436,7 +522,7 @@ export const formsFinancieraInvoiceObjectWithoutUndefined = (
   SharePointFiles,
   Keys
 ) => {
-  var obj = {};
+  const obj = {};
 
   if (_id) {
     obj._id = _id;
@@ -505,6 +591,153 @@ export const formsFinancieraInvoiceObjectWithoutUndefined = (
   return obj;
 };
 
+export const formsJuridicaRequestObjectWithoutUndefined = (
+  _id,
+  Id,
+  TipoPeticion,
+  TipoCompraContratacion,
+  TipoAdquisicion,
+  TipoAdquisicionOtro,
+  ConvenioResponsable,
+  JustificacionContratacion,
+  ObjetivoContratacion,
+  EspecificacionesTecnicasMinimas,
+  PerfilRequerido,
+  FactoresEvaluacion,
+  Objeto,
+  ObligacionesEspecificas,
+  ProductosEntregables,
+  PresupuestoEstimado,
+  FormaPago,
+  Plazo,
+  ManejoDatos,
+  CategoriaInteresado,
+  CategoriaDatos,
+  InformacionAdicional,
+  Requestor,
+  ConvenioInformation,
+  Configuration,
+  GestionPath,
+  SharePointFiles,
+  Keys
+) => {
+  const obj = {};
+
+  if (_id) {
+    obj._id = _id;
+  }
+
+  if (Id) {
+    obj.Id = Id;
+  }
+
+  if (TipoPeticion) {
+    obj.TipoPeticion = TipoPeticion;
+  }
+
+  if (TipoCompraContratacion) {
+    obj.TipoCompraContratacion = TipoCompraContratacion;
+  }
+
+  if (TipoAdquisicion) {
+    obj.TipoAdquisicion = TipoAdquisicion;
+  }
+
+  if (TipoAdquisicionOtro) {
+    obj.TipoAdquisicionOtro = TipoAdquisicionOtro;
+  }
+
+  if (ConvenioResponsable) {
+    obj.ConvenioResponsable = ConvenioResponsable;
+  }
+
+  if (JustificacionContratacion) {
+    obj.JustificacionContratacion = JustificacionContratacion;
+  }
+
+  if (ObjetivoContratacion) {
+    obj.ObjetivoContratacion = ObjetivoContratacion;
+  }
+
+  if (EspecificacionesTecnicasMinimas) {
+    obj.EspecificacionesTecnicasMinimas = EspecificacionesTecnicasMinimas;
+  }
+
+  if (PerfilRequerido) {
+    obj.PerfilRequerido = PerfilRequerido;
+  }
+
+  if (FactoresEvaluacion) {
+    obj.FactoresEvaluacion = FactoresEvaluacion;
+  }
+
+  if (Objeto) {
+    obj.Objeto = Objeto;
+  }
+
+  if (ObligacionesEspecificas) {
+    obj.ObligacionesEspecificas = ObligacionesEspecificas;
+  }
+
+  if (ProductosEntregables) {
+    obj.ProductosEntregables = ProductosEntregables;
+  }
+
+  if (PresupuestoEstimado) {
+    obj.PresupuestoEstimado = PresupuestoEstimado;
+  }
+
+  if (FormaPago) {
+    obj.FormaPago = FormaPago;
+  }
+
+  if (Plazo) {
+    obj.Plazo = Plazo;
+  }
+
+  if (ManejoDatos) {
+    obj.ManejoDatos = ManejoDatos;
+  }
+
+  if (CategoriaInteresado) {
+    obj.CategoriaInteresado = CategoriaInteresado;
+  }
+
+  if (CategoriaDatos) {
+    obj.CategoriaDatos = CategoriaDatos;
+  }
+
+  if (InformacionAdicional) {
+    obj.InformacionAdicional = InformacionAdicional;
+  }
+
+  if (Requestor) {
+    obj.Requestor = Requestor;
+  }
+
+  if (ConvenioInformation) {
+    obj.ConvenioInformation = ConvenioInformation;
+  }
+
+  if (Configuration) {
+    obj.Configuration = Configuration;
+  }
+
+  if (GestionPath) {
+    obj.GestionPath = GestionPath;
+  }
+
+  if (SharePointFiles) {
+    obj.SharePointFiles = SharePointFiles;
+  }
+
+  if (Keys) {
+    obj.Keys = Keys;
+  }
+
+  return obj;
+};
+
 export const formsCoordinacionLogisticaObjectWithoutUndefined = (
   _id,
   Id,
@@ -528,7 +761,7 @@ export const formsCoordinacionLogisticaObjectWithoutUndefined = (
   Quotations,
   SelectedQuotation
 ) => {
-  var obj = {};
+  const obj = {};
 
   if (_id) {
     obj._id = _id;
@@ -655,7 +888,7 @@ export const informationAirportObjectWithoutUndefined = (
   Data_1,
   Data_2
 ) => {
-  var obj = {};
+  const obj = {};
 
   if (_id) {
     obj._id = _id;

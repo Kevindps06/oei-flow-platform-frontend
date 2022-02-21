@@ -1,8 +1,9 @@
 import { HttpEventType } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Utils } from 'src/app/classes/utils';
 import { Convenio } from 'src/app/interfaces/Convenio';
 import { FileItem } from 'src/app/interfaces/FileItem';
+import { FormsJuridicaRequest } from 'src/app/interfaces/forms-juridica-request';
 import { ToastMessage } from 'src/app/interfaces/toast-message';
 import { WaitTask } from 'src/app/interfaces/WaitTask';
 import { FormsService } from 'src/app/services/forms.service';
@@ -139,6 +140,7 @@ export class FormsJuridicaRequestComponent implements OnInit {
   manejoDatos: string = '';
   categoriaInteresado: string = '';
   categoriaDatos: string = '';
+  informacionAdicional: string = '';
 
   tipoPersona: string = '';
   tipoRelacion: string = '';
@@ -311,7 +313,6 @@ export class FormsJuridicaRequestComponent implements OnInit {
         this.objeto = '';
         this.obligacionesEspecificas = '';
         this.productosEntregables = '';
-
         const presupuestoEstimadoMinString = this.numberWithPriceSpaces(
           this.juridicaRequestMap
             ?.get(this.tipoPeticion)
@@ -374,8 +375,6 @@ export class FormsJuridicaRequestComponent implements OnInit {
     this.formIndex++;
   }
 
-  btnSubmitClick() {}
-
   numberWithPriceSpaces(number: number | undefined): string {
     if (!number || number === NaN) return 'NaN';
 
@@ -386,14 +385,136 @@ export class FormsJuridicaRequestComponent implements OnInit {
     return parseInt(string.replace(/ /g, ''));
   }
 
-  isValid(): boolean {
+  async btnSubmitClick() {
+    const taskId: string = Utils.makeRandomString(4);
+
+    document.getElementById('firstElement')?.scrollIntoView({
+      behavior: 'smooth',
+    });
+
+    let formsJuridicaRequest: FormsJuridicaRequest = {
+      Id: Utils.makeRandomString(32),
+      TipoPeticion: this.tipoPeticion,
+      TipoCompraContratacion: this.tipoCompraContratacion,
+      TipoAdquisicion: this.tipoAdquisicion,
+      TipoAdquisicionOtro:
+        this.tipoAdquisicion === 'Otro' ? this.tipoAdquisicionOtro : undefined,
+      ConvenioResponsable: this.convenioResponsable,
+      JustificacionContratacion: this.justificacionContratacion,
+      ObjetivoContratacion: this.objetivoContratacion,
+      EspecificacionesTecnicasMinimas: this.especificacionesTecnicasMinimas,
+      PerfilRequerido: this.perfilRequerido,
+      FactoresEvaluacion: this.factoresEvaluacion,
+      Objeto: this.objeto,
+      ObligacionesEspecificas: this.obligacionesEspecificas,
+      ProductosEntregables: this.productosEntregables,
+      PresupuestoEstimado: this.presupuestoEstimado,
+      FormaPago: this.formaPago,
+      Plazo: this.plazo,
+      ManejoDatos: this.manejoDatos,
+      CategoriaInteresado:
+        this.manejoDatos === 'Si' ? this.categoriaInteresado : undefined,
+      CategoriaDatos:
+        this.manejoDatos === 'Si' ? this.categoriaDatos : undefined,
+      InformacionAdicional: this.informacionAdicional,
+      Requestor: {},
+    };
+
+    // Cleaning fields because information has been saved
+    this.informacionAdicional = '';
+    this.categoriaDatos = '';
+    this.categoriaInteresado = '';
+    this.manejoDatos = '';
+    this.plazo = '';
+    this.formaPago = '';
+    this.presupuestoEstimado = '';
+    this.productosEntregables = '';
+    this.obligacionesEspecificas = '';
+    this.objeto = '';
+    this.factoresEvaluacion = '';
+    this.perfilRequerido = '';
+    this.especificacionesTecnicasMinimas = '';
+    this.objetivoContratacion = '';
+    this.justificacionContratacion = '';
+    this.convenioResponsable = '';
+    this.tipoAdquisicionOtro = '';
+    this.tipoAdquisicion = '';
+    this.tipoCompraContratacion = '';
+    this.tipoPeticion = '';
+
+    this.formIndex = 0;
+
+    this.formsService
+      .postFormsJuridicaRequestFlow(formsJuridicaRequest)
+      .subscribe(
+        (event) => {
+          switch (event.type) {
+            case HttpEventType.Sent:
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                description: `Enviando peticion juricia...`,
+                progress: 0,
+              });
+              break;
+            case HttpEventType.UploadProgress:
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                progress: Math.round((event.loaded * 100) / event.total),
+              });
+              break;
+          }
+        },
+        (err) => {
+          this.sharedService.removeWaitTask({
+            id: taskId,
+          });
+
+          this.sharedService.pushToastMessage({
+            id: Utils.makeRandomString(4),
+            title: `Ha ocurrido un problema`,
+            description: `No se ha podido enviar su peticion juridica debido a algun inconveniente mientras se enviaba la peticion, vuelva a intentarlo.`,
+            autohide: 30000,
+          });
+        },
+        () => {
+          this.sharedService.removeWaitTask({
+            id: taskId,
+          });
+
+          this.sharedService.pushToastMessage({
+            id: Utils.makeRandomString(4),
+            title: `Peticion juridica enviada satisfactoriamente`,
+            description: `Su peticion juridica ha sido ingresada correctamente y sera procesada en la mayor brevedad posible, este atento al correo electronico registrado por el cual se le notificara del estado y manera de validacion de la peticion.`,
+            autohide: 30000,
+          });
+        }
+      );
+  }
+
+  isValid() {
     switch (this.formIndex) {
       case 0:
-        return this.tipoPeticion !== '';
+        return this.tipoPeticion;
       case 1:
-        return this.tipoCompraContratacion !== '';
+        return this.tipoCompraContratacion;
       case 2:
-        return true;
+        return (
+          this.tipoAdquisicion &&
+          (this.tipoAdquisicion === 'Otro' ? this.tipoAdquisicionOtro : true) &&
+          this.convenioResponsable &&
+          this.justificacionContratacion &&
+          this.objetivoContratacion &&
+          this.objeto &&
+          this.obligacionesEspecificas &&
+          this.productosEntregables &&
+          this.presupuestoEstimado &&
+          this.formaPago &&
+          this.plazo &&
+          this.manejoDatos &&
+          (this.manejoDatos === 'Si'
+            ? this.categoriaInteresado && this.categoriaDatos
+            : true)
+        );
     }
 
     return false;

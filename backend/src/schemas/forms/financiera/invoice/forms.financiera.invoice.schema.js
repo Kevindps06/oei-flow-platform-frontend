@@ -10,6 +10,7 @@ const schema = mongoose.Schema({
   TipoLegalizacion: String,
   Convenio: String,
   InformacionAdicional: String,
+  Requestor: Object,
   ConvenioInformation: Object,
   Configuration: [],
   GestionPath: String,
