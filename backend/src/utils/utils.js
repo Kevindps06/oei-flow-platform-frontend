@@ -75,7 +75,42 @@ export const getConvenioFromSharePointById = async (convenioId) => {
   return convenioFromSharePoint;
 };
 
-export const getUserFromSharePointFinancieraOEI = async (lookupId) => {
+export const getUserFromSharePointFinancieraOEI = async (email) => {
+  let user;
+
+  let retries = 0;
+  do {
+    try {
+      user = (
+        await axios.default.get(
+          `https://graph.microsoft.com/v1.0/sites/${process.env.FINANCIERA_OEI_SITE_ID}/lists/${process.env.FINANCIERA_OEI_SITE_USERINFORMATION_LIST_ID}/items`,
+          {
+            headers: {
+              Authorization:
+                "Bearer " + (await getToken(tokenRequest)).accessToken,
+              Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+            },
+            params: {
+              $select: "id",
+              $expand: "fields",
+              $filter: `fields/EMail eq '${email}'`,
+            },
+          }
+        )
+      ).data.fields;
+    } catch (err) {
+      console.log(`Try: ${retries} - Error:`, err);
+    }
+
+    retries++;
+  } while (!user && retries < 5);
+
+  delete user["@odata.etag"];
+
+  return getUserFromSharePointByIdFinancieraOEI(user.id);
+};
+
+export const getUserFromSharePointByIdFinancieraOEI = async (lookupId) => {
   let user;
 
   let retries = 0;
@@ -126,7 +161,7 @@ export const inflateFlowStepsFinancieraOEI = async (flowSteps, convenio) => {
     );
 
     const encargado = await getUserFromSharePointFinancieraOEI(
-      convenio[flowSteps[i].key][exception ? exception.encargado : 0].LookupId
+      convenio[flowSteps[i].key][exception ? exception.encargado : 0].Email
     );
 
     flowSteps[i].encargado = encargado;
@@ -180,7 +215,42 @@ export const getFinancieraFlowStepsWithEncargados = async (
   return await inflateFlowStepsFinancieraOEI(stepsFromConfiguration, convenio);
 };
 
-export const getUserFromSharePointJuridicaOEI = async (lookupId) => {
+export const getUserFromSharePointJuridicaOEI = async (email) => {
+  let user;
+
+  let retries = 0;
+  do {
+    try {
+      user = (
+        await axios.default.get(
+          `https://graph.microsoft.com/v1.0/sites/${process.env.JURIDICA_OEI_SITE_ID}/lists/${process.env.JURIDICA_OEI_SITE_USERINFORMATION_LIST_ID}/items`,
+          {
+            headers: {
+              Authorization:
+                "Bearer " + (await getToken(tokenRequest)).accessToken,
+              Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly",
+            },
+            params: {
+              $select: "id",
+              $expand: "fields",
+              $filter: `fields/EMail eq '${email}'`,
+            },
+          }
+        )
+      ).data.value[0].fields;
+    } catch (err) {
+      console.log(`Try: ${retries} - Error:`, err);
+    }
+
+    retries++;
+  } while (!user && retries < 5);
+
+  delete user["@odata.etag"];
+
+  return getUserFromSharePointByIdJuridicaOEI(user.id);
+};
+
+export const getUserFromSharePointByIdJuridicaOEI = async (lookupId) => {
   let user;
 
   let retries = 0;
@@ -231,7 +301,7 @@ export const inflateFlowStepsJuridicaOEI = async (flowSteps, convenio) => {
     );
 
     const encargado = await getUserFromSharePointJuridicaOEI(
-      convenio[flowSteps[i].key][exception ? exception.encargado : 0].LookupId
+      convenio[flowSteps[i].key][exception ? exception.encargado : 0].Email
     );
 
     flowSteps[i].encargado = encargado;
