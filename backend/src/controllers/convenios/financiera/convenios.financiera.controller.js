@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getToken, tokenRequest } from "../../apis/microsoft/auth";
+import { getToken, tokenRequest } from "../../../apis/microsoft/auth";
 
 export const get = async (req, res) => {
   const response = await axios.default.get(
