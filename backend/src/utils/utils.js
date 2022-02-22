@@ -110,7 +110,7 @@ export const getUserFromSharePointFinancieraOEI = async (email) => {
             },
           }
         )
-      ).data.fields;
+      ).data.value[0].fields;
     } catch (err) {
       console.log(`Try: ${retries} - Error:`, err);
     }

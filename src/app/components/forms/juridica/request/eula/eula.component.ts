@@ -12,13 +12,15 @@ import { SharedService } from 'src/app/services/shared.service';
   styleUrls: ['./eula.component.css'],
 })
 export class FormsJuridicaRequestEulaComponent implements OnInit {
+  formIndex: number = 0;
+
   Id: string = '';
   formsJuridicaRequest!: FormsJuridicaRequest;
 
   codigoVerificacion: string = '';
 
   codigoVerificacionRequested: boolean = false;
-  validacionCodigoVerificacionError: boolean = false;
+  verificacionCodigoVerificacionError: boolean = false;
 
   constructor(
     private formsService: FormsService,
@@ -30,41 +32,17 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
     const taskId: string = Utils.makeRandomString(4);
 
     this.Id = this.activatedRoute.snapshot.params.id;
-
-    /*this.formsService.getFormsJuridicaRequest(this.Id).subscribe((event) => {
-      switch (event.type) {
-        case HttpEventType.Sent:
-          this.sharedService.pushWaitTask({
-            id: taskId,
-            description: 'Obteniendo informacion de la peticion...',
-            progress: 0,
-          });
-          break;
-        case HttpEventType.DownloadProgress:
-          this.sharedService.pushWaitTask({
-            id: taskId,
-            progress: Math.round((event.loaded * 100) / event.total),
-          });
-          break;
-        case HttpEventType.Response:
-          this.sharedService.removeWaitTask({
-            id: taskId,
-          });
-
-          if (event.body.length > 0) {
-            this.formsJuridicaRequest = event.body[0];
-          }
-          break;
-      }
-    });*/
   }
 
   currentAvailableAction: string = 'Solicitar codigo';
 
-  invalidateCodigoVerificacion() {}
+  invalidateCodigoVerificacion() {
+    this.verificacionCodigoVerificacionError = false;
+  }
 
   solicitarVerificarCodigo() {
     const taskId: string = Utils.makeRandomString(4);
+    let requestTimeout: NodeJS.Timeout;
 
     if (this.currentAvailableAction === 'Solicitar codigo') {
       this.formsService
@@ -89,11 +67,35 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
             }
           },
           (err) => {
+            console.log(err);
+
             this.sharedService.removeWaitTask({
               id: taskId,
             });
           },
           () => {
+            this.currentAvailableAction = 'Verificar codigo';
+
+            this.codigoVerificacionRequested = true;
+
+            requestTimeout = setTimeout(() => {
+              if (!this.formsJuridicaRequest) {
+                this.verificacionCodigoVerificacionError = false;
+
+                this.currentAvailableAction = 'Solicitar codigo';
+
+                this.codigoVerificacionRequested = false;
+
+                this.codigoVerificacion = '';
+
+                this.sharedService.pushToastMessage({
+                  id: Utils.makeRandomString(4),
+                  title: `Tiempo limite de peticion alcanzado`,
+                  description: `Se ha alcanzado el tiempo de espera maximo para la solicitud del codigo de verificacion, solicite uno nuevo, y vuelva a intentarlo.`,
+                });
+              }
+            }, 300000);
+
             this.sharedService.removeWaitTask({
               id: taskId,
             });
@@ -101,15 +103,10 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
             this.sharedService.pushToastMessage({
               id: Utils.makeRandomString(4),
               title: `Codigo de verificacion solicitado`,
-              description: `Se ha realizado la solicitud del codigo de verificacion satisfactoriamente, y en unos momentos le llegara a su correo electronico.`,
-              autohide: 30000,
+              description: `Se ha realizado la solicitud del codigo de verificacion satisfactoriamente, y en unos momentos le llegara.`,
             });
-
-            this.codigoVerificacionRequested = true;
           }
         );
-
-      this.currentAvailableAction = 'Verificar codigo';
     } else {
       this.formsService
         .getFormsJuridicaRequestEulaVerifyVerificationCode(
@@ -140,36 +137,111 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
             });
 
             switch (err.status) {
-              case 404:
+              case 403:
+                clearTimeout(requestTimeout);
+
+                this.verificacionCodigoVerificacionError = true;
+
+                this.currentAvailableAction = 'Solicitar codigo';
+
+                this.codigoVerificacionRequested = false;
+
+                this.codigoVerificacion = '';
+
                 this.sharedService.pushToastMessage({
                   id: Utils.makeRandomString(4),
-                  title: `Not found`,
-                  description: ``,
+                  title: `Codigo ya utilizado`,
+                  description: `El codigo que ha ingresado ya ha sido utilizado con anterioridad, solicite uno nuevo, y vuelva a intentarlo.`,
+                });
+                break;
+              case 404:
+                this.verificacionCodigoVerificacionError = true;
+
+                this.codigoVerificacion = '';
+
+                this.sharedService.pushToastMessage({
+                  id: Utils.makeRandomString(4),
+                  title: `Codigo incorrecto`,
+                  description: `El codigo ingresado es incorrecto, vuelva a intentarlo.`,
                 });
                 break;
               case 408:
+                clearTimeout(requestTimeout);
+
+                this.verificacionCodigoVerificacionError = true;
+
+                this.currentAvailableAction = 'Solicitar codigo';
+
+                this.codigoVerificacionRequested = false;
+
+                this.codigoVerificacion = '';
+
                 this.sharedService.pushToastMessage({
                   id: Utils.makeRandomString(4),
-                  title: `Timeout`,
-                  description: ``,
+                  title: `Codigo expirado`,
+                  description: `El codigo ingresado ha expirado, vuelva a intentarlo.`,
                 });
                 break;
             }
           },
           () => {
+            this.formsService
+              .getFormsJuridicaRequest(this.Id)
+              .subscribe((event) => {
+                switch (event.type) {
+                  case HttpEventType.Sent:
+                    this.sharedService.pushWaitTask({
+                      id: taskId,
+                      description: 'Obteniendo informacion de la peticion...',
+                      progress: 0,
+                    });
+                    break;
+                  case HttpEventType.DownloadProgress:
+                    this.sharedService.pushWaitTask({
+                      id: taskId,
+                      progress: Math.round((event.loaded * 100) / event.total),
+                    });
+                    break;
+                  case HttpEventType.Response:
+                    this.sharedService.removeWaitTask({
+                      id: taskId,
+                    });
+
+                    if (event.body.length > 0) {
+                      clearTimeout(requestTimeout);
+
+                      this.formsJuridicaRequest = event.body[0];
+
+                      this.formIndex++;
+                    }
+                    break;
+                }
+              });
+
             this.sharedService.removeWaitTask({
               id: taskId,
             });
 
             this.sharedService.pushToastMessage({
               id: Utils.makeRandomString(4),
-              title: `Correcto`,
-              description: ``,
+              title: `Verificacion pasada correctamente`,
+              description: `Se ha completado la verificacion en 2 pasos satisfactoriamente.`,
             });
-
-            this.codigoVerificacionRequested = false;
           }
         );
+    }
+  }
+
+  btnSubmitClick() {}
+
+  isValid() {
+    switch (this.formIndex) {
+      case 0:
+        return this.formsJuridicaRequest;
+      case 1:
+        return true;
+      default:
+        return false;
     }
   }
 }

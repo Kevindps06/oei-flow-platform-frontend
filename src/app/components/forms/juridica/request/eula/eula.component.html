@@ -1,5 +1,5 @@
 <div class="row g-3">
-  <div class="col-12">
+  <div *ngIf="formIndex === 0" class="col-12">
     <div class="card card-body">
       <div class="row g-3">
         <div class="col-12">
@@ -29,7 +29,7 @@
                 'is-invalid':
                   codigoVerificacionRequested &&
                   (codigoVerificacion.length !== 4 ||
-                    validacionCodigoVerificacionError)
+                    verificacionCodigoVerificacionError)
               }"
               maxlength="4"
               [disabled]="!codigoVerificacionRequested"
@@ -38,18 +38,24 @@
               >Codigo de verificacion<span class="text-danger">*</span></label
             >
             <div class="invalid-feedback">
-              <div *ngIf="!validacionCodigoVerificacionError">
+              <div *ngIf="!verificacionCodigoVerificacionError">
                 Este campo es (*) obligatorio, rellenelo.
               </div>
-              <div *ngIf="validacionCodigoVerificacionError">
-                No se ha encontrado, se encuentra en espera o ha sido rechazado
-                el registro con la informacion ingresada.
+              <div *ngIf="verificacionCodigoVerificacionError">
+                El codigo ingresado no es correcto, vuelvalo a intentar o
+                reintente el envio del codigo de verificacion en 5 minutos
+                despues haber solicitado algun codigo.
               </div>
             </div>
           </div>
         </div>
         <div class="col-5 col-md-4 col-xl-3 d-grid grap-2 mx-auto">
           <button
+            [disabled]="
+              currentAvailableAction === 'Verificar codigo'
+                ? codigoVerificacion.length !== 4
+                : false
+            "
             (click)="solicitarVerificarCodigo()"
             class="btn btn-primary"
           >
@@ -58,5 +64,23 @@
         </div>
       </div>
     </div>
+  </div>
+  <div *ngIf="formIndex === 1" class="col-12">
+    <div class="card card-body">
+      <div class="row g-3">
+        <div class="col-12">
+          <h5 class="card-title text-center">EULA Agreement</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="formIndex === 1" class="d-grid gap-2 col-12 mx-auto mb-2">
+    <a
+      class="btn btn-primary"
+      (click)="btnSubmitClick()"
+      role="button"
+      [ngClass]="{ disabled: !isValid() }"
+      >Enviar</a
+    >
   </div>
 </div>
