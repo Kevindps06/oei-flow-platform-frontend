@@ -132,7 +132,15 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
                 break;
             }
           },
-          (err) => {},
+          (err) => {
+            this.sharedService.removeWaitTask({
+              id: taskId,
+            });
+
+            if (err.status === 404) {
+
+            }
+          },
           () => {
             this.sharedService.removeWaitTask({
               id: taskId,

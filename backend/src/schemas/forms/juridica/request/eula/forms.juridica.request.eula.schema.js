@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const schema = mongoose.Schema({
   Id: String,
   VerificationCode: String,
+  Creation: Number,
+  Expiration: Number
 });
 
 export default mongoose

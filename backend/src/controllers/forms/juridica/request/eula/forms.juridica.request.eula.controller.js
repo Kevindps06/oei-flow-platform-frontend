@@ -4,11 +4,15 @@ import { generateRandomString } from "../../../../../utils/utils";
 
 export const requestVerificationCode = async (req, res) => {
   try {
-    const verificationCode = generateRandomString(4);
+    const currentDate = new Date();
 
     const juridicaRequestEula = new formsJuridicaRequestEulaSchema({
       Id: req.body.Id,
-      VerificationCode: verificationCode,
+      VerificationCode: generateRandomString(4),
+      Creation: Math.floor(currentDate.getTime() / 1000.0),
+      Expiration: Math.floor(
+        currentDate.setMinutes(currentDate.getMinutes() + 5).getTime() / 1000.0
+      ),
     });
 
     await juridicaRequestEula.save();
@@ -25,14 +29,21 @@ export const verifyVerificationCode = async (req, res) => {
       formsJuridicaRequestEulaObjectWithoutUndefined(
         req.query._id,
         req.query.Id,
-        req.query.VerificationCode
+        req.query.VerificationCode,
+        req.query.Creation,
+        req.query.Expiration
       )
     );
 
-    console.log(juridicaRequestEula);
-
     if (juridicaRequestEula.length > 0) {
-      res.status(200).send();
+      if (
+        juridicaRequestEula[0].Expiration >=
+        Math.floor(new Date().getTime() / 1000.0)
+      ) {
+        res.status(200).send();
+      } else {
+        res.status(408).send();
+      }
     } else {
       res.status(404).send();
     }
@@ -59,7 +70,9 @@ export const find = async (req, res) => {
       formsJuridicaRequestEulaObjectWithoutUndefined(
         req.query._id,
         req.query.Id,
-        req.query.VerificationCode
+        req.query.VerificationCode,
+        req.query.Creation,
+        req.query.Expiration
       )
     );
 
@@ -75,7 +88,9 @@ export const updateMany = async (req, res) => {
       formsJuridicaRequestEulaObjectWithoutUndefined(
         req.query._id,
         req.query.Id,
-        req.query.VerificationCode
+        req.query.VerificationCode,
+        req.query.Creation,
+        req.query.Expiration
       ),
       req.body
     );
@@ -92,7 +107,9 @@ export const deleteMany = async (req, res) => {
       formsJuridicaRequestEulaObjectWithoutUndefined(
         req.query._id,
         req.query.Id,
-        req.query.VerificationCode
+        req.query.VerificationCode,
+        req.query.Creation,
+        req.query.Expiration
       )
     );
 
