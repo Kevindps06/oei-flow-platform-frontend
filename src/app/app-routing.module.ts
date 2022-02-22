@@ -26,7 +26,11 @@ const routes: Routes = [
     component: FormsComponent,
   },
   {
-    path: 'forms/certificadosingresosretenciones',
+    path: 'forms/juridica/request',
+    component: FormsComponent,
+  },
+  {
+    path: 'forms/juridica/request/:id/eula',
     component: FormsComponent,
   },
   {
@@ -34,15 +38,15 @@ const routes: Routes = [
     component: FormsComponent,
   },
   {
-    path: 'forms/coordinacionlogistica/:Id/fillquotations',
+    path: 'forms/coordinacionlogistica/:id/fillquotations',
     component: FormsComponent,
   },
   {
-    path: 'forms/coordinacionlogistica/:Id/selectquotation',
+    path: 'forms/coordinacionlogistica/:id/selectquotation',
     component: FormsComponent,
   },
   {
-    path: 'forms/juridica/request',
+    path: 'forms/certificadosingresosretenciones',
     component: FormsComponent,
   },
 ];

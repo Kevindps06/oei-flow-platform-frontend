@@ -20,7 +20,7 @@ import { FormsJuridicaRequest } from '../interfaces/forms-juridica-request';
 export class FormsService {
   constructor(private http: HttpClient) {}
 
-  validateFlowUser(
+  validateFinancieraRegistration(
     tipoDePersona: string,
     tipoDeRelacion: string,
     identification: string
@@ -28,7 +28,7 @@ export class FormsService {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/workflow/validateUser`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/workflow/financiera/validateregistration`,
         {
           params: new HttpParams().appendAll({
             tipoPersona: tipoDePersona,

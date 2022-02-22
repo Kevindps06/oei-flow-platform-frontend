@@ -30,6 +30,7 @@ import { FormsCertificadosIngresosRetencionesComponent } from './components/form
 import { OAuthSettings } from 'src/oauth';
 import { MaxOnlyPriceNumbersDirective } from './directives/max-only-price-numbers.directive';
 import { MinOnlyPriceNumbersDirective } from './directives/min-only-price-numbers.directive';
+import { FormsJuridicaRequestEulaComponent } from './components/forms/juridica/request/eula/eula.component';
 
 let msalInstance: IPublicClientApplication | undefined = undefined;
 
@@ -71,6 +72,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FormsCertificadosIngresosRetencionesComponent,
     MaxOnlyPriceNumbersDirective,
     MinOnlyPriceNumbersDirective,
+    FormsJuridicaRequestEulaComponent,
   ],
   imports: [
     BrowserModule,

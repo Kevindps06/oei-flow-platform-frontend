@@ -48,31 +48,31 @@ export class FormsComponent implements OnInit {
         this.description =
           'Aqui podra realizar los siguientes procesos:\n- Envio de cuentas de cobro\n- Facturas\n- Anticipos\n- Pagos directos\n- Legalizaciones';
         return;
-      case '/forms/certificadosingresosretenciones':
-        this.title = 'Gestion de certificados de ingresos y retenciones';
-        this.description =
-          'Aqui podra realizar procesos como:\n- Descarga de certificado de ingresos y retenciones';
+      case '/forms/juridica/request':
+        this.title = 'Gestion juridica';
+        this.description = 'Formulario de gestion juridica descripcion.';
+        return;
+      case `/forms/juridica/request/${this.route.snapshot.params.id}/eula`:
+        this.title = 'Gestion juridica eula';
+        this.description = 'Formulario de gestion juridica eula descripcion.';
         return;
       case '/forms/coordinacionlogistica':
         this.title = 'Coordinacion logistica';
         this.description = 'Coordinacion logistica descripcion';
         return;
-      case '/forms/coordinacionlogistica/' +
-        this.route.snapshot.params.id +
-        '/fillquotations':
+      case `/forms/coordinacionlogistica/${this.route.snapshot.params.id}/fillquotations`:
         this.title = 'Coordinacion logistica fill quotations';
         this.description = 'Coordinacion logistica fill quotations descripcion';
         return;
-      case '/forms/coordinacionlogistica/' +
-        this.route.snapshot.params.id +
-        '/selectquotation':
+      case `/forms/coordinacionlogistica/${this.route.snapshot.params.id}/selectquotation`:
         this.title = 'Coordinacion logistica select quotation';
         this.description =
           'Coordinacion logistica select quotation descripcion';
         return;
-      case '/forms/juridica/request':
-        this.title = 'Formulario de gestion juridica';
-        this.description = 'Formulario de gestion juridica descripcion.';
+      case '/forms/certificadosingresosretenciones':
+        this.title = 'Gestion de certificados de ingresos y retenciones';
+        this.description =
+          'Aqui podra realizar procesos como:\n- Descarga de certificado de ingresos y retenciones';
         return;
     }
   }

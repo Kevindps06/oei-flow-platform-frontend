@@ -25,9 +25,15 @@
           <app-forms-financiera-invoice
             *ngIf="isRoute('/forms/financiera/invoice')"
           ></app-forms-financiera-invoice>
-          <app-forms-certificadosingresosretenciones
-            *ngIf="isRoute('/forms/certificadosingresosretenciones')"
-          ></app-forms-certificadosingresosretenciones>
+          <app-forms-juridica-request
+            *ngIf="isRoute('/forms/juridica/request')"
+          ></app-forms-juridica-request>
+          <app-forms-juridica-request-eula
+            *ngIf="
+              startWithRoute('/forms/juridica/request/') &&
+              endWithRoute('/eula')
+            "
+          ></app-forms-juridica-request-eula>
           <app-forms-coordinacionlogistica
             *ngIf="isRoute('/forms/coordinacionlogistica')"
           >
@@ -46,9 +52,9 @@
             "
           >
           </app-forms-coordinacionlogistica-selectquotation>
-          <app-forms-juridica-request
-            *ngIf="isRoute('/forms/juridica/request')"
-          ></app-forms-juridica-request>
+          <app-forms-certificadosingresosretenciones
+            *ngIf="isRoute('/forms/certificadosingresosretenciones')"
+          ></app-forms-certificadosingresosretenciones>
         </div>
       </div>
     </div>

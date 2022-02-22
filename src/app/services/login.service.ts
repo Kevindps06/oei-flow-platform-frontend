@@ -31,27 +31,10 @@ export class LoginService {
 
   constructor(
     private router: Router,
-    private http: HttpClient,
     private sharedService: SharedService,
     private msalService: MsalService,
     private sanitizer: DomSanitizer
   ) {}
-
-  validateUser(email: string, password: string): Observable<any> {
-    return this.http.request(
-      new HttpRequest(
-        'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/platform/validateUser`,
-        {
-          reportProgress: true,
-          params: new HttpParams().appendAll({
-            email: email,
-            password: password,
-          }),
-        }
-      )
-    );
-  }
 
   loggedInUser(): AccountInfo | undefined {
     const activeAccount = this.msalService.instance.getActiveAccount();

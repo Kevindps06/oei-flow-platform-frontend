@@ -173,7 +173,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
 
     const taskId: string = Utils.makeRandomString(4);
     this.formsService
-      .validateFlowUser(
+      .validateFinancieraRegistration(
         this.tipoPersona,
         this.tipoRelacion,
         this.tipoPersona === 'Juridica'
