@@ -51,7 +51,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
             id: taskId,
           });
 
-          if (event.body.lenght > 0) {
+          if (event.body.length > 0) {
             this.formsJuridicaRequest = event.body[0];
           }
           break;
@@ -102,6 +102,8 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
               description: `Se ha realizado la solicitud del codigo de verificacion satisfactoriamente, y en unos momentos le llegara a su correo electronico.`,
               autohide: 30000,
             });
+
+            this.codigoVerificacionRequested = true;
           }
         );
 
@@ -118,8 +120,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
               case HttpEventType.Sent:
                 this.sharedService.pushWaitTask({
                   id: taskId,
-                  description:
-                    'Verificando el codigo de verificacion...',
+                  description: 'Verificando el codigo de verificacion...',
                   progress: 0,
                 });
                 break;
@@ -131,13 +132,13 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
                 break;
             }
           },
-          (err) => {
-
-          },
+          (err) => {},
           () => {
             this.sharedService.removeWaitTask({
               id: taskId,
             });
+
+            this.codigoVerificacionRequested = false;
           }
         );
 

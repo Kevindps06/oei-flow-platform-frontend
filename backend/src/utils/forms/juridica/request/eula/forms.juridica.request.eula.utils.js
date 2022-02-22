@@ -10,7 +10,7 @@ export const formsJuridicaRequestEulaObjectWithoutUndefined = (
   }
 
   if (Id) {
-    obj._id = Id;
+    obj.Id = Id;
   }
 
   if (VerificationCode) {
