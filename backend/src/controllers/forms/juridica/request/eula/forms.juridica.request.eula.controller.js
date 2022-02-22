@@ -31,7 +31,7 @@ export const verifyVerificationCode = async (req, res) => {
 
     console.log(juridicaRequestEula);
 
-    if (juridicaRequestEula) {
+    if (juridicaRequestEula.length > 0) {
       res.status(200).send();
     } else {
       res.status(404).send();
