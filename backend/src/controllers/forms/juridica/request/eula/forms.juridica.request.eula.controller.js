@@ -47,7 +47,11 @@ export const verifyVerificationCode = async (req, res) => {
         juridicaRequestEula[0].Expiration >=
         Math.floor(new Date().getTime() / 1000.0)
       ) {
-        res.status(200).send();
+        if (!juridicaRequestEula[0].Used) {
+          res.status(200).send();
+        } else {
+          res.status(403).send();
+        }
       } else {
         res.status(408).send();
       }
