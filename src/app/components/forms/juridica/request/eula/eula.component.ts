@@ -29,7 +29,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
   ngOnInit(): void {
     const taskId: string = Utils.makeRandomString(4);
 
-    this.Id = this.activatedRoute.snapshot.paramMap.get('Id') as string;
+    this.Id = this.activatedRoute.snapshot.params.id;
 
     this.formsService.getFormsJuridicaRequest(this.Id).subscribe((event) => {
       switch (event.type) {
@@ -51,7 +51,9 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
             id: taskId,
           });
 
-          this.formsJuridicaRequest = event.body;
+          if (event.body.lenght > 0) {
+            this.formsJuridicaRequest = event.body[0];
+          }
           break;
       }
     });
