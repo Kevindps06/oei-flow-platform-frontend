@@ -1,6 +1,5 @@
 import { HttpEventType } from '@angular/common/http';
 import { FileItem } from '../interfaces/FileItem';
-import { Tramo } from '../interfaces/tramo';
 import { FormsService } from '../services/forms.service';
 import { SharedService } from '../services/shared.service';
 
@@ -80,8 +79,8 @@ export class Utils {
 
     return await Promise.all(filesUploadsPromises);
   }
-  
+
   static numberWithPriceSpaces(x: number) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-}
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  }
 }

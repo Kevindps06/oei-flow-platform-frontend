@@ -169,9 +169,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   }
 
   btnValidarUsuarioClick() {
+    const taskId: string = Utils.makeRandomString(4);
+
     this.invalidateFlowUser();
 
-    const taskId: string = Utils.makeRandomString(4);
     this.formsService
       .validateFinancieraRegistration(
         this.tipoPersona,
@@ -201,12 +202,12 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 id: taskId,
               });
 
-              switch (event.body.userInfo.fields.Estado) {
+              switch (event.body.Estado) {
                 case 'Esperando verificacion':
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
                     title: `Registro en espera de aprobacion`,
-                    description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, su peticion de registro aun se encuentra siendo procesada, vuelva mas tarde y, recuerde que cuando su peticion de registro sea respondida recibira una notificacion en su Email.`,
+                    description: `Hola ${event.body.Nombre_x0020_o_x0020_razon_x0020}, su peticion de registro aun se encuentra siendo procesada, vuelva mas tarde y, recuerde que cuando su peticion de registro sea respondida recibira una notificacion en su Email.`,
                     autohide: 20000,
                   });
 
@@ -215,8 +216,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 case 'Verificado':
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
-                    title: `Bienvenido ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}`,
-                    description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
+                    title: `Bienvenido ${event.body.Nombre_x0020_o_x0020_razon_x0020}`,
+                    description: `Hola ${event.body.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
                   });
 
                   this.contratistaProveedorInformation = event.body;
@@ -225,7 +226,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
                     title: `Registro rechazado`,
-                    description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, la ultima peticion de registro con esta informacion ha sido rechazada, verifiquela y vuelva a intentarlo o registrese <a href="/forms/financiera/registration">aqui</a>.`,
+                    description: `Hola ${event.body.Nombre_x0020_o_x0020_razon_x0020}, la ultima peticion de registro con esta informacion ha sido rechazada, verifiquela y vuelva a intentarlo o registrese <a href="/forms/financiera/registration">aqui</a>.`,
                     autohide: 20000,
                   });
 

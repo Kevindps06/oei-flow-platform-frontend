@@ -27,7 +27,7 @@ export class FormsComponent implements OnInit {
   constructor(
     private formsService: FormsService,
     private router: Router,
-    private route: ActivatedRoute
+    private activatedRoute: ActivatedRoute
   ) {}
 
   convenios: Convenio[] = [];
@@ -52,7 +52,7 @@ export class FormsComponent implements OnInit {
         this.title = 'Gestion juridica';
         this.description = 'Formulario de gestion juridica descripcion.';
         return;
-      case `/forms/juridica/request/${this.route.snapshot.params.id}/eula`:
+      case `/forms/juridica/request/${this.activatedRoute.snapshot.params.id}/eula`:
         this.title = 'Gestion juridica eula';
         this.description = 'Formulario de gestion juridica eula descripcion.';
         return;
@@ -60,11 +60,11 @@ export class FormsComponent implements OnInit {
         this.title = 'Coordinacion logistica';
         this.description = 'Coordinacion logistica descripcion';
         return;
-      case `/forms/coordinacionlogistica/${this.route.snapshot.params.id}/fillquotations`:
+      case `/forms/coordinacionlogistica/${this.activatedRoute.snapshot.params.id}/fillquotations`:
         this.title = 'Coordinacion logistica fill quotations';
         this.description = 'Coordinacion logistica fill quotations descripcion';
         return;
-      case `/forms/coordinacionlogistica/${this.route.snapshot.params.id}/selectquotation`:
+      case `/forms/coordinacionlogistica/${this.activatedRoute.snapshot.params.id}/selectquotation`:
         this.title = 'Coordinacion logistica select quotation';
         this.description =
           'Coordinacion logistica select quotation descripcion';

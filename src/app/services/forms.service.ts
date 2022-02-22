@@ -41,6 +41,39 @@ export class FormsService {
     );
   }
 
+  postFormsJuridicaRequestEulaRequestVerificationCode(
+    formsJuridicaRequest: FormsJuridicaRequest
+  ): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'POST',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/eula/requestverificationcode`,
+        formsJuridicaRequest,
+        {
+          headers: new HttpHeaders({
+            'content-type': 'application/json',
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  getFormsJuridicaRequestEulaVerifyVerificationCode(
+    formsJuridicaRequestEula: any
+  ): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/eula/verifyverificationcode`,
+        {
+          params: new HttpParams().appendAll(formsJuridicaRequestEula),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
   postTest(formsTests: any): Observable<any> {
     return this.http.request(
       new HttpRequest(
@@ -123,6 +156,21 @@ export class FormsService {
         {
           headers: new HttpHeaders({
             'content-type': 'application/json',
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  getFormsJuridicaRequest(Id: string): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request`,
+        {
+          params: new HttpParams().appendAll({
+            Id: Id,
           }),
           reportProgress: true,
         }

@@ -6,6 +6,19 @@ import configurationFinancieraFlowSchema from "../schemas/configuration/financie
 import configurationJuridicaFlowSchema from "../schemas/configuration/juridicaflow/configuration.juridicaflow.schema";
 import configurationCoordinacionLogisticaFlowSchema from "../schemas/configuration/coordinacionlogisticaflow/configuration.coordinacionlogisticaflow.schema";
 
+export const generateRandomString = (length) => {
+    var result = '';
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+
+    for (var i = 0; length > i; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  }
+
 export const getConvenioFromSharePoint = async (convenioNumber) => {
   let convenioFromSharePoint;
 

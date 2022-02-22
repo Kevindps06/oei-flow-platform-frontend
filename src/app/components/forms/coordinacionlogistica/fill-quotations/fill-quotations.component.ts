@@ -50,7 +50,7 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
       return;
     }
 
-    this.Id = this.activatedRoute.snapshot.paramMap.get('Id') as string;
+    this.Id = this.activatedRoute.snapshot.params.id;
 
     let taskId: string = Utils.makeRandomString(4);
     this.formsService.getFormsCoordinacionLogistica(this.Id).subscribe(
