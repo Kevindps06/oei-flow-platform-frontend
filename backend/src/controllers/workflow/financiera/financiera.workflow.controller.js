@@ -2,7 +2,7 @@ import {
   getConvenioFromSharePointById,
   inflateFlowStepsFinancieraOEI,
 } from "../../../utils/utils";
-import axios from "axios"
+import axios from "axios";
 import { getToken, tokenRequest } from "../../../apis/microsoft/auth";
 
 export const inflateFlowSteps = async (req, res) => {
@@ -40,16 +40,12 @@ export const validateRegistration = async (req, res) => {
         },
       }
     )
-  ).data.value[0];
+  ).data.value[0].fields;
 
   if (contratistaProveedorResponse) {
     delete contratistaProveedorResponse["@odata.etag"];
-    delete contratistaProveedorResponse["fields@odata.context"];
-    delete contratistaProveedorResponse.fields["@odata.etag"];
 
-    res.status(200).json({
-      userInfo: contratistaProveedorResponse,
-    });
+    res.status(200).json(contratistaProveedorResponse);
   } else {
     res.status(404).send();
   }

@@ -9,7 +9,7 @@ router.post("/inflateFlowSteps", workflowFinancieraController.inflateFlowSteps);
 
 // /api/workflow/financiera/validateregistration
 
-router.post(
+router.get(
   "/validateregistration",
   workflowFinancieraController.validateRegistration
 );

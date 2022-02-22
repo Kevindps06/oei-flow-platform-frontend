@@ -219,7 +219,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                     description: `Hola ${event.body.userInfo.fields.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
                   });
 
-                  this.contratistaProveedorInformation = event.body.userInfo;
+                  this.contratistaProveedorInformation = event.body;
                   break;
                 case 'Rechazado':
                   this.sharedService.pushToastMessage({
@@ -467,7 +467,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         this.tipoPersona === 'Natural'
           ? this.identificator
           : `${this.identificator}-${this.digitoVerificacion}`,
-      Email: this.contratistaProveedorInformation.fields.Emaildecontacto,
+      Email: this.contratistaProveedorInformation.Emaildecontacto,
       TipoGestion: this.tipoGestion,
       TipoLegalizacion: this.tipoLegalizacion,
       Convenio: this.convenio,
