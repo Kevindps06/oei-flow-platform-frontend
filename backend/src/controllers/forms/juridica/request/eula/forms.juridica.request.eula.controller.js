@@ -8,9 +8,6 @@ export const requestVerificationCode = async (req, res) => {
     const expirationDate = new Date(currentDate);
     expirationDate.setMinutes(expirationDate.getMinutes() + 5);
 
-    console.log("Creation", Math.floor(currentDate.getTime() / 1000.0));
-    console.log("Expiration", Math.floor(expirationDate.getTime() / 1000.0));
-
     const juridicaRequestEula = new formsJuridicaRequestEulaSchema({
       Id: req.body.Id,
       VerificationCode: generateRandomString(4),
@@ -23,9 +20,7 @@ export const requestVerificationCode = async (req, res) => {
 
     res.status(201).send();
   } catch (err) {
-    console.log(err);
-
-    res.status(500).json({ "Test Json": ["Test", "Test"] });
+    res.status(500).json(err);
   }
 };
 
@@ -43,31 +38,31 @@ export const verifyVerificationCode = async (req, res) => {
     );
 
     if (juridicaRequestEula.length > 0) {
-      if (
-        juridicaRequestEula[0].Expiration >=
-        Math.floor(new Date().getTime() / 1000)
-      ) {
-        if (!juridicaRequestEula[0].Used) {
-          await formsJuridicaRequestEulaSchema.updateMany(
-            formsJuridicaRequestEulaObjectWithoutUndefined(
-              req.query._id,
-              req.query.Id,
-              req.query.VerificationCode,
-              req.query.Creation,
-              req.query.Expiration,
-              req.query.Used
-            ),
-            {
-              Used: true,
-            }
-          );
+      if (!juridicaRequestEula[0].Used) {
+        await formsJuridicaRequestEulaSchema.updateMany(
+          formsJuridicaRequestEulaObjectWithoutUndefined(
+            req.query._id,
+            req.query.Id,
+            req.query.VerificationCode,
+            req.query.Creation,
+            req.query.Expiration,
+            req.query.Used
+          ),
+          {
+            Used: true,
+          }
+        );
 
+        if (
+          juridicaRequestEula[0].Expiration >=
+          Math.floor(new Date().getTime() / 1000.0)
+        ) {
           res.status(200).send();
         } else {
-          res.status(403).send();
+          res.status(408).send();
         }
       } else {
-        res.status(408).send();
+        res.status(403).send();
       }
     } else {
       res.status(404).send();
