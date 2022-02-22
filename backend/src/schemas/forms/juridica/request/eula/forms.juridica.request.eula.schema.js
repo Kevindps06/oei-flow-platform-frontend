@@ -4,7 +4,8 @@ const schema = mongoose.Schema({
   Id: String,
   VerificationCode: String,
   Creation: Number,
-  Expiration: Number
+  Expiration: Number,
+  Used: Boolean
 });
 
 export default mongoose

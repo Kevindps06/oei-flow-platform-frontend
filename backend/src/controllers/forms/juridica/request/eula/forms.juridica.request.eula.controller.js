@@ -5,22 +5,18 @@ import { generateRandomString } from "../../../../../utils/utils";
 export const requestVerificationCode = async (req, res) => {
   try {
     const currentDate = new Date();
+    const expirationDate = currentDate;
+    expirationDate.setMinutes(expirationDate.getMinutes() + 5);
 
     console.log("Creation", Math.floor(currentDate.getTime() / 1000));
-    console.log(
-      "Expiration",
-      Math.floor(
-        currentDate.setMinutes(currentDate.getMinutes() + 5).getTime() / 1000
-      )
-    );
+    console.log("Expiration", Math.floor(expirationDate.getTime() / 1000));
 
     const juridicaRequestEula = new formsJuridicaRequestEulaSchema({
       Id: req.body.Id,
       VerificationCode: generateRandomString(4),
       Creation: Math.floor(currentDate.getTime() / 1000),
-      Expiration: Math.floor(
-        currentDate.setMinutes(currentDate.getMinutes() + 5).getTime() / 1000
-      ),
+      Expiration: Math.floor(expirationDate.getTime() / 1000),
+      Used: false,
     });
 
     await juridicaRequestEula.save();
@@ -41,7 +37,8 @@ export const verifyVerificationCode = async (req, res) => {
         req.query.Id,
         req.query.VerificationCode,
         req.query.Creation,
-        req.query.Expiration
+        req.query.Expiration,
+        req.query.Used
       )
     );
 
@@ -82,7 +79,8 @@ export const find = async (req, res) => {
         req.query.Id,
         req.query.VerificationCode,
         req.query.Creation,
-        req.query.Expiration
+        req.query.Expiration,
+        req.query.Used
       )
     );
 
@@ -100,7 +98,8 @@ export const updateMany = async (req, res) => {
         req.query.Id,
         req.query.VerificationCode,
         req.query.Creation,
-        req.query.Expiration
+        req.query.Expiration,
+        req.query.Used
       ),
       req.body
     );
@@ -119,7 +118,8 @@ export const deleteMany = async (req, res) => {
         req.query.Id,
         req.query.VerificationCode,
         req.query.Creation,
-        req.query.Expiration
+        req.query.Expiration,
+        req.query.Used
       )
     );
 

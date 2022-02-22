@@ -3,7 +3,8 @@ export const formsJuridicaRequestEulaObjectWithoutUndefined = (
   Id,
   VerificationCode,
   Creation,
-  Expiration
+  Expiration,
+  Used
 ) => {
   const obj = {};
 
@@ -25,6 +26,10 @@ export const formsJuridicaRequestEulaObjectWithoutUndefined = (
 
   if (Expiration) {
     obj.Expiration = Expiration;
+  }
+
+  if (Used) {
+    obj.Used = Used;
   }
 
   return obj;
