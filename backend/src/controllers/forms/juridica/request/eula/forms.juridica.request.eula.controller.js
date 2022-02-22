@@ -1,6 +1,8 @@
 import formsJuridicaRequestEulaSchema from "../../../../../schemas/forms/juridica/request/eula/forms.juridica.request.eula.schema";
-import { formsJuridicaRequestEulaObjectWithoutUndefined } from "../../../../../utils/forms/juridica/request/eula/forms.juridica.request.eula.utils";
-import { generateRandomString } from "../../../../../utils/utils";
+import {
+  generateRandomString,
+  formsJuridicaRequestEulaObjectWithoutUndefined,
+} from "../../../../../utils/utils";
 
 export const requestVerificationCode = async (req, res) => {
   try {

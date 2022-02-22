@@ -5,7 +5,7 @@ import {
   getConfigurationJuridicaFlowStepsWithEncargados,
   formsJuridicaRequestObjectWithoutUndefined,
   uploadFilesToSharePointJuridica,
-} from "../../../../../utils/utils";
+} from "../../../../../utils/forms/juridica/request/forms.juridica.request.utils";
 
 export const post = async (req, res) => {
   res.status(200).send();

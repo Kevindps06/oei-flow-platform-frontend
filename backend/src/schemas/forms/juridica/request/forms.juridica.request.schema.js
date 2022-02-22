@@ -28,6 +28,7 @@ const schema = mongoose.Schema({
   GestionPath: String,
   SharePointFiles: [],
   Keys: [],
+  Eula: Boolean,
 });
 
 export default mongoose

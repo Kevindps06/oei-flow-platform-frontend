@@ -44,7 +44,8 @@ export const find = async (req, res) => {
         req.query.Configuration,
         req.query.GestionPath,
         req.query.SharePointFiles,
-        req.query.Keys
+        req.query.Keys,
+        req.query.Eula
       )
     );
 
@@ -85,7 +86,8 @@ export const updateMany = async (req, res) => {
         req.query.Configuration,
         req.query.GestionPath,
         req.query.SharePointFiles,
-        req.query.Keys
+        req.query.Keys,
+        req.query.Eula
       ),
       req.body
     );
@@ -127,7 +129,8 @@ export const deleteMany = async (req, res) => {
         req.query.Configuration,
         req.query.GestionPath,
         req.query.SharePointFiles,
-        req.query.Keys
+        req.query.Keys,
+        req.query.Eula
       )
     );
 
