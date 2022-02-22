@@ -48,6 +48,20 @@ export const verifyVerificationCode = async (req, res) => {
         Math.floor(new Date().getTime() / 1000.0)
       ) {
         if (!juridicaRequestEula[0].Used) {
+          await formsJuridicaRequestEulaSchema.updateMany(
+            formsJuridicaRequestEulaObjectWithoutUndefined(
+              req.query._id,
+              req.query.Id,
+              req.query.VerificationCode,
+              req.query.Creation,
+              req.query.Expiration,
+              req.query.Used
+            ),
+            {
+              Used: true,
+            }
+          );
+
           res.status(200).send();
         } else {
           res.status(403).send();
