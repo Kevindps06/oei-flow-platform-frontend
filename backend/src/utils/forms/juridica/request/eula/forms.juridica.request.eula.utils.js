@@ -1,4 +1,8 @@
-export const formsJuridicaRequestEulaObjectWithoutUndefined = (_id) => {
+export const formsJuridicaRequestEulaObjectWithoutUndefined = (
+  _id,
+  Id,
+  VerificationCode
+) => {
   const obj = {};
 
   if (_id) {
