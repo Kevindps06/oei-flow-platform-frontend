@@ -5,17 +5,17 @@ import { generateRandomString } from "../../../../../utils/utils";
 export const requestVerificationCode = async (req, res) => {
   try {
     const currentDate = new Date();
-    const expirationDate = currentDate;
+    const expirationDate = new Date(currentDate);
     expirationDate.setMinutes(expirationDate.getMinutes() + 5);
 
-    console.log("Creation", Math.floor(currentDate.getTime() / 1000));
-    console.log("Expiration", Math.floor(expirationDate.getTime() / 1000));
+    console.log("Creation", Math.floor(currentDate.getTime() / 1000.0));
+    console.log("Expiration", Math.floor(expirationDate.getTime() / 1000.0));
 
     const juridicaRequestEula = new formsJuridicaRequestEulaSchema({
       Id: req.body.Id,
       VerificationCode: generateRandomString(4),
-      Creation: Math.floor(currentDate.getTime() / 1000),
-      Expiration: Math.floor(expirationDate.getTime() / 1000),
+      Creation: Math.floor(currentDate.getTime() / 1000.0),
+      Expiration: Math.floor(expirationDate.getTime() / 1000.0),
       Used: false,
     });
 
@@ -45,7 +45,7 @@ export const verifyVerificationCode = async (req, res) => {
     if (juridicaRequestEula.length > 0) {
       if (
         juridicaRequestEula[0].Expiration >=
-        Math.floor(new Date().getTime() / 1000.0)
+        Math.floor(new Date().getTime() / 1000)
       ) {
         if (!juridicaRequestEula[0].Used) {
           await formsJuridicaRequestEulaSchema.updateMany(
