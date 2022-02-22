@@ -6,12 +6,20 @@ export const requestVerificationCode = async (req, res) => {
   try {
     const currentDate = new Date();
 
+    console.log("Creation", Math.floor(currentDate.getTime() / 1000));
+    console.log(
+      "Expiration",
+      Math.floor(
+        currentDate.setMinutes(currentDate.getMinutes() + 5).getTime() / 1000
+      )
+    );
+
     const juridicaRequestEula = new formsJuridicaRequestEulaSchema({
       Id: req.body.Id,
       VerificationCode: generateRandomString(4),
-      Creation: Math.floor(currentDate.getTime() / 1000.0),
+      Creation: Math.floor(currentDate.getTime() / 1000),
       Expiration: Math.floor(
-        currentDate.setMinutes(currentDate.getMinutes() + 5).getTime() / 1000.0
+        currentDate.setMinutes(currentDate.getMinutes() + 5).getTime() / 1000
       ),
     });
 
@@ -19,7 +27,9 @@ export const requestVerificationCode = async (req, res) => {
 
     res.status(201).send();
   } catch (err) {
-    res.status(500).json(err);
+    console.log(err);
+
+    res.status(500).json({ "Test Json": ["Test", "Test"] });
   }
 };
 

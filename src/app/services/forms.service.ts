@@ -42,13 +42,15 @@ export class FormsService {
   }
 
   postFormsJuridicaRequestEulaRequestVerificationCode(
-    formsJuridicaRequest: FormsJuridicaRequest
+    Id: string
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'POST',
         `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/eula/requestverificationcode`,
-        formsJuridicaRequest,
+        {
+          Id,
+        },
         {
           headers: new HttpHeaders({
             'content-type': 'application/json',
@@ -60,14 +62,18 @@ export class FormsService {
   }
 
   getFormsJuridicaRequestEulaVerifyVerificationCode(
-    formsJuridicaRequestEula: any
+    Id: string,
+    VerificationCode: string
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
         `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/eula/verifyverificationcode`,
         {
-          params: new HttpParams().appendAll(formsJuridicaRequestEula),
+          params: new HttpParams().appendAll({
+            Id,
+            VerificationCode,
+          }),
           reportProgress: true,
         }
       )

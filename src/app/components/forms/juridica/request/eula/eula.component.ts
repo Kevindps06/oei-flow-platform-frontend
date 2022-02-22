@@ -31,7 +31,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
 
     this.Id = this.activatedRoute.snapshot.params.id;
 
-    this.formsService.getFormsJuridicaRequest(this.Id).subscribe((event) => {
+    /*this.formsService.getFormsJuridicaRequest(this.Id).subscribe((event) => {
       switch (event.type) {
         case HttpEventType.Sent:
           this.sharedService.pushWaitTask({
@@ -56,7 +56,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
           }
           break;
       }
-    });
+    });*/
   }
 
   currentAvailableAction: string = 'Solicitar codigo';
@@ -68,9 +68,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
 
     if (this.currentAvailableAction === 'Solicitar codigo') {
       this.formsService
-        .postFormsJuridicaRequestEulaRequestVerificationCode(
-          this.formsJuridicaRequest
-        )
+        .postFormsJuridicaRequestEulaRequestVerificationCode(this.Id)
         .subscribe(
           (event) => {
             switch (event.type) {
@@ -90,7 +88,11 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
                 break;
             }
           },
-          (err) => {},
+          (err) => {
+            this.sharedService.removeWaitTask({
+              id: taskId,
+            });
+          },
           () => {
             this.sharedService.removeWaitTask({
               id: taskId,
@@ -110,10 +112,10 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
       this.currentAvailableAction = 'Verificar codigo';
     } else {
       this.formsService
-        .getFormsJuridicaRequestEulaVerifyVerificationCode({
-          Id: this.formsJuridicaRequest.Id,
-          VerificationCode: this.codigoVerificacion,
-        })
+        .getFormsJuridicaRequestEulaVerifyVerificationCode(
+          this.Id,
+          this.codigoVerificacion
+        )
         .subscribe(
           (event) => {
             switch (event.type) {
@@ -137,8 +139,21 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
               id: taskId,
             });
 
-            if (err.status === 404) {
-
+            switch (err.status) {
+              case 404:
+                this.sharedService.pushToastMessage({
+                  id: Utils.makeRandomString(4),
+                  title: `Not found`,
+                  description: ``,
+                });
+                break;
+              case 408:
+                this.sharedService.pushToastMessage({
+                  id: Utils.makeRandomString(4),
+                  title: `Timeout`,
+                  description: ``,
+                });
+                break;
             }
           },
           () => {
@@ -146,11 +161,15 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
               id: taskId,
             });
 
+            this.sharedService.pushToastMessage({
+              id: Utils.makeRandomString(4),
+              title: `Correcto`,
+              description: ``,
+            });
+
             this.codigoVerificacionRequested = false;
           }
         );
-
-      this.currentAvailableAction = 'Solicitar codigo';
     }
   }
 }
