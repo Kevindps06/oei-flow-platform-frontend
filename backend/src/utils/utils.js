@@ -7,17 +7,17 @@ import configurationJuridicaFlowSchema from "../schemas/configuration/juridicafl
 import configurationCoordinacionLogisticaFlowSchema from "../schemas/configuration/coordinacionlogisticaflow/configuration.coordinacionlogisticaflow.schema";
 
 export const generateRandomString = (length) => {
-    var result = '';
-    const characters =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
+  var result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charactersLength = characters.length;
 
-    for (var i = 0; length > i; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-
-    return result;
+  for (var i = 0; length > i; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
+
+  return result;
+};
 
 export const getConvenioFromSharePoint = async (convenioNumber) => {
   let convenioFromSharePoint;
@@ -312,6 +312,10 @@ export const inflateFlowStepsJuridicaOEI = async (flowSteps, convenio) => {
     const exception = flowSteps[i].exceptions?.find(
       (exception) => exception.convenio == convenio.Numero
     );
+
+    console.log("Convenio", convenio);
+
+    console.log("Step", flowSteps[i].key);
 
     const encargado = await getUserFromSharePointJuridicaOEI(
       convenio[flowSteps[i].key][exception ? exception.encargado : 0].Email
