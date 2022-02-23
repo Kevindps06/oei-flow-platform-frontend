@@ -19,6 +19,12 @@ import formsJuridicaRequestFlowRoutes from "./flow/forms.juridica.request.flow.r
 
 router.use("/flow", formsJuridicaRequestFlowRoutes);
 
+// /api/forms/juridica/request/minuta
+
+import formsJuridicaRequestMinutaRoutes from "./minuta/forms.juridica.request.minuta.routes";
+
+router.use("/minuta", formsJuridicaRequestMinutaRoutes);
+
 // /api/forms/juridica/request/eula
 
 import formsJuridicaRequestEulaRoutes from "./eula/forms.juridica.request.eula.routes";

@@ -15,7 +15,7 @@ router.delete("/", formsJuridicaRequestEulaController.deleteMany);
 
 // /api/forms/juridica/request/eula/requestverificationcode
 
-router.post(
+router.get(
   "/requestverificationcode",
   formsJuridicaRequestEulaController.requestVerificationCode
 );
@@ -27,8 +27,8 @@ router.get(
   formsJuridicaRequestEulaController.verifyVerificationCode
 );
 
-// /api/forms/juridica/request/eula/fillstatus
+// /api/forms/juridica/request/eula/availability
 
-router.get("/fillstatus", formsJuridicaRequestEulaController.fillStatus);
+router.get("/availability", formsJuridicaRequestEulaController.availability);
 
 export default router;

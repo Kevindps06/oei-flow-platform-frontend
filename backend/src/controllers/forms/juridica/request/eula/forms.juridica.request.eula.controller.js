@@ -6,7 +6,7 @@ import {
   formsJuridicaRequestObjectWithoutUndefined,
 } from "../../../../../utils/utils";
 
-export const fillStatus = async (req, res) => {
+export const availability = async (req, res) => {
   try {
     const juridicaRequest = await formsJuridicaRequestSchema.find(
       formsJuridicaRequestObjectWithoutUndefined(
@@ -66,7 +66,7 @@ export const requestVerificationCode = async (req, res) => {
     expirationDate.setMinutes(expirationDate.getMinutes() + 5);
 
     const juridicaRequestEula = new formsJuridicaRequestEulaSchema({
-      Id: req.body.Id,
+      Id: req.query.Id,
       VerificationCode: generateRandomString(4),
       Creation: Math.floor(currentDate.getTime() / 1000.0),
       Expiration: Math.floor(expirationDate.getTime() / 1000.0),
