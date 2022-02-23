@@ -30,6 +30,10 @@ const routes: Routes = [
     component: FormsComponent,
   },
   {
+    path: 'forms/juridica/request/:id/minuta',
+    component: FormsComponent,
+  },
+  {
     path: 'forms/juridica/request/:id/eula',
     component: FormsComponent,
   },

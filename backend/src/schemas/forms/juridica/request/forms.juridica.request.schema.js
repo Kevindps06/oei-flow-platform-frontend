@@ -29,6 +29,7 @@ const schema = mongoose.Schema({
   SharePointFiles: [],
   Keys: [],
   Eula: Object,
+  Minuta: Object
 });
 
 export default mongoose

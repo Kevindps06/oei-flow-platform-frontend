@@ -292,7 +292,8 @@ export const formsJuridicaRequestObjectWithoutUndefined = (
   GestionPath,
   SharePointFiles,
   Keys,
-  Eula
+  Eula,
+  Minuta
 ) => {
   const obj = {};
 
@@ -412,6 +413,10 @@ export const formsJuridicaRequestObjectWithoutUndefined = (
     obj.Eula = Eula;
   }
 
+  if (Minuta) {
+    obj.Minuta = Minuta;
+  }
+
   return obj;
 };
 
@@ -451,7 +456,6 @@ export const formsJuridicaRequestEulaObjectWithoutUndefined = (
 
   return obj;
 };
-
 
 export const generateRandomString = (length) => {
   var result = "";

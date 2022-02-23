@@ -28,6 +28,12 @@
           <app-forms-juridica-request
             *ngIf="isRoute('/forms/juridica/request')"
           ></app-forms-juridica-request>
+          <app-forms-juridica-request-minuta
+            *ngIf="
+              startWithRoute('/forms/juridica/request/') &&
+              endWithRoute('/minuta')
+            "
+          ></app-forms-juridica-request-minuta>
           <app-forms-juridica-request-eula
             *ngIf="
               startWithRoute('/forms/juridica/request/') &&

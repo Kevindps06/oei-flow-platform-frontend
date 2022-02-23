@@ -52,6 +52,10 @@ export class FormsComponent implements OnInit {
         this.title = 'Gestion juridica';
         this.description = 'Formulario de gestion juridica descripcion.';
         return;
+      case `/forms/juridica/request/${this.activatedRoute.snapshot.params.id}/minuta`:
+        this.title = 'Gestion juridica minuta';
+        this.description = 'Formulario de gestion juridica minuta descripcion.';
+        return;
       case `/forms/juridica/request/${this.activatedRoute.snapshot.params.id}/eula`:
         this.title = 'Gestion juridica eula';
         this.description = 'Formulario de gestion juridica eula descripcion.';

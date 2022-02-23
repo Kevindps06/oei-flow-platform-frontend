@@ -38,11 +38,10 @@ export const fillStatus = async (req, res) => {
         req.query.GestionPath,
         req.query.SharePointFiles,
         req.query.Keys,
-        req.query.Eula
+        req.query.Eula,
+        req.query.Minuta
       )
     );
-
-    console.log(juridicaRequest[0].Eula);
 
     switch (juridicaRequest[0].Eula) {
       case undefined:
