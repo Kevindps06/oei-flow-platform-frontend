@@ -38,6 +38,9 @@ export const availability = async (req, res) => {
       )
     );
 
+    console.log("Minuta", juridicaRequest[0].Minuta);
+    console.log("Minuta type", typeof juridicaRequest[0].Minuta);
+
     switch (juridicaRequest[0].Minuta) {
       case undefined:
       case {}:
