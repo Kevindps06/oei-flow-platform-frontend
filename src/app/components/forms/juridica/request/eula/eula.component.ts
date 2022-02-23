@@ -86,6 +86,8 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
     this.verificacionCodigoVerificacionError = false;
   }
 
+  formsJuridicaRequestEulaId!: string;
+
   solicitarVerificarCodigo() {
     const taskId: string = Utils.makeRandomString(4);
     let requestTimeout: NodeJS.Timeout;
@@ -174,6 +176,10 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
                   id: taskId,
                   progress: Math.round((event.loaded * 100) / event.total),
                 });
+                break;
+              case HttpEventType.Response:
+                console.log(event.body);
+                this.formsJuridicaRequestEulaId = event.body;
                 break;
             }
           },
@@ -278,7 +284,44 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
     }
   }
 
-  btnSubmitClick() {}
+  btnSubmitClick() {
+    const taskId: string = Utils.makeRandomString(4);
+
+    this.formsService
+      .putFormsJuridicaRequest(this.Id, {
+        Eula: this.formsJuridicaRequestEulaId,
+      })
+      .subscribe((event) => {
+        switch (event.type) {
+          case HttpEventType.Sent:
+            this.sharedService.pushWaitTask({
+              id: taskId,
+              description: 'Actualizando informacion de la peticion...',
+              progress: 0,
+            });
+            break;
+          case HttpEventType.UploadProgress:
+            this.sharedService.pushWaitTask({
+              id: taskId,
+              progress: Math.round((event.loaded * 100) / event.total),
+            });
+            break;
+          case HttpEventType.Response:
+            this.router.navigate(['/']);
+
+            this.sharedService.removeWaitTask({
+              id: taskId,
+            });
+
+            this.sharedService.pushToastMessage({
+              id: Utils.makeRandomString(4),
+              title: `Condiciones aceptadas`,
+              description: `Su respuesta ha sido correctamente ingresada.`,
+            });
+            break;
+        }
+      });
+  }
 
   isValid() {
     switch (this.formIndex) {

@@ -50,9 +50,9 @@ export class FormsService {
           headers: new HttpHeaders({
             'content-type': 'application/json',
           }),
-          param: {
+          params: new HttpParams().appendAll({
             Id,
-          },
+          }),
           reportProgress: true,
         }
       )
@@ -195,6 +195,25 @@ export class FormsService {
         {
           params: new HttpParams().appendAll({
             Id: Id,
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  putFormsJuridicaRequest(
+    Id: string,
+    formsJuridicaRequest: any
+  ): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'PUT',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request`,
+        formsJuridicaRequest,
+        {
+          params: new HttpParams().appendAll({
+            Id,
           }),
           reportProgress: true,
         }

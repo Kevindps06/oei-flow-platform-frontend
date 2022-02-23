@@ -115,7 +115,7 @@ export const verifyVerificationCode = async (req, res) => {
           juridicaRequestEula[0].Expiration >=
           Math.floor(new Date().getTime() / 1000.0)
         ) {
-          res.status(200).send();
+          res.status(200).json(juridicaRequestEula[0]._id);
         } else {
           res.status(408).send();
         }
