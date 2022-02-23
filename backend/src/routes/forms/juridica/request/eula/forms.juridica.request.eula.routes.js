@@ -27,4 +27,8 @@ router.get(
   formsJuridicaRequestEulaController.verifyVerificationCode
 );
 
+// /api/forms/juridica/request/eula/fillstatus
+
+router.get("/fillstatus", formsJuridicaRequestEulaController.fillStatus);
+
 export default router;

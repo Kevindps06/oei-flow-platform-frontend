@@ -41,6 +41,24 @@ export class FormsService {
     );
   }
 
+  getFormsJuridicaRequestEulaFillStatus(Id: string): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/eula/fillstatus`,
+        {
+          headers: new HttpHeaders({
+            'content-type': 'application/json',
+          }),
+          param: {
+            Id,
+          },
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
   postFormsJuridicaRequestEulaRequestVerificationCode(
     Id: string
   ): Observable<any> {

@@ -1,6 +1,6 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from 'src/app/classes/utils';
 import { FormsJuridicaRequest } from 'src/app/interfaces/forms-juridica-request';
 import { FormsService } from 'src/app/services/forms.service';
@@ -25,13 +25,59 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
   constructor(
     private formsService: FormsService,
     private activatedRoute: ActivatedRoute,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     const taskId: string = Utils.makeRandomString(4);
 
     this.Id = this.activatedRoute.snapshot.params.id;
+
+    this.formsService.getFormsJuridicaRequestEulaFillStatus(this.Id).subscribe(
+      (event) => {
+        switch (event.type) {
+          case HttpEventType.Sent:
+            this.sharedService.pushWaitTask({
+              id: taskId,
+              description: 'Verificando disponibilidad...',
+              progress: 0,
+            });
+            break;
+          case HttpEventType.DownloadProgress:
+            this.sharedService.pushWaitTask({
+              id: taskId,
+              progress: Math.round((event.loaded * 100) / event.total),
+            });
+            break;
+        }
+      },
+      (err) => {
+        this.router.navigate(['/']);
+
+        this.sharedService.removeWaitTask({
+          id: taskId,
+        });
+
+        switch (err.status) {
+          case 406:
+            this.sharedService.pushToastMessage({
+              id: Utils.makeRandomString(4),
+              title: `Contenido no disponible`,
+              description: `El contenido al que esta intentando ingresar no se encuentra disponible, intentelo despues.`,
+            });
+            break;
+          case 423:
+            this.sharedService.pushToastMessage({
+              id: Utils.makeRandomString(4),
+              title: `Componente ya usado`,
+              description: `Ya se ha utilizado el componente al que intenta ingresar para su respectiva tarea.`,
+            });
+            break;
+        }
+      },
+      () => {}
+    );
   }
 
   currentAvailableAction: string = 'Solicitar codigo';
@@ -79,7 +125,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
             this.codigoVerificacionRequested = true;
 
             requestTimeout = setTimeout(() => {
-              if (!this.formsJuridicaRequest) {
+              if (this.formIndex === 0) {
                 this.verificacionCodigoVerificacionError = false;
 
                 this.currentAvailableAction = 'Solicitar codigo';
