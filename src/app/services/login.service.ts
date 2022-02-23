@@ -1,4 +1,3 @@
-import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
@@ -8,8 +7,6 @@ import {
   InteractionType,
   PublicClientApplication,
 } from '@azure/msal-browser';
-import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { Utils } from '../classes/utils';
 import { SharedService } from './shared.service';
 import { Client } from '@microsoft/microsoft-graph-client';
@@ -27,7 +24,7 @@ export interface idTokenClaims {
   providedIn: 'root',
 })
 export class LoginService {
-  private graphClient?: Client;
+  private graphClient!: Client;
 
   constructor(
     private router: Router,

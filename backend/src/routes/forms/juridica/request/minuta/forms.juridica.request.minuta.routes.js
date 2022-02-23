@@ -9,4 +9,11 @@ import * as formsJuridicaRequestMinutaController from "../../../../../controller
 
 router.get("/availability", formsJuridicaRequestMinutaController.availability);
 
+// /api/forms/juridica/request/minuta/verifyencargado
+
+router.get(
+  "/verifyencargado",
+  formsJuridicaRequestMinutaController.verifyEncargado
+);
+
 export default router;
