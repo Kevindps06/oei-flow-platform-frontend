@@ -45,6 +45,7 @@ export const availability = async (req, res) => {
 
     switch (juridicaRequest[0].Eula) {
       case undefined:
+      case {}:
         res.status(406).send();
         break;
       case false:
