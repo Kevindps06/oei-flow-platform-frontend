@@ -34,50 +34,52 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
 
     this.Id = this.activatedRoute.snapshot.params.id;
 
-    this.formsService.getFormsJuridicaRequestEulaFillStatus(this.Id).subscribe(
-      (event) => {
-        switch (event.type) {
-          case HttpEventType.Sent:
-            this.sharedService.pushWaitTask({
-              id: taskId,
-              description: 'Verificando disponibilidad...',
-              progress: 0,
-            });
-            break;
-          case HttpEventType.DownloadProgress:
-            this.sharedService.pushWaitTask({
-              id: taskId,
-              progress: Math.round((event.loaded * 100) / event.total),
-            });
-            break;
-        }
-      },
-      (err) => {
-        this.router.navigate(['/']);
+    this.formsService
+      .getFormsJuridicaRequestEulaAvailability(this.Id)
+      .subscribe(
+        (event) => {
+          switch (event.type) {
+            case HttpEventType.Sent:
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                description: 'Verificando disponibilidad...',
+                progress: 0,
+              });
+              break;
+            case HttpEventType.DownloadProgress:
+              this.sharedService.pushWaitTask({
+                id: taskId,
+                progress: Math.round((event.loaded * 100) / event.total),
+              });
+              break;
+          }
+        },
+        (err) => {
+          this.router.navigate(['/']);
 
-        this.sharedService.removeWaitTask({
-          id: taskId,
-        });
+          this.sharedService.removeWaitTask({
+            id: taskId,
+          });
 
-        switch (err.status) {
-          case 406:
-            this.sharedService.pushToastMessage({
-              id: Utils.makeRandomString(4),
-              title: `Contenido no disponible`,
-              description: `El contenido al que esta intentando ingresar no se encuentra disponible, intentelo despues.`,
-            });
-            break;
-          case 423:
-            this.sharedService.pushToastMessage({
-              id: Utils.makeRandomString(4),
-              title: `Componente ya usado`,
-              description: `Ya se ha utilizado el componente al que intenta ingresar para su respectiva tarea.`,
-            });
-            break;
-        }
-      },
-      () => {}
-    );
+          switch (err.status) {
+            case 406:
+              this.sharedService.pushToastMessage({
+                id: Utils.makeRandomString(4),
+                title: `Contenido no disponible`,
+                description: `El contenido al que esta intentando ingresar no se encuentra disponible, intentelo despues.`,
+              });
+              break;
+            case 423:
+              this.sharedService.pushToastMessage({
+                id: Utils.makeRandomString(4),
+                title: `Componente ya usado`,
+                description: `Ya se ha utilizado el componente al que intenta ingresar para su respectiva tarea.`,
+              });
+              break;
+          }
+        },
+        () => {}
+      );
   }
 
   currentAvailableAction: string = 'Solicitar codigo';
@@ -94,7 +96,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
 
     if (this.currentAvailableAction === 'Solicitar codigo') {
       this.formsService
-        .postFormsJuridicaRequestEulaRequestVerificationCode(this.Id)
+        .getFormsJuridicaRequestEulaRequestVerificationCode(this.Id)
         .subscribe(
           (event) => {
             switch (event.type) {

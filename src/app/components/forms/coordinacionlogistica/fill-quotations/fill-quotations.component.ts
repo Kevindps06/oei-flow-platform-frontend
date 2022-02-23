@@ -124,10 +124,9 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
 
   btnSetTicketNumber() {
     this.formsService
-      .putFormsCoordinacionLogistica(
-        { TicketNumber: this.ticketNumber },
-        this.Id
-      )
+      .putFormsCoordinacionLogistica(this.Id, {
+        TicketNumber: this.ticketNumber,
+      })
       .subscribe(
         (event) => {
           switch (event.type) {
@@ -171,7 +170,7 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
     });
 
     this.formsService
-      .putFormsCoordinacionLogistica({ Quotations: this.quotations }, this.Id)
+      .putFormsCoordinacionLogistica(this.Id, { Quotations: this.quotations })
       .subscribe(
         (event) => {
           switch (event.type) {
@@ -221,7 +220,7 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
     }
 
     this.formsService
-      .putFormsCoordinacionLogistica({ Quotations: this.quotations }, this.Id)
+      .putFormsCoordinacionLogistica(this.Id, { Quotations: this.quotations })
       .subscribe(
         (event) => {
           switch (event.type) {

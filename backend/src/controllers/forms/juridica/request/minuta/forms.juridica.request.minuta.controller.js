@@ -38,7 +38,7 @@ export const availability = async (req, res) => {
       )
     );
 
-    switch (juridicaRequest[0].Eula) {
+    switch (juridicaRequest[0].Minuta) {
       case undefined:
         res.status(406).send();
         break;

@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
-  HttpEventType,
   HttpHeaders,
   HttpParams,
   HttpRequest,
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { FormsFinancieraRegistration } from '../interfaces/forms-financiera-registration';
 import { environment } from 'src/environments/environment';
 import { FormsFinancieraInvoice } from '../interfaces/forms-financiera-invoice';
@@ -41,15 +39,12 @@ export class FormsService {
     );
   }
 
-  getFormsJuridicaRequestEulaFillStatus(Id: string): Observable<any> {
+  getFormsJuridicaRequestMinutaAvailability(Id: string): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/eula/fillstatus`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/minuta/availability`,
         {
-          headers: new HttpHeaders({
-            'content-type': 'application/json',
-          }),
           params: new HttpParams().appendAll({
             Id,
           }),
@@ -59,19 +54,31 @@ export class FormsService {
     );
   }
 
-  postFormsJuridicaRequestEulaRequestVerificationCode(
+  getFormsJuridicaRequestEulaAvailability(Id: string): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/eula/availability`,
+        {
+          params: new HttpParams().appendAll({
+            Id,
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  getFormsJuridicaRequestEulaRequestVerificationCode(
     Id: string
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
-        'POST',
+        'GET',
         `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/eula/requestverificationcode`,
         {
-          Id,
-        },
-        {
-          headers: new HttpHeaders({
-            'content-type': 'application/json',
+          params: new HttpParams().appendAll({
+            Id,
           }),
           reportProgress: true,
         }
@@ -125,7 +132,7 @@ export class FormsService {
             'content-type': 'application/octet-stream',
           }),
           params: new HttpParams().appendAll({
-            name: name,
+            name,
           }),
           reportProgress: true,
         }
@@ -194,7 +201,7 @@ export class FormsService {
         `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request`,
         {
           params: new HttpParams().appendAll({
-            Id: Id,
+            Id,
           }),
           reportProgress: true,
         }
@@ -278,7 +285,7 @@ export class FormsService {
         `${environment.backendProtocol}://${environment.backendAddress}/api/forms/coordinacionlogistica`,
         {
           params: new HttpParams().appendAll({
-            Id: Id,
+            Id,
           }),
           reportProgress: true,
         }
@@ -287,8 +294,8 @@ export class FormsService {
   }
 
   putFormsCoordinacionLogistica(
-    formsCoordinacionLogistica: any,
-    Id: string
+    Id: string,
+    formsCoordinacionLogistica: any
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
@@ -300,7 +307,7 @@ export class FormsService {
             'content-type': 'application/json',
           }),
           params: new HttpParams().appendAll({
-            Id: Id,
+            Id,
           }),
           reportProgress: true,
         }

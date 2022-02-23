@@ -118,10 +118,9 @@ export class FormsCoordinacionLogisticaSelectQuotationComponent
     selectedQuotation: FormsCoordinacionLogisticaFillQuotations
   ) {
     this.formsService
-      .putFormsCoordinacionLogistica(
-        { SelectedQuotation: selectedQuotation },
-        this.Id
-      )
+      .putFormsCoordinacionLogistica(this.Id, {
+        SelectedQuotation: selectedQuotation,
+      })
       .subscribe(
         (event) => {
           switch (event.type) {
