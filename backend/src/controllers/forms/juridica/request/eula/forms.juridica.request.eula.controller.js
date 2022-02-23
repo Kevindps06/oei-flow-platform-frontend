@@ -6,7 +6,7 @@ import {
   formsJuridicaRequestObjectWithoutUndefined,
 } from "../../../../../utils/utils";
 
-export const fillStatus = (req, res) => {
+export const fillStatus = async (req, res) => {
   try {
     const juridicaRequest = await formsJuridicaRequestSchema.find(
       formsJuridicaRequestObjectWithoutUndefined(
