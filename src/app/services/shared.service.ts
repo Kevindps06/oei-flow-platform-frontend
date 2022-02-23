@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Utils } from '../classes/utils';
 import { ToastMessage } from '../interfaces/toast-message';
 import { WaitTask } from '../interfaces/WaitTask';
 
@@ -10,13 +11,15 @@ export class SharedService {
   private pushWaitTaskSource = new Subject<WaitTask>();
   onPushWaitTask = this.pushWaitTaskSource.asObservable();
   pushWaitTask(waitTask: WaitTask) {
-    this.pushWaitTaskSource.next(waitTask);
-  }
+    if (!waitTask.id) {
+      waitTask = Object.assign(waitTask, {
+        id: Utils.makeRandomString(4),
+      });
+    }
 
-  private removeWaitTaskSource = new Subject<WaitTask>();
-  onRemoveWaitTask = this.removeWaitTaskSource.asObservable();
-  removeWaitTask(waitTask: WaitTask) {
-    this.removeWaitTaskSource.next(waitTask);
+    this.pushWaitTaskSource.next(waitTask);
+
+    return waitTask.id;
   }
 
   private pushToastMessageSource = new Subject<ToastMessage>();

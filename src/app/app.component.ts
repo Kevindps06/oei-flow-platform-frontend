@@ -16,18 +16,9 @@ export class AppComponent implements OnInit {
   waitTasks: WaitTask[] = [];
   toastMessages: ToastMessage[] = [];
 
-  constructor(
-    private sharedService: SharedService,
-    private msalService: MsalService
-  ) {}
+  constructor(private sharedService: SharedService) {}
 
   ngOnInit(): void {
-    /*this.msalService.instance.handleRedirectPromise().then((res) => {
-      if (res != null && res.account != null) {
-        this.msalService.instance.setActiveAccount(res.account);
-      }
-    });*/
-
     this.sharedService.onPushWaitTask.subscribe((waitTask: WaitTask) => {
       const taskIndex = this.waitTasks.findIndex(
         (element) => element.id === waitTask.id
@@ -35,8 +26,11 @@ export class AppComponent implements OnInit {
 
       if (taskIndex !== -1) {
         if (waitTask.progress === 100) {
-          this.waitTasks[taskIndex].description =
-            'Su peticion se encuentra siendo procesada, por favor espere...';
+          this.waitTasks.splice(
+            this.waitTasks.findIndex((element) => element.id === waitTask.id)
+          );
+
+          return;
         }
 
         if (waitTask.description) {
@@ -47,12 +41,6 @@ export class AppComponent implements OnInit {
       } else {
         this.waitTasks.push(waitTask);
       }
-    });
-
-    this.sharedService.onRemoveWaitTask.subscribe((waitTask: WaitTask) => {
-      this.waitTasks.splice(
-        this.waitTasks.findIndex((element) => element.id === waitTask.id)
-      );
     });
 
     this.sharedService.onPushToastMessage.subscribe(

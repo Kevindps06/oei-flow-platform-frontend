@@ -5,8 +5,6 @@ import { Utils } from 'src/app/classes/utils';
 import { FormsService } from 'src/app/services/forms.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { LoginService } from 'src/app/services/login.service';
-import { catchError, map } from 'rxjs/operators';
-import { EMPTY, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-forms-juridica-request-minuta',
@@ -16,6 +14,8 @@ import { EMPTY, throwError } from 'rxjs';
 export class FormsJuridicaRequestMinutaComponent implements OnInit {
   Id!: string;
 
+  minuta: string = '';
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private formsService: FormsService,
@@ -24,7 +24,7 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
     private loginService: LoginService
   ) {}
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     if (!this.loginService.loggedInUser()) {
       this.router.navigate(['/login']);
 
@@ -37,21 +37,21 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
       return;
     }
 
-    const taskId: string = Utils.makeRandomString(4);
+    let taskId: string;
 
     this.Id = this.activatedRoute.snapshot.params.id;
 
-    await this.formsService
+    this.formsService
       .getFormsJuridicaRequestMinutaAvailability(this.Id)
-      .pipe(
-        map((httpEvent) => {
+      .subscribe(
+        (httpEvent) => {
           switch (httpEvent.type) {
             case HttpEventType.Sent:
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: 'Verificando disponibilidad...',
                 progress: 0,
-              });
+              }) as string;
+              console.log(taskId);
               break;
             case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
@@ -62,18 +62,48 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
               });
               break;
             case HttpEventType.Response:
-              this.sharedService.removeWaitTask({
-                id: taskId,
-              });
+              this.formsService
+                .getFormsJuridicaRequestMinutaVerifyEncargado(
+                  this.Id,
+                  this.loginService.loggedInUser()?.username as string
+                )
+                .subscribe(
+                  (httpEvent) => {
+                    switch (httpEvent.type) {
+                      case HttpEventType.Sent:
+                        taskId = this.sharedService.pushWaitTask({
+                          description: 'Verificando autorizacion...',
+                          progress: 0,
+                        }) as string;
+                        console.log(taskId);
+                        break;
+                      case HttpEventType.DownloadProgress:
+                        this.sharedService.pushWaitTask({
+                          id: taskId,
+                          progress: Math.round(
+                            (httpEvent.loaded * 100) / httpEvent.total
+                          ),
+                        });
+                        break;
+                    }
+                  },
+                  (httpEventError) => {
+                    if (httpEventError.status === 403) {
+                      this.router.navigate(['/']);
+
+                      this.sharedService.pushToastMessage({
+                        id: Utils.makeRandomString(4),
+                        title: `Inautorizado`,
+                        description: `Al contenido que esta intentando ingresar no se encuentra encargado usted, no intente ingresar.`,
+                      });
+                    }
+                  }
+                );
               break;
           }
-        }),
-        catchError((httpEventError) => {
+        },
+        (httpEventError) => {
           this.router.navigate(['/']);
-
-          this.sharedService.removeWaitTask({
-            id: taskId,
-          });
 
           switch (httpEventError.status) {
             case 406:
@@ -82,19 +112,28 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
                 title: `Contenido no disponible`,
                 description: `El contenido al que esta intentando ingresar no se encuentra disponible, intentelo despues.`,
               });
-              return EMPTY;
+              break;
             case 423:
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
                 title: `Componente ya usado`,
                 description: `Ya se ha utilizado el componente al que intenta ingresar para su respectiva tarea.`,
               });
-              return EMPTY;
+              break;
           }
+        }
+      );
+  }
 
-          return throwError(httpEventError);
-        })
-      )
-      .toPromise();
+  btnSubmitClick() {
+    this.formsService
+      .putFormsJuridicaRequest(this.Id, {
+        Minuta: 'Test minuta',
+      })
+      .subscribe();
+  }
+
+  isValid() {
+    return true;
   }
 }

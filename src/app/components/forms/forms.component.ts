@@ -2,10 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormsService } from 'src/app/services/forms.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Convenio } from 'src/app/interfaces/Convenio';
-import { FormsFinancieraRegistration } from 'src/app/interfaces/forms-financiera-registration';
-import { WaitTask } from 'src/app/interfaces/WaitTask';
-import { HttpEventType } from '@angular/common/http';
-import { Utils } from 'src/app/classes/utils';
 
 @Component({
   selector: 'app-forms',
@@ -13,14 +9,6 @@ import { Utils } from 'src/app/classes/utils';
   styleUrls: ['./forms.component.css'],
 })
 export class FormsComponent implements OnInit {
-  waitTasks: WaitTask[] = [];
-
-  setWaitTasks(waitTasks: WaitTask[]) {
-    setTimeout(() => {
-      this.waitTasks = waitTasks;
-    }, 0);
-  }
-
   title!: string;
   description!: string;
 
@@ -91,43 +79,5 @@ export class FormsComponent implements OnInit {
 
   endWithRoute(route: string) {
     return this.router.url.endsWith(route);
-  }
-
-  onSubmitFinancieraRegistrationForm(
-    financieraRegistrationForm: FormsFinancieraRegistration
-  ) {
-    var taskId: string;
-    this.formsService
-      .postFormsFinancieraRegistration(financieraRegistrationForm)
-      .subscribe((event) => {
-        switch (event.type) {
-          case HttpEventType.Sent:
-            taskId = Utils.makeRandomString(4);
-            this.waitTasks.push({
-              id: taskId,
-              description: 'Subiendo información...',
-              total: 0,
-              current: 0,
-              progress: 0,
-            });
-            break;
-          case HttpEventType.UploadProgress:
-            let taskIndex = this.waitTasks.findIndex(
-              (element) => element.id === taskId
-            );
-            this.waitTasks[taskIndex].total = event.total;
-            this.waitTasks[taskIndex].current = event.loaded;
-            this.waitTasks[taskIndex].progress = Math.round(
-              (event.loaded * 100) / event.total
-            );
-            break;
-          case HttpEventType.Response:
-            this.waitTasks.splice(
-              this.waitTasks.findIndex((element) => element.id === taskId),
-              1
-            );
-            break;
-        }
-      });
   }
 }

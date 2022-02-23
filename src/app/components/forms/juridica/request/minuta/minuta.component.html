@@ -1,1 +1,41 @@
-<p>minuta works!</p>
+<div class="row g-3">
+  <div class="col-12">
+    <div class="card card-body">
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label" for="textareaJustificacionContratacion"
+            >Minuta<strong class="text-danger">*</strong
+            ><button
+              type="button"
+              class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+            >
+              ?
+            </button></label
+          >
+          <textarea
+            [(ngModel)]="minuta"
+            name="textareaMinuta"
+            id="textareaMinuta"
+            class="form-control"
+            [ngClass]="{
+              'is-valid': minuta,
+              'is-invalid': !minuta
+            }"
+          ></textarea>
+          <div class="invalid-feedback">
+            Este campo es (*) obligatorio, rellenelo.
+          </div>
+        </div>
+        <div class="d-grid gap-2 col-6 mx-auto mb-2">
+          <a
+            class="btn btn-primary"
+            (click)="btnSubmitClick()"
+            role="button"
+            [ngClass]="{ disabled: !isValid() }"
+            >Enviar</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -3,10 +3,13 @@ import bytes from "bytes";
 import path from "path";
 import cors from "cors";
 import routes from "./routes/routes"
+import compression from "compression";
 
 const app = express();
 
 //app.use(morgan("tiny"));
+
+app.use(compression());
 
 app.use(
   cors({

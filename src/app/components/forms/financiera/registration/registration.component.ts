@@ -20,7 +20,7 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
   tipoPersona: string = '';
 
   tipoRelacion: string = '';
-  
+
   // 1
   identification: string = '';
   digitoVerificacion: string = '';
@@ -101,36 +101,32 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
 
         // Load form index 2 values
         let taskId: string;
-        this.formsService.getConveniosFinanciera().subscribe((event) => {
-          switch (event.type) {
+        this.formsService.getConveniosFinanciera().subscribe((httpEvent) => {
+          switch (httpEvent.type) {
             case HttpEventType.Sent:
-              taskId = Utils.makeRandomString(4);
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: 'Cargando convenios...',
                 progress: 0,
-              });
+              }) as string;
               break;
             case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
                 id: taskId,
-                progress: Math.round((event.loaded * 100) / event.total),
+                progress: Math.round(
+                  (httpEvent.loaded * 100) / httpEvent.total
+                ),
               });
               break;
             case HttpEventType.Response:
-              this.convenios = []
+              this.convenios = [];
 
-              event.body.value.forEach((convenio: any) => {
+              httpEvent.body.value.forEach((convenio: any) => {
                 this.convenios.push({
                   Id: convenio.id,
                   Aliado: convenio.fields.Aliado,
                   Numero: convenio.fields.Numero,
                   Mostrar: convenio.fields.Mostrar,
                 });
-              });
-
-              this.sharedService.removeWaitTask({
-                id: taskId,
               });
               break;
           }
@@ -160,7 +156,7 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
     };
 
     // Cleaning fields because information has been saved
-    this.manejoDatos = false
+    this.manejoDatos = false;
     this.informacionAdicional = '';
     this.certificacionBancariaFiles = [];
     this.cedulaFiles = [];
@@ -182,11 +178,10 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
         (event) => {
           switch (event.type) {
             case HttpEventType.Sent:
-              this.sharedService.pushWaitTask({
-                id: (taskId = Utils.makeRandomString(4)),
+              taskId = this.sharedService.pushWaitTask({
                 description: `Enviando registro...`,
                 progress: 0,
-              });
+              }) as string;
               break;
             case HttpEventType.UploadProgress:
               this.sharedService.pushWaitTask({
@@ -195,11 +190,10 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
               });
               break;
             case HttpEventType.ResponseHeader:
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: `Obteniendo la respuesta del envio del registro...`,
                 progress: 0,
-              });
+              }) as string;
               break;
             case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
@@ -208,10 +202,6 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
               });
               break;
             case HttpEventType.Response:
-              this.sharedService.removeWaitTask({
-                id: taskId,
-              });
-
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
                 title: `Registro enviado satisfactoriamente`,

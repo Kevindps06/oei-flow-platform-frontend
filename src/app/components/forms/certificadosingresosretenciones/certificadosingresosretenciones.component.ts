@@ -17,7 +17,7 @@ export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
   year: string = '';
 
   setYear(year: string) {
-    this.year = year
+    this.year = year;
   }
 
   identificator: string = '';
@@ -28,84 +28,72 @@ export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const taskId = Utils.makeRandomString(4);
+    let taskId: string;
 
     this.formsService
       .getFormsCertificadosIngresosRetencionesYears()
-      .subscribe(async (event) => {
-        switch (event.type) {
+      .subscribe(async (httpEvent) => {
+        switch (httpEvent.type) {
           case HttpEventType.Sent:
-            this.sharedService.pushWaitTask({
-              id: taskId,
+            taskId = this.sharedService.pushWaitTask({
               description: 'Obteniendo informacion...',
               progress: 0,
-            });
+            }) as string;
             break;
           case HttpEventType.DownloadProgress:
             this.sharedService.pushWaitTask({
               id: taskId,
-              progress: Math.round((event.loaded * 100) / event.total),
+              progress: Math.round((httpEvent.loaded * 100) / httpEvent.total),
             });
             break;
           case HttpEventType.Response:
-            this.years = event.body;
+            this.years = httpEvent.body;
 
-            this.year = this.years[0]
-
-            this.sharedService.removeWaitTask({
-              id: taskId,
-            });
+            this.year = this.years[0];
             break;
         }
       });
   }
 
   btnValidarDocumento() {
-    const taskId = Utils.makeRandomString(4);
+    let taskId: string;
 
     this.formsService
       .getFormsCertificadosIngresosRetenciones(this.year, this.identificator)
       .subscribe(
-        async (event) => {
-          switch (event.type) {
+        async (httpEvent) => {
+          switch (httpEvent.type) {
             case HttpEventType.Sent:
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description:
                   'Validando certificado de ingresos y retenciones...',
                 progress: 0,
-              });
+              }) as string;
               break;
             case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
                 id: taskId,
-                progress: Math.round((event.loaded * 100) / event.total),
+                progress: Math.round(
+                  (httpEvent.loaded * 100) / httpEvent.total
+                ),
               });
               break;
             case HttpEventType.Response:
-              saveAs(event.body, `${this.identificator}.pdf`);
+              saveAs(httpEvent.body, `${this.identificator}.pdf`);
 
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
                 title: 'Certificado de ingresos y retenciones encontrado',
                 description: `Su certificado de ingresos y retenciones identificado con el numero de cedula de ciudadania ${this.identificator} ha sido encontrado e iniciara su descarga en un momento.`,
               });
-
-              this.sharedService.removeWaitTask({
-                id: taskId,
-              });
               break;
           }
         },
-        (err) => {
+        (httpEventError) => {
           this.sharedService.pushToastMessage({
             id: Utils.makeRandomString(4),
             title: 'Certificado de ingresos y retenciones no encontrado',
             description: `Su certificado de ingresos y retenciones identificado con el numero de cedula de ciudadania ${this.identificator} no ha sido encontrado en el sistema.`,
-          });
-
-          this.sharedService.removeWaitTask({
-            id: taskId,
           });
         }
       );

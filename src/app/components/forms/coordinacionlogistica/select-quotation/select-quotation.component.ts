@@ -47,26 +47,27 @@ export class FormsCoordinacionLogisticaSelectQuotationComponent
     this.Id = this.activatedRoute.snapshot.paramMap.get('Id') as string;
 
     let taskId: string;
-    this.formsService.getFormsCoordinacionLogistica(this.Id).subscribe(
-      (event) => {
-        switch (event.type) {
+
+    this.formsService
+      .getFormsCoordinacionLogistica(this.Id)
+      .subscribe((httpEvent) => {
+        switch (httpEvent.type) {
           case HttpEventType.Sent:
-            this.sharedService.pushWaitTask({
-              id: (taskId = Utils.makeRandomString(4)),
+            taskId = this.sharedService.pushWaitTask({
               description:
                 'Obteniendo informacion de la coordinacion logistica...',
               progress: 0,
-            });
+            }) as string;
             break;
           case HttpEventType.DownloadProgress:
             this.sharedService.pushWaitTask({
               id: taskId,
-              progress: Math.round((event.loaded * 100) / event.total),
+              progress: Math.round((httpEvent.loaded * 100) / httpEvent.total),
             });
             break;
           case HttpEventType.Response:
-            if (event.body.length > 0) {
-              if (event.body[0].SelectedQuotation) {
+            if (httpEvent.body.length > 0) {
+              if (httpEvent.body[0].SelectedQuotation) {
                 this.router.navigate(['/']);
 
                 this.sharedService.pushToastMessage({
@@ -76,7 +77,7 @@ export class FormsCoordinacionLogisticaSelectQuotationComponent
                   autohide: 10000,
                 });
               } else {
-                this.formsCoordinacionLogistica = event.body[0];
+                this.formsCoordinacionLogistica = httpEvent.body[0];
 
                 if (this.formsCoordinacionLogistica.Quotations.length > 0) {
                   this.quotations = this.formsCoordinacionLogistica.Quotations;
@@ -99,19 +100,9 @@ export class FormsCoordinacionLogisticaSelectQuotationComponent
                 autohide: 10000,
               });
             }
-
-            this.sharedService.removeWaitTask({
-              id: taskId,
-            });
             break;
         }
-      },
-      (err) => {
-        this.sharedService.removeWaitTask({
-          id: taskId,
-        });
-      }
-    );
+      });
   }
 
   setSelectedQuotation(

@@ -1,5 +1,5 @@
 export interface WaitTask {
-  id: string;
+  id?: string;
   description?: string;
   total?: number;
   current?: number;

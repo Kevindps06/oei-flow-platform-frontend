@@ -302,7 +302,7 @@ export class FormsJuridicaRequestComponent implements OnInit {
   presupuestoEstimadoMin: number = 0;
 
   btnNextClick() {
-    const taskId: string = Utils.makeRandomString(4);
+    let taskId: string;
 
     switch (this.formIndex) {
       case 0:
@@ -347,11 +347,10 @@ export class FormsJuridicaRequestComponent implements OnInit {
         this.formsService.getConveniosJuridica().subscribe((event) => {
           switch (event.type) {
             case HttpEventType.Sent:
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: 'Cargando convenios...',
                 progress: 0,
-              });
+              }) as string;
               break;
             case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
@@ -369,10 +368,6 @@ export class FormsJuridicaRequestComponent implements OnInit {
                   Numero: convenio.fields.Numero,
                   Mostrar: convenio.fields.Mostrar,
                 });
-              });
-
-              this.sharedService.removeWaitTask({
-                id: taskId,
               });
               break;
           }
@@ -395,7 +390,7 @@ export class FormsJuridicaRequestComponent implements OnInit {
   }
 
   async btnSubmitClick() {
-    const taskId: string = Utils.makeRandomString(4);
+    let taskId: string;
 
     document.getElementById('firstElement')?.scrollIntoView({
       behavior: 'smooth',
@@ -429,11 +424,10 @@ export class FormsJuridicaRequestComponent implements OnInit {
       Requestor: {},
     };
 
-    this.sharedService.pushWaitTask({
-      id: taskId,
+    taskId = this.sharedService.pushWaitTask({
       description: `Subiendo archivos...`,
       progress: 0,
-    });
+    }) as string;
 
     for (let i = 0; this.Files.length > i; i++) {
       await this.formsService
@@ -495,49 +489,30 @@ export class FormsJuridicaRequestComponent implements OnInit {
 
     this.formsService
       .postFormsJuridicaRequestFlow(formsJuridicaRequest)
-      .subscribe(
-        (event) => {
-          switch (event.type) {
-            case HttpEventType.Sent:
-              this.sharedService.pushWaitTask({
-                id: taskId,
-                description: `Enviando peticion juricia...`,
-                progress: 0,
-              });
-              break;
-            case HttpEventType.UploadProgress:
-              this.sharedService.pushWaitTask({
-                id: taskId,
-                progress: Math.round((event.loaded * 100) / event.total),
-              });
-              break;
-          }
-        },
-        (err) => {
-          this.sharedService.removeWaitTask({
-            id: taskId,
-          });
-
-          this.sharedService.pushToastMessage({
-            id: Utils.makeRandomString(4),
-            title: `Ha ocurrido un problema`,
-            description: `No se ha podido enviar su peticion juridica debido a algun inconveniente mientras se enviaba la peticion, vuelva a intentarlo.`,
-            autohide: 30000,
-          });
-        },
-        () => {
-          this.sharedService.removeWaitTask({
-            id: taskId,
-          });
-
-          this.sharedService.pushToastMessage({
-            id: Utils.makeRandomString(4),
-            title: `Peticion juridica enviada satisfactoriamente`,
-            description: `Su peticion juridica ha sido ingresada correctamente y sera procesada en la mayor brevedad posible, este atento al correo electronico registrado por el cual se le notificara del estado y manera de validacion de la peticion.`,
-            autohide: 30000,
-          });
+      .subscribe((event) => {
+        switch (event.type) {
+          case HttpEventType.Sent:
+            taskId = this.sharedService.pushWaitTask({
+              description: `Enviando peticion juricia...`,
+              progress: 0,
+            }) as string;
+            break;
+          case HttpEventType.UploadProgress:
+            this.sharedService.pushWaitTask({
+              id: taskId,
+              progress: Math.round((event.loaded * 100) / event.total),
+            });
+            break;
+          case HttpEventType.Response:
+            this.sharedService.pushToastMessage({
+              id: Utils.makeRandomString(4),
+              title: `Peticion juridica enviada satisfactoriamente`,
+              description: `Su peticion juridica ha sido ingresada correctamente y sera procesada en la mayor brevedad posible, este atento al correo electronico registrado por el cual se le notificara del estado y manera de validacion de la peticion.`,
+              autohide: 30000,
+            });
+            break;
         }
-      );
+      });
   }
 
   isValid() {

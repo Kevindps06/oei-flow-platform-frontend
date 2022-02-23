@@ -54,6 +54,25 @@ export class FormsService {
     );
   }
 
+  getFormsJuridicaRequestMinutaVerifyEncargado(
+    Id: string,
+    EmailEncargado: string
+  ): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/minuta/verifyencargado`,
+        {
+          params: new HttpParams().appendAll({
+            Id,
+            encargado: EmailEncargado,
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
   getFormsJuridicaRequestEulaAvailability(Id: string): Observable<any> {
     return this.http.request(
       new HttpRequest(

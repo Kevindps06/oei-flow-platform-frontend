@@ -116,35 +116,30 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
   }
 
   onRutaChange() {
-    const taskId: string = Utils.makeRandomString(4);
+    let taskId: string;
 
     if (this.airports.length === 0) {
-      this.formsService.getAirports().subscribe((event) => {
-        switch (event.type) {
+      this.formsService.getAirports().subscribe((httpEvent) => {
+        switch (httpEvent.type) {
           case HttpEventType.Sent:
-            this.sharedService.pushWaitTask({
-              id: taskId,
+            taskId = this.sharedService.pushWaitTask({
               description: 'Cargando aeropuertos...',
               progress: 0,
-            });
+            }) as string;
             break;
           case HttpEventType.DownloadProgress:
             this.sharedService.pushWaitTask({
               id: taskId,
-              progress: Math.round((event.loaded * 100) / event.total),
+              progress: Math.round((httpEvent.loaded * 100) / httpEvent.total),
             });
             break;
           case HttpEventType.Response:
-            for (const airport of event.body) {
+            for (const airport of httpEvent.body) {
               this.airports.push({
                 label: `${airport.Country} | ${airport.City} | ${airport['Airport Name']} | ${airport.IATA}`,
                 value: airport._id,
               });
             }
-
-            this.sharedService.removeWaitTask({
-              id: taskId,
-            });
             break;
         }
       });
@@ -244,50 +239,38 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
       ComprobantesFiles: this.comprobantesFiles,
       InformacionAdicional: this.infoAdicional.replace('"', "'"),
       Requestor: history.state.userInfo,
-      Status: 0
+      Status: 0,
     };
 
-    var taskId: string = Utils.makeRandomString(4);
+    let taskId: string;
     this.formsService
       .postFormsCoordinacionLogisticaFlow(formsCoordinacionLogistica)
-      .subscribe(
-        (event) => {
-          switch (event.type) {
-            case HttpEventType.Sent:
-              this.sharedService.pushWaitTask({
-                id: taskId,
-                description: `Enviando coordinacion logistica...`,
-                progress: 0,
-              });
-              break;
-            case HttpEventType.UploadProgress:
-              this.sharedService.pushWaitTask({
-                id: taskId,
-                progress: Math.round((event.loaded * 100) / event.total),
-              });
-              break;
-            case HttpEventType.Response:
-              this.sharedService.removeWaitTask({
-                id: taskId,
-              });
+      .subscribe((event) => {
+        switch (event.type) {
+          case HttpEventType.Sent:
+            taskId = this.sharedService.pushWaitTask({
+              description: `Enviando coordinacion logistica...`,
+              progress: 0,
+            }) as string;
+            break;
+          case HttpEventType.UploadProgress:
+            this.sharedService.pushWaitTask({
+              id: taskId,
+              progress: Math.round((event.loaded * 100) / event.total),
+            });
+            break;
+          case HttpEventType.Response:
+            this.router.navigateByUrl('/');
 
-              this.sharedService.pushToastMessage({
-                id: Utils.makeRandomString(4),
-                title: `Coordinacion logistica enviada satisfactoriamente`,
-                description: `Su coordinacion logistica ha sido ingresada correctamente y sera procesada muy pronto, este atento de su correo electronico por el cual se le notificara del estado y manera de validacion de la peticion.`,
-                autohide: 30000,
-              });
-
-              this.router.navigateByUrl('/');
-              break;
-          }
-        },
-        (err) => {
-          this.sharedService.removeWaitTask({
-            id: taskId,
-          });
+            this.sharedService.pushToastMessage({
+              id: Utils.makeRandomString(4),
+              title: `Coordinacion logistica enviada satisfactoriamente`,
+              description: `Su coordinacion logistica ha sido ingresada correctamente y sera procesada muy pronto, este atento de su correo electronico por el cual se le notificara del estado y manera de validacion de la peticion.`,
+              autohide: 30000,
+            });
+            break;
         }
-      );
+      });
   }
 
   validateEmail(email: string = this.email): boolean {

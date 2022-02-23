@@ -52,17 +52,17 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
 
     this.Id = this.activatedRoute.snapshot.params.id;
 
-    let taskId: string = Utils.makeRandomString(4);
-    this.formsService.getFormsCoordinacionLogistica(this.Id).subscribe(
-      (event) => {
+    let taskId: string;
+    this.formsService
+      .getFormsCoordinacionLogistica(this.Id)
+      .subscribe((event) => {
         switch (event.type) {
           case HttpEventType.Sent:
-            this.sharedService.pushWaitTask({
-              id: taskId,
+            taskId = this.sharedService.pushWaitTask({
               description:
                 'Obteniendo informacion de la coordinacion logistica...',
               progress: 0,
-            });
+            }) as string;
             break;
           case HttpEventType.DownloadProgress:
             this.sharedService.pushWaitTask({
@@ -107,19 +107,9 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
                 autohide: 10000,
               });
             }
-
-            this.sharedService.removeWaitTask({
-              id: taskId,
-            });
             break;
         }
-      },
-      (err) => {
-        this.sharedService.removeWaitTask({
-          id: taskId,
-        });
-      }
-    );
+      });
   }
 
   btnSetTicketNumber() {

@@ -19,7 +19,6 @@
           <app-forms-tests *ngIf="isRoute('/forms/tests')"> </app-forms-tests>
           <app-forms-financiera-registration
             *ngIf="isRoute('/forms/financiera/registration')"
-            (onWaitTasksChange)="setWaitTasks($event)"
           >
           </app-forms-financiera-registration>
           <app-forms-financiera-invoice

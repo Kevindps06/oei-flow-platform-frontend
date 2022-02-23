@@ -169,7 +169,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   }
 
   btnValidarUsuarioClick() {
-    const taskId: string = Utils.makeRandomString(4);
+    let taskId: string;
 
     this.invalidateFlowUser();
 
@@ -182,32 +182,35 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           : this.identificator
       )
       .subscribe(
-        (event) => {
-          switch (event.type) {
+        (httpEvent) => {
+          switch (httpEvent.type) {
             case HttpEventType.Sent:
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: 'Validando informacion...',
                 progress: 0,
-              });
+              }) as string;
+
+              console.log(taskId);
               break;
             case HttpEventType.DownloadProgress:
+              console.log('Loaded', httpEvent.loaded);
+              console.log('Total', httpEvent.total);
+              console.log((httpEvent.loaded * 100) / httpEvent.total);
+
               this.sharedService.pushWaitTask({
                 id: taskId,
-                progress: Math.round((event.loaded * 100) / event.total),
+                progress: Math.round(
+                  (httpEvent.loaded * 100) / httpEvent.total
+                ),
               });
               break;
             case HttpEventType.Response:
-              this.sharedService.removeWaitTask({
-                id: taskId,
-              });
-
-              switch (event.body.Estado) {
+              switch (httpEvent.body.Estado) {
                 case 'Esperando verificacion':
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
                     title: `Registro en espera de aprobacion`,
-                    description: `Hola ${event.body.Nombre_x0020_o_x0020_razon_x0020}, su peticion de registro aun se encuentra siendo procesada, vuelva mas tarde y, recuerde que cuando su peticion de registro sea respondida recibira una notificacion en su Email.`,
+                    description: `Hola ${httpEvent.body.Nombre_x0020_o_x0020_razon_x0020}, su peticion de registro aun se encuentra siendo procesada, vuelva mas tarde y, recuerde que cuando su peticion de registro sea respondida recibira una notificacion en su Email.`,
                     autohide: 20000,
                   });
 
@@ -216,17 +219,17 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                 case 'Verificado':
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
-                    title: `Bienvenido ${event.body.Nombre_x0020_o_x0020_razon_x0020}`,
-                    description: `Hola ${event.body.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
+                    title: `Bienvenido ${httpEvent.body.Nombre_x0020_o_x0020_razon_x0020}`,
+                    description: `Hola ${httpEvent.body.Nombre_x0020_o_x0020_razon_x0020}, esperamos tengas la mejor de las estancias.`,
                   });
 
-                  this.contratistaProveedorInformation = event.body;
+                  this.contratistaProveedorInformation = httpEvent.body;
                   break;
                 case 'Rechazado':
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
                     title: `Registro rechazado`,
-                    description: `Hola ${event.body.Nombre_x0020_o_x0020_razon_x0020}, la ultima peticion de registro con esta informacion ha sido rechazada, verifiquela y vuelva a intentarlo o registrese <a href="/forms/financiera/registration">aqui</a>.`,
+                    description: `Hola ${httpEvent.body.Nombre_x0020_o_x0020_razon_x0020}, la ultima peticion de registro con esta informacion ha sido rechazada, verifiquela y vuelva a intentarlo o registrese <a href="/forms/financiera/registration">aqui</a>.`,
                     autohide: 20000,
                   });
 
@@ -236,12 +239,8 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               break;
           }
         },
-        (err) => {
-          this.sharedService.removeWaitTask({
-            id: taskId,
-          });
-
-          switch (err.status) {
+        (httpEventError) => {
+          switch (httpEventError.status) {
             case 404:
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
@@ -297,7 +296,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
   }
 
   btnNextClick() {
-    const taskId: string = Utils.makeRandomString(4);
+    let taskId: string;
 
     switch (this.formIndex) {
       case 0:
@@ -342,35 +341,32 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
             break;
         }
         // Load form index 3 values
-        this.formsService.getConveniosFinanciera().subscribe((event) => {
-          switch (event.type) {
+        this.formsService.getConveniosFinanciera().subscribe((httpEvent) => {
+          switch (httpEvent.type) {
             case HttpEventType.Sent:
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: 'Cargando convenios...',
                 progress: 0,
-              });
+              }) as string;
               break;
             case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
                 id: taskId,
-                progress: Math.round((event.loaded * 100) / event.total),
+                progress: Math.round(
+                  (httpEvent.loaded * 100) / httpEvent.total
+                ),
               });
               break;
             case HttpEventType.Response:
               this.convenios = [];
 
-              event.body.value.forEach((convenio: any) => {
+              httpEvent.body.value.forEach((convenio: any) => {
                 this.convenios.push({
                   Id: convenio.id,
                   Aliado: convenio.fields.Aliado,
                   Numero: convenio.fields.Numero,
                   Mostrar: convenio.fields.Mostrar,
                 });
-              });
-
-              this.sharedService.removeWaitTask({
-                id: taskId,
               });
               break;
           }
@@ -409,11 +405,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         this.formsService.getConveniosFinanciera().subscribe((event) => {
           switch (event.type) {
             case HttpEventType.Sent:
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: 'Cargando convenios...',
                 progress: 0,
-              });
+              }) as string;
               break;
             case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
@@ -431,10 +426,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                   Numero: convenio.fields.Numero,
                   Mostrar: convenio.fields.Mostrar,
                 });
-              });
-
-              this.sharedService.removeWaitTask({
-                id: taskId,
               });
               break;
           }
@@ -476,16 +467,15 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
       Requestor: this.contratistaProveedorInformation,
     };
 
-    const taskId: string = Utils.makeRandomString(4);
+    let taskId: string;
 
     if (this.tipoPersona === 'Natural') {
       switch (this.tipoGestion) {
         case 'Cuenta de cobro':
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de cuenta de cobro o factura...`,
             progress: 0,
-          });
+          }) as string;
 
           for (let i = 0; this.cuentaCobroFacturaFiles.length > i; i++) {
             await this.formsService
@@ -518,11 +508,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               .toPromise();
           }
 
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de factura equivalente...`,
             progress: 0,
-          });
+          }) as string;
 
           for (let i = 0; this.facturaEquivalenteFiles.length > i; i++) {
             await this.formsService
@@ -555,15 +544,14 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               .toPromise();
           }
 
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de ${
               this.tipoPersona === 'Natural'
                 ? 'seguridad social'
                 : 'parafiscales'
             }...`,
             progress: 0,
-          });
+          }) as string;
 
           for (
             let i = 0;
@@ -600,11 +588,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               .toPromise();
           }
 
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de informe de actividades...`,
             progress: 0,
-          });
+          }) as string;
 
           for (let i = 0; this.informeActividadesFiles.length > i; i++) {
             await this.formsService
@@ -637,10 +624,6 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               .toPromise();
           }
 
-          this.sharedService.removeWaitTask({
-            id: taskId,
-          });
-
           formsFinancieraInvoice = Object.assign(formsFinancieraInvoice, {
             CuentaCobroFiles: this.cuentaCobroFacturaFiles,
             FacturaEquivalenteFiles: this.facturaEquivalenteFiles,
@@ -654,11 +637,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           this.cuentaCobroFacturaFiles = [];
           break;
         case 'Anticipo':
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de formato de solicitud de avances...`,
             progress: 0,
-          });
+          }) as string;
 
           for (let i = 0; this.formatoSolicitudAvancesFiles.length > i; i++) {
             await this.formsService
@@ -691,11 +673,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               .toPromise();
           }
 
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de cotizaciones...`,
             progress: 0,
-          });
+          }) as string;
 
           for (let i = 0; this.cotizacionesFiles.length > i; i++) {
             await this.formsService
@@ -727,11 +708,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               .toPromise();
           }
 
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de solicitudes de comision...`,
             progress: 0,
-          });
+          }) as string;
 
           for (let i = 0; this.solicitudesComisionFiles.length > i; i++) {
             await this.formsService
@@ -775,11 +755,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           this.formatoSolicitudAvancesFiles = [];
           break;
         case 'Dieta':
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de formato de solicitud de viajes...`,
             progress: 0,
-          });
+          }) as string;
 
           for (let i = 0; this.formatoSolicitudViajesFiles.length > i; i++) {
             await this.formsService
@@ -821,11 +800,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         case 'Legalizacion':
           switch (this.tipoLegalizacion) {
             case 'Desplazamiento':
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: `Subiendo archivos de formato de legalizacion de viajes...`,
                 progress: 0,
-              });
+              }) as string;
 
               for (
                 let i = 0;
@@ -862,11 +840,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                   .toPromise();
               }
 
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: `Subiendo archivos de soportes de facturas...`,
                 progress: 0,
-              });
+              }) as string;
 
               for (let i = 0; this.soportesFacturasFiles.length > i; i++) {
                 await this.formsService
@@ -899,11 +876,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                   .toPromise();
               }
 
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: `Subiendo archivos de pasabordos tiquetes aereos...`,
                 progress: 0,
-              });
+              }) as string;
 
               for (
                 let i = 0;
@@ -940,11 +916,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                   .toPromise();
               }
 
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: `Subiendo archivos de informe de actividades...`,
                 progress: 0,
-              });
+              }) as string;
 
               for (let i = 0; this.informeActividades2Files.length > i; i++) {
                 await this.formsService
@@ -992,11 +967,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               this.informeActividades2Files = [];
               break;
             case 'Suministro y servicios':
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: `Subiendo archivos de formato de legalizacion...`,
                 progress: 0,
-              });
+              }) as string;
 
               for (let i = 0; this.formatoLegalizacionFiles.length > i; i++) {
                 await this.formsService
@@ -1029,11 +1003,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                   .toPromise();
               }
 
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: `Subiendo archivos de cuenta de cobro o factura...`,
                 progress: 0,
-              });
+              }) as string;
 
               for (let i = 0; this.cuentaCobroFacturaFiles.length > i; i++) {
                 await this.formsService
@@ -1066,11 +1039,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                   .toPromise();
               }
 
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: `Subiendo archivos de soportes facturas...`,
                 progress: 0,
-              });
+              }) as string;
 
               for (let i = 0; this.soportesFacturasFiles.length > i; i++) {
                 await this.formsService
@@ -1119,11 +1091,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
     } else {
       switch (this.tipoGestion) {
         case 'Cuenta de cobro':
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de cuenta de cobro o factura...`,
             progress: 0,
-          });
+          }) as string;
 
           for (let i = 0; this.cuentaCobroFacturaFiles.length > i; i++) {
             await this.formsService
@@ -1156,11 +1127,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               .toPromise();
           }
 
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de factura equivalente...`,
             progress: 0,
-          });
+          }) as string;
 
           for (let i = 0; this.facturaEquivalenteFiles.length > i; i++) {
             await this.formsService
@@ -1193,11 +1163,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               .toPromise();
           }
 
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de parafiscales...`,
             progress: 0,
-          });
+          }) as string;
 
           for (
             let i = 0;
@@ -1234,11 +1203,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               .toPromise();
           }
 
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de informe de actividades...`,
             progress: 0,
-          });
+          }) as string;
 
           for (let i = 0; this.informeActividadesFiles.length > i; i++) {
             await this.formsService
@@ -1279,11 +1247,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           });
 
           if (this.tipoRelacion === 'Contratista') {
-            this.sharedService.pushWaitTask({
-              id: taskId,
+            taskId = this.sharedService.pushWaitTask({
               description: `Subiendo archivos de poliza de anticipo de cumplimiento...`,
               progress: 0,
-            });
+            }) as string;
 
             for (
               let i = 0;
@@ -1335,11 +1302,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
           this.cuentaCobroFacturaFiles = [];
           break;
         case 'Anticipo':
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de camara de comercio...`,
             progress: 0,
-          });
+          }) as string;
 
           for (let i = 0; this.camaraComercioFiles.length > i; i++) {
             await this.formsService
@@ -1371,11 +1337,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               .toPromise();
           }
 
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de solicitud de avances...`,
             progress: 0,
-          });
+          }) as string;
 
           for (let i = 0; this.formatoSolicitudAvancesFiles.length > i; i++) {
             await this.formsService
@@ -1408,11 +1373,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               .toPromise();
           }
 
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de cotizaciones...`,
             progress: 0,
-          });
+          }) as string;
 
           for (let i = 0; this.cotizacionesFiles.length > i; i++) {
             await this.formsService
@@ -1444,11 +1408,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
               .toPromise();
           }
 
-          this.sharedService.pushWaitTask({
-            id: taskId,
+          taskId = this.sharedService.pushWaitTask({
             description: `Subiendo archivos de solicitudes de comision...`,
             progress: 0,
-          });
+          }) as string;
 
           for (let i = 0; this.solicitudesComisionFiles.length > i; i++) {
             await this.formsService
@@ -1496,11 +1459,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
         case 'Legalizacion':
           switch (this.tipoLegalizacion) {
             case 'Suministro y servicios':
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: `Subiendo archivos de formato de legalizacion...`,
                 progress: 0,
-              });
+              }) as string;
 
               for (let i = 0; this.formatoLegalizacionFiles.length > i; i++) {
                 await this.formsService
@@ -1533,11 +1495,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                   .toPromise();
               }
 
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: `Subiendo archivos de cuenta de cobro o factura...`,
                 progress: 0,
-              });
+              }) as string;
 
               for (let i = 0; this.cuentaCobroFacturaFiles.length > i; i++) {
                 await this.formsService
@@ -1570,11 +1531,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                   .toPromise();
               }
 
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: `Subiendo archivos de soportes facturas...`,
                 progress: 0,
-              });
+              }) as string;
 
               for (let i = 0; this.soportesFacturasFiles.length > i; i++) {
                 await this.formsService
@@ -1607,11 +1567,10 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
                   .toPromise();
               }
 
-              this.sharedService.pushWaitTask({
-                id: taskId,
+              taskId = this.sharedService.pushWaitTask({
                 description: `Subiendo archivos de certificado de parafiscales...`,
                 progress: 0,
-              });
+              }) as string;
 
               for (
                 let i = 0;
@@ -1682,65 +1641,42 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
 
     this.formsService
       .postFormsFinancieraInvoiceFlow(formsFinancieraInvoice)
-      .subscribe(
-        (event) => {
-          switch (event.type) {
-            case HttpEventType.Sent:
-              this.sharedService.pushWaitTask({
-                id: taskId,
-                description: `Enviando ${(formsFinancieraInvoice.TipoGestion ===
-                'Legalizacion'
-                  ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-                  : formsFinancieraInvoice.TipoGestion
-                ).toLowerCase()}...`,
-                progress: 0,
-              });
-              break;
-            case HttpEventType.UploadProgress:
-              this.sharedService.pushWaitTask({
-                id: taskId,
-                progress: Math.round((event.loaded * 100) / event.total),
-              });
-              break;
-          }
-        },
-        (err) => {
-          this.sharedService.removeWaitTask({
-            id: taskId,
-          });
-
-          this.sharedService.pushToastMessage({
-            id: Utils.makeRandomString(4),
-            title: `Ha ocurrido un problema`,
-            description: `No se ha podido enviar su ${(formsFinancieraInvoice.TipoGestion ===
-            'Legalizacion'
-              ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-              : formsFinancieraInvoice.TipoGestion
-            ).toLowerCase()} debido a que ha ocurrido un problema mientras se intentaba enviar la peticion, vuelva a intentarlo.`,
-            autohide: 30000,
-          });
-        },
-        () => {
-          this.sharedService.removeWaitTask({
-            id: taskId,
-          });
-
-          this.sharedService.pushToastMessage({
-            id: Utils.makeRandomString(4),
-            title: `${
-              formsFinancieraInvoice.TipoGestion === 'Legalizacion'
+      .subscribe((event) => {
+        switch (event.type) {
+          case HttpEventType.Sent:
+            taskId = this.sharedService.pushWaitTask({
+              description: `Enviando ${(formsFinancieraInvoice.TipoGestion ===
+              'Legalizacion'
                 ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
                 : formsFinancieraInvoice.TipoGestion
-            } enviada satisfactoriamente`,
-            description: `Su ${(formsFinancieraInvoice.TipoGestion ===
-            'Legalizacion'
-              ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
-              : formsFinancieraInvoice.TipoGestion
-            ).toLowerCase()} ha sido ingresada correctamente y sera procesada en la mayor brevedad posible, este atento al correo electronico registrado por el cual se le notificara del estado y manera de validacion de la peticion.`,
-            autohide: 30000,
-          });
+              ).toLowerCase()}...`,
+              progress: 0,
+            }) as string;
+            break;
+          case HttpEventType.UploadProgress:
+            this.sharedService.pushWaitTask({
+              id: taskId,
+              progress: Math.round((event.loaded * 100) / event.total),
+            });
+            break;
+          case HttpEventType.Response:
+            this.sharedService.pushToastMessage({
+              id: Utils.makeRandomString(4),
+              title: `${
+                formsFinancieraInvoice.TipoGestion === 'Legalizacion'
+                  ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
+                  : formsFinancieraInvoice.TipoGestion
+              } enviada satisfactoriamente`,
+              description: `Su ${(formsFinancieraInvoice.TipoGestion ===
+              'Legalizacion'
+                ? `${formsFinancieraInvoice.TipoGestion} de tipo ${formsFinancieraInvoice.TipoLegalizacion}`
+                : formsFinancieraInvoice.TipoGestion
+              ).toLowerCase()} ha sido ingresada correctamente y sera procesada en la mayor brevedad posible, este atento al correo electronico registrado por el cual se le notificara del estado y manera de validacion de la peticion.`,
+              autohide: 30000,
+            });
+            break;
         }
-      );
+      });
   }
 
   isValid(formIndex: number = this.formIndex) {

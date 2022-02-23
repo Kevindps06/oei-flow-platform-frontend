@@ -59,12 +59,10 @@ export class LoginService {
   }
 
   userLogin() {
-    const taskId: string = Utils.makeRandomString(4);
-    this.sharedService.pushWaitTask({
-      id: taskId,
+    let taskId: string = this.sharedService.pushWaitTask({
       description: 'Iniciando sesion...',
       progress: 0,
-    });
+    }) as string;
 
     this.msalService
       .loginPopup()
@@ -80,10 +78,6 @@ export class LoginService {
         this.user.avatar = this.sanitizer.bypassSecurityTrustUrl(
           URL.createObjectURL(await this.getGraphProfilePhoto())
         );
-
-        this.sharedService.removeWaitTask({
-          id: taskId,
-        });
 
         this.sharedService.pushToastMessage({
           id: Utils.makeRandomString(4),
@@ -104,12 +98,10 @@ export class LoginService {
   async loadUser() {
     if (!this.loggedInUser()) return;
 
-    const taskId: string = Utils.makeRandomString(4);
-    this.sharedService.pushWaitTask({
-      id: taskId,
+    let taskId: string = this.sharedService.pushWaitTask({
       description: 'Obteniendo informacion de usuario...',
       progress: 0,
-    });
+    }) as string;
 
     if (!this.user) {
       this.user = await this.getGraphUser();
@@ -123,8 +115,9 @@ export class LoginService {
       }
     }
 
-    this.sharedService.removeWaitTask({
+    this.sharedService.pushWaitTask({
       id: taskId,
+      progress: 100,
     });
   }
 
