@@ -128,12 +128,38 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
   btnSubmitClick() {
     this.formsService
       .putFormsJuridicaRequest(this.Id, {
-        Minuta: 'Test minuta',
+        Minuta: this.minuta,
       })
-      .subscribe();
+      .subscribe((httpEvent) => {
+        let taskId!: string;
+
+        switch (httpEvent.type) {
+          case HttpEventType.Sent:
+            taskId = this.sharedService.pushWaitTask({
+              description: 'Actualizando informacion de la peticion...',
+              progress: 0,
+            }) as string;
+            break;
+          case HttpEventType.UploadProgress:
+            this.sharedService.pushWaitTask({
+              id: taskId,
+              progress: Math.round((httpEvent.loaded * 100) / httpEvent.total),
+            });
+            break;
+          case HttpEventType.Response:
+            this.router.navigate(['/']);
+
+            this.sharedService.pushToastMessage({
+              id: Utils.makeRandomString(4),
+              title: `Informacion ingresada`,
+              description: `Su respuesta ha sido correctamente ingresada, prosiga a responder el flujo.`,
+            });
+            break;
+        }
+      });
   }
 
   isValid() {
-    return true;
+    return this.minuta;
   }
 }

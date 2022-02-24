@@ -43,6 +43,12 @@ export class AppComponent implements OnInit {
       }
     });
 
+    this.sharedService.onRemoveWaitTask.subscribe((waitTask: WaitTask) => {
+      this.waitTasks.splice(
+        this.waitTasks.findIndex((element) => element.id === waitTask.id)
+      );
+    });
+
     this.sharedService.onPushToastMessage.subscribe(
       (toastMessage: ToastMessage) => {
         this.toastMessages.push(toastMessage);

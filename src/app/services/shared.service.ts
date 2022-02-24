@@ -22,6 +22,13 @@ export class SharedService {
     return waitTask.id;
   }
 
+  private removeWaitTaskSource = new Subject<WaitTask>();
+  onRemoveWaitTask = this.removeWaitTaskSource.asObservable();
+  removeWaitTask(waitTask: WaitTask) {
+    this.removeWaitTaskSource.next(waitTask);
+    return waitTask.id;
+  }
+
   private pushToastMessageSource = new Subject<ToastMessage>();
   onPushToastMessage = this.pushToastMessageSource.asObservable();
   pushToastMessage(toastMessage: ToastMessage) {

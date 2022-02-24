@@ -50,9 +50,9 @@ export const find = async (req, res) => {
       )
     );
 
-    res.status(200).json(juridicaRequest);
+    res.status(200).send(juridicaRequest);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).send(err);
   }
 };
 
