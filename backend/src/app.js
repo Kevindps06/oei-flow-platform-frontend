@@ -22,6 +22,11 @@ app.use(
   express.urlencoded({ limit: bytes(1024 * 1024 * 128), extended: true })
 );
 
+app.use((req, res, next) => {
+  res.set("Access-Control-Expose-Headers", "*");  
+  next();
+});
+
 app.use("/api", routes);
 
 app.set("views", path.join(__dirname, "views"));

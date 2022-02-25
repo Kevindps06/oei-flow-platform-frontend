@@ -50,8 +50,6 @@ export const find = async (req, res) => {
       )
     );
 
-    res.set("Access-Control-Expose-Headers", "*");
-
     res.status(200).json(juridicaRequest);
   } catch (err) {
     res.status(500).json(err);
