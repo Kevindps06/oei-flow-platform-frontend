@@ -22,7 +22,17 @@ app.use(
   express.urlencoded({ limit: bytes(1024 * 1024 * 128), extended: true })
 );
 
+app.use((req, res, next) => {
+  console.log("before");
+  next();
+});
+
 app.use("/api", routes);
+
+app.use((req, res, next) => {
+  console.log("after");
+  next();
+});
 
 app.set("views", path.join(__dirname, "views"));
 
