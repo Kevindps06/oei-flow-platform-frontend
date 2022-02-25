@@ -53,13 +53,15 @@ export const find = async (req, res) => {
       )
     );
 
+    console.log("Content-Length", roughSizeOfObject(juridicaRequest));
+
     res.set({
       "Content-Length": roughSizeOfObject(juridicaRequest),
     });
 
-    res.status(200).send(juridicaRequest);
+    res.status(200).json(juridicaRequest);
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).json(err);
   }
 };
 
