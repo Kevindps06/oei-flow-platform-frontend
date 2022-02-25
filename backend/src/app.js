@@ -31,6 +31,7 @@ app.use("/api", routes);
 
 app.use((req, res, next) => {
   console.log("after");
+  console.log(res);
   next();
 });
 
