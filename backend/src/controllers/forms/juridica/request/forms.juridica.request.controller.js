@@ -56,7 +56,7 @@ export const find = async (req, res) => {
     console.log("Content-Length", roughSizeOfObject(juridicaRequest));
 
     res.set({
-      "Content-Length": roughSizeOfObject(juridicaRequest),
+      "TestHeader": roughSizeOfObject(juridicaRequest),
     });
 
     res.status(200).json(juridicaRequest);
