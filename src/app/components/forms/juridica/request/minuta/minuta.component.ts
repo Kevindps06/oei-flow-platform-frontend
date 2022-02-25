@@ -45,6 +45,18 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
       .getFormsJuridicaRequestMinutaAvailability(this.Id)
       .subscribe(
         (httpEvent) => {
+          if (httpEvent.headers) {
+            httpEvent.headers
+              .keys()
+              .forEach((keyName: any) =>
+                console.log(
+                  `The value of the ${keyName} header is: ${httpEvent.headers.get(
+                    keyName
+                  )}`
+                )
+              );
+          }
+
           switch (httpEvent.type) {
             case HttpEventType.Sent:
               taskId = this.sharedService.pushWaitTask({
