@@ -23,24 +23,23 @@ app.use(
 );
 
 app.use((req, res, next) => {
-  console.log("before");
+  console.log("before", res);
+
+  res.on("finish", () => {
+    console.log("after", res);
+  });
+
   next();
 });
 
 app.use("/api", routes);
-
-app.use((req, res, next) => {
-  console.log("after");
-  console.log(res);
-  next();
-});
 
 app.set("views", path.join(__dirname, "views"));
 
 app.use(express.static(app.get("views")));
 
 app.get("/*", (req, res) => {
-  res.setHeader("X-UA-Compatible", "IE=Edge");
+  res.set("X-UA-Compatible", "IE=Edge");
   res.status(200).sendFile(path.join(app.get("views"), "index.html"));
 });
 
