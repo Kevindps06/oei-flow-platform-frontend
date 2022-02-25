@@ -1,8 +1,5 @@
 import formsJuridicaRequestSchema from "../../../../schemas/forms/juridica/request/forms.juridica.request.schema";
-import {
-  formsJuridicaRequestObjectWithoutUndefined,
-  roughSizeOfObject,
-} from "../../../../utils/utils";
+import { formsJuridicaRequestObjectWithoutUndefined } from "../../../../utils/utils";
 
 export const save = async (req, res) => {
   try {
@@ -52,12 +49,6 @@ export const find = async (req, res) => {
         req.query.Minuta
       )
     );
-
-    console.log("Content-Length", roughSizeOfObject(juridicaRequest));
-
-    res.set({
-      "TestHeader": roughSizeOfObject(juridicaRequest),
-    });
 
     res.status(200).json(juridicaRequest);
   } catch (err) {
