@@ -25,14 +25,6 @@ export class AppComponent implements OnInit {
       );
 
       if (taskIndex !== -1) {
-        if (waitTask.progress === 100) {
-          this.waitTasks.splice(
-            this.waitTasks.findIndex((element) => element.id === waitTask.id)
-          );
-
-          return;
-        }
-
         if (waitTask.description) {
           this.waitTasks[taskIndex].description = waitTask.description;
         }

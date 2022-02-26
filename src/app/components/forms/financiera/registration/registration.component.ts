@@ -100,18 +100,18 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
         this.certificacionBancariaFiles = [];
 
         // Load form index 2 values
-        let taskId: string;
+        let getConveniosFinancieraTaskId: string;
         this.formsService.getConveniosFinanciera().subscribe((httpEvent) => {
           switch (httpEvent.type) {
             case HttpEventType.Sent:
-              taskId = this.sharedService.pushWaitTask({
+              getConveniosFinancieraTaskId = this.sharedService.pushWaitTask({
                 description: 'Cargando convenios...',
                 progress: 0,
               }) as string;
               break;
             case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
-                id: taskId,
+                id: getConveniosFinancieraTaskId,
                 progress: Math.round(
                   (httpEvent.loaded * 100) / httpEvent.total
                 ),
@@ -127,6 +127,10 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
                   Numero: convenio.fields.Numero,
                   Mostrar: convenio.fields.Mostrar,
                 });
+              });
+
+              this.sharedService.removeWaitTask({
+                id: getConveniosFinancieraTaskId,
               });
               break;
           }
@@ -171,34 +175,25 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
 
     this.formIndex = 0;
 
-    var taskId: string;
+    let postFormsFinancieraRegistrationTaskId: string;
     this.formsService
       .postFormsFinancieraRegistration(formsFinancieraRegistration)
       .subscribe(
-        (event) => {
-          switch (event.type) {
+        (httpEvent) => {
+          switch (httpEvent.type) {
             case HttpEventType.Sent:
-              taskId = this.sharedService.pushWaitTask({
-                description: `Enviando registro...`,
-                progress: 0,
-              }) as string;
+              postFormsFinancieraRegistrationTaskId =
+                this.sharedService.pushWaitTask({
+                  description: `Enviando registro...`,
+                  progress: 0,
+                }) as string;
               break;
             case HttpEventType.UploadProgress:
               this.sharedService.pushWaitTask({
-                id: taskId,
-                progress: Math.round((event.loaded * 100) / event.total),
-              });
-              break;
-            case HttpEventType.ResponseHeader:
-              taskId = this.sharedService.pushWaitTask({
-                description: `Obteniendo la respuesta del envio del registro...`,
-                progress: 0,
-              }) as string;
-              break;
-            case HttpEventType.DownloadProgress:
-              this.sharedService.pushWaitTask({
-                id: taskId,
-                progress: Math.round((event.loaded * 100) / event.total),
+                id: postFormsFinancieraRegistrationTaskId,
+                progress: Math.round(
+                  (httpEvent.loaded * 100) / httpEvent.total
+                ),
               });
               break;
             case HttpEventType.Response:
@@ -211,7 +206,16 @@ export class FormsFinancieraRegistrationComponent implements OnInit {
               break;
           }
         },
-        (err) => {}
+        (httpEventError) => {
+          this.sharedService.removeWaitTask({
+            id: postFormsFinancieraRegistrationTaskId,
+          });
+        },
+        () => {
+          this.sharedService.removeWaitTask({
+            id: postFormsFinancieraRegistrationTaskId,
+          });
+        }
       );
   }
 

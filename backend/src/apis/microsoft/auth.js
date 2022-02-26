@@ -1,4 +1,4 @@
-const msal = require("@azure/msal-node");
+import * as msal from "@azure/msal-node";
 
 /**
  * Configuration object to be passed to MSAL instance on creation.

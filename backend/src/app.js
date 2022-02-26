@@ -1,8 +1,8 @@
-import express from "express";
-import bytes from "bytes";
-import path from "path";
-import cors from "cors";
-import routes from "./routes/routes";
+import express from 'express';
+import bytes from 'bytes';
+import path from 'path';
+import cors from 'cors';
+import routes from './routes/routes';
 
 const app = express();
 
@@ -10,7 +10,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "*",
+    origin: '*',
   })
 );
 
@@ -23,19 +23,19 @@ app.use(
 );
 
 app.use((req, res, next) => {
-  res.set("Access-Control-Expose-Headers", "*");  
+  res.set('Access-Control-Expose-Headers', '*');
   next();
 });
 
-app.use("/api", routes);
+app.use('/api', routes);
 
-app.set("views", path.join(__dirname, "views"));
+app.set('views', path.join(__dirname, 'views'));
 
-app.use(express.static(app.get("views")));
+app.use(express.static(app.get('views')));
 
-app.get("/*", (req, res) => {
-  res.set("X-UA-Compatible", "IE=Edge");
-  res.status(200).sendFile(path.join(app.get("views"), "index.html"));
+app.get('/*', (req, res) => {
+  res.set('X-UA-Compatible', 'IE=Edge');
+  res.status(200).sendFile(path.join(app.get('views'), 'index.html'));
 });
 
 export default app;

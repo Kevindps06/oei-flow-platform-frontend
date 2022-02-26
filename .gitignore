@@ -2,9 +2,7 @@
 
 # customs
 .angular
-backend/dist
-backend/node_modules
-backend/src/controllers/forms/certificacioneslaborales/files
+backend
 
 # compiled output
 /dist

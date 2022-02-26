@@ -37,43 +37,31 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
       return;
     }
 
-    let taskId: string;
-
     this.Id = this.activatedRoute.snapshot.params.id;
 
+    let getFormsJuridicaRequestMinutaAvailabilityTaskId: string;
     this.formsService
       .getFormsJuridicaRequestMinutaAvailability(this.Id)
       .subscribe(
         (httpEvent) => {
-          if (httpEvent.headers) {
-            httpEvent.headers
-              .keys()
-              .forEach((keyName: any) =>
-                console.log(
-                  `The value of the ${keyName} header is: ${httpEvent.headers.get(
-                    keyName
-                  )}`
-                )
-              );
-          }
-
           switch (httpEvent.type) {
             case HttpEventType.Sent:
-              taskId = this.sharedService.pushWaitTask({
-                description: 'Verificando disponibilidad...',
-                progress: 0,
-              }) as string;
-              console.log(taskId);
+              getFormsJuridicaRequestMinutaAvailabilityTaskId =
+                this.sharedService.pushWaitTask({
+                  description: 'Verificando disponibilidad...',
+                  progress: 0,
+                }) as string;
               break;
             case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
-                id: taskId,
+                id: getFormsJuridicaRequestMinutaAvailabilityTaskId,
                 progress: Math.round(
                   (httpEvent.loaded * 100) / httpEvent.total
                 ),
               });
               break;
             case HttpEventType.Response:
+              let getFormsJuridicaRequestMinutaVerifyEncargadoTaskId: string;
               this.formsService
                 .getFormsJuridicaRequestMinutaVerifyEncargado(
                   this.Id,
@@ -83,15 +71,15 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
                   (httpEvent) => {
                     switch (httpEvent.type) {
                       case HttpEventType.Sent:
-                        taskId = this.sharedService.pushWaitTask({
-                          description: 'Verificando autorizacion...',
-                          progress: 0,
-                        }) as string;
-                        console.log(taskId);
+                        getFormsJuridicaRequestMinutaVerifyEncargadoTaskId =
+                          this.sharedService.pushWaitTask({
+                            description: 'Verificando autorizacion...',
+                            progress: 0,
+                          }) as string;
                         break;
                       case HttpEventType.DownloadProgress:
                         this.sharedService.pushWaitTask({
-                          id: taskId,
+                          id: getFormsJuridicaRequestMinutaVerifyEncargadoTaskId,
                           progress: Math.round(
                             (httpEvent.loaded * 100) / httpEvent.total
                           ),
@@ -109,6 +97,15 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
                         description: `Al contenido que esta intentando ingresar no se encuentra encargado usted, no intente ingresar.`,
                       });
                     }
+
+                    this.sharedService.removeWaitTask({
+                      id: getFormsJuridicaRequestMinutaVerifyEncargadoTaskId,
+                    });
+                  },
+                  () => {
+                    this.sharedService.removeWaitTask({
+                      id: getFormsJuridicaRequestMinutaVerifyEncargadoTaskId,
+                    });
                   }
                 );
               break;
@@ -133,42 +130,64 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
               });
               break;
           }
+
+          this.sharedService.removeWaitTask({
+            id: getFormsJuridicaRequestMinutaAvailabilityTaskId,
+          });
+        },
+        () => {
+          this.sharedService.removeWaitTask({
+            id: getFormsJuridicaRequestMinutaAvailabilityTaskId,
+          });
         }
       );
   }
 
   btnSubmitClick() {
+    let putFormsJuridicaRequestTaskId: string;
     this.formsService
       .putFormsJuridicaRequest(this.Id, {
         Minuta: this.minuta,
       })
-      .subscribe((httpEvent) => {
-        let taskId!: string;
+      .subscribe(
+        (httpEvent) => {
+          switch (httpEvent.type) {
+            case HttpEventType.Sent:
+              putFormsJuridicaRequestTaskId = this.sharedService.pushWaitTask({
+                description: 'Actualizando informacion de la peticion...',
+                progress: 0,
+              }) as string;
+              break;
+            case HttpEventType.UploadProgress:
+              this.sharedService.pushWaitTask({
+                id: putFormsJuridicaRequestTaskId,
+                progress: Math.round(
+                  (httpEvent.loaded * 100) / httpEvent.total
+                ),
+              });
+              break;
+            case HttpEventType.Response:
+              this.router.navigate(['/']);
 
-        switch (httpEvent.type) {
-          case HttpEventType.Sent:
-            taskId = this.sharedService.pushWaitTask({
-              description: 'Actualizando informacion de la peticion...',
-              progress: 0,
-            }) as string;
-            break;
-          case HttpEventType.UploadProgress:
-            this.sharedService.pushWaitTask({
-              id: taskId,
-              progress: Math.round((httpEvent.loaded * 100) / httpEvent.total),
-            });
-            break;
-          case HttpEventType.Response:
-            this.router.navigate(['/']);
-
-            this.sharedService.pushToastMessage({
-              id: Utils.makeRandomString(4),
-              title: `Informacion ingresada`,
-              description: `Su respuesta ha sido correctamente ingresada, prosiga a responder el flujo.`,
-            });
-            break;
+              this.sharedService.pushToastMessage({
+                id: Utils.makeRandomString(4),
+                title: `Informacion ingresada`,
+                description: `Su respuesta ha sido correctamente ingresada, prosiga a responder el flujo.`,
+              });
+              break;
+          }
+        },
+        (httpEventError) => {
+          this.sharedService.removeWaitTask({
+            id: putFormsJuridicaRequestTaskId,
+          });
+        },
+        () => {
+          this.sharedService.removeWaitTask({
+            id: putFormsJuridicaRequestTaskId,
+          });
         }
-      });
+      );
   }
 
   isValid() {

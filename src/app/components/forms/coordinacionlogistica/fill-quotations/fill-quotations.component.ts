@@ -52,27 +52,27 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
 
     this.Id = this.activatedRoute.snapshot.params.id;
 
-    let taskId: string;
-    this.formsService
-      .getFormsCoordinacionLogistica(this.Id)
-      .subscribe((event) => {
-        switch (event.type) {
+    let getFormsCoordinacionLogisticaTaskId!: string;
+    this.formsService.getFormsCoordinacionLogistica(this.Id).subscribe(
+      (httpEvent) => {
+        switch (httpEvent.type) {
           case HttpEventType.Sent:
-            taskId = this.sharedService.pushWaitTask({
-              description:
-                'Obteniendo informacion de la coordinacion logistica...',
-              progress: 0,
-            }) as string;
+            getFormsCoordinacionLogisticaTaskId =
+              this.sharedService.pushWaitTask({
+                description:
+                  'Obteniendo informacion de la coordinacion logistica...',
+                progress: 0,
+              }) as string;
             break;
           case HttpEventType.DownloadProgress:
             this.sharedService.pushWaitTask({
-              id: taskId,
-              progress: Math.round((event.loaded * 100) / event.total),
+              id: getFormsCoordinacionLogisticaTaskId,
+              progress: Math.round((httpEvent.loaded * 100) / httpEvent.total),
             });
             break;
           case HttpEventType.Response:
-            if (event.body.length > 0) {
-              if (event.body.SelectedQuotation) {
+            if (httpEvent.body.length > 0) {
+              if (httpEvent.body.SelectedQuotation) {
                 this.router.navigate(['/']);
 
                 this.sharedService.pushToastMessage({
@@ -82,7 +82,7 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
                   autohide: 10000,
                 });
               } else {
-                this.formsCoordinacionLogistica = event.body[0];
+                this.formsCoordinacionLogistica = httpEvent.body[0];
 
                 if (this.formsCoordinacionLogistica.Quotations.length > 0) {
                   this.ticketNumber =
@@ -109,7 +109,18 @@ export class FormsCoordinacionLogisticaFillQuotationsComponent
             }
             break;
         }
-      });
+      },
+      (httpEventError) => {
+        this.sharedService.removeWaitTask({
+          id: getFormsCoordinacionLogisticaTaskId,
+        });
+      },
+      () => {
+        this.sharedService.removeWaitTask({
+          id: getFormsCoordinacionLogisticaTaskId,
+        });
+      }
+    );
   }
 
   btnSetTicketNumber() {

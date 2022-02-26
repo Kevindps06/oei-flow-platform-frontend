@@ -46,22 +46,21 @@ export class FormsCoordinacionLogisticaSelectQuotationComponent
 
     this.Id = this.activatedRoute.snapshot.paramMap.get('Id') as string;
 
-    let taskId: string;
-
-    this.formsService
-      .getFormsCoordinacionLogistica(this.Id)
-      .subscribe((httpEvent) => {
+    let getFormsCoordinacionLogisticaTaskId!: string;
+    this.formsService.getFormsCoordinacionLogistica(this.Id).subscribe(
+      (httpEvent) => {
         switch (httpEvent.type) {
           case HttpEventType.Sent:
-            taskId = this.sharedService.pushWaitTask({
-              description:
-                'Obteniendo informacion de la coordinacion logistica...',
-              progress: 0,
-            }) as string;
+            getFormsCoordinacionLogisticaTaskId =
+              this.sharedService.pushWaitTask({
+                description:
+                  'Obteniendo informacion de la coordinacion logistica...',
+                progress: 0,
+              }) as string;
             break;
           case HttpEventType.DownloadProgress:
             this.sharedService.pushWaitTask({
-              id: taskId,
+              id: getFormsCoordinacionLogisticaTaskId,
               progress: Math.round((httpEvent.loaded * 100) / httpEvent.total),
             });
             break;
@@ -102,7 +101,18 @@ export class FormsCoordinacionLogisticaSelectQuotationComponent
             }
             break;
         }
-      });
+      },
+      (httpEventError) => {
+        this.sharedService.removeWaitTask({
+          id: getFormsCoordinacionLogisticaTaskId,
+        });
+      },
+      () => {
+        this.sharedService.removeWaitTask({
+          id: getFormsCoordinacionLogisticaTaskId,
+        });
+      }
+    );
   }
 
   setSelectedQuotation(

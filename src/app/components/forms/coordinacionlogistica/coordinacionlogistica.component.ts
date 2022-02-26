@@ -116,33 +116,46 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
   }
 
   onRutaChange() {
-    let taskId: string;
-
     if (this.airports.length === 0) {
-      this.formsService.getAirports().subscribe((httpEvent) => {
-        switch (httpEvent.type) {
-          case HttpEventType.Sent:
-            taskId = this.sharedService.pushWaitTask({
-              description: 'Cargando aeropuertos...',
-              progress: 0,
-            }) as string;
-            break;
-          case HttpEventType.DownloadProgress:
-            this.sharedService.pushWaitTask({
-              id: taskId,
-              progress: Math.round((httpEvent.loaded * 100) / httpEvent.total),
-            });
-            break;
-          case HttpEventType.Response:
-            for (const airport of httpEvent.body) {
-              this.airports.push({
-                label: `${airport.Country} | ${airport.City} | ${airport['Airport Name']} | ${airport.IATA}`,
-                value: airport._id,
+      let getAirportsTaskId!: string;
+      this.formsService.getAirports().subscribe(
+        (httpEvent) => {
+          switch (httpEvent.type) {
+            case HttpEventType.Sent:
+              getAirportsTaskId = this.sharedService.pushWaitTask({
+                description: 'Cargando aeropuertos...',
+                progress: 0,
+              }) as string;
+              break;
+            case HttpEventType.DownloadProgress:
+              this.sharedService.pushWaitTask({
+                id: getAirportsTaskId,
+                progress: Math.round(
+                  (httpEvent.loaded * 100) / httpEvent.total
+                ),
               });
-            }
-            break;
+              break;
+            case HttpEventType.Response:
+              for (const airport of httpEvent.body) {
+                this.airports.push({
+                  label: `${airport.Country} | ${airport.City} | ${airport['Airport Name']} | ${airport.IATA}`,
+                  value: airport._id,
+                });
+              }
+              break;
+          }
+        },
+        (httpEventError) => {
+          this.sharedService.removeWaitTask({
+            id: getAirportsTaskId,
+          });
+        },
+        () => {
+          this.sharedService.removeWaitTask({
+            id: getAirportsTaskId,
+          });
         }
-      });
+      );
     }
 
     switch (this.ruta) {
@@ -242,35 +255,50 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
       Status: 0,
     };
 
-    let taskId: string;
+    let postFormsCoordinacionLogisticaFlowTaskId!: string;
     this.formsService
       .postFormsCoordinacionLogisticaFlow(formsCoordinacionLogistica)
-      .subscribe((event) => {
-        switch (event.type) {
-          case HttpEventType.Sent:
-            taskId = this.sharedService.pushWaitTask({
-              description: `Enviando coordinacion logistica...`,
-              progress: 0,
-            }) as string;
-            break;
-          case HttpEventType.UploadProgress:
-            this.sharedService.pushWaitTask({
-              id: taskId,
-              progress: Math.round((event.loaded * 100) / event.total),
-            });
-            break;
-          case HttpEventType.Response:
-            this.router.navigateByUrl('/');
+      .subscribe(
+        (httpEvent) => {
+          switch (httpEvent.type) {
+            case HttpEventType.Sent:
+              postFormsCoordinacionLogisticaFlowTaskId =
+                this.sharedService.pushWaitTask({
+                  description: `Enviando coordinacion logistica...`,
+                  progress: 0,
+                }) as string;
+              break;
+            case HttpEventType.UploadProgress:
+              this.sharedService.pushWaitTask({
+                id: postFormsCoordinacionLogisticaFlowTaskId,
+                progress: Math.round(
+                  (httpEvent.loaded * 100) / httpEvent.total
+                ),
+              });
+              break;
+            case HttpEventType.Response:
+              this.router.navigateByUrl('/');
 
-            this.sharedService.pushToastMessage({
-              id: Utils.makeRandomString(4),
-              title: `Coordinacion logistica enviada satisfactoriamente`,
-              description: `Su coordinacion logistica ha sido ingresada correctamente y sera procesada muy pronto, este atento de su correo electronico por el cual se le notificara del estado y manera de validacion de la peticion.`,
-              autohide: 30000,
-            });
-            break;
+              this.sharedService.pushToastMessage({
+                id: Utils.makeRandomString(4),
+                title: `Coordinacion logistica enviada satisfactoriamente`,
+                description: `Su coordinacion logistica ha sido ingresada correctamente y sera procesada muy pronto, este atento de su correo electronico por el cual se le notificara del estado y manera de validacion de la peticion.`,
+                autohide: 30000,
+              });
+              break;
+          }
+        },
+        (httpEventError) => {
+          this.sharedService.removeWaitTask({
+            id: postFormsCoordinacionLogisticaFlowTaskId,
+          });
+        },
+        () => {
+          this.sharedService.removeWaitTask({
+            id: postFormsCoordinacionLogisticaFlowTaskId,
+          });
         }
-      });
+      );
   }
 
   validateEmail(email: string = this.email): boolean {

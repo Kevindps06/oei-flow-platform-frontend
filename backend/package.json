@@ -2,10 +2,18 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.js",
+  "main": "dist/server.js",
   "scripts": {
-    "start": "nodemon dist/server.js",
-    "build": "babel src --out-dir dist --copy-files"
+    "start": "nodemon src/server.js -x babel-node",
+    "build": "babel src --out-dir dist --copy-files",
+    "clean": "rm -r dist",
+    "rebuild": "npm run clean && npm run build",
+    "build-development-image": "npm run build && sudo docker build . --tag kevindps06/web-app:development",
+    "push-development-image": "npm run build-development-image && sudo docker push kevindps06/web-app:development",
+    "build-preproduction-image": "npm run build && sudo docker build . --tag kevindps06/web-app:preproduction",
+    "push-preproduction-image": "npm run build-preproduction-image && sudo docker push kevindps06/web-app:preproduction",
+    "build-production-image": "npm run build && sudo docker build . --tag kevindps06/web-app:production",
+    "push-production-image": "npm run build-production-image && sudo docker push kevindps06/web-app:production"
   },
   "author": "Kevin Paternina",
   "license": "ISC",
