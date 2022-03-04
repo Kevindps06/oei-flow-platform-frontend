@@ -59,7 +59,7 @@ export class LoginService {
   }
 
   userLogin() {
-    let taskId: string = this.sharedService.pushWaitTask({
+    const taskId: string = this.sharedService.pushWaitTask({
       description: 'Iniciando sesion...',
       progress: 0,
     }) as string;
@@ -70,6 +70,10 @@ export class LoginService {
         this.sharedService.pushWaitTask({
           id: taskId,
           progress: 100,
+        });
+
+        this.sharedService.removeWaitTask({
+          id: taskId,
         });
 
         this.msalService.instance.setActiveAccount(res.account);
@@ -98,10 +102,10 @@ export class LoginService {
   async loadUser() {
     if (!this.loggedInUser()) return;
 
-    let taskId: string = this.sharedService.pushWaitTask({
+    const taskId = this.sharedService.pushWaitTask({
       description: 'Obteniendo informacion de usuario...',
       progress: 0,
-    }) as string;
+    });
 
     if (!this.user) {
       this.user = await this.getGraphUser();
@@ -111,13 +115,17 @@ export class LoginService {
           URL.createObjectURL(await this.getGraphProfilePhoto())
         );
       } catch (err) {
-        console.log(err);
+        //console.log(err);
       }
     }
 
     this.sharedService.pushWaitTask({
       id: taskId,
       progress: 100,
+    });
+
+    this.sharedService.removeWaitTask({
+      id: taskId,
     });
   }
 

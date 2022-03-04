@@ -1,6 +1,5 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { Utils } from 'src/app/classes/utils';
 import { FormsService } from 'src/app/services/forms.service';
 import { SharedService } from 'src/app/services/shared.service';
@@ -58,6 +57,8 @@ export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
         });
       },
       () => {
+        this.year = '2021'
+
         this.sharedService.removeWaitTask({
           id: getFormsCertificadosIngresosRetencionesYearsTaskId,
         });
@@ -94,7 +95,7 @@ export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
                 title: 'Certificado de ingresos y retenciones encontrado',
-                description: `Su certificado de ingresos y retenciones identificado con el numero de cedula de ciudadania ${this.identificator} ha sido encontrado e iniciara su descarga en un momento.`,
+                description: `Su certificado de ingresos y retenciones identificado con ${this.identificator} ha sido encontrado e iniciara su descarga en un momento.`,
               });
               break;
           }
@@ -103,7 +104,7 @@ export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
           this.sharedService.pushToastMessage({
             id: Utils.makeRandomString(4),
             title: 'Certificado de ingresos y retenciones no encontrado',
-            description: `Su certificado de ingresos y retenciones identificado con el numero de cedula de ciudadania ${this.identificator} no ha sido encontrado en el sistema.`,
+            description: `Su certificado de ingresos y retenciones identificado con ${this.identificator} no ha sido encontrado en el sistema.`,
           });
 
           this.sharedService.removeWaitTask({

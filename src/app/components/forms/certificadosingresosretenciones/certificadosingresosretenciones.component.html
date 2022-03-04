@@ -30,15 +30,18 @@
               placeholder="\0"
               [ngClass]="{
                 'is-valid':
-                  identificator.length === 8 || identificator.length === 10,
+                  identificator.length === 8 ||
+                  identificator.length === 10 ||
+                  identificator.length === 11,
                 'is-invalid':
-                  identificator.length !== 8 && identificator.length !== 10
+                  identificator.length !== 8 &&
+                  identificator.length !== 10 &&
+                  identificator.length !== 11
               }"
-              maxlength="10"
-              [OnlyNumbers]="true"
+              maxlength="11"
             />
             <label for="inputTextIdentificator"
-              >Cedula de ciudadania<strong class="text-danger">*</strong></label
+              >Identificacion<strong class="text-danger">*</strong></label
             >
             <div class="invalid-feedback">
               Este campo es (*) obligatorio, rellenelo.
@@ -48,7 +51,9 @@
         <div class="col-3 col-md-2 col-xl-1 d-grid grap-2 mx-auto">
           <button
             [disabled]="
-              identificator.length !== 8 && identificator.length !== 10
+              identificator.length !== 8 &&
+              identificator.length !== 10 &&
+              identificator.length !== 11
             "
             (click)="btnValidarDocumento()"
             class="btn btn-primary"
