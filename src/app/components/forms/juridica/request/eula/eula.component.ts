@@ -15,6 +15,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
   formIndex: number = 0;
 
   JuridicaRequest: string = '';
+  encargado: string = '';
   formsJuridicaRequest!: FormsJuridicaRequest;
 
   codigoVerificacion: string = '';
@@ -31,6 +32,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
 
   ngOnInit(): void {
     this.JuridicaRequest = this.activatedRoute.snapshot.params.id;
+    this.encargado = this.activatedRoute.snapshot.queryParams.encargado;
 
     let getFormsJuridicaRequestEulaAvailabilityTaskId: string;
     this.formsService
@@ -295,8 +297,8 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
 
             this.sharedService.pushToastMessage({
               id: Utils.makeRandomString(4),
-              title: `Verificacion pasada correctamente`,
-              description: `Se ha completado la verificacion en 2 pasos satisfactoriamente.`,
+              title: `Autentificacion correcta`,
+              description: `Se ha completado la autentificacion en 2 pasos satisfactoriamente.`,
             });
 
             this.sharedService.removeWaitTask({
@@ -308,23 +310,26 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
   }
 
   btnSubmitClick() {
-    let putFormsJuridicaRequestTaskId: string;
+    let getFormsJuridicaRequestEulaSaveResponseTaskId: string;
     this.formsService
-      .putFormsJuridicaRequest(this.JuridicaRequest, {
-        JuridicaRequestEula: this.JuridicaRequestEula,
-      })
+      .getFormsJuridicaRequestEulaSaveResponse(
+        this.JuridicaRequest,
+        this.JuridicaRequestEula,
+        this.encargado
+      )
       .subscribe(
         (httpEvent) => {
           switch (httpEvent.type) {
             case HttpEventType.Sent:
-              putFormsJuridicaRequestTaskId = this.sharedService.pushWaitTask({
-                description: 'Actualizando informacion de la peticion...',
-                progress: 0,
-              }) as string;
+              getFormsJuridicaRequestEulaSaveResponseTaskId =
+                this.sharedService.pushWaitTask({
+                  description: 'Guardando respuesta de la peticion...',
+                  progress: 0,
+                }) as string;
               break;
-            case HttpEventType.UploadProgress:
+            case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
-                id: putFormsJuridicaRequestTaskId,
+                id: getFormsJuridicaRequestEulaSaveResponseTaskId,
                 progress: Math.round(
                   (httpEvent.loaded * 100) / httpEvent.total
                 ),
@@ -343,12 +348,12 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
         },
         (httpEventError) => {
           this.sharedService.removeWaitTask({
-            id: putFormsJuridicaRequestTaskId,
+            id: getFormsJuridicaRequestEulaSaveResponseTaskId,
           });
         },
         () => {
           this.sharedService.removeWaitTask({
-            id: putFormsJuridicaRequestTaskId,
+            id: getFormsJuridicaRequestEulaSaveResponseTaskId,
           });
         }
       );

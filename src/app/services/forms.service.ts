@@ -239,6 +239,27 @@ export class FormsService {
     );
   }
 
+  getFormsJuridicaRequestEulaSaveResponse(
+    JuridicaRequest: string,
+    JuridicaRequestEula: string,
+    encargado: string
+  ): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/eula/saveresponse`,
+        {
+          params: new HttpParams().appendAll({
+            JuridicaRequest,
+            JuridicaRequestEula,
+            encargado,
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
   getFormsJuridicaRequestEulaAvailability(_id: string): Observable<any> {
     return this.http.request(
       new HttpRequest(
