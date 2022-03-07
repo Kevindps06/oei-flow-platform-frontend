@@ -4,6 +4,7 @@ import { MsalService } from '@azure/msal-angular';
 import {
   AccountInfo,
   AuthenticationResult,
+  BrowserAuthError,
   InteractionType,
   PublicClientApplication,
 } from '@azure/msal-browser';
@@ -64,33 +65,41 @@ export class LoginService {
       progress: 0,
     }) as string;
 
-    this.msalService
-      .loginPopup()
-      .subscribe(async (res: AuthenticationResult) => {
+    this.msalService.loginPopup().subscribe(
+      async (res: AuthenticationResult) => {
+        this.msalService.instance.setActiveAccount(res.account);
+
         this.sharedService.pushWaitTask({
           id: taskId,
           progress: 100,
         });
 
-        this.sharedService.removeWaitTask({
-          id: taskId,
-        });
-
-        this.msalService.instance.setActiveAccount(res.account);
-
-        this.user = await this.getGraphUser();
-        this.user.avatar = this.sanitizer.bypassSecurityTrustUrl(
-          URL.createObjectURL(await this.getGraphProfilePhoto())
-        );
+        await this.loadUser();
 
         this.sharedService.pushToastMessage({
           id: Utils.makeRandomString(4),
-          title: `Bienvenido`,
+          title: `Bienvenido ${this.user?.givenName}`,
           description: `Hola ${this.user?.givenName}, esperamos tengas la mejor de las estancias.`,
         });
 
         this.router.navigate(['/']);
-      });
+
+        this.sharedService.removeWaitTask({
+          id: taskId,
+        });
+      },
+      (err: BrowserAuthError) => {
+        this.sharedService.pushToastMessage({
+          id: Utils.makeRandomString(4),
+          title: `No se ha iniciado sesion`,
+          description: `No se ha completado el inicio de sesion, vuelva a intentarlo.`,
+        });
+
+        this.sharedService.removeWaitTask({
+          id: taskId,
+        });
+      }
+    );
   }
 
   userLogout() {
@@ -110,13 +119,16 @@ export class LoginService {
     if (!this.user) {
       this.user = await this.getGraphUser();
 
+      this.sharedService.pushWaitTask({
+        id: taskId,
+        progress: 50,
+      });
+
       try {
         this.user.avatar = this.sanitizer.bypassSecurityTrustUrl(
           URL.createObjectURL(await this.getGraphProfilePhoto())
         );
-      } catch (err) {
-        //console.log(err);
-      }
+      } catch (err) {}
     }
 
     this.sharedService.pushWaitTask({

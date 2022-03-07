@@ -1,12 +1,13 @@
-import { FileItem } from "./FileItem";
+import { FileItem } from './FileItem';
 
 export interface FormsJuridicaRequest {
   Id: string;
-  TipoPeticion: string;
-  TipoCompraContratacion: string;
+  TipoProceso: string;
   TipoAdquisicion: string;
   TipoAdquisicionOtro?: string;
+  TipoPersona: string;
   ConvenioResponsable: string;
+  Email: string;
   JustificacionContratacion: string;
   ObjetivoContratacion: string;
   EspecificacionesTecnicasMinimas?: string;
@@ -20,7 +21,12 @@ export interface FormsJuridicaRequest {
   Plazo: string;
   ManejoDatos: string;
   CategoriaInteresado?: string;
-  CategoriaDatos?: string;
+  CategoriaDatosSensibles?: boolean;
+  CategoriaDatosIdentificativos?: boolean;
+  CategoriaDatosCaracteristicasPersonales?: boolean;
+  CategoriaDatosCaracteristicasCircunstanciasSociales?: boolean;
+  CategoriaDatosCaracteristicasDetallesEmpleo?: boolean;
+  CategoriaDatosEconomicosFinancierosSeguros?: boolean;
   Files?: FileItem[];
   InformacionAdicional: string;
   Requestor: any;

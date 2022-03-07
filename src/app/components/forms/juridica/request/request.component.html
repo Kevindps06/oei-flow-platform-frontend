@@ -1,73 +1,41 @@
 <div class="row g-3">
   <div *ngIf="formIndex === 0" class="col-12">
-    <div class="card card-body">
-      <div class="row g-3">
-        <div class="col-12">
-          <h5 class="card-title text-center">
-            Tipo de peticion<strong class="text-danger">*</strong>
-          </h5>
-        </div>
-        <div class="col-12">
-          <div
-            *ngFor="let mapItem of juridicaRequestMap | keyvalue"
-            class="form-check"
-          >
-            <input
-              [(ngModel)]="tipoPeticion"
-              class="form-check-input"
-              type="radio"
-              name="checkInputTipoPeticion{{ mapItem.key }}"
-              id="checkInputTipoPeticion{{ mapItem.key }}"
-              [value]="mapItem.key"
-              [ngClass]="{
-                'is-valid': tipoPeticion,
-                'is-invalid': !tipoPeticion
-              }"
-            />
-            <label
-              class="form-check-label"
-              for="checkInputTipoPeticion{{ mapItem.key }}"
-            >
-              {{ mapItem.key }}
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div *ngIf="formIndex === 1" class="col-12">
     <div class="card">
       <div class="card-body">
         <div class="row g-3">
           <div class="col-12">
             <h5 class="card-title text-center">
-              Tipo de {{ tipoPeticion.toLowerCase()
-              }}<strong class="text-danger">*</strong>
+              Tipo de proceso<strong class="text-danger">*</strong>
             </h5>
           </div>
           <div class="col-12">
             <div
               *ngFor="
-                let mapItem of juridicaRequestMap.get(tipoPeticion)
-                  | keyvalue: originalOrder
+                let mapItem of juridicaRequestMap | keyvalue: originalOrder
               "
               class="form-check"
             >
               <input
-                [(ngModel)]="tipoCompraContratacion"
+                [disabled]="
+                  mapItem.key === 'Procedimiento super simplificado' ||
+                  mapItem.key === 'Procedimiento simplificado' ||
+                  mapItem.key === 'Contrato marco' ||
+                  mapItem.key === 'Licitacion'
+                "
+                [(ngModel)]="tipoProceso"
                 class="form-check-input"
                 type="radio"
-                name="checkInputTipoCompraContratacion{{ mapItem.key }}"
-                id="checkInputTipoCompraContratacion{{ mapItem.key }}"
+                name="checkInputTipoProceso{{ mapItem.key }}"
+                id="checkInputTipoProceso{{ mapItem.key }}"
                 [value]="mapItem.key"
                 [ngClass]="{
-                  'is-valid': tipoCompraContratacion,
-                  'is-invalid': !tipoCompraContratacion
+                  'is-valid': tipoProceso,
+                  'is-invalid': !tipoProceso
                 }"
               />
               <label
                 class="form-check-label"
-                for="checkInputTipoCompraContratacion{{ mapItem.key }}"
+                for="checkInputTipoProceso{{ mapItem.key }}"
               >
                 {{ mapItem.key }}
                 {{
@@ -85,7 +53,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="formIndex === 2" class="col-12">
+  <div *ngIf="formIndex === 1" class="col-12">
     <div class="card">
       <div class="card-body">
         <div class="row g-3">
@@ -207,12 +175,63 @@
       </div>
     </div>
   </div>
-  <div *ngIf="formIndex === 2" class="col-12">
+  <div *ngIf="formIndex === 1" class="col-12">
+    <div class="card card-body">
+      <div class="row g-3">
+        <div class="col-12">
+          <h5 class="card-title text-center">
+            Tipo de persona<strong class="text-danger">*</strong>
+          </h5>
+        </div>
+        <div class="col-12">
+          <div class="form-check">
+            <input
+              [(ngModel)]="tipoPersona"
+              class="form-check-input"
+              type="radio"
+              name="radioTipoPersonaNatural"
+              id="radioTipoPersonaNatural"
+              value="Natural"
+              [ngClass]="{
+                'is-valid': tipoPersona,
+                'is-invalid': !tipoPersona
+              }"
+            />
+            <label class="form-check-label" for="radioTipoPersonaNatural">
+              Natural
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              [disabled]="tipoProceso === 'Directa'"
+              [(ngModel)]="tipoPersona"
+              class="form-check-input"
+              type="radio"
+              name="radioTipoPersonaJuridica"
+              id="radioTipoPersonaJuridica"
+              value="Juridica"
+              [ngClass]="{
+                'is-valid': tipoPersona,
+                'is-invalid': !tipoPersona
+              }"
+            />
+            <label class="form-check-label" for="radioTipoPersonaJuridica">
+              Juridica
+            </label>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, seleccione una opcion.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="formIndex === 1" class="col-12">
     <div class="card">
       <div class="card-body">
         <div class="row g-3">
           <div class="col-12">
-            <h5 class="card-title text-center"></h5>
+            <h5 class="card-title text-center">Datos</h5>
           </div>
           <div class="col-12">
             <div class="form-floating">
@@ -242,6 +261,47 @@
               >
               <div class="invalid-feedback">
                 Este campo es (*) obligatorio, seleccione una opcion.
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="col-12">
+              <label class="form-label" for="inputEmail"
+                >Correo electronico personal y privado<strong
+                  class="text-danger"
+                  >*</strong
+                ><button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseEmail"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapseEmail"
+                name="collapseEmail"
+              >
+                <div class="card card-body">
+                  Este correo electronico sera utilizado durante el proceso
+                  actual para validacion de identidad, notificacion.
+                </div>
+              </div>
+              <input
+                [(ngModel)]="email"
+                name="inputEmail"
+                id="inputEmail"
+                type="email"
+                class="form-control"
+                [ngClass]="{
+                  'is-valid': validateEmail(email),
+                  'is-invalid': !validateEmail(email)
+                }"
+              />
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
               </div>
             </div>
           </div>
@@ -428,7 +488,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="formIndex === 2" class="col-12">
+  <div *ngIf="formIndex === 1" class="col-12">
     <div class="card">
       <div class="card-body">
         <div class="row g-3">
@@ -553,22 +613,14 @@
             <label class="form-label" for="inputPresupuestoEstimado"
               >Presupuesto estimado
               {{
-                juridicaRequestMap
-                  .get(tipoPeticion)
-                  ?.get(tipoCompraContratacion)
+                juridicaRequestMap.get(tipoProceso)
                   ? "- Min: " +
                     numberWithPriceSpaces(
-                      juridicaRequestMap
-                        .get(tipoPeticion)
-                        ?.get(tipoCompraContratacion)
-                        ?.get("Min")
+                      juridicaRequestMap?.get(tipoProceso)?.get("Min")
                     ) +
                     " - Max: " +
                     numberWithPriceSpaces(
-                      juridicaRequestMap
-                        .get(tipoPeticion)
-                        ?.get(tipoCompraContratacion)
-                        ?.get("Max")
+                      juridicaRequestMap?.get(tipoProceso)?.get("Max")
                     )
                   : "- Limite no definido"
               }}<strong class="text-danger">*</strong
@@ -605,10 +657,7 @@
                   parseInt(presupuestoEstimado) < presupuestoEstimadoMin
               }"
               [MaxOnlyPriceNumbers]="
-                juridicaRequestMap
-                  .get(tipoPeticion)
-                  ?.get(tipoCompraContratacion)
-                  ?.get('Max')
+                juridicaRequestMap.get(tipoProceso)?.get('Max')
               "
             />
             <div class="invalid-feedback">
@@ -819,20 +868,20 @@
                   <div class="col-12">
                     <div class="form-check">
                       <input
-                        [(ngModel)]="categoriaDatos"
+                        [(ngModel)]="categoriaDatosSensibles"
                         class="form-check-input"
-                        type="radio"
-                        name="radioCategoriaDatosSensibles"
-                        id="radioCategoriaDatosSensibles"
+                        type="checkbox"
+                        name="checkboxCategoriaDatosSensibles"
+                        id="checkboxCategoriaDatosSensibles"
                         value="Sensibles"
                         [ngClass]="{
-                          'is-valid': categoriaDatos,
-                          'is-invalid': !categoriaDatos
+                          'is-valid': isValidCategoriaDatos(),
+                          'is-invalid': !isValidCategoriaDatos()
                         }"
                       />
                       <label
                         class="form-check-label"
-                        for="radioCategoriaDatosSensibles"
+                        for="checkboxCategoriaDatosSensibles"
                       >
                         Sensibles: se entiende todo dato de especial cuidado y
                         que podría tener el carácter de reservado, es victima
@@ -848,40 +897,40 @@
                     </div>
                     <div class="form-check">
                       <input
-                        [(ngModel)]="categoriaDatos"
+                        [(ngModel)]="categoriaDatosIdentificativos"
                         class="form-check-input"
-                        type="radio"
-                        name="radioCategoriaDatosIdentificativos"
-                        id="radioCategoriaDatosIdentificativos"
+                        type="checkbox"
+                        name="checkboxCategoriaDatosIdentificativos"
+                        id="checkboxCategoriaDatosIdentificativos"
                         value="Identificativos"
                         [ngClass]="{
-                          'is-valid': categoriaDatos,
-                          'is-invalid': !categoriaDatos
+                          'is-valid': isValidCategoriaDatos(),
+                          'is-invalid': !isValidCategoriaDatos()
                         }"
                       />
                       <label
                         class="form-check-label"
-                        for="radioCategoriaDatosIdentificativos"
+                        for="checkboxCategoriaDatosIdentificativos"
                       >
                         Identificativos: número de cédula, nombre.
                       </label>
                     </div>
                     <div class="form-check">
                       <input
-                        [(ngModel)]="categoriaDatos"
+                        [(ngModel)]="categoriaDatosCaracteristicasPersonales"
                         class="form-check-input"
-                        type="radio"
-                        name="radioCategoriaDatosCaracteristicasPersonales"
-                        id="radioCategoriaDatosCaracteristicasPersonales"
+                        type="checkbox"
+                        name="checkboxCategoriaDatosCaracteristicasPersonales"
+                        id="checkboxCategoriaDatosCaracteristicasPersonales"
                         value="Caracteristicas personales"
                         [ngClass]="{
-                          'is-valid': categoriaDatos,
-                          'is-invalid': !categoriaDatos
+                          'is-valid': isValidCategoriaDatos(),
+                          'is-invalid': !isValidCategoriaDatos()
                         }"
                       />
                       <label
                         class="form-check-label"
-                        for="radioCategoriaDatosCaracteristicasPersonales"
+                        for="checkboxCategoriaDatosCaracteristicasPersonales"
                       >
                         Caracteristicas personales: profesión, pertenece a una
                         población especial (indígena, ROM), tiene algún tipo de
@@ -890,20 +939,22 @@
                     </div>
                     <div class="form-check">
                       <input
-                        [(ngModel)]="categoriaDatos"
+                        [(ngModel)]="
+                          categoriaDatosCaracteristicasCircunstanciasSociales
+                        "
                         class="form-check-input"
-                        type="radio"
-                        name="radioCategoriaDatosCaracteristicasCircunstanciasSociales"
-                        id="radioCategoriaDatosCaracteristicasCircunstanciasSociales"
+                        type="checkbox"
+                        name="checkboxCategoriaDatosCaracteristicasCircunstanciasSociales"
+                        id="checkboxCategoriaDatosCaracteristicasCircunstanciasSociales"
                         value="Circunstancias sociales"
                         [ngClass]="{
-                          'is-valid': categoriaDatos,
-                          'is-invalid': !categoriaDatos
+                          'is-valid': isValidCategoriaDatos(),
+                          'is-invalid': !isValidCategoriaDatos()
                         }"
                       />
                       <label
                         class="form-check-label"
-                        for="radioCategoriaDatosCaracteristicasCircunstanciasSociales"
+                        for="checkboxCategoriaDatosCaracteristicasCircunstanciasSociales"
                       >
                         Circunstancias sociales: estrato donde vive, tiene
                         servicios públicos, información del núcleo familiar.
@@ -911,20 +962,22 @@
                     </div>
                     <div class="form-check">
                       <input
-                        [(ngModel)]="categoriaDatos"
+                        [(ngModel)]="
+                          categoriaDatosCaracteristicasDetallesEmpleo
+                        "
                         class="form-check-input"
-                        type="radio"
-                        name="radioCategoriaDatosCaracteristicasDetallesEmpleo"
-                        id="radioCategoriaDatosCaracteristicasDetallesEmpleo"
+                        type="checkbox"
+                        name="checkboxCategoriaDatosCaracteristicasDetallesEmpleo"
+                        id="checkboxCategoriaDatosCaracteristicasDetallesEmpleo"
                         value="Detalles de empleo"
                         [ngClass]="{
-                          'is-valid': categoriaDatos,
-                          'is-invalid': !categoriaDatos
+                          'is-valid': isValidCategoriaDatos(),
+                          'is-invalid': !isValidCategoriaDatos()
                         }"
                       />
                       <label
                         class="form-check-label"
-                        for="radioCategoriaDatosCaracteristicasDetallesEmpleo"
+                        for="checkboxCategoriaDatosCaracteristicasDetallesEmpleo"
                       >
                         Detalles de empleo: tiene empleo formal o informal,
                         valor de sus ingresos.
@@ -932,20 +985,20 @@
                     </div>
                     <div class="form-check">
                       <input
-                        [(ngModel)]="categoriaDatos"
+                        [(ngModel)]="categoriaDatosEconomicosFinancierosSeguros"
                         class="form-check-input"
-                        type="radio"
-                        name="radioCategoriaDatosEconomicosFinancierosSeguros"
-                        id="radioCategoriaDatosEconomicosFinancierosSeguros"
+                        type="checkbox"
+                        name="checkboxCategoriaDatosEconomicosFinancierosSeguros"
+                        id="checkboxCategoriaDatosEconomicosFinancierosSeguros"
                         value="Economicos, financieros y de seguros"
                         [ngClass]="{
-                          'is-valid': categoriaDatos,
-                          'is-invalid': !categoriaDatos
+                          'is-valid': isValidCategoriaDatos(),
+                          'is-invalid': !isValidCategoriaDatos()
                         }"
                       />
                       <label
                         class="form-check-label"
-                        for="radioCategoriaDatosEconomicosFinancierosSeguros"
+                        for="checkboxCategoriaDatosEconomicosFinancierosSeguros"
                       >
                         Economicos, financieros y de seguros: recibe subsidios o
                         ayudas del Estado, número de cuenta bancaria.
@@ -965,6 +1018,22 @@
               (onFilesChange)="setFiles($event)"
             ></app-upload-files>
           </div>
+          <div class="col-12">
+            <div class="form-floating">
+              <input
+                [(ngModel)]="informacionAdicional"
+                type="text"
+                class="form-control"
+                name="inputInformacionAdicional"
+                id="inputInformacionAdicional"
+                placeholder="\0"
+                maxlength="255"
+              />
+              <label for="inputInformacionAdicional"
+                >Informacion adicional</label
+              >
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -975,7 +1044,7 @@
     >
   </div>
   <div
-    *ngIf="formIndex !== 2"
+    *ngIf="formIndex !== 1"
     [ngClass]="{ 'col-12': formIndex === 0 }"
     class="d-grid gap-2 col-6 mx-auto mb-2"
   >
@@ -987,7 +1056,7 @@
       >Siguiente</a
     >
   </div>
-  <div *ngIf="formIndex === 2" class="d-grid gap-2 col-6 mx-auto mb-2">
+  <div *ngIf="formIndex === 1" class="d-grid gap-2 col-6 mx-auto mb-2">
     <a
       class="btn btn-primary"
       (click)="btnSubmitClick()"

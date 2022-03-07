@@ -1,5 +1,0 @@
-{
-  "presets": ["@babel/preset-env"],
-  "plugins": ["inline-dotenv"],
-  "ignore": ["src/views"]
-}

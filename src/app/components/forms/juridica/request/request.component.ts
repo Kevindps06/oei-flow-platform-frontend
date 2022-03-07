@@ -17,92 +17,42 @@ import { SharedService } from 'src/app/services/shared.service';
   styleUrls: ['./request.component.css'],
 })
 export class FormsJuridicaRequestComponent implements OnInit {
-  juridicaRequestMap: Map<
-    string,
-    Map<string, Map<string, number> | undefined>
-  > = new Map([
+  juridicaRequestMap: Map<string, Map<string, number> | undefined> = new Map([
     [
-      'Compra',
+      'Directa',
       new Map([
-        [
-          'Directa',
-          new Map([
-            ['Min', 0],
-            ['Max', 10000000],
-          ]),
-        ],
-        ['Directa por extencion', undefined],
-        [
-          'Comparativa de precios',
-          new Map([
-            ['Min', 0],
-            ['Max', 80000000],
-          ]),
-        ],
-        [
-          'Procedimiento super simplificado',
-          new Map([
-            ['Min', 40000000],
-            ['Max', 80000000],
-          ]),
-        ],
-        [
-          'Procedimiento simplificado',
-          new Map([
-            ['Min', 80000000],
-            ['Max', 400000000],
-          ]),
-        ],
-        ['Contrato marco', undefined],
-        [
-          'Licitacion',
-          new Map([
-            ['Min', 400000000],
-            ['Max', NaN],
-          ]),
-        ],
+        ['Min', 0],
+        ['Max', 40000000],
+      ]),
+    ],
+    ['Directa por extencion', undefined],
+    ['Comparativa de precios', undefined],
+    [
+      'Procedimiento super simplificado',
+      new Map([
+        ['Min', 40000000],
+        ['Max', 80000000],
       ]),
     ],
     [
-      'Contratacion',
+      'Procedimiento simplificado',
       new Map([
-        [
-          'Directa',
-          new Map([
-            ['Min', 0],
-            ['Max', 40000000],
-          ]),
-        ],
-        ['Directa por extencion', undefined],
-        ['Comparativa de precios', undefined],
-        [
-          'Procedimiento super simplificado',
-          new Map([
-            ['Min', 40000000],
-            ['Max', 80000000],
-          ]),
-        ],
-        [
-          'Procedimiento simplificado',
-          new Map([
-            ['Min', 80000000],
-            ['Max', 400000000],
-          ]),
-        ],
-        [
-          'Contrato marco',
-          new Map([
-            ['Min', 0],
-            ['Max', 5000000000],
-          ]),
-        ],
-        [
-          'Licitacion',
-          new Map([
-            ['Min', 400000000],
-            ['Max', NaN],
-          ]),
-        ],
+        ['Min', 80000000],
+        ['Max', 400000000],
+      ]),
+    ],
+    [
+      'Contrato marco',
+      new Map([
+        ['Min', 0],
+        ['Max', 5000000000],
+      ]),
+    ],
+    [
+      'Licitacion',
+      new Map([
+        ['Min', 400000000],
+        ['Max', NaN],
       ]),
     ],
   ]);
@@ -115,18 +65,17 @@ export class FormsJuridicaRequestComponent implements OnInit {
   formIndex: number = 0;
 
   // 0
-  tipoPeticion: string = '';
+  tipoProceso: string = '';
 
   // 1
-  tipoCompraContratacion: string = '';
-
-  // 2
   tipoAdquisicion: string = '';
   tipoAdquisicionOtro: string = '';
+  tipoPersona: string = '';
 
   convenios: Convenio[] = [];
 
   convenioResponsable: string = '';
+  email: string = '';
   justificacionContratacion: string = '';
   objetivoContratacion: string = '';
   especificacionesTecnicasMinimas: string = '';
@@ -141,7 +90,12 @@ export class FormsJuridicaRequestComponent implements OnInit {
   plazo: string = '';
   manejoDatos: string = '';
   categoriaInteresado: string = '';
-  categoriaDatos: string = '';
+  categoriaDatosSensibles: boolean = false;
+  categoriaDatosIdentificativos: boolean = false;
+  categoriaDatosCaracteristicasPersonales: boolean = false;
+  categoriaDatosCaracteristicasCircunstanciasSociales: boolean = false;
+  categoriaDatosCaracteristicasDetallesEmpleo: boolean = false;
+  categoriaDatosEconomicosFinancierosSeguros: boolean = false;
 
   Files: FileItem[] = [];
 
@@ -151,7 +105,7 @@ export class FormsJuridicaRequestComponent implements OnInit {
 
   informacionAdicional: string = '';
 
-  tipoPersona: string = '';
+  /**************************************/
   tipoRelacion: string = '';
 
   identificator: string = '';
@@ -287,11 +241,7 @@ export class FormsJuridicaRequestComponent implements OnInit {
     switch (this.formIndex) {
       case 1:
         // Reset form index 0 values
-        this.tipoPeticion = '';
-        break;
-      case 2:
-        // Reset form index 1 values
-        this.tipoCompraContratacion = '';
+        this.tipoProceso = '';
         break;
     }
 
@@ -305,13 +255,11 @@ export class FormsJuridicaRequestComponent implements OnInit {
     switch (this.formIndex) {
       case 0:
         // Reset form index 1 values
-        this.tipoCompraContratacion = '';
-        break;
-      case 1:
-        // Reset form index 2 values
         this.tipoAdquisicion = '';
         this.tipoAdquisicionOtro = '';
+        this.tipoPersona = this.tipoProceso === 'Directa' ? 'Natural' : '';
         this.convenioResponsable = '';
+        this.email = '';
         this.justificacionContratacion = '';
         this.objetivoContratacion = '';
         this.especificacionesTecnicasMinimas = '';
@@ -321,10 +269,7 @@ export class FormsJuridicaRequestComponent implements OnInit {
         this.obligacionesEspecificas = '';
         this.productosEntregables = '';
         const presupuestoEstimadoMinString = this.numberWithPriceSpaces(
-          this.juridicaRequestMap
-            ?.get(this.tipoPeticion)
-            ?.get(this.tipoCompraContratacion)
-            ?.get('Min')
+          this.juridicaRequestMap?.get(this.tipoProceso)?.get('Min')
         );
 
         this.presupuestoEstimadoMin =
@@ -340,7 +285,12 @@ export class FormsJuridicaRequestComponent implements OnInit {
         this.plazo = '';
         this.manejoDatos = '';
         this.categoriaInteresado = '';
-        this.categoriaDatos = '';
+        this.categoriaDatosSensibles = false;
+        this.categoriaDatosIdentificativos = false;
+        this.categoriaDatosCaracteristicasPersonales = false;
+        this.categoriaDatosCaracteristicasCircunstanciasSociales = false;
+        this.categoriaDatosCaracteristicasDetallesEmpleo = false;
+        this.categoriaDatosEconomicosFinancierosSeguros = false;
 
         let getConveniosJuridicaTaskId: string;
         this.formsService.getConveniosJuridica().subscribe(
@@ -409,12 +359,13 @@ export class FormsJuridicaRequestComponent implements OnInit {
 
     let formsJuridicaRequest: FormsJuridicaRequest = {
       Id: Utils.makeRandomString(32),
-      TipoPeticion: this.tipoPeticion,
-      TipoCompraContratacion: this.tipoCompraContratacion,
+      TipoProceso: this.tipoProceso,
       TipoAdquisicion: this.tipoAdquisicion,
       TipoAdquisicionOtro:
         this.tipoAdquisicion === 'Otro' ? this.tipoAdquisicionOtro : undefined,
+      TipoPersona: this.tipoPersona,
       ConvenioResponsable: this.convenioResponsable,
+      Email: this.email,
       JustificacionContratacion: this.justificacionContratacion,
       ObjetivoContratacion: this.objetivoContratacion,
       EspecificacionesTecnicasMinimas: this.especificacionesTecnicasMinimas,
@@ -429,8 +380,28 @@ export class FormsJuridicaRequestComponent implements OnInit {
       ManejoDatos: this.manejoDatos,
       CategoriaInteresado:
         this.manejoDatos === 'Si' ? this.categoriaInteresado : undefined,
-      CategoriaDatos:
-        this.manejoDatos === 'Si' ? this.categoriaDatos : undefined,
+      CategoriaDatosSensibles:
+        this.manejoDatos === 'Si' ? this.categoriaDatosSensibles : undefined,
+      CategoriaDatosIdentificativos:
+        this.manejoDatos === 'Si'
+          ? this.categoriaDatosIdentificativos
+          : undefined,
+      CategoriaDatosCaracteristicasPersonales:
+        this.manejoDatos === 'Si'
+          ? this.categoriaDatosCaracteristicasPersonales
+          : undefined,
+      CategoriaDatosCaracteristicasCircunstanciasSociales:
+        this.manejoDatos === 'Si'
+          ? this.categoriaDatosCaracteristicasCircunstanciasSociales
+          : undefined,
+      CategoriaDatosCaracteristicasDetallesEmpleo:
+        this.manejoDatos === 'Si'
+          ? this.categoriaDatosCaracteristicasDetallesEmpleo
+          : undefined,
+      CategoriaDatosEconomicosFinancierosSeguros:
+        this.manejoDatos === 'Si'
+          ? this.categoriaDatosEconomicosFinancierosSeguros
+          : undefined,
       InformacionAdicional: this.informacionAdicional,
       Requestor: {},
     };
@@ -486,7 +457,12 @@ export class FormsJuridicaRequestComponent implements OnInit {
 
     // Cleaning fields because information has been saved
     this.informacionAdicional = '';
-    this.categoriaDatos = '';
+    this.categoriaDatosIdentificativos = false;
+    this.categoriaDatosCaracteristicasPersonales = false;
+    this.categoriaDatosCaracteristicasCircunstanciasSociales = false;
+    this.categoriaDatosCaracteristicasDetallesEmpleo = false;
+    this.categoriaDatosEconomicosFinancierosSeguros = false;
+    this.categoriaDatosSensibles = false;
     this.categoriaInteresado = '';
     this.manejoDatos = '';
     this.plazo = '';
@@ -500,11 +476,12 @@ export class FormsJuridicaRequestComponent implements OnInit {
     this.especificacionesTecnicasMinimas = '';
     this.objetivoContratacion = '';
     this.justificacionContratacion = '';
+    this.email = '';
     this.convenioResponsable = '';
+    this.tipoPersona = '';
     this.tipoAdquisicionOtro = '';
     this.tipoAdquisicion = '';
-    this.tipoCompraContratacion = '';
-    this.tipoPeticion = '';
+    this.tipoProceso = '';
 
     this.formIndex = 0;
 
@@ -550,17 +527,32 @@ export class FormsJuridicaRequestComponent implements OnInit {
       );
   }
 
+  validateEmail(email: string): boolean {
+    return Utils.validateEmail(email);
+  }
+
+  isValidCategoriaDatos(): boolean {
+    return (
+      this.categoriaDatosSensibles ||
+      this.categoriaDatosIdentificativos ||
+      this.categoriaDatosCaracteristicasPersonales ||
+      this.categoriaDatosCaracteristicasCircunstanciasSociales ||
+      this.categoriaDatosCaracteristicasDetallesEmpleo ||
+      this.categoriaDatosEconomicosFinancierosSeguros
+    );
+  }
+
   isValid() {
     switch (this.formIndex) {
       case 0:
-        return this.tipoPeticion;
+        return this.tipoProceso;
       case 1:
-        return this.tipoCompraContratacion;
-      case 2:
         return (
           this.tipoAdquisicion &&
           (this.tipoAdquisicion === 'Otro' ? this.tipoAdquisicionOtro : true) &&
+          this.tipoPersona &&
           this.convenioResponsable &&
+          Utils.validateEmail(this.email) &&
           this.justificacionContratacion &&
           this.objetivoContratacion &&
           this.objeto &&
@@ -571,7 +563,7 @@ export class FormsJuridicaRequestComponent implements OnInit {
           this.plazo &&
           this.manejoDatos &&
           (this.manejoDatos === 'Si'
-            ? this.categoriaInteresado && this.categoriaDatos
+            ? this.categoriaInteresado && this.isValidCategoriaDatos()
             : true)
         );
     }
