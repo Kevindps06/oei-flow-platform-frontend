@@ -21,7 +21,7 @@ export class FormsComponent implements OnInit {
   convenios: Convenio[] = [];
 
   ngOnInit(): void {
-    switch (this.router.url) {
+    switch (this.router.url.split('?')[0]) {
       case '/forms/tests':
         this.title = 'Test';
         this.description = '';
@@ -78,6 +78,6 @@ export class FormsComponent implements OnInit {
   }
 
   endWithRoute(route: string) {
-    return this.router.url.endsWith(route);
+    return this.router.url.split('?')[0].endsWith(route);
   }
 }
