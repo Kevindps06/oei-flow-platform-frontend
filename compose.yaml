@@ -1,12 +1,4 @@
 services:
-  nginx:
-    #image: kevindps06/oei-flow-platform-frontend
-    build: .
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    depends_on:
-      - node
   node:
     image: kevindps06/oei-flow-platform-backend:development
     #image: kevindps06/oei-flow-platform-backend:preproduction
@@ -18,3 +10,11 @@ services:
       - NODE_ENV=development
       #- NODE_ENV=preproduction
       #- NODE_ENV=production
+  nginx:
+    #image: kevindps06/oei-flow-platform-frontend
+    build: .
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - node
