@@ -19,7 +19,9 @@ export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
     this.year = year;
   }
 
+  tipoPersona: string = '';
   identificator: string = '';
+  digitoVerificacion: string = '';
 
   constructor(
     private formsService: FormsService,
@@ -57,7 +59,7 @@ export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
         });
       },
       () => {
-        this.year = '2021'
+        this.year = '2021';
 
         this.sharedService.removeWaitTask({
           id: getFormsCertificadosIngresosRetencionesYearsTaskId,
@@ -69,7 +71,12 @@ export class FormsCertificadosIngresosRetencionesComponent implements OnInit {
   btnValidarDocumento() {
     let getFormsCertificadosIngresosRetencionesTaskId!: string;
     this.formsService
-      .getFormsCertificadosIngresosRetenciones(this.year, this.identificator)
+      .getFormsCertificadosIngresosRetenciones(
+        this.year,
+        this.tipoPersona === 'Natural'
+          ? this.identificator
+          : `${this.identificator}-${this.digitoVerificacion}`
+      )
       .subscribe(
         async (httpEvent) => {
           switch (httpEvent.type) {

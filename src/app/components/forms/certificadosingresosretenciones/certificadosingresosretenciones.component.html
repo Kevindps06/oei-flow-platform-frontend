@@ -19,41 +19,141 @@
             Busqueda de certificados de ingresos y retenciones año {{ year }}
           </h5>
         </div>
-        <div class="col-9 col-md-10 col-xl-11">
+        <div class="col-12">
+          <div class="card card-body">
+            <div class="row g-3">
+              <div class="col-12">
+                <h5 class="card-title text-center">Tipo de persona</h5>
+              </div>
+              <div class="col-12">
+                <div class="form-check">
+                  <input
+                    (change)="identificator = ''; digitoVerificacion = ''"
+                    [(ngModel)]="tipoPersona"
+                    class="form-check-input"
+                    type="radio"
+                    name="tipoPersonaNatural"
+                    id="tipoPersonaNatural"
+                    value="Natural"
+                    [ngClass]="{
+                      'is-valid': tipoPersona,
+                      'is-invalid': !tipoPersona
+                    }"
+                  />
+                  <label class="form-check-label" for="tipoPersonaNatural">
+                    Natural
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    (change)="identificator = ''; digitoVerificacion = ''"
+                    [(ngModel)]="tipoPersona"
+                    class="form-check-input"
+                    type="radio"
+                    name="tipoPersonaJuridica"
+                    id="tipoPersonaJuridica"
+                    value="Juridica"
+                    [ngClass]="{
+                      'is-valid': tipoPersona,
+                      'is-invalid': !tipoPersona
+                    }"
+                  />
+                  <label class="form-check-label" for="tipoPersonaJuridica">
+                    Juridica
+                  </label>
+                  <div class="invalid-feedback">
+                    Este campo es (*) obligatorio, seleccione una opcion.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="tipoPersona === 'Natural'"
+          class="col-9 col-md-10 col-xl-11"
+        >
           <div class="form-floating">
             <input
               [(ngModel)]="identificator"
               type="text"
               class="form-control"
-              name="inputTextIdentificator"
-              id="inputTextIdentificator"
+              name="floatingInputIdentificator"
+              id="floatingInputIdentificator"
               placeholder="\0"
               [ngClass]="{
                 'is-valid':
-                  identificator.length === 8 ||
-                  identificator.length === 10 ||
-                  identificator.length === 11,
+                  identificator.length === 8 || identificator.length === 10,
                 'is-invalid':
-                  identificator.length !== 8 &&
-                  identificator.length !== 10 &&
-                  identificator.length !== 11
+                  identificator.length !== 8 && identificator.length !== 10
               }"
-              maxlength="11"
+              maxlength="10"
+              [OnlyNumbers]="true"
             />
-            <label for="inputTextIdentificator"
-              >Identificacion<strong class="text-danger">*</strong></label
+            <label for="floatingInputIdentificator"
+              >Identificacion<span class="text-danger">*</span></label
             >
             <div class="invalid-feedback">
               Este campo es (*) obligatorio, rellenelo.
             </div>
           </div>
         </div>
-        <div class="col-3 col-md-2 col-xl-1 d-grid grap-2 mx-auto">
+        <div
+          *ngIf="tipoPersona === 'Juridica'"
+          class="col-9 col-md-10 col-xl-11"
+        >
+          <label for="inputNIT1" class="form-label"
+            >NIT (Con digito de verificacion) Ej. 890507890-4<span
+              class="text-danger"
+              >*</span
+            ></label
+          >
+          <div class="input-group">
+            <input
+              [(ngModel)]="identificator"
+              type="text"
+              class="form-control"
+              placeholder="NIT Ej. 890507890"
+              aria-label="NIT Ej. 890507890"
+              [ngClass]="{
+                'is-valid': identificator.length === 9,
+                'is-invalid': identificator.length !== 9
+              }"
+              style="z-index: 0"
+              name="inputNIT1"
+              maxlength="9"
+              [OnlyNumbers]="true"
+            />
+            <span class="input-group-text">-</span>
+            <input
+              [(ngModel)]="digitoVerificacion"
+              type="text"
+              class="form-control"
+              placeholder="Digito de verificacion Ej. 4"
+              aria-label="Digito de verificacion Ej. 4"
+              [ngClass]="{
+                'is-valid': digitoVerificacion.length === 1,
+                'is-invalid': digitoVerificacion.length !== 1
+              }"
+              style="z-index: 0"
+              name="inputNIT2"
+              maxlength="1"
+              [OnlyNumbers]="true"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="tipoPersona"
+          class="col-3 col-md-2 col-xl-1 d-grid grap-2 mx-auto"
+        >
           <button
             [disabled]="
-              identificator.length !== 8 &&
-              identificator.length !== 10 &&
-              identificator.length !== 11
+              !(tipoPersona === 'Natural'
+                ? identificator.length === 8 || identificator.length === 10
+                : identificator.length === 9 && digitoVerificacion.length === 1)
             "
             (click)="btnValidarDocumento()"
             class="btn btn-primary"

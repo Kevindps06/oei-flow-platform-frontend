@@ -207,8 +207,9 @@
             <button
               [disabled]="
                 !(tipoPersona === 'Natural'
-                  ? identificator
-                  : identificator && digitoVerificacion)
+                  ? identificator.length === 8 || identificator.length === 10
+                  : identificator.length === 9 &&
+                    digitoVerificacion.length === 1)
               "
               (click)="btnValidarUsuarioClick()"
               class="btn btn-primary"
