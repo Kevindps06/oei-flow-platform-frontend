@@ -5,7 +5,3 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-    environment:
-      - NODE_ENV=development
-      #- NODE_ENV=preproduction
-      #- NODE_ENV=production
