@@ -83,4 +83,8 @@ export class Utils {
   static numberWithPriceSpaces(x: number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
+
+  static replaceAll(str: string, find: string, replace: string) {
+    return str.replace(new RegExp(find, 'g'), replace);
+  }
 }

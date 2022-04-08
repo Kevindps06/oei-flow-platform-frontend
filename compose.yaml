@@ -5,3 +5,16 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+    depends_on:
+      - node
+  node:
+    image: kevindps06/oei-flow-platform-backend:development
+    #image: kevindps06/oei-flow-platform-backend:preproduction
+    #image: kevindps06/oei-flow-platform-backend:production
+    restart: unless-stopped
+    ports:
+      - "6060:80"
+    environment:
+      - NODE_ENV=development
+      #- NODE_ENV=preproduction
+      #- NODE_ENV=production

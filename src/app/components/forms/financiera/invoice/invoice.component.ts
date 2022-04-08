@@ -151,7 +151,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
     this.formatoLegalizacionFiles = formatoLegalizacionFiles;
   }
 
-  infoAdicional: string = '';
+  informacionAdicional: string = '';
 
   @Output() onWaitTasksChange = new EventEmitter<WaitTask[]>();
   @Output() onToastMessagesChange = new EventEmitter<ToastMessage>();
@@ -484,7 +484,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
       TipoGestion: this.tipoGestion,
       TipoLegalizacion: this.tipoLegalizacion,
       Convenio: this.convenio,
-      InformacionAdicional: this.infoAdicional.replace('"', "'"),
+      InformacionAdicional: Utils.replaceAll(this.informacionAdicional, '"', "'"),
       Requestor: this.contratistaProveedorInformation,
     };
 
@@ -1938,7 +1938,7 @@ export class FormsFinancieraInvoiceComponent implements OnInit {
     }
 
     // Cleaning fields because information has been saved
-    this.infoAdicional = '';
+    this.informacionAdicional = '';
     this.convenio = '';
     this.tipoLegalizacion = '';
     this.tipoGestion = '';

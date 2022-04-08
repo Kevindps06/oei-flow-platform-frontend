@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build-image": "sudo docker build -t kevindps06/oei-flow-platform-frontend .",
+    "push-image": "sudo docker push kevindps06/oei-flow-platform-frontend"
   },
   "private": true,
   "dependencies": {

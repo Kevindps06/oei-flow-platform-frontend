@@ -402,7 +402,11 @@ export class FormsJuridicaRequestComponent implements OnInit {
         this.manejoDatos === 'Si'
           ? this.categoriaDatosEconomicosFinancierosSeguros
           : undefined,
-      InformacionAdicional: this.informacionAdicional,
+      InformacionAdicional: Utils.replaceAll(
+        this.informacionAdicional,
+        '"',
+        "'"
+      ),
       Requestor: {},
     };
 

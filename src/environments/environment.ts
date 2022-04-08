@@ -8,6 +8,7 @@ export const environment = {
   frontendAddress: 'localhost',
   backendProtocol: 'https',
   backendAddress: 'lab.oeiprojectflow.org',
+  backendPort: 8080
 };
 
 /*
