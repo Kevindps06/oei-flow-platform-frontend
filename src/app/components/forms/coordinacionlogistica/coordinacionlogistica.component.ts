@@ -74,7 +74,7 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
     this.comprobantesFiles = comprobantesFiles;
   }
 
-  infoAdicional: string = '';
+  informacionAdicional: string = '';
 
   @Output() onWaitTasksChange = new EventEmitter<WaitTask[]>();
 
@@ -250,7 +250,11 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
       Telefono: this.telefono,
       PasaporteFiles: this.pasaporteFiles,
       ComprobantesFiles: this.comprobantesFiles,
-      InformacionAdicional: this.infoAdicional.replace('"', "'"),
+      InformacionAdicional: Utils.replaceAll(
+        this.informacionAdicional,
+        '"',
+        "'"
+      ),
       Requestor: history.state.userInfo,
       Status: 0,
     };
