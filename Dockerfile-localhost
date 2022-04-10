@@ -1,0 +1,19 @@
+# Build Development
+FROM node:16.13.0-alpine as localhost-builder
+
+WORKDIR /oei-flow-platform-localhost
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npx ng build --configuration=development
+
+# Deploy
+FROM nginx:1.21.6-alpine
+
+COPY nginx /etc/nginx
+
+COPY --from=localhost-builder /oei-flow-platform-localhost/dist /usr/share/nginx/localhost

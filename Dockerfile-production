@@ -1,0 +1,19 @@
+# Build Production
+FROM node:16.13.0-alpine as production-builder
+
+WORKDIR /oei-flow-platform-production
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npx ng build --configuration=production
+
+# Deploy
+FROM nginx:1.21.6-alpine
+
+COPY nginx /etc/nginx
+
+COPY --from=production-builder /oei-flow-platform-production/dist /usr/share/nginx/oeiprojectflow.org
