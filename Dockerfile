@@ -40,7 +40,7 @@ RUN npx ng build --configuration=production
 # Deploy
 FROM nginx:1.21.6-alpine
 
-COPY nginx_tests /etc/nginx
+COPY nginx /etc/nginx
 
 COPY --from=development-builder /oei-flow-platform-development/dist /usr/share/nginx/localhost
 
