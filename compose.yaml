@@ -1,18 +1,7 @@
 services:
-  node:
-    image: kevindps06/oei-flow-platform-backend:development
-    #image: kevindps06/oei-flow-platform-backend:preproduction
-    #image: kevindps06/oei-flow-platform-backend:production
-    restart: unless-stopped
-    environment:
-      - NODE_ENV=development
-      #- NODE_ENV=preproduction
-      #- NODE_ENV=production
   nginx:
-    #image: kevindps06/oei-flow-platform-frontend
+    #image: nginx:1.21.6-alpine
     build: .
     restart: unless-stopped
     ports:
       - "80:80"
-    depends_on:
-      - node
