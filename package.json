@@ -7,8 +7,12 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "build-image": "sudo docker build -t kevindps06/oei-flow-platform-frontend .",
-    "push-image": "sudo docker push kevindps06/oei-flow-platform-frontend"
+    "build-localhost-image": "sudo docker build -t kevindps06/oei-flow-platform-frontend:localhost .",
+    "push-localhost-image": "sudo docker push kevindps06/oei-flow-platform-frontend:localhost",
+    "build-preproduction-image": "sudo docker build -t kevindps06/oei-flow-platform-frontend:preproduction .",
+    "push-preproduction-image": "sudo docker push kevindps06/oei-flow-platform-frontend:preproduction",
+    "build-production-image": "sudo docker build -t kevindps06/oei-flow-platform-frontend:production .",
+    "push-production-image": "sudo docker push kevindps06/oei-flow-platform-frontend:production"
   },
   "private": true,
   "dependencies": {
