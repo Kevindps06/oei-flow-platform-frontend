@@ -1,0 +1,19 @@
+# Build Preproduction
+FROM node:16.13.0-alpine as preproduction-builder
+
+WORKDIR /oei-flow-platform-preproduction
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npx ng build --configuration=preproduction
+
+# Deploy
+FROM nginx:1.21.6-alpine
+
+COPY nginx /etc/nginx
+
+COPY --from=preproduction-builder /oei-flow-platform-preproduction/dist /usr/share/nginx/lab.oeiprojectflow.org
