@@ -40,14 +40,10 @@ RUN npx ng build --configuration=production
 # Deploy
 FROM nginx:1.21.6-alpine
 
-RUN rm -f /etc/nginx/conf.d/default.conf
+COPY nginx_tests /etc/nginx
 
-COPY nginx/configuration /etc/nginx
+COPY --from=development-builder /oei-flow-platform-development/dist /usr/share/nginx/localhost
 
-COPY nginx/content/html /var/www/html
+COPY --from=preproduction-builder /oei-flow-platform-preproduction/dist /usr/share/nginx/lab.oeiprojectflow.org
 
-COPY --from=development-builder /oei-flow-platform-development/dist /var/www/localhost
-
-COPY --from=preproduction-builder /oei-flow-platform-preproduction/dist /var/www/lab.oeiprojectflow.org
-
-COPY --from=production-builder /oei-flow-platform-production/dist /var/www/oeiprojectflow.org
+COPY --from=production-builder /oei-flow-platform-production/dist /usr/share/nginx/oeiprojectflow.org

@@ -1,0 +1,18 @@
+services:
+  hello-v1:
+    image: gcr.io/google-samples/hello-app:1.0
+    restart: unless-stopped
+  hello-v2:
+    image: gcr.io/google-samples/hello-app:2.0
+    restart: unless-stopped
+  nginx:
+    #image: nginx:1.21.6-alpine
+    build: .
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx_tests:/etc/nginx
+    depends_on:
+      - hello-v1
+      - hello-v2

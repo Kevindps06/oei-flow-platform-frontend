@@ -4,5 +4,5 @@ export const environment = {
   frontendAddress: 'oeiprojectflow.org',
   backendProtocol: 'https',
   backendAddress: 'oeiprojectflow.org',
-  backendPort: 6060,
+  backendPort: 80,
 };
