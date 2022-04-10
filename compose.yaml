@@ -1,15 +1,17 @@
 services:
   node:
-    #image: kevindps06/oei-flow-platform-backend:development
-    image: kevindps06/oei-flow-platform-backend:preproduction
+    image: kevindps06/oei-flow-platform-backend:development
+    #image: kevindps06/oei-flow-platform-backend:preproduction
     #image: kevindps06/oei-flow-platform-backend:production
     restart: unless-stopped
     environment:
-      #- NODE_ENV=development
-      - NODE_ENV=preproduction
+      - NODE_ENV=development
+      #- NODE_ENV=preproduction
       #- NODE_ENV=production
   nginx:
-    #image: kevindps06/oei-flow-platform-frontend
+    #image: kevindps06/oei-flow-platform-frontend:localhost
+    #image: kevindps06/oei-flow-platform-frontend:preproduction
+    #image: kevindps06/oei-flow-platform-frontend:production
     build: .
     restart: unless-stopped
     ports:

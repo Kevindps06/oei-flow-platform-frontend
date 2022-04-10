@@ -1,7 +1,0 @@
-services:
-  nginx:
-    #image: nginx:1.21.6-alpine
-    build: .
-    restart: unless-stopped
-    ports:
-      - "80:80"
