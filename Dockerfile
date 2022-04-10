@@ -1,7 +1,7 @@
 # Build Development
-FROM node:16.13.0-alpine as development-builder
+FROM node:16.13.0-alpine as localhost-builder
 
-WORKDIR /oei-flow-platform-development
+WORKDIR /oei-flow-platform-localhost
 
 COPY package*.json ./
 
@@ -42,7 +42,7 @@ FROM nginx:1.21.6-alpine
 
 COPY nginx /etc/nginx
 
-COPY --from=development-builder /oei-flow-platform-development/dist /usr/share/nginx/localhost
+COPY --from=localhost-builder /oei-flow-platform-localhost/dist /usr/share/nginx/localhost
 
 COPY --from=preproduction-builder /oei-flow-platform-preproduction/dist /usr/share/nginx/lab.oeiprojectflow.org
 
