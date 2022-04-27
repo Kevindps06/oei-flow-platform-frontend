@@ -1,10 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 
-body {
+/*body {
   background: url("./assets/background.png");
   background-size: 50%;
   background-repeat: repeat;
-}
+}*/
+
+/*body {
+  background-color: coral;
+}*/
 
 .myClickableThingy {
     cursor: pointer;
