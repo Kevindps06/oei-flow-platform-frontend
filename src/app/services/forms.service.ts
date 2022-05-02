@@ -269,7 +269,7 @@ export class FormsService {
   }
 
   getFormJuridicaEulaVerificationRequestCode(
-    formJuridica: string
+    formJuridicaId: string
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
@@ -277,7 +277,7 @@ export class FormsService {
         `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/eula/verification/requestcode`,
         {
           params: new HttpParams().appendAll({
-            JuridicaRequest: formJuridica,
+            Juridica: formJuridicaId,
           }),
           reportProgress: true,
         }

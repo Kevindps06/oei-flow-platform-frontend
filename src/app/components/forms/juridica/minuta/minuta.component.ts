@@ -243,6 +243,27 @@ export class FormsJuridicaMinutaComponent implements OnInit {
 
   btnPreviewClick() {
     let formsJuridicaRequestMinutaGenerate = {
+      tipoInmueble: this.tipoInmueble,
+      nombreArrendador: this.nombreArrendador,
+      numeroNit: this.numeroNit,
+      nombreRepresentanteLegal: this.nombreRepresentanteLegal,
+      ciudadDondeReside: this.ciudadDondeReside,
+      numeroCedula: this.numeroCedula,
+      ciudadExpedicion: this.ciudadExpedicion,
+      detalleInmueble: this.detalleInmueble,
+      ubicacionInmueble: this.ubicacionInmueble,
+      barrio: this.barrio,
+      ciudadInmueble: this.ciudadInmueble,
+      inmueble: this.inmueble,
+      mesesContrato: this.mesesContrato,
+      diaInicio: this.diaInicio,
+      mesInicio: this.mesInicio,
+      anoInicio: this.anoInicio,
+      diaFin: this.diaFin,
+      mesFin: this.mesFin,
+      anoFin: this.anoFin,
+      valorContrato: this.valorContrato,
+      valorCanonMensual: this.valorCanonMensual,
       field1: this.field1,
       field2: this.field2,
       field3: this.field3,
@@ -321,6 +342,27 @@ export class FormsJuridicaMinutaComponent implements OnInit {
 
   async btnSubmitClick() {
     const formsJuridicaRequestMinuta = {
+      tipoInmueble: this.tipoInmueble,
+      nombreArrendador: this.nombreArrendador,
+      numeroNit: this.numeroNit,
+      nombreRepresentanteLegal: this.nombreRepresentanteLegal,
+      ciudadDondeReside: this.ciudadDondeReside,
+      numeroCedula: this.numeroCedula,
+      ciudadExpedicion: this.ciudadExpedicion,
+      detalleInmueble: this.detalleInmueble,
+      ubicacionInmueble: this.ubicacionInmueble,
+      barrio: this.barrio,
+      ciudadInmueble: this.ciudadInmueble,
+      inmueble: this.inmueble,
+      mesesContrato: this.mesesContrato,
+      diaInicio: this.diaInicio,
+      mesInicio: this.mesInicio,
+      anoInicio: this.anoInicio,
+      diaFin: this.diaFin,
+      mesFin: this.mesFin,
+      anoFin: this.anoFin,
+      valorContrato: this.valorContrato,
+      valorCanonMensual: this.valorCanonMensual,
       Field1: this.field1,
       Field2: this.field2,
       Field3: this.field3,
@@ -441,63 +483,73 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   }
 
   isValidPreview() {
-    return (
-      this.field1 &&
-      this.field2 &&
-      this.field3 &&
-      this.field4 &&
-      this.field5 &&
-      this.field6 &&
-      this.field7 &&
-      this.field8 &&
-      this.field9 &&
-      this.field10 &&
-      this.field11 &&
-      this.field12 &&
-      this.field13 &&
-      this.field14 &&
-      this.field15 &&
-      this.field16 &&
-      this.field17 &&
-      this.field18 &&
-      this.field19 &&
-      this.field20 &&
-      this.field21 &&
-      this.field22 &&
-      this.field23 &&
-      this.field24 &&
-      this.field25
-    );
+    switch (this.formJuridica.TipoAdquisicion) {
+      case 'Bienes':
+        return (
+          this.tipoInmueble &&
+          this.nombreArrendador &&
+          this.numeroNit &&
+          this.nombreRepresentanteLegal &&
+          this.ciudadDondeReside &&
+          this.numeroCedula &&
+          this.ciudadExpedicion &&
+          this.detalleInmueble &&
+          this.ubicacionInmueble &&
+          this.barrio &&
+          this.ciudadInmueble &&
+          this.inmueble &&
+          this.mesesContrato &&
+          this.diaInicio &&
+          this.mesInicio &&
+          this.anoInicio &&
+          this.diaFin &&
+          this.mesFin &&
+          this.anoFin &&
+          this.valorContrato &&
+          this.valorCanonMensual &&
+          this.field1 &&
+          this.field2 &&
+          this.field3 &&
+          this.field4
+        );
+      default:
+        return false;
+    }
   }
 
   isValid() {
-    return (
-      this.field1 &&
-      this.field2 &&
-      this.field3 &&
-      this.field4 &&
-      this.field5 &&
-      this.field6 &&
-      this.field7 &&
-      this.field8 &&
-      this.field9 &&
-      this.field10 &&
-      this.field11 &&
-      this.field12 &&
-      this.field13 &&
-      this.field14 &&
-      this.field15 &&
-      this.field16 &&
-      this.field17 &&
-      this.field18 &&
-      this.field19 &&
-      this.field20 &&
-      this.field21 &&
-      this.field22 &&
-      this.field23 &&
-      this.field24 &&
-      this.field25 &&
-      this.file
-    );
+    switch (this.formJuridica.TipoAdquisicion) {
+      case 'Bienes':
+        return (
+          this.tipoInmueble &&
+          this.nombreArrendador &&
+          this.numeroNit &&
+          this.nombreRepresentanteLegal &&
+          this.ciudadDondeReside &&
+          this.numeroCedula &&
+          this.ciudadExpedicion &&
+          this.detalleInmueble &&
+          this.ubicacionInmueble &&
+          this.barrio &&
+          this.ciudadInmueble &&
+          this.inmueble &&
+          this.mesesContrato &&
+          this.diaInicio &&
+          this.mesInicio &&
+          this.anoInicio &&
+          this.diaFin &&
+          this.mesFin &&
+          this.anoFin &&
+          this.valorContrato &&
+          this.valorCanonMensual &&
+          this.field1 &&
+          this.field2 &&
+          this.field3 &&
+          this.field4 &&
+          this.file
+        );
+      default:
+        return false;
+    }
   }
 }

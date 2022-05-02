@@ -1,4 +1,4 @@
-<div class="row g-3">
+<div *ngIf="formJuridica" class="row g-3">
   <div class="col-12">
     <div class="card card-body">
       <div class="row g-3">
@@ -17,6 +17,469 @@
             }}
           </h5>
         </div>
+        <!--Bienes-->
+        <div *ngIf="formJuridica.TipoAdquisicion === 'Bienes'" class="col-12">
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="tipoInmueble"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaTipoInmueble"
+                  id="floatingTextareaTipoInmueble"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': tipoInmueble,
+                    'is-invalid': !tipoInmueble
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaTipoInmueble"
+                  >Tipo de inmueble</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="nombreArrendador"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNombreArrendador"
+                  id="floatingTextareaNombreArrendador"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': nombreArrendador,
+                    'is-invalid': !nombreArrendador
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNombreArrendador"
+                  >Nombre del arrendador</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="numeroNit"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNumeroNit"
+                  id="floatingTextareaNumeroNit"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': numeroNit,
+                    'is-invalid': !numeroNit
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNumeroNit">Numero de NIT</label>
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="nombreRepresentanteLegal"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNombreRepresentanteLegal"
+                  id="floatingTextareaNombreRepresentanteLegal"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': nombreRepresentanteLegal,
+                    'is-invalid': !nombreRepresentanteLegal
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNombreRepresentanteLegal"
+                  >Nombre del representante legal</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="ciudadDondeReside"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaCiudadDondeReside"
+                  id="floatingTextareaCiudadDondeReside"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': ciudadDondeReside,
+                    'is-invalid': !ciudadDondeReside
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaCiudadDondeReside"
+                  >Ciudad donde reside</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="numeroCedula"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNumeroCedula"
+                  id="floatingTextareaNumeroCedula"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': numeroCedula,
+                    'is-invalid': !numeroCedula
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNumeroCedula"
+                  >Numero de cedula</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="ciudadExpedicion"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaCiudadExpedicion"
+                  id="floatingTextareaCiudadExpedicion"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': ciudadExpedicion,
+                    'is-invalid': !ciudadExpedicion
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaCiudadExpedicion"
+                  >Ciudad de expedicion</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="detalleInmueble"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaDetalleInmueble"
+                  id="floatingTextareaDetalleInmueble"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': detalleInmueble,
+                    'is-invalid': !detalleInmueble
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaDetalleInmueble"
+                  >Detalle del inmueble</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="ubicacionInmueble"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaUbicacionInmueble"
+                  id="floatingTextareaUbicacionInmueble"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': ubicacionInmueble,
+                    'is-invalid': !ubicacionInmueble
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaUbicacionInmueble"
+                  >Ubicacion del inmueble</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="barrio"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaBarrio"
+                  id="floatingTextareaBarrio"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': barrio,
+                    'is-invalid': !barrio
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaBarrio">Barrio</label>
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="ciudadInmueble"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaCiudadInmueble"
+                  id="floatingTextareaCiudadInmueble"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': ciudadInmueble,
+                    'is-invalid': !ciudadInmueble
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaCiudadInmueble"
+                  >Ciudad del inmueble</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="inmueble"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaInmueble"
+                  id="floatingTextareaInmueble"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': inmueble,
+                    'is-invalid': !inmueble
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaInmueble">Inmueble</label>
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="mesesContrato"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaMesesContrato"
+                  id="floatingTextareaMesesContrato"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': mesesContrato,
+                    'is-invalid': !mesesContrato
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaMesesContrato"
+                  >Meses del contrato</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="diaInicio"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaDiaInicio"
+                  id="floatingTextareaDiaInicio"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': diaInicio,
+                    'is-invalid': !diaInicio
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaDiaInicio"
+                  >Dia de inicio del contrato</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="mesInicio"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaMesInicio"
+                  id="floatingTextareaMesInicio"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': mesInicio,
+                    'is-invalid': !mesInicio
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaMesInicio"
+                  >Mes de inicio del contrato</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="anoInicio"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaAnoInicio"
+                  id="floatingTextareaAnoInicio"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': anoInicio,
+                    'is-invalid': !anoInicio
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaAnoInicio"
+                  >Año de inicio del contrato</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="diaFin"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaDiaFin"
+                  id="floatingTextareaDiaFin"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': diaFin,
+                    'is-invalid': !diaFin
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaDiaFin"
+                  >Dia de fin del contrato</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="mesFin"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaMesFin"
+                  id="floatingTextareaMesFin"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': mesFin,
+                    'is-invalid': !mesFin
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaMesFin"
+                  >Mes de fin del contrato</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="anoFin"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaAnoFin"
+                  id="floatingTextareaAnoFin"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': anoFin,
+                    'is-invalid': !anoFin
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaAnoFin"
+                  >Año de fin del contrato</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="valorContrato"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaValorContrato"
+                  id="floatingTextareaValorContrato"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': valorContrato,
+                    'is-invalid': !valorContrato
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaValorContrato"
+                  >Valor del contrato</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="valorCanonMensual"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaValorCanonMensual"
+                  id="floatingTextareaValorCanonMensual"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': valorCanonMensual,
+                    'is-invalid': !valorCanonMensual
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaValorCanonMensual"
+                  >Valor canones mensuales del contrato</label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!---->
         <div class="col-12">
           <div class="form-floating">
             <textarea
