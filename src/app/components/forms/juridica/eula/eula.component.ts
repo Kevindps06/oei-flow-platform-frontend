@@ -16,7 +16,7 @@ export class FormsJuridicaEulaComponent implements OnInit {
 
   formJuridicaId: string = '';
   encargado: string = '';
-  formsJuridica!: FormsJuridica;
+  formJuridica!: FormsJuridica;
 
   codigoVerificacion: string = '';
 
@@ -180,7 +180,7 @@ export class FormsJuridicaEulaComponent implements OnInit {
               case HttpEventType.Sent:
                 getFormsJuridicaEulaVerifyVerificationCodeTaskId =
                   this.sharedService.pushWaitTask({
-                    description: 'Verificando el codigo de verificacion...',
+                    description: 'Verificando el codigo de autentificacion...',
                     progress: 0,
                   }) as string;
                 break;
@@ -249,47 +249,45 @@ export class FormsJuridicaEulaComponent implements OnInit {
           },
           () => {
             let getFormsJuridicaTaskId: string;
-            this.formsService
-              .getFormJuridica(this.formJuridicaEulaId)
-              .subscribe(
-                (httpEvent) => {
-                  switch (httpEvent.type) {
-                    case HttpEventType.Sent:
-                      getFormsJuridicaTaskId = this.sharedService.pushWaitTask({
-                        description: 'Obteniendo informacion de la peticion...',
-                        progress: 0,
-                      }) as string;
-                      break;
-                    case HttpEventType.DownloadProgress:
-                      this.sharedService.pushWaitTask({
-                        id: getFormsJuridicaTaskId,
-                        progress: Math.round(
-                          (httpEvent.loaded * 100) / httpEvent.total
-                        ),
-                      });
-                      break;
-                    case HttpEventType.Response:
-                      if (httpEvent.body.length > 0) {
-                        clearTimeout(requestTimeout);
+            this.formsService.getFormJuridica(this.formJuridicaId).subscribe(
+              (httpEvent) => {
+                switch (httpEvent.type) {
+                  case HttpEventType.Sent:
+                    getFormsJuridicaTaskId = this.sharedService.pushWaitTask({
+                      description: 'Obteniendo informacion de la peticion...',
+                      progress: 0,
+                    }) as string;
+                    break;
+                  case HttpEventType.DownloadProgress:
+                    this.sharedService.pushWaitTask({
+                      id: getFormsJuridicaTaskId,
+                      progress: Math.round(
+                        (httpEvent.loaded * 100) / httpEvent.total
+                      ),
+                    });
+                    break;
+                  case HttpEventType.Response:
+                    if (httpEvent.body.length > 0) {
+                      clearTimeout(requestTimeout);
 
-                        this.formsJuridica = httpEvent.body[0];
+                      this.formJuridica = httpEvent.body[0];
 
-                        this.formIndex++;
-                      }
-                      break;
-                  }
-                },
-                (httpEventError) => {
-                  this.sharedService.removeWaitTask({
-                    id: getFormsJuridicaTaskId,
-                  });
-                },
-                () => {
-                  this.sharedService.removeWaitTask({
-                    id: getFormsJuridicaTaskId,
-                  });
+                      this.formIndex++;
+                    }
+                    break;
                 }
-              );
+              },
+              (httpEventError) => {
+                this.sharedService.removeWaitTask({
+                  id: getFormsJuridicaTaskId,
+                });
+              },
+              () => {
+                this.sharedService.removeWaitTask({
+                  id: getFormsJuridicaTaskId,
+                });
+              }
+            );
 
             this.sharedService.pushToastMessage({
               id: Utils.makeRandomString(4),
@@ -358,7 +356,7 @@ export class FormsJuridicaEulaComponent implements OnInit {
   isValid() {
     switch (this.formIndex) {
       case 0:
-        return this.formsJuridica;
+        return this.formJuridica;
       case 1:
         return true;
       default:
