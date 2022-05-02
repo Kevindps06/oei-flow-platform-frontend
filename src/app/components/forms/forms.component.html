@@ -10,13 +10,13 @@
             {{ title }}
           </h5>
         </div>
-        <div class="col-12">
+        <div *ngIf="description" class="col-12">
           <p class="card-text" style="white-space: pre-wrap">
             {{ description }}
           </p>
         </div>
         <div class="col-12">
-          <app-forms-tests *ngIf="isRoute('/forms/tests')"> </app-forms-tests>
+          <!--Financiera-->
           <app-forms-financiera-registration
             *ngIf="isRoute('/forms/financiera/registration')"
           >
@@ -24,35 +24,35 @@
           <app-forms-financiera-invoice
             *ngIf="isRoute('/forms/financiera/invoice')"
           ></app-forms-financiera-invoice>
-          <app-forms-juridica-request
-            *ngIf="isRoute('/forms/juridica/request')"
-          ></app-forms-juridica-request>
-          <app-forms-juridica-request-minuta
+          <!--Juridica-->
+          <app-forms-juridica
+            *ngIf="isRoute('/forms/juridica')"
+          ></app-forms-juridica>
+          <app-forms-juridica-minuta
             *ngIf="
-              startWithRoute('/forms/juridica/request/') &&
-              endWithRoute('/minuta')
+              startWithRoute('/forms/juridica/') && endWithRoute('/minuta')
             "
-          ></app-forms-juridica-request-minuta>
-          <app-forms-juridica-request-eula
-            *ngIf="
-              startWithRoute('/forms/juridica/request/') &&
-              endWithRoute('/eula')
-            "
-          ></app-forms-juridica-request-eula>
-          <app-forms-coordinacionlogistica
-            *ngIf="isRoute('/forms/coordinacionlogistica')"
-          >
+          ></app-forms-juridica-minuta>
+          <app-forms-juridica-eula
+            *ngIf="startWithRoute('/forms/juridica/') && endWithRoute('/eula')"
+          ></app-forms-juridica-eula>
+          <!--Compras-->
+          <app-forms-adquisicion
+            *ngIf="isRoute('/forms/compras')"
+          ></app-forms-adquisicion>
+          <!--Logistica-->
+          <app-forms-coordinacionlogistica *ngIf="isRoute('/forms/logistica')">
           </app-forms-coordinacionlogistica>
           <app-forms-coordinacionlogistica-fillquotations
             *ngIf="
-              startWithRoute('/forms/coordinacionlogistica/') &&
+              startWithRoute('/forms/logistica/') &&
               endWithRoute('/fillquotations')
             "
           >
           </app-forms-coordinacionlogistica-fillquotations>
           <app-forms-coordinacionlogistica-selectquotation
             *ngIf="
-              startWithRoute('/forms/coordinacionlogistica/') &&
+              startWithRoute('/forms/logistica/') &&
               endWithRoute('/selectquotation')
             "
           >
@@ -60,6 +60,7 @@
           <app-forms-certificadosingresosretenciones
             *ngIf="isRoute('/forms/certificadosingresosretenciones')"
           ></app-forms-certificadosingresosretenciones>
+          <app-forms-tests *ngIf="isRoute('/forms/tests')"> </app-forms-tests>
         </div>
       </div>
     </div>

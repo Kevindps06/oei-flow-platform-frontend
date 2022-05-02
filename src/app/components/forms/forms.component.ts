@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormsService } from 'src/app/services/forms.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Convenio } from 'src/app/interfaces/Convenio';
+import { AuthService } from 'src/app/services/auth.service';
+import { mergeMap } from 'rxjs/operators';
+import { from, of } from 'rxjs';
 
 @Component({
   selector: 'app-forms',
@@ -13,7 +16,7 @@ export class FormsComponent implements OnInit {
   description!: string;
 
   constructor(
-    private formsService: FormsService,
+    private authService: AuthService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {}
@@ -22,10 +25,7 @@ export class FormsComponent implements OnInit {
 
   ngOnInit(): void {
     switch (this.router.url.split('?')[0]) {
-      case '/forms/tests':
-        this.title = 'Test';
-        this.description = '';
-        return;
+      // Financiera
       case '/forms/financiera/registration':
         this.title = 'Registro colaborador o proveedor';
         this.description =
@@ -36,35 +36,45 @@ export class FormsComponent implements OnInit {
         this.description =
           'Aqui podra realizar los siguientes procesos:\n- Envio de cuentas de cobro\n- Facturas\n- Anticipos\n- Pagos directos\n- Legalizaciones';
         return;
-      case '/forms/juridica/request':
+      // Juridica
+      case '/forms/juridica':
         this.title = 'Gestion juridica';
-        this.description = 'Formulario de gestion juridica descripcion.';
+        //this.description = 'Formulario de gestion juridica.';
         return;
-      case `/forms/juridica/request/${this.activatedRoute.snapshot.params.id}/minuta`:
+      case `/forms/juridica/${this.activatedRoute.snapshot.params.id}/minuta`:
         this.title = 'Gestion juridica minuta';
-        this.description = 'Formulario de gestion juridica minuta descripcion.';
+        //this.description = 'Formulario de gestion juridica minuta descripcion.';
         return;
-      case `/forms/juridica/request/${this.activatedRoute.snapshot.params.id}/eula`:
+      case `/forms/juridica/${this.activatedRoute.snapshot.params.id}/eula`:
         this.title = 'Gestion juridica eula';
-        this.description = 'Formulario de gestion juridica eula descripcion.';
+        //this.description = 'Formulario de gestion juridica eula descripcion.';
         return;
-      case '/forms/coordinacionlogistica':
-        this.title = 'Coordinacion logistica';
-        this.description = 'Coordinacion logistica descripcion';
+      // Compras
+      case '/forms/compras':
+        this.title = 'Gestion compras';
+        //this.description = 'Formulario de gestion de adquisicion.';
         return;
-      case `/forms/coordinacionlogistica/${this.activatedRoute.snapshot.params.id}/fillquotations`:
-        this.title = 'Coordinacion logistica fill quotations';
-        this.description = 'Coordinacion logistica fill quotations descripcion';
+      // Logistica
+      case '/forms/logistica':
+        this.title = 'Gestion logistica';
+        //this.description = 'Gestion logistica';
         return;
-      case `/forms/coordinacionlogistica/${this.activatedRoute.snapshot.params.id}/selectquotation`:
-        this.title = 'Coordinacion logistica select quotation';
-        this.description =
-          'Coordinacion logistica select quotation descripcion';
+      case `/forms/logistica/${this.activatedRoute.snapshot.params.id}/fillquotations`:
+        this.title = 'Gestion logistica fill quotations';
+        //this.description = 'Gestion logistica fill quotations';
+        return;
+      case `/forms/logistica/${this.activatedRoute.snapshot.params.id}/selectquotation`:
+        this.title = 'Gestion logistica select quotation';
+        //this.description = 'Gestion logistica select quotation descripcion';
         return;
       case '/forms/certificadosingresosretenciones':
         this.title = 'Gestion de certificados de ingresos y retenciones';
-        this.description =
-          'Aqui podra realizar procesos como:\n- Descarga de certificado de ingresos y retenciones';
+        //this.description =
+        'Aqui podra realizar procesos como:\n- Descarga de certificado de ingresos y retenciones';
+        return;
+      case '/forms/tests':
+        this.title = 'Test';
+        //this.description = '';
         return;
     }
   }

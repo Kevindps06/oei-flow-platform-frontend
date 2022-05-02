@@ -62,30 +62,54 @@
         </li>
         <li class="nav-item">
           <a
-            [ngClass]="{ active: isRoute('/forms/certificadosingresosretenciones') }"
+            [ngClass]="{
+              active: isRoute('/forms/certificadosingresosretenciones')
+            }"
             class="nav-link text-white"
             aria-current="page"
             [routerLink]="['/forms/certificadosingresosretenciones']"
             >Certificados de ingresos y retenciones</a
           >
         </li>
-        <li *ngIf="isLoggedIn()" class="nav-item">
+        <li *ngIf="isLoggedIn()" class="nav-item dropdown">
           <a
-            [ngClass]="{ active: isRoute('/forms/coordinacionlogistica') }"
-            class="nav-link text-white"
-            aria-current="page"
-            [routerLink]="['/forms/coordinacionlogistica']"
-            >Coordinacion logistica</a
+            [ngClass]="{
+              active:
+                isRoute('/forms/juridica') ||
+                isRoute('/forms/adquisicion') ||
+                isRoute('/forms/coordinacionlogistica')
+            }"
+            class="nav-link dropdown-toggle text-white"
+            id="navbarScrollingDropdownGestion"
+            name="navbarScrollingDropdownGestion"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
           >
-        </li>
-        <li *ngIf="isLoggedIn()" class="nav-item">
-          <a
-            [ngClass]="{ active: isRoute('/forms/juridica/request') }"
-            class="nav-link text-white"
-            aria-current="page"
-            [routerLink]="['/forms/juridica/request']"
-            >Gestion juridica</a
+            Gestiones
+          </a>
+          <ul
+            class="dropdown-menu text-white"
+            aria-labelledby="navbarScrollingDropdownGestion"
           >
+            <li>
+              <a class="dropdown-item" [routerLink]="['/forms/juridica']"
+                >Juridica</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" [routerLink]="['/forms/adquisicion']"
+                >Adquisicion
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                [routerLink]="['/forms/logistica']"
+                >Logistica
+              </a>
+            </li>
+          </ul>
         </li>
       </ul>
       <a *ngIf="isLoggedIn()" class="navbar-brand" href="#">

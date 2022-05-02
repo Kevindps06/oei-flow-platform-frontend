@@ -1,11 +1,6 @@
-import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { MsalService } from '@azure/msal-angular';
-import { AuthenticationResult } from '@azure/msal-browser';
 import { Utils } from 'src/app/classes/utils';
 import { LoginService } from 'src/app/services/login.service';
-import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +22,7 @@ export class LoginComponent implements OnInit {
   }
 
   isLoggedIn(): Boolean {
-    return this.loginService.loggedInUser() !== undefined;
+    return this.loginService.loggedInUser();
   }
 
   userLoginLogout() {

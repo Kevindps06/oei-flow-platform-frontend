@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormsJuridicaRequestComponent } from './request.component';
+import { FormsJuridicaComponent } from './juridica.component';
 
 describe('RequestComponent', () => {
-  let component: FormsJuridicaRequestComponent;
-  let fixture: ComponentFixture<FormsJuridicaRequestComponent>;
+  let component: FormsJuridicaComponent;
+  let fixture: ComponentFixture<FormsJuridicaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FormsJuridicaRequestComponent],
+      declarations: [FormsJuridicaComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FormsJuridicaRequestComponent);
+    fixture = TestBed.createComponent(FormsJuridicaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

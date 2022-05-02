@@ -10,7 +10,7 @@ import { FormsFinancieraRegistration } from '../interfaces/forms-financiera-regi
 import { environment } from 'src/environments/environment';
 import { FormsFinancieraInvoice } from '../interfaces/forms-financiera-invoice';
 import { FormsCoordinacionLogistica } from '../interfaces/forms-coordinacionlogistica';
-import { FormsJuridicaRequest } from '../interfaces/forms-juridica-request';
+import { FormsJuridica } from '../interfaces/forms-juridica';
 
 @Injectable({
   providedIn: 'root',
@@ -110,14 +110,12 @@ export class FormsService {
     );
   }
 
-  postFormsJuridicaRequestFlow(
-    formsJuridicaRequest: FormsJuridicaRequest
-  ): Observable<any> {
+  postFormJuridicaFlow(formJuridica: FormsJuridica): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'POST',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/flow`,
-        formsJuridicaRequest,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/flow`,
+        formJuridica,
         {
           headers: new HttpHeaders({
             'content-type': 'application/json',
@@ -128,11 +126,11 @@ export class FormsService {
     );
   }
 
-  getFormsJuridicaRequest(_id: string): Observable<any> {
+  getFormJuridica(_id: string): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica`,
         {
           params: new HttpParams().appendAll({
             _id,
@@ -143,15 +141,12 @@ export class FormsService {
     );
   }
 
-  putFormsJuridicaRequest(
-    _id: string,
-    formsJuridicaRequest: any
-  ): Observable<any> {
+  putFormJuridica(_id: string, formJuridica: any): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'PUT',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request`,
-        formsJuridicaRequest,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica`,
+        formJuridica,
         {
           params: new HttpParams().appendAll({
             _id,
@@ -162,14 +157,12 @@ export class FormsService {
     );
   }
 
-  postFormsJuridicaRequestMinuta(
-    formsJuridicaRequestMinuta: any
-  ): Observable<any> {
+  postFormJuridicaMinuta(formJuridicaMinuta: any): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'POST',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/minuta`,
-        formsJuridicaRequestMinuta,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/minuta`,
+        formJuridicaMinuta,
         {
           headers: new HttpHeaders({
             'content-type': 'application/json',
@@ -180,16 +173,16 @@ export class FormsService {
     );
   }
 
-  postFormsJuridicaRequestMinutaGenerate(
+  postFormJuridicaMinutaGenerate(
     TipoAdquisicion: string,
     TipoPersona: string,
-    formsJuridicaRequestMinuta: any
+    formJuridicaMinuta: any
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'POST',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/minuta/generate`,
-        formsJuridicaRequestMinuta,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/minuta/generate`,
+        formJuridicaMinuta,
         {
           headers: new HttpHeaders({
             'content-type': 'application/json',
@@ -205,11 +198,11 @@ export class FormsService {
     );
   }
 
-  getFormsJuridicaRequestMinutaAvailability(_id: string): Observable<any> {
+  getFormJuridicaMinutaAvailability(_id: string): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/minuta/availability`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/minuta/availability`,
         {
           params: new HttpParams().appendAll({
             _id,
@@ -220,38 +213,17 @@ export class FormsService {
     );
   }
 
-  getFormsJuridicaRequestMinutaVerifyEncargado(
+  getFormJuridicaMinutaVerifyEncargado(
     _id: string,
-    EmailEncargado: string
-  ): Observable<any> {
-    return this.http.request(
-      new HttpRequest(
-        'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/minuta/verifyencargado`,
-        {
-          params: new HttpParams().appendAll({
-            _id,
-            encargado: EmailEncargado,
-          }),
-          reportProgress: true,
-        }
-      )
-    );
-  }
-
-  getFormsJuridicaRequestEulaSaveResponse(
-    JuridicaRequest: string,
-    JuridicaRequestEula: string,
     encargado: string
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/eula/saveresponse`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/minuta/verifyencargado`,
         {
           params: new HttpParams().appendAll({
-            JuridicaRequest,
-            JuridicaRequestEula,
+            _id,
             encargado,
           }),
           reportProgress: true,
@@ -260,11 +232,32 @@ export class FormsService {
     );
   }
 
-  getFormsJuridicaRequestEulaAvailability(_id: string): Observable<any> {
+  getFormJuridicaEulaSaveResponse(
+    Juridica: string,
+    JuridicaEula: string,
+    encargado: string
+  ): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/eula/availability`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/eula/saveresponse`,
+        {
+          params: new HttpParams().appendAll({
+            Juridica,
+            JuridicaEula,
+            encargado,
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  getFormJuridicaEulaAvailability(_id: string): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/eula/availability`,
         {
           params: new HttpParams().appendAll({
             _id,
@@ -275,16 +268,16 @@ export class FormsService {
     );
   }
 
-  getFormsJuridicaRequestEulaRequestVerificationCode(
-    JuridicaRequest: string
+  getFormJuridicaEulaVerificationRequestCode(
+    formJuridica: string
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/eula/requestverificationcode`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/eula/verification/requestcode`,
         {
           params: new HttpParams().appendAll({
-            JuridicaRequest: JuridicaRequest,
+            JuridicaRequest: formJuridica,
           }),
           reportProgress: true,
         }
@@ -292,14 +285,14 @@ export class FormsService {
     );
   }
 
-  getFormsJuridicaRequestEulaVerifyVerificationCode(
+  getFormJuridicaEulaVerificationVerifyCode(
     _id: string,
     VerificationCode: string
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/request/eula/verifyverificationcode`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/eula/verification/verifycode`,
         {
           params: new HttpParams().appendAll({
             _id,

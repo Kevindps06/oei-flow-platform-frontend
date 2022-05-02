@@ -1,6 +1,6 @@
 import { FileItem } from './FileItem';
 
-export interface FormsJuridicaRequest {
+export interface FormsJuridica {
   Id: string;
   TipoProceso: string;
   TipoAdquisicion: string;

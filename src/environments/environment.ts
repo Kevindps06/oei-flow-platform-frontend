@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   frontendProtocol: 'http',
-  frontendAddress: 'localhost',
+  frontendAddress: 'localhost:4200',
   backendProtocol: 'https',
   backendAddress: 'lab.oeiprojectflow.org',
 };

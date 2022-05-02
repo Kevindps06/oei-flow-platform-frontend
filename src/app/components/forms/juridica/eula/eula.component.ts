@@ -2,21 +2,21 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from 'src/app/classes/utils';
-import { FormsJuridicaRequest } from 'src/app/interfaces/forms-juridica-request';
+import { FormsJuridica } from 'src/app/interfaces/forms-juridica';
 import { FormsService } from 'src/app/services/forms.service';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
-  selector: 'app-forms-juridica-request-eula',
+  selector: 'app-forms-juridica-eula',
   templateUrl: './eula.component.html',
   styleUrls: ['./eula.component.css'],
 })
-export class FormsJuridicaRequestEulaComponent implements OnInit {
+export class FormsJuridicaEulaComponent implements OnInit {
   formIndex: number = 0;
 
-  JuridicaRequest: string = '';
+  formJuridicaId: string = '';
   encargado: string = '';
-  formsJuridicaRequest!: FormsJuridicaRequest;
+  formsJuridica!: FormsJuridica;
 
   codigoVerificacion: string = '';
 
@@ -31,17 +31,17 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.JuridicaRequest = this.activatedRoute.snapshot.params.id;
+    this.formJuridicaId = this.activatedRoute.snapshot.params.id;
     this.encargado = this.activatedRoute.snapshot.queryParams.encargado;
 
-    let getFormsJuridicaRequestEulaAvailabilityTaskId: string;
+    let getFormsJuridicaEulaAvailabilityTaskId: string;
     this.formsService
-      .getFormsJuridicaRequestEulaAvailability(this.JuridicaRequest)
+      .getFormJuridicaEulaAvailability(this.formJuridicaId)
       .subscribe(
         (httpEvent) => {
           switch (httpEvent.type) {
             case HttpEventType.Sent:
-              getFormsJuridicaRequestEulaAvailabilityTaskId =
+              getFormsJuridicaEulaAvailabilityTaskId =
                 this.sharedService.pushWaitTask({
                   description: 'Verificando disponibilidad...',
                   progress: 0,
@@ -49,7 +49,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
               break;
             case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
-                id: getFormsJuridicaRequestEulaAvailabilityTaskId,
+                id: getFormsJuridicaEulaAvailabilityTaskId,
                 progress: Math.round(
                   (httpEvent.loaded * 100) / httpEvent.total
                 ),
@@ -78,12 +78,12 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
           }
 
           this.sharedService.removeWaitTask({
-            id: getFormsJuridicaRequestEulaAvailabilityTaskId,
+            id: getFormsJuridicaEulaAvailabilityTaskId,
           });
         },
         () => {
           this.sharedService.removeWaitTask({
-            id: getFormsJuridicaRequestEulaAvailabilityTaskId,
+            id: getFormsJuridicaEulaAvailabilityTaskId,
           });
         }
       );
@@ -95,22 +95,20 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
     this.verificacionCodigoVerificacionError = false;
   }
 
-  JuridicaRequestEula!: string;
+  formJuridicaEulaId!: string;
 
   solicitarVerificarCodigo() {
     let requestTimeout: NodeJS.Timeout;
 
     if (this.currentAvailableAction === 'Solicitar codigo') {
-      let getFormsJuridicaRequestEulaRequestVerificationCodeTaskId: string;
+      let getFormsJuridicaEulaRequestVerificationCodeTaskId: string;
       this.formsService
-        .getFormsJuridicaRequestEulaRequestVerificationCode(
-          this.JuridicaRequest
-        )
+        .getFormJuridicaEulaVerificationRequestCode(this.formJuridicaId)
         .subscribe(
           (httpEvent) => {
             switch (httpEvent.type) {
               case HttpEventType.Sent:
-                getFormsJuridicaRequestEulaRequestVerificationCodeTaskId =
+                getFormsJuridicaEulaRequestVerificationCodeTaskId =
                   this.sharedService.pushWaitTask({
                     description:
                       'Realizando peticion del codigo de verificacion...',
@@ -119,20 +117,20 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
                 break;
               case HttpEventType.UploadProgress:
                 this.sharedService.pushWaitTask({
-                  id: getFormsJuridicaRequestEulaRequestVerificationCodeTaskId,
+                  id: getFormsJuridicaEulaRequestVerificationCodeTaskId,
                   progress: Math.round(
                     (httpEvent.loaded * 100) / httpEvent.total
                   ),
                 });
                 break;
               case HttpEventType.Response:
-                this.JuridicaRequestEula = httpEvent.body;
+                this.formJuridicaEulaId = httpEvent.body;
                 break;
             }
           },
           (httpEventError) => {
             this.sharedService.removeWaitTask({
-              id: getFormsJuridicaRequestEulaRequestVerificationCodeTaskId,
+              id: getFormsJuridicaEulaRequestVerificationCodeTaskId,
             });
           },
           () => {
@@ -165,22 +163,22 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
             });
 
             this.sharedService.removeWaitTask({
-              id: getFormsJuridicaRequestEulaRequestVerificationCodeTaskId,
+              id: getFormsJuridicaEulaRequestVerificationCodeTaskId,
             });
           }
         );
     } else {
-      let getFormsJuridicaRequestEulaVerifyVerificationCodeTaskId: string;
+      let getFormsJuridicaEulaVerifyVerificationCodeTaskId: string;
       this.formsService
-        .getFormsJuridicaRequestEulaVerifyVerificationCode(
-          this.JuridicaRequestEula,
+        .getFormJuridicaEulaVerificationVerifyCode(
+          this.formJuridicaEulaId,
           this.codigoVerificacion
         )
         .subscribe(
           (httpEvent) => {
             switch (httpEvent.type) {
               case HttpEventType.Sent:
-                getFormsJuridicaRequestEulaVerifyVerificationCodeTaskId =
+                getFormsJuridicaEulaVerifyVerificationCodeTaskId =
                   this.sharedService.pushWaitTask({
                     description: 'Verificando el codigo de verificacion...',
                     progress: 0,
@@ -188,7 +186,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
                 break;
               case HttpEventType.DownloadProgress:
                 this.sharedService.pushWaitTask({
-                  id: getFormsJuridicaRequestEulaVerifyVerificationCodeTaskId,
+                  id: getFormsJuridicaEulaVerifyVerificationCodeTaskId,
                   progress: Math.round(
                     (httpEvent.loaded * 100) / httpEvent.total
                   ),
@@ -246,37 +244,35 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
             }
 
             this.sharedService.removeWaitTask({
-              id: getFormsJuridicaRequestEulaVerifyVerificationCodeTaskId,
+              id: getFormsJuridicaEulaVerifyVerificationCodeTaskId,
             });
           },
           () => {
-            let getFormsJuridicaRequestTaskId: string;
+            let getFormsJuridicaTaskId: string;
             this.formsService
-              .getFormsJuridicaRequest(this.JuridicaRequest)
+              .getFormJuridica(this.formJuridicaEulaId)
               .subscribe(
-                (event) => {
-                  switch (event.type) {
+                (httpEvent) => {
+                  switch (httpEvent.type) {
                     case HttpEventType.Sent:
-                      getFormsJuridicaRequestTaskId =
-                        this.sharedService.pushWaitTask({
-                          description:
-                            'Obteniendo informacion de la peticion...',
-                          progress: 0,
-                        }) as string;
+                      getFormsJuridicaTaskId = this.sharedService.pushWaitTask({
+                        description: 'Obteniendo informacion de la peticion...',
+                        progress: 0,
+                      }) as string;
                       break;
                     case HttpEventType.DownloadProgress:
                       this.sharedService.pushWaitTask({
-                        id: getFormsJuridicaRequestTaskId,
+                        id: getFormsJuridicaTaskId,
                         progress: Math.round(
-                          (event.loaded * 100) / event.total
+                          (httpEvent.loaded * 100) / httpEvent.total
                         ),
                       });
                       break;
                     case HttpEventType.Response:
-                      if (event.body.length > 0) {
+                      if (httpEvent.body.length > 0) {
                         clearTimeout(requestTimeout);
 
-                        this.formsJuridicaRequest = event.body[0];
+                        this.formsJuridica = httpEvent.body[0];
 
                         this.formIndex++;
                       }
@@ -285,12 +281,12 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
                 },
                 (httpEventError) => {
                   this.sharedService.removeWaitTask({
-                    id: getFormsJuridicaRequestTaskId,
+                    id: getFormsJuridicaTaskId,
                   });
                 },
                 () => {
                   this.sharedService.removeWaitTask({
-                    id: getFormsJuridicaRequestTaskId,
+                    id: getFormsJuridicaTaskId,
                   });
                 }
               );
@@ -302,7 +298,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
             });
 
             this.sharedService.removeWaitTask({
-              id: getFormsJuridicaRequestEulaVerifyVerificationCodeTaskId,
+              id: getFormsJuridicaEulaVerifyVerificationCodeTaskId,
             });
           }
         );
@@ -310,18 +306,18 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
   }
 
   btnSubmitClick() {
-    let getFormsJuridicaRequestEulaSaveResponseTaskId: string;
+    let getFormJuridicaEulaSaveResponseTaskId: string;
     this.formsService
-      .getFormsJuridicaRequestEulaSaveResponse(
-        this.JuridicaRequest,
-        this.JuridicaRequestEula,
+      .getFormJuridicaEulaSaveResponse(
+        this.formJuridicaId,
+        this.formJuridicaEulaId,
         this.encargado
       )
       .subscribe(
         (httpEvent) => {
           switch (httpEvent.type) {
             case HttpEventType.Sent:
-              getFormsJuridicaRequestEulaSaveResponseTaskId =
+              getFormJuridicaEulaSaveResponseTaskId =
                 this.sharedService.pushWaitTask({
                   description: 'Guardando respuesta de la peticion...',
                   progress: 0,
@@ -329,7 +325,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
               break;
             case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
-                id: getFormsJuridicaRequestEulaSaveResponseTaskId,
+                id: getFormJuridicaEulaSaveResponseTaskId,
                 progress: Math.round(
                   (httpEvent.loaded * 100) / httpEvent.total
                 ),
@@ -348,12 +344,12 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
         },
         (httpEventError) => {
           this.sharedService.removeWaitTask({
-            id: getFormsJuridicaRequestEulaSaveResponseTaskId,
+            id: getFormJuridicaEulaSaveResponseTaskId,
           });
         },
         () => {
           this.sharedService.removeWaitTask({
-            id: getFormsJuridicaRequestEulaSaveResponseTaskId,
+            id: getFormJuridicaEulaSaveResponseTaskId,
           });
         }
       );
@@ -362,7 +358,7 @@ export class FormsJuridicaRequestEulaComponent implements OnInit {
   isValid() {
     switch (this.formIndex) {
       case 0:
-        return this.formsJuridicaRequest;
+        return this.formsJuridica;
       case 1:
         return true;
       default:

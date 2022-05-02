@@ -5,19 +5,19 @@ import { catchError, map } from 'rxjs/operators';
 import { Utils } from 'src/app/classes/utils';
 import { Convenio } from 'src/app/interfaces/Convenio';
 import { FileItem } from 'src/app/interfaces/FileItem';
-import { FormsJuridicaRequest } from 'src/app/interfaces/forms-juridica-request';
+import { FormsJuridica } from 'src/app/interfaces/forms-juridica';
 import { ToastMessage } from 'src/app/interfaces/toast-message';
 import { WaitTask } from 'src/app/interfaces/WaitTask';
 import { FormsService } from 'src/app/services/forms.service';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
-  selector: 'app-forms-juridica-request',
-  templateUrl: './request.component.html',
-  styleUrls: ['./request.component.css'],
+  selector: 'app-forms-juridica',
+  templateUrl: './juridica.component.html',
+  styleUrls: ['./juridica.component.css'],
 })
-export class FormsJuridicaRequestComponent implements OnInit {
-  juridicaRequestMap: Map<string, Map<string, number> | undefined> = new Map([
+export class FormsJuridicaComponent implements OnInit {
+  juridicaMap: Map<string, Map<string, number> | undefined> = new Map([
     [
       'Directa',
       new Map([
@@ -269,7 +269,7 @@ export class FormsJuridicaRequestComponent implements OnInit {
         this.obligacionesEspecificas = '';
         this.productosEntregables = '';
         const presupuestoEstimadoMinString = this.numberWithPriceSpaces(
-          this.juridicaRequestMap?.get(this.tipoProceso)?.get('Min')
+          this.juridicaMap?.get(this.tipoProceso)?.get('Min')
         );
 
         this.presupuestoEstimadoMin =
@@ -357,7 +357,7 @@ export class FormsJuridicaRequestComponent implements OnInit {
       behavior: 'smooth',
     });
 
-    let formsJuridicaRequest: FormsJuridicaRequest = {
+    let formJuridica: FormsJuridica = {
       Id: Utils.makeRandomString(32),
       TipoProceso: this.tipoProceso,
       TipoAdquisicion: this.tipoAdquisicion,
@@ -452,7 +452,7 @@ export class FormsJuridicaRequestComponent implements OnInit {
         .toPromise();
     }
 
-    formsJuridicaRequest = Object.assign(formsJuridicaRequest, {
+    formJuridica = Object.assign(formJuridica, {
       Files: this.Files,
     });
 
@@ -490,45 +490,43 @@ export class FormsJuridicaRequestComponent implements OnInit {
     this.formIndex = 0;
 
     let postFormsJuridicaRequestFlowTaskId: string;
-    this.formsService
-      .postFormsJuridicaRequestFlow(formsJuridicaRequest)
-      .subscribe(
-        (event) => {
-          switch (event.type) {
-            case HttpEventType.Sent:
-              postFormsJuridicaRequestFlowTaskId =
-                this.sharedService.pushWaitTask({
-                  description: `Enviando peticion juricia...`,
-                  progress: 0,
-                }) as string;
-              break;
-            case HttpEventType.UploadProgress:
+    this.formsService.postFormJuridicaFlow(formJuridica).subscribe(
+      (event) => {
+        switch (event.type) {
+          case HttpEventType.Sent:
+            postFormsJuridicaRequestFlowTaskId =
               this.sharedService.pushWaitTask({
-                id: postFormsJuridicaRequestFlowTaskId,
-                progress: Math.round((event.loaded * 100) / event.total),
-              });
-              break;
-            case HttpEventType.Response:
-              this.sharedService.pushToastMessage({
-                id: Utils.makeRandomString(4),
-                title: `Peticion juridica enviada satisfactoriamente`,
-                description: `Su peticion juridica ha sido ingresada correctamente y sera procesada en la mayor brevedad posible, este atento al correo electronico registrado por el cual se le notificara del estado y manera de validacion de la peticion.`,
-                autohide: 30000,
-              });
-              break;
-          }
-        },
-        (httpEventError) => {
-          this.sharedService.removeWaitTask({
-            id: postFormsJuridicaRequestFlowTaskId,
-          });
-        },
-        () => {
-          this.sharedService.removeWaitTask({
-            id: postFormsJuridicaRequestFlowTaskId,
-          });
+                description: `Enviando peticion juricia...`,
+                progress: 0,
+              }) as string;
+            break;
+          case HttpEventType.UploadProgress:
+            this.sharedService.pushWaitTask({
+              id: postFormsJuridicaRequestFlowTaskId,
+              progress: Math.round((event.loaded * 100) / event.total),
+            });
+            break;
+          case HttpEventType.Response:
+            this.sharedService.pushToastMessage({
+              id: Utils.makeRandomString(4),
+              title: `Peticion juridica enviada satisfactoriamente`,
+              description: `Su peticion juridica ha sido ingresada correctamente y sera procesada en la mayor brevedad posible, este atento al correo electronico registrado por el cual se le notificara del estado y manera de validacion de la peticion.`,
+              autohide: 30000,
+            });
+            break;
         }
-      );
+      },
+      (httpEventError) => {
+        this.sharedService.removeWaitTask({
+          id: postFormsJuridicaRequestFlowTaskId,
+        });
+      },
+      () => {
+        this.sharedService.removeWaitTask({
+          id: postFormsJuridicaRequestFlowTaskId,
+        });
+      }
+    );
   }
 
   validateEmail(email: string): boolean {

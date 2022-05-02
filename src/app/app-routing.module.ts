@@ -14,10 +14,6 @@ const routes: Routes = [
     component: LoginComponent,
   },
   {
-    path: 'forms/tests',
-    component: FormsComponent,
-  },
-  {
     path: 'forms/financiera/registration',
     component: FormsComponent,
   },
@@ -26,31 +22,43 @@ const routes: Routes = [
     component: FormsComponent,
   },
   {
-    path: 'forms/juridica/request',
+    path: 'forms/juridica',
     component: FormsComponent,
   },
   {
-    path: 'forms/juridica/request/:id/minuta',
+    path: 'forms/juridica/:id/minuta',
     component: FormsComponent,
   },
   {
-    path: 'forms/juridica/request/:id/eula',
+    path: 'forms/juridica/:id/eula',
     component: FormsComponent,
   },
   {
-    path: 'forms/coordinacionlogistica',
+    path: 'forms/adquisicion',
     component: FormsComponent,
   },
   {
-    path: 'forms/coordinacionlogistica/:id/fillquotations',
+    path: 'forms/adquisicion/:id/eula',
     component: FormsComponent,
   },
   {
-    path: 'forms/coordinacionlogistica/:id/selectquotation',
+    path: 'forms/logistica',
+    component: FormsComponent,
+  },
+  {
+    path: 'forms/logistica/:id/fillquotations',
+    component: FormsComponent,
+  },
+  {
+    path: 'forms/logistica/:id/selectquotation',
     component: FormsComponent,
   },
   {
     path: 'forms/certificadosingresosretenciones',
+    component: FormsComponent,
+  },
+  {
+    path: 'forms/tests',
     component: FormsComponent,
   },
 ];

@@ -12,7 +12,6 @@ import { SharedService } from './services/shared.service';
 export class AppComponent implements OnInit {
   title = 'OEI';
 
-  loggedUser: any;
   waitTasks: WaitTask[] = [];
   toastMessages: ToastMessage[] = [];
 
@@ -50,7 +49,7 @@ export class AppComponent implements OnInit {
             () => {
               this.removeToastMessage(toastMessage.id);
             },
-            toastMessage.autohide ? toastMessage.autohide : 6500
+            toastMessage.autohide ? toastMessage.autohide : 12000
           );
         }
       }

@@ -11,7 +11,7 @@
           <div class="col-12">
             <div
               *ngFor="
-                let mapItem of juridicaRequestMap | keyvalue: originalOrder
+                let mapItem of juridicaMap | keyvalue: originalOrder
               "
               class="form-check"
             >
@@ -613,14 +613,14 @@
             <label class="form-label" for="inputPresupuestoEstimado"
               >Presupuesto estimado
               {{
-                juridicaRequestMap.get(tipoProceso)
+                juridicaMap.get(tipoProceso)
                   ? "- Min: " +
                     numberWithPriceSpaces(
-                      juridicaRequestMap?.get(tipoProceso)?.get("Min")
+                      juridicaMap?.get(tipoProceso)?.get("Min")
                     ) +
                     " - Max: " +
                     numberWithPriceSpaces(
-                      juridicaRequestMap?.get(tipoProceso)?.get("Max")
+                      juridicaMap?.get(tipoProceso)?.get("Max")
                     )
                   : "- Limite no definido"
               }}<strong class="text-danger">*</strong
@@ -657,7 +657,7 @@
                   parseInt(presupuestoEstimado) < presupuestoEstimadoMin
               }"
               [MaxOnlyPriceNumbers]="
-                juridicaRequestMap.get(tipoProceso)?.get('Max')
+                juridicaMap.get(tipoProceso)?.get('Max')
               "
             />
             <div class="invalid-feedback">

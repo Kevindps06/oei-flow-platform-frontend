@@ -5,14 +5,14 @@
         <div class="col-12">
           <h5 class="card-title text-center">
             {{
-              formsJuridicaRequest
-                ? formsJuridicaRequest.TipoProceso +
+              formJuridica
+                ? formJuridica.TipoProceso +
                   " - " +
-                  formsJuridicaRequest.TipoPersona +
+                  formJuridica.TipoPersona +
                   " - " +
-                  (formsJuridicaRequest.TipoAdquisicion === "Otro"
-                    ? formsJuridicaRequest.TipoAdquisicionOtro
-                    : formsJuridicaRequest.TipoAdquisicion)
+                  (formJuridica.TipoAdquisicion === "Otro"
+                    ? formJuridica.TipoAdquisicionOtro
+                    : formJuridica.TipoAdquisicion)
                 : ""
             }}
           </h5>

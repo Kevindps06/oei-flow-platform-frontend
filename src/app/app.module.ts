@@ -8,7 +8,7 @@ import { FormsComponent } from './components/forms/forms.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { OnlyNumbersDirective } from './directives/onlynumber.directive';
-import { FormsJuridicaRequestComponent } from './components/forms/juridica/request/request.component';
+import { FormsJuridicaComponent } from './components/forms/juridica/juridica.component';
 import { LoginComponent } from './components/login/login.component';
 import { FormsFinancieraRegistrationComponent } from './components/forms/financiera/registration/registration.component';
 import { FormsFinancieraInvoiceComponent } from './components/forms/financiera/invoice/invoice.component';
@@ -30,8 +30,9 @@ import { FormsCertificadosIngresosRetencionesComponent } from './components/form
 import { OAuthSettings } from 'src/oauth';
 import { MaxOnlyPriceNumbersDirective } from './directives/max-only-price-numbers.directive';
 import { MinOnlyPriceNumbersDirective } from './directives/min-only-price-numbers.directive';
-import { FormsJuridicaRequestEulaComponent } from './components/forms/juridica/request/eula/eula.component';
-import { FormsJuridicaRequestMinutaComponent } from './components/forms/juridica/request/minuta/minuta.component';
+import { FormsJuridicaEulaComponent } from './components/forms/juridica/eula/eula.component';
+import { FormsJuridicaMinutaComponent } from './components/forms/juridica/minuta/minuta.component';
+import { AdquisicionComponent } from './components/forms/adquisicion/adquisicion.component';
 
 let msalInstance: IPublicClientApplication | undefined = undefined;
 
@@ -59,7 +60,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FooterComponent,
     FormsComponent,
     OnlyNumbersDirective,
-    FormsJuridicaRequestComponent,
+    FormsJuridicaComponent,
     LoginComponent,
     FormsFinancieraRegistrationComponent,
     FormsFinancieraInvoiceComponent,
@@ -73,8 +74,9 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FormsCertificadosIngresosRetencionesComponent,
     MaxOnlyPriceNumbersDirective,
     MinOnlyPriceNumbersDirective,
-    FormsJuridicaRequestEulaComponent,
-    FormsJuridicaRequestMinutaComponent,
+    FormsJuridicaEulaComponent,
+    FormsJuridicaMinutaComponent,
+    AdquisicionComponent,
   ],
   imports: [
     BrowserModule,

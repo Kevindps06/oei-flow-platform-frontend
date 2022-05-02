@@ -26,7 +26,7 @@ export class HeaderComponent implements OnInit {
   }
 
   isLoggedIn(): Boolean {
-    return this.loginService.loggedInUser() !== undefined;
+    return this.loginService.loggedInUser();
   }
 
   loggedInUserName(): String | undefined {

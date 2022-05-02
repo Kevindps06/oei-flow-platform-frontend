@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
 import {
-  AccountInfo,
   AuthenticationResult,
   BrowserAuthError,
   InteractionType,
@@ -34,10 +33,14 @@ export class LoginService {
     private sanitizer: DomSanitizer
   ) {}
 
-  loggedInUser(): AccountInfo | undefined {
+  activeAccoount() {
+    return this.msalService.instance.getActiveAccount();
+  }
+
+  loggedInUser(): boolean {
     const activeAccount = this.msalService.instance.getActiveAccount();
 
-    if (activeAccount === null) return undefined;
+    if (!activeAccount || this.loadingUser) return false;
 
     if (
       Math.floor(new Date().getTime() / 1000.0) >
@@ -53,10 +56,10 @@ export class LoginService {
 
       this.router.navigate(['/']);
 
-      return undefined;
+      return false;
     }
 
-    return activeAccount;
+    return true;
   }
 
   userLogin() {
@@ -107,6 +110,7 @@ export class LoginService {
   }
 
   user!: User;
+  loadingUser: boolean = false;
 
   async loadUser() {
     if (!this.loggedInUser()) return;
@@ -117,6 +121,8 @@ export class LoginService {
     });
 
     if (!this.user) {
+      this.loadingUser = true;
+
       this.user = await this.getGraphUser();
 
       this.sharedService.pushWaitTask({
@@ -129,6 +135,8 @@ export class LoginService {
           URL.createObjectURL(await this.getGraphProfilePhoto())
         );
       } catch (err) {}
+
+      this.loadingUser = false;
     }
 
     this.sharedService.pushWaitTask({

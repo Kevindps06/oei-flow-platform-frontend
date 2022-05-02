@@ -1,0 +1,797 @@
+<div class="row g-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-12">
+            <h5 class="card-title text-center">Datos</h5>
+          </div>
+          <div class="col-12">
+            <div class="form-floating">
+              <select
+                [(ngModel)]="convenioResponsable"
+                name="selectConvenioResponsable"
+                class="form-select"
+                id="selectConvenioResponsable"
+                required
+                [ngClass]="{
+                  'is-valid': convenioResponsable,
+                  'is-invalid': !convenioResponsable
+                }"
+              >
+                <option selected disabled></option>
+                <option
+                  *ngFor="let convenio of convenios"
+                  [value]="convenio.Numero"
+                >
+                  {{ convenio.Aliado }} | {{ convenio.Numero }}
+                </option>
+              </select>
+              <label for="selectConvenioResponsable"
+                >Convenio responsable<strong class="text-danger"
+                  >*</strong
+                ></label
+              >
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, seleccione una opcion.
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="col-12">
+              <label class="form-label" for="inputEmail"
+                >Correo electronico personal y privado<strong
+                  class="text-danger"
+                  >*</strong
+                ><button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseEmail"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapseEmail"
+                name="collapseEmail"
+              >
+                <div class="card card-body">
+                  Este correo electronico sera utilizado durante el proceso
+                  actual para validacion de identidad, notificacion.
+                </div>
+              </div>
+              <input
+                [(ngModel)]="email"
+                name="inputEmail"
+                id="inputEmail"
+                type="email"
+                class="form-control"
+                [ngClass]="{
+                  'is-valid': validateEmail(email),
+                  'is-invalid': !validateEmail(email)
+                }"
+              />
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="textareaJustificacionContratacion"
+              >Justificacion de contratacion<strong class="text-danger"
+                >*</strong
+              ><button
+                type="button"
+                class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseJustificacionContratacion"
+              >
+                ?
+              </button></label
+            >
+            <div
+              class="collapse mb-2"
+              id="collapseJustificacionContratacion"
+              name="collapseJustificacionContratacion"
+            >
+              <div class="card card-body">
+                La justificación nace de la necesidad del bien/servicio en el
+                marco del Convenio de Cooperación celebrado, por ejemplo, si se
+                requiere un profesional pedagogo, la justificación debe estar
+                relacionada con la necesidad que nace de las obligaciones y
+                productos del Convenio relacionados con procesos de formación y
+                creación de contenidos curriculares. Si se requiere una empresa
+                que realice pautas publicitarias, la necesidad nace de
+                obligaciones y productos relacionados con difusión,
+                comunicación.
+              </div>
+            </div>
+            <textarea
+              [(ngModel)]="justificacionContratacion"
+              name="textareaJustificacionContratacion"
+              id="textareaJustificacionContratacion"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': justificacionContratacion,
+                'is-invalid': !justificacionContratacion
+              }"
+            ></textarea>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="textareaObjetivoContratacion"
+              >Objetivo de la contratacion<strong class="text-danger">*</strong
+              ><button
+                type="button"
+                class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseObjetivoContratacion"
+              >
+                ?
+              </button></label
+            >
+            <div
+              class="collapse mb-2"
+              id="collapseObjetivoContratacion"
+              name="collapseObjetivoContratacion"
+            >
+              <div class="card card-body">
+                El objetivo se encuentra relacionado con el fin que voy a
+                cumplir con la contratación a realizar. Por ejemplo, contratar
+                el profesional en pedagogía, me permitirá cumplir con la
+                obligación del Convenio, con la actividad del POA y con la
+                entrega del producto: Metodología y contenidos curriculares.
+              </div>
+            </div>
+            <textarea
+              [(ngModel)]="objetivoContratacion"
+              name="textareaObjetivoContratacion"
+              id="textareaObjetivoContratacion"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': objetivoContratacion,
+                'is-invalid': !objetivoContratacion
+              }"
+            ></textarea>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+          <div class="col-12">
+            <label
+              class="form-label"
+              for="textareaEspecificacionesTecnicasMinimas"
+              >Especificaciones tecnicas minimas (Si aplica)<button
+                type="button"
+                class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseEspecificacionesTecnicasMinimas"
+              >
+                ?
+              </button></label
+            >
+            <div
+              class="collapse mb-2"
+              id="collapseEspecificacionesTecnicasMinimas"
+              name="collapseEspecificacionesTecnicasMinimas"
+            >
+              <div class="card card-body">
+                Este ítem debe diligenciarse solo en los casos que aplique.<br />
+                Las especificaciones técnicas son las condiciones que deben
+                tenerse en cuenta para poder prestar el servicio o las
+                condiciones que debe cumplir del bien. Por ejemplo, se van a
+                comprar agendas, debe señalarse el tamaño de la misma, el tipo
+                de impresión, la cantidad, el tipo de papel, etc.
+              </div>
+            </div>
+            <textarea
+              [(ngModel)]="especificacionesTecnicasMinimas"
+              name="textareaEspecificacionesTecnicasMinimas"
+              id="textareaEspecificacionesTecnicasMinimas"
+              class="form-control"
+            ></textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="textareaPerfilRequerido"
+              >Perfil requerido (Si aplica)<button
+                type="button"
+                class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapsePerfilRequerido"
+              >
+                ?
+              </button></label
+            >
+            <div
+              class="collapse mb-2"
+              id="collapsePerfilRequerido"
+              name="collapsePerfilRequerido"
+            >
+              <div class="card card-body">
+                ​Este ítem debe diligenciarse solo en los casos que aplique.<br />
+                Se encuentra relacionado con el perfil que debe cumplir la
+                persona natural o jurídica a contratar. Por ejemplo, Profesional
+                en ciencias sociales, con estudios de posgrado, con 3 años de
+                experiencia general, especifica, relacionada en……. ​Para una
+                persona jurídica, empresa con 3 años de experiencia en impresión
+                de material publicitario.
+              </div>
+            </div>
+            <textarea
+              [(ngModel)]="perfilRequerido"
+              name="textareaPerfilRequerido"
+              id="textareaPerfilRequerido"
+              class="form-control"
+            ></textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="textareaFactoresEvaluacion"
+              >Factores de evaluacion (Si aplica)<button
+                type="button"
+                class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseFactoresEvaluacion"
+              >
+                ?
+              </button></label
+            >
+            <div
+              class="collapse mb-2"
+              id="collapseFactoresEvaluacion"
+              name="collapseFactoresEvaluacion"
+            >
+              <div class="card card-body">
+                Este ítem debe diligenciarse solo en los casos que aplique.<br />
+                Estos factores aplican para los procesos de selección y
+                convocatoria.
+              </div>
+            </div>
+            <textarea
+              [(ngModel)]="factoresEvaluacion"
+              name="textareaFactoresEvaluacion"
+              id="textareaFactoresEvaluacion"
+              class="form-control"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-12">
+            <h5 class="card-title text-center">Condiciones del contrato</h5>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="textareaObjeto"
+              >Objeto<strong class="text-danger">*</strong
+              ><button
+                type="button"
+                class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseObjeto"
+              >
+                ?
+              </button></label
+            >
+            <div
+              class="collapse mb-2"
+              id="collapseObjeto"
+              name="collapseObjeto"
+            >
+              <div class="card card-body">
+                Se debe señalar el objeto contractual que deberá cumplir el
+                contratista.
+              </div>
+            </div>
+            <textarea
+              [(ngModel)]="objeto"
+              name="textareaObjeto"
+              id="textareaObjeto"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': objeto,
+                'is-invalid': !objeto
+              }"
+            ></textarea>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="textareaObligacionesEspecificas"
+              >Obligaciones especificas<strong class="text-danger">*</strong
+              ><button
+                type="button"
+                class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseObligacionesEspecificas"
+              >
+                ?
+              </button></label
+            >
+            <div
+              class="collapse mb-2"
+              id="collapseObligacionesEspecificas"
+              name="collapseObligacionesEspecificas"
+            >
+              <div class="card card-body">
+                Se deben detallar cada una de las obligaciones especificas que
+                el contratista deberá cumplir para cumplir con el objeto
+                contractual, incluido asistencia a reuniones, elaboración de
+                informes, etc.
+              </div>
+            </div>
+            <textarea
+              [(ngModel)]="obligacionesEspecificas"
+              name="textareaObligacionesEspecificas"
+              id="textareaObligacionesEspecificas"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': obligacionesEspecificas,
+                'is-invalid': !obligacionesEspecificas
+              }"
+            ></textarea>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="textareaProductosEntregables"
+              >Productos entregables<strong class="text-danger">*</strong
+              ><button
+                type="button"
+                class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseProductosEntregables"
+              >
+                ?
+              </button></label
+            >
+            <div
+              class="collapse mb-2"
+              id="collapseProductosEntregables"
+              name="collapseProductosEntregables"
+            >
+              <div class="card card-body">
+                Las obligaciones especificas estarán relacionadas a la
+                elaboración de un producto, producto que debe ir encaminado al
+                cumplimiento de las obligaciones y productos del Convenio de
+                Cooperación celebrado. Deben detallarse cada uno de los
+                productos que el contratista debe entregar para los pagos y
+                ejecución del objeto contractual a cabalidad.
+              </div>
+            </div>
+            <textarea
+              [(ngModel)]="productosEntregables"
+              name="textareaProductosEntregables"
+              id="textareaProductosEntregables"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': productosEntregables,
+                'is-invalid': !productosEntregables
+              }"
+            ></textarea>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="inputPresupuestoEstimado"
+              >Presupuesto estimado<strong class="text-danger">*</strong
+              ><button
+                type="button"
+                class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapsePresupuestoEstimado"
+              >
+                ?
+              </button></label
+            >
+            <div
+              class="collapse mb-2"
+              id="collapsePresupuestoEstimado"
+              name="collapsePresupuestoEstimado"
+            >
+              <div class="card card-body">
+                Es el presupuesto disponible dentro del proyecto para la
+                contratación.
+              </div>
+            </div>
+            <input
+              [(ngModel)]="presupuestoEstimado"
+              name="inputPresupuestoEstimado"
+              id="inputPresupuestoEstimado"
+              type="text"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': parseInt(presupuestoEstimado) > 0,
+                'is-invalid':
+                  !presupuestoEstimado || parseInt(presupuestoEstimado) <= 0
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="textareaFormaPago"
+              >Forma de pago<strong class="text-danger">*</strong
+              ><button
+                type="button"
+                class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseFormaPago"
+              >
+                ?
+              </button></label
+            >
+            <div
+              class="collapse mb-2"
+              id="collapseFormaPago"
+              name="collapseFormaPago"
+            >
+              <div class="card card-body">
+                Debe señalarse la forma en que se realizaran los pagos,
+                recordándose siempre que los pagos deben estar supeditados a la
+                entrega de productos. Los productos deben ser directamente
+                proporcionales al porcentaje de pago que se va a realizar, es
+                decir no se puede pagar un porcentaje del 40% del contrato
+                contraentrega del plan operativo y firma del contrato, pues no
+                hay un avance proporcional en los productos VS el valor a
+                entregar.
+              </div>
+            </div>
+            <textarea
+              [(ngModel)]="formaPago"
+              name="textareaFormaPago"
+              id="textareaFormaPago"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': formaPago,
+                'is-invalid': !formaPago
+              }"
+            ></textarea>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="inputPlazo"
+              >Plazo<strong class="text-danger">*</strong
+              ><button
+                type="button"
+                class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapsePlazo"
+              >
+                ?
+              </button></label
+            >
+            <div class="collapse mb-2" id="collapsePlazo" name="collapsePlazo">
+              <div class="card card-body">
+                Es el presupuesto disponible dentro del proyecto para la
+                contratación.
+              </div>
+            </div>
+            <input
+              [(ngModel)]="plazo"
+              name="inputPlazo"
+              id="inputPlazo"
+              type="text"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': plazo,
+                'is-invalid': !plazo
+              }"
+            />
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+          <div class="row-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <h5 class="card-title text-center">
+                      ¿El contratista sera encargado de manejo de datos?<strong
+                        class="text-danger"
+                        >*</strong
+                      ><button
+                        type="button"
+                        class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseManejoDatos"
+                      >
+                        ?
+                      </button>
+                    </h5>
+                  </div>
+                  <div class="col-12">
+                    <div
+                      class="collapse mb-2"
+                      id="collapseManejoDatos"
+                      name="collapseManejoDatos"
+                    >
+                      <div class="card card-body">
+                        En la medida en que las obligaciones y el cumplimiento
+                        del contrato impliquen un acceso del contratista a datos
+                        de carácter personal de cuyo tratamiento sea responsable
+                        la Organización de Estados Iberoamericanos para la
+                        Educación, Ciencia y Cultura (OEI), aquel tendrá la
+                        condición de encargado de tratamiento de datos.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-check">
+                      <input
+                        [(ngModel)]="manejoDatos"
+                        class="form-check-input"
+                        type="radio"
+                        name="radioManejoDatosSi"
+                        id="radioManejoDatosSi"
+                        value="Si"
+                        [ngClass]="{
+                          'is-valid': manejoDatos,
+                          'is-invalid': !manejoDatos
+                        }"
+                      />
+                      <label class="form-check-label" for="radioManejoDatosSi">
+                        Si
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        [(ngModel)]="manejoDatos"
+                        class="form-check-input"
+                        type="radio"
+                        name="radioManejoDatosNo"
+                        id="radioManejoDatosNo"
+                        value="No"
+                        [ngClass]="{
+                          'is-valid': manejoDatos,
+                          'is-invalid': !manejoDatos
+                        }"
+                      />
+                      <label class="form-check-label" for="radioManejoDatosNo">
+                        No
+                      </label>
+                      <div class="invalid-feedback">
+                        Este campo es (*) obligatorio, seleccione una opcion.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="manejoDatos === 'Si'" class="col-12">
+            <label class="form-label" for="textareaCategoriaInteresado"
+              >Categoria del interesado<strong class="text-danger">*</strong
+              ><button
+                type="button"
+                class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseCategoriaInteresado"
+              >
+                ?
+              </button></label
+            >
+            <div
+              class="collapse mb-2"
+              id="collapseCategoriaInteresado"
+              name="collapseCategoriaInteresado"
+            >
+              <div class="card card-body">
+                Debe especificarse los datos de que tipo de personas se
+                manejarán, por ejemplo, victimas del conflicto armado,
+                contratistas de la OEI, niños, niñas, mujeres, jóvenes
+                pertenecientes a colectivos sociales, lideres sociales, personal
+                de las fuerzas armadas de Colombia, estudiantes, etc...
+              </div>
+            </div>
+            <textarea
+              [(ngModel)]="categoriaInteresado"
+              name="textareaCategoriaInteresado"
+              id="textareaCategoriaInteresado"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': categoriaInteresado,
+                'is-invalid': !categoriaInteresado
+              }"
+            ></textarea>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+          <div *ngIf="manejoDatos === 'Si'" class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <h5 class="card-title text-center">
+                      Categoria de datos<strong class="text-danger">*</strong>
+                    </h5>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-check">
+                      <input
+                        [(ngModel)]="categoriaDatosSensibles"
+                        class="form-check-input"
+                        type="checkbox"
+                        name="checkboxCategoriaDatosSensibles"
+                        id="checkboxCategoriaDatosSensibles"
+                        value="Sensibles"
+                        [ngClass]="{
+                          'is-valid': isValidCategoriaDatos(),
+                          'is-invalid': !isValidCategoriaDatos()
+                        }"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="checkboxCategoriaDatosSensibles"
+                      >
+                        Sensibles: se entiende todo dato de especial cuidado y
+                        que podría tener el carácter de reservado, es victima
+                        del conflicto, tiene esquema de protección. sexo,
+                        género, grupo étnico y/o social, medios de transporte,
+                        posición en el hogar, problemáticas que afectan las
+                        dinámicas familiares, relación de pareja u hogar,
+                        enfermedades de alto costo o terminales, cuidado del
+                        hogar, oficios del hogar, mantenimiento y reparación en
+                        el hogar, actividades de cuidado de  niños, niñas y
+                        adolescentes y adultos mayores.
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        [(ngModel)]="categoriaDatosIdentificativos"
+                        class="form-check-input"
+                        type="checkbox"
+                        name="checkboxCategoriaDatosIdentificativos"
+                        id="checkboxCategoriaDatosIdentificativos"
+                        value="Identificativos"
+                        [ngClass]="{
+                          'is-valid': isValidCategoriaDatos(),
+                          'is-invalid': !isValidCategoriaDatos()
+                        }"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="checkboxCategoriaDatosIdentificativos"
+                      >
+                        Identificativos: número de cédula, nombre.
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        [(ngModel)]="categoriaDatosCaracteristicasPersonales"
+                        class="form-check-input"
+                        type="checkbox"
+                        name="checkboxCategoriaDatosCaracteristicasPersonales"
+                        id="checkboxCategoriaDatosCaracteristicasPersonales"
+                        value="Caracteristicas personales"
+                        [ngClass]="{
+                          'is-valid': isValidCategoriaDatos(),
+                          'is-invalid': !isValidCategoriaDatos()
+                        }"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="checkboxCategoriaDatosCaracteristicasPersonales"
+                      >
+                        Caracteristicas personales: profesión, pertenece a una
+                        población especial (indígena, ROM), tiene algún tipo de
+                        discapacidad.
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        [(ngModel)]="
+                          categoriaDatosCaracteristicasCircunstanciasSociales
+                        "
+                        class="form-check-input"
+                        type="checkbox"
+                        name="checkboxCategoriaDatosCaracteristicasCircunstanciasSociales"
+                        id="checkboxCategoriaDatosCaracteristicasCircunstanciasSociales"
+                        value="Circunstancias sociales"
+                        [ngClass]="{
+                          'is-valid': isValidCategoriaDatos(),
+                          'is-invalid': !isValidCategoriaDatos()
+                        }"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="checkboxCategoriaDatosCaracteristicasCircunstanciasSociales"
+                      >
+                        Circunstancias sociales: estrato donde vive, tiene
+                        servicios públicos, información del núcleo familiar.
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        [(ngModel)]="
+                          categoriaDatosCaracteristicasDetallesEmpleo
+                        "
+                        class="form-check-input"
+                        type="checkbox"
+                        name="checkboxCategoriaDatosCaracteristicasDetallesEmpleo"
+                        id="checkboxCategoriaDatosCaracteristicasDetallesEmpleo"
+                        value="Detalles de empleo"
+                        [ngClass]="{
+                          'is-valid': isValidCategoriaDatos(),
+                          'is-invalid': !isValidCategoriaDatos()
+                        }"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="checkboxCategoriaDatosCaracteristicasDetallesEmpleo"
+                      >
+                        Detalles de empleo: tiene empleo formal o informal,
+                        valor de sus ingresos.
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        [(ngModel)]="categoriaDatosEconomicosFinancierosSeguros"
+                        class="form-check-input"
+                        type="checkbox"
+                        name="checkboxCategoriaDatosEconomicosFinancierosSeguros"
+                        id="checkboxCategoriaDatosEconomicosFinancierosSeguros"
+                        value="Economicos, financieros y de seguros"
+                        [ngClass]="{
+                          'is-valid': isValidCategoriaDatos(),
+                          'is-invalid': !isValidCategoriaDatos()
+                        }"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="checkboxCategoriaDatosEconomicosFinancierosSeguros"
+                      >
+                        Economicos, financieros y de seguros: recibe subsidios o
+                        ayudas del Estado, número de cuenta bancaria.
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <label for="uploadFiles" class="form-label">Files</label>
+            <app-upload-files
+              name="uploadFiles"
+              id="uploadFiles"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setFiles($event)"
+            ></app-upload-files>
+          </div>
+          <div class="col-12">
+            <div class="form-floating">
+              <input
+                [(ngModel)]="informacionAdicional"
+                type="text"
+                class="form-control"
+                name="inputInformacionAdicional"
+                id="inputInformacionAdicional"
+                placeholder="\0"
+                maxlength="255"
+              />
+              <label for="inputInformacionAdicional"
+                >Informacion adicional</label
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

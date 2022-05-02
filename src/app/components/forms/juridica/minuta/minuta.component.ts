@@ -5,45 +5,72 @@ import { Utils } from 'src/app/classes/utils';
 import { FormsService } from 'src/app/services/forms.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { LoginService } from 'src/app/services/login.service';
-import { FormsJuridicaRequest } from 'src/app/interfaces/forms-juridica-request';
+import { FormsJuridica } from 'src/app/interfaces/forms-juridica';
 import { saveAs } from 'file-saver';
 import { Buffer } from 'buffer';
 
 @Component({
-  selector: 'app-forms-juridica-request-minuta',
+  selector: 'app-forms-juridica-minuta',
   templateUrl: './minuta.component.html',
   styleUrls: ['./minuta.component.css'],
 })
-export class FormsJuridicaRequestMinutaComponent implements OnInit {
-  JuridicaRequest!: string;
-  formsJuridicaRequest!: FormsJuridicaRequest;
+export class FormsJuridicaMinutaComponent implements OnInit {
+  formJuridicaId!: string;
 
-  field1: string = 'x';
-  field2: string = 'x';
-  field3: string = 'x';
-  field4: string = 'x';
-  field5: string = 'x';
-  field6: string = 'x';
-  field7: string = 'x';
-  field8: string = 'x';
-  field9: string = 'x';
-  field10: string = 'x';
-  field11: string = 'x';
-  field12: string = 'x';
-  field13: string = 'x';
-  field14: string = 'x';
-  field15: string = 'x';
-  field16: string = 'x';
-  field17: string = 'x';
-  field18: string = 'x';
-  field19: string = 'x';
-  field20: string = 'x';
-  field21: string = 'x';
-  field22: string = 'x';
-  field23: string = 'x';
-  field24: string = 'x';
-  field25: string = 'x';
+  // Bienes
+  tipoInmueble: string = '';
+  nombreArrendador: string = '';
+  numeroNit: string = '';
+  nombreRepresentanteLegal: string = '';
+  ciudadDondeReside: string = '';
+  numeroCedula: string = '';
+  ciudadExpedicion: string = '';
+  detalleInmueble: string = '';
+  ubicacionInmueble: string = '';
+  barrio: string = '';
+  ciudadInmueble: string = '';
+  inmueble: string = '';
+  mesesContrato: string = '';
+  diaInicio: string = '';
+  mesInicio: string = '';
+  anoInicio: string = '';
+  diaFin: string = '';
+  mesFin: string = '';
+  anoFin: string = '';
+  valorContrato: string = '';
+  valorCanonMensual: string = '';
+  // field1
+  // field2
+  // field3
+  // field4
+
+  field1: string = '';
+  field2: string = '';
+  field3: string = '';
+  field4: string = '';
+  field5: string = '';
+  field6: string = '';
+  field7: string = '';
+  field8: string = '';
+  field9: string = '';
+  field10: string = '';
+  field11: string = '';
+  field12: string = '';
+  field13: string = '';
+  field14: string = '';
+  field15: string = '';
+  field16: string = '';
+  field17: string = '';
+  field18: string = '';
+  field19: string = '';
+  field20: string = '';
+  field21: string = '';
+  field22: string = '';
+  field23: string = '';
+  field24: string = '';
+  field25: string = '';
   file?: Blob;
+  formJuridica!: FormsJuridica;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -54,7 +81,7 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (!this.loginService.loggedInUser()) {
+    if (!this.loginService.activeAccoount()) {
       this.router.navigate(['/login']);
 
       this.sharedService.pushToastMessage({
@@ -66,16 +93,16 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
       return;
     }
 
-    this.JuridicaRequest = this.activatedRoute.snapshot.params.id;
+    this.formJuridicaId = this.activatedRoute.snapshot.params.id;
 
-    let getFormsJuridicaRequestMinutaAvailabilityTaskId: string;
+    let getFormJuridicaMinutaAvailabilityTaskId: string;
     this.formsService
-      .getFormsJuridicaRequestMinutaAvailability(this.JuridicaRequest)
+      .getFormJuridicaMinutaAvailability(this.formJuridicaId)
       .subscribe(
         (httpEvent) => {
           switch (httpEvent.type) {
             case HttpEventType.Sent:
-              getFormsJuridicaRequestMinutaAvailabilityTaskId =
+              getFormJuridicaMinutaAvailabilityTaskId =
                 this.sharedService.pushWaitTask({
                   description: 'Verificando disponibilidad...',
                   progress: 0,
@@ -83,7 +110,7 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
               break;
             case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
-                id: getFormsJuridicaRequestMinutaAvailabilityTaskId,
+                id: getFormJuridicaMinutaAvailabilityTaskId,
                 progress: Math.round(
                   (httpEvent.loaded * 100) / httpEvent.total
                 ),
@@ -105,28 +132,28 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
             case 423:
               this.sharedService.pushToastMessage({
                 id: Utils.makeRandomString(4),
-                title: `Componente ya usado`,
+                title: `Componente ya utilizado`,
                 description: `Ya se ha utilizado el componente al que intenta ingresar para su respectiva tarea.`,
               });
               break;
           }
 
           this.sharedService.removeWaitTask({
-            id: getFormsJuridicaRequestMinutaAvailabilityTaskId,
+            id: getFormJuridicaMinutaAvailabilityTaskId,
           });
         },
         () => {
-          let getFormsJuridicaRequestMinutaVerifyEncargadoTaskId: string;
+          let getFormsJuridicaMinutaVerifyEncargadoTaskId: string;
           this.formsService
-            .getFormsJuridicaRequestMinutaVerifyEncargado(
-              this.JuridicaRequest,
-              this.loginService.loggedInUser()?.username as string
+            .getFormJuridicaMinutaVerifyEncargado(
+              this.formJuridicaId,
+              this.loginService.activeAccoount()?.username as string
             )
             .subscribe(
               (httpEvent) => {
                 switch (httpEvent.type) {
                   case HttpEventType.Sent:
-                    getFormsJuridicaRequestMinutaVerifyEncargadoTaskId =
+                    getFormsJuridicaMinutaVerifyEncargadoTaskId =
                       this.sharedService.pushWaitTask({
                         description: 'Verificando autorizacion...',
                         progress: 0,
@@ -134,7 +161,7 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
                     break;
                   case HttpEventType.DownloadProgress:
                     this.sharedService.pushWaitTask({
-                      id: getFormsJuridicaRequestMinutaVerifyEncargadoTaskId,
+                      id: getFormsJuridicaMinutaVerifyEncargadoTaskId,
                       progress: Math.round(
                         (httpEvent.loaded * 100) / httpEvent.total
                       ),
@@ -149,23 +176,23 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
                   this.sharedService.pushToastMessage({
                     id: Utils.makeRandomString(4),
                     title: `Inautorizado`,
-                    description: `Al contenido que esta intentando ingresar no se encuentra encargado usted, no intente ingresar.`,
+                    description: `Usted no cuenta con autorizacion para el contenido que esta intentando ingresar, no intente ingresar.`,
                   });
                 }
 
                 this.sharedService.removeWaitTask({
-                  id: getFormsJuridicaRequestMinutaVerifyEncargadoTaskId,
+                  id: getFormsJuridicaMinutaVerifyEncargadoTaskId,
                 });
               },
               () => {
-                let getFormsJuridicaRequestTaskId: string;
+                let getFormJuridicaTaskId: string;
                 this.formsService
-                  .getFormsJuridicaRequest(this.JuridicaRequest)
+                  .getFormJuridica(this.formJuridicaId)
                   .subscribe(
                     (httpEvent) => {
                       switch (httpEvent.type) {
                         case HttpEventType.Sent:
-                          getFormsJuridicaRequestTaskId =
+                          getFormJuridicaTaskId =
                             this.sharedService.pushWaitTask({
                               description:
                                 'Obteniendo informacion de la peticion...',
@@ -174,37 +201,37 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
                           break;
                         case HttpEventType.DownloadProgress:
                           this.sharedService.pushWaitTask({
-                            id: getFormsJuridicaRequestTaskId,
+                            id: getFormJuridicaTaskId,
                             progress: Math.round(
                               (httpEvent.loaded * 100) / httpEvent.total
                             ),
                           });
                           break;
                         case HttpEventType.Response:
-                          this.formsJuridicaRequest = httpEvent.body[0];
+                          this.formJuridica = httpEvent.body[0];
                           break;
                       }
                     },
                     (httpEventError) => {
                       this.sharedService.removeWaitTask({
-                        id: getFormsJuridicaRequestTaskId,
+                        id: getFormJuridicaTaskId,
                       });
                     },
                     () => {
                       this.sharedService.removeWaitTask({
-                        id: getFormsJuridicaRequestTaskId,
+                        id: getFormJuridicaTaskId,
                       });
                     }
                   );
 
                 this.sharedService.removeWaitTask({
-                  id: getFormsJuridicaRequestMinutaVerifyEncargadoTaskId,
+                  id: getFormsJuridicaMinutaVerifyEncargadoTaskId,
                 });
               }
             );
 
           this.sharedService.removeWaitTask({
-            id: getFormsJuridicaRequestMinutaAvailabilityTaskId,
+            id: getFormJuridicaMinutaAvailabilityTaskId,
           });
         }
       );
@@ -245,9 +272,9 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
 
     let postFormsJuridicaRequestMinutaGenerateTaskId!: string;
     this.formsService
-      .postFormsJuridicaRequestMinutaGenerate(
-        this.formsJuridicaRequest.TipoAdquisicion,
-        this.formsJuridicaRequest.TipoPersona,
+      .postFormJuridicaMinutaGenerate(
+        this.formJuridica.TipoAdquisicion,
+        this.formJuridica.TipoPersona,
         formsJuridicaRequestMinutaGenerate
       )
       .subscribe(
@@ -293,8 +320,7 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
   }
 
   async btnSubmitClick() {
-    let formsJuridicaRequestMinuta = {
-      JuridicaRequest: this.JuridicaRequest,
+    const formsJuridicaRequestMinuta = {
       Field1: this.field1,
       Field2: this.field2,
       Field3: this.field3,
@@ -321,11 +347,12 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
       Field24: this.field24,
       Field25: this.field25,
       File: Buffer.from(await this.file!.arrayBuffer()),
+      FormJuridica: this.formJuridicaId,
     };
 
     let postFormsJuridicaRequestMinutaTaskId: string;
     this.formsService
-      .postFormsJuridicaRequestMinuta(formsJuridicaRequestMinuta)
+      .postFormJuridicaMinuta(formsJuridicaRequestMinuta)
       .subscribe(
         (httpEvent) => {
           switch (httpEvent.type) {
@@ -347,8 +374,8 @@ export class FormsJuridicaRequestMinutaComponent implements OnInit {
             case HttpEventType.Response:
               let putFormsJuridicaRequestTaskId: string;
               this.formsService
-                .putFormsJuridicaRequest(this.JuridicaRequest, {
-                  JuridicaRequestMinuta: httpEvent.body._id,
+                .putFormJuridica(this.formJuridicaId, {
+                  JuridicaMinuta: httpEvent.body._id,
                 })
                 .subscribe(
                   (httpEvent) => {
