@@ -37,26 +37,26 @@
             *ngIf="startWithRoute('/forms/juridica/') && endWithRoute('/eula')"
           ></app-forms-juridica-eula>
           <!--Compras-->
-          <app-forms-adquisicion
+          <app-forms-compras
             *ngIf="isRoute('/forms/compras')"
-          ></app-forms-adquisicion>
-          <!--Logistica-->
-          <app-forms-coordinacionlogistica *ngIf="isRoute('/forms/logistica')">
-          </app-forms-coordinacionlogistica>
-          <app-forms-coordinacionlogistica-fillquotations
+          ></app-forms-compras>
+          <!--Tiquetes-->
+          <app-forms-tiquetes *ngIf="isRoute('/forms/tiquetes')">
+          </app-forms-tiquetes>
+          <app-forms-tiquetes-fillquotations
             *ngIf="
-              startWithRoute('/forms/logistica/') &&
+              startWithRoute('/forms/tiquetes/') &&
               endWithRoute('/fillquotations')
             "
           >
-          </app-forms-coordinacionlogistica-fillquotations>
-          <app-forms-coordinacionlogistica-selectquotation
+          </app-forms-tiquetes-fillquotations>
+          <app-forms-tiquetes-selectquotation
             *ngIf="
-              startWithRoute('/forms/logistica/') &&
+              startWithRoute('/forms/tiquetes/') &&
               endWithRoute('/selectquotation')
             "
           >
-          </app-forms-coordinacionlogistica-selectquotation>
+          </app-forms-tiquetes-selectquotation>
           <app-forms-certificadosingresosretenciones
             *ngIf="isRoute('/forms/certificadosingresosretenciones')"
           ></app-forms-certificadosingresosretenciones>

@@ -1,4 +1,4 @@
-export interface FormsCoordinacionLogisticaFillQuotations {
+export interface FormsTiquetesFillQuotations {
     Number: number,
     Aerolinea: string,
     HoraSalida: string,

@@ -86,7 +86,7 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            Gestiones
+            Gestiones Juridicas
           </a>
           <ul
             class="dropdown-menu text-white"
@@ -98,18 +98,22 @@
               >
             </li>
             <li>
-              <a class="dropdown-item" [routerLink]="['/forms/adquisicion']"
-                >Adquisicion
-              </a>
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                [routerLink]="['/forms/logistica']"
-                >Logistica
+              <a class="dropdown-item" [routerLink]="['/forms/compras']"
+                >Compras
               </a>
             </li>
           </ul>
+        </li>
+        <li *ngIf="isLoggedIn()" class="nav-item">
+          <a
+            [ngClass]="{
+              active: isRoute('/forms/tiquetes')
+            }"
+            class="nav-link text-white"
+            aria-current="page"
+            [routerLink]="['/forms/tiquetes']"
+            >Tiquetes</a
+          >
         </li>
       </ul>
       <a *ngIf="isLoggedIn()" class="navbar-brand" href="#">

@@ -34,23 +34,23 @@ const routes: Routes = [
     component: FormsComponent,
   },
   {
-    path: 'forms/adquisicion',
+    path: 'forms/compras',
     component: FormsComponent,
   },
   {
-    path: 'forms/adquisicion/:id/eula',
+    path: 'forms/compras/:id/eula',
     component: FormsComponent,
   },
   {
-    path: 'forms/logistica',
+    path: 'forms/tiquetes',
     component: FormsComponent,
   },
   {
-    path: 'forms/logistica/:id/fillquotations',
+    path: 'forms/tiquetes/:id/fillquotations',
     component: FormsComponent,
   },
   {
-    path: 'forms/logistica/:id/selectquotation',
+    path: 'forms/tiquetes/:id/selectquotation',
     component: FormsComponent,
   },
   {

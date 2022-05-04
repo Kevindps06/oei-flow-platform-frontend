@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { FormsFinancieraRegistration } from '../interfaces/forms-financiera-registration';
 import { environment } from 'src/environments/environment';
 import { FormsFinancieraInvoice } from '../interfaces/forms-financiera-invoice';
-import { FormsCoordinacionLogistica } from '../interfaces/forms-coordinacionlogistica';
+import { FormsTiquetes } from '../interfaces/forms-tiquetes';
 import { FormsJuridica } from '../interfaces/forms-juridica';
 
 @Injectable({
@@ -337,7 +337,7 @@ export class FormsService {
   }
 
   postFormsCoordinacionLogisticaFlow(
-    formsCoordinacionLogistica: FormsCoordinacionLogistica
+    formsCoordinacionLogistica: FormsTiquetes
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(

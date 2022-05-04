@@ -2,19 +2,19 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from 'src/app/classes/utils';
-import { FormsCoordinacionLogisticaFillQuotations } from 'src/app/interfaces/forms-coordinacionlogistica-fillquotations';
+import { FormsTiquetesFillQuotations } from 'src/app/interfaces/forms-tiquetes-fillquotations';
 import { FormsService } from 'src/app/services/forms.service';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
-  selector: 'app-forms-coordinacionlogistica-fillquotations',
+  selector: 'app-forms-tiquetes-fillquotations',
   templateUrl: './fill-quotations.component.html',
   styleUrls: ['./fill-quotations.component.css'],
 })
-export class FormsCoordinacionLogisticaFillQuotationsComponent
+export class FormsTiquetesFillQuotationsComponent
   implements OnInit
 {
-  quotations: FormsCoordinacionLogisticaFillQuotations[] = [];
+  quotations: FormsTiquetesFillQuotations[] = [];
 
   Id: string = '';
   formsCoordinacionLogistica: any;

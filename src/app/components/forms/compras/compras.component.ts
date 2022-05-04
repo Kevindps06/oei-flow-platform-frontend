@@ -7,11 +7,11 @@ import { FormsService } from 'src/app/services/forms.service';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
-  selector: 'app-forms-adquisicion',
-  templateUrl: './adquisicion.component.html',
-  styleUrls: ['./adquisicion.component.css'],
+  selector: 'app-forms-compras',
+  templateUrl: './compras.component.html',
+  styleUrls: ['./compras.component.css'],
 })
-export class AdquisicionComponent implements OnInit {
+export class ComprasComponent implements OnInit {
   formIndex: number = 0;
 
   // 0

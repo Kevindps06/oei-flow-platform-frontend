@@ -5,7 +5,7 @@ import { Utils } from 'src/app/classes/utils';
 import { Convenio } from 'src/app/interfaces/Convenio';
 import { DropdownItem } from 'src/app/interfaces/dropdown-item';
 import { FileItem } from 'src/app/interfaces/FileItem';
-import { FormsCoordinacionLogistica } from 'src/app/interfaces/forms-coordinacionlogistica';
+import { FormsTiquetes } from 'src/app/interfaces/forms-tiquetes';
 import { Tramo } from 'src/app/interfaces/tramo';
 import { WaitTask } from 'src/app/interfaces/WaitTask';
 import { FormsService } from 'src/app/services/forms.service';
@@ -14,11 +14,11 @@ import { SharedService } from 'src/app/services/shared.service';
 declare const Autocomplete: any;
 
 @Component({
-  selector: 'app-forms-coordinacionlogistica',
-  templateUrl: './coordinacionlogistica.component.html',
-  styleUrls: ['./coordinacionlogistica.component.css'],
+  selector: 'app-forms-tiquetes',
+  templateUrl: './tiquetes.component.html',
+  styleUrls: ['./tiquetes.component.css'],
 })
-export class FormsCoordinacionLogisticaComponent implements OnInit {
+export class FormsTiquetesComponent implements OnInit {
   convenios: Convenio[] = [];
 
   nombre: string = '';
@@ -237,7 +237,7 @@ export class FormsCoordinacionLogisticaComponent implements OnInit {
   }
 
   btnSubmitClick() {
-    const formsCoordinacionLogistica: FormsCoordinacionLogistica = {
+    const formsCoordinacionLogistica: FormsTiquetes = {
       Id: Utils.makeRandomString(32),
       Nombre: this.nombre,
       Convenio: this.convenio,

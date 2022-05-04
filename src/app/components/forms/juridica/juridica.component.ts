@@ -97,20 +97,6 @@ export class FormsJuridicaComponent implements OnInit {
   categoriaDatosCaracteristicasDetallesEmpleo: boolean = false;
   categoriaDatosEconomicosFinancierosSeguros: boolean = false;
 
-  Files: FileItem[] = [];
-
-  setFiles(Files: FileItem[]) {
-    this.Files = Files;
-  }
-
-  informacionAdicional: string = '';
-
-  /**************************************/
-  tipoRelacion: string = '';
-
-  identificator: string = '';
-  digitoVerificacion: string = '';
-
   cedulaCiudadaniaFiles: FileItem[] = [];
 
   setCedulaCiudadaniaFiles(cedulaCiudadaniaFiles: FileItem[]) {
@@ -145,31 +131,16 @@ export class FormsJuridicaComponent implements OnInit {
     this.constanciaAfiliacionPensionFiles = constanciaAfiliacionPensionFiles;
   }
 
+  constanciaArlFiles: FileItem[] = [];
+
+  setConstanciaArlFiles(constanciaArlFiles: FileItem[]) {
+    this.constanciaArlFiles = constanciaArlFiles;
+  }
+
   tarjetaProfesionalFiles: FileItem[] = [];
 
   setTarjetaProfesionalFiles(tarjetaProfesionalFiles: FileItem[]) {
     this.tarjetaProfesionalFiles = tarjetaProfesionalFiles;
-  }
-
-  examenSaludOcupacionalFiles: FileItem[] = [];
-
-  setExamenSaludOcupacionalFiles(examenSaludOcupacionalFiles: FileItem[]) {
-    this.examenSaludOcupacionalFiles = examenSaludOcupacionalFiles;
-  }
-
-  formatoActaCumplimientoConocimientoFiles: FileItem[] = [];
-
-  setFormatoActaCumplimientoConocimientoFiles(
-    formatoActaCumplimientoConocimientoFiles: FileItem[]
-  ) {
-    this.formatoActaCumplimientoConocimientoFiles =
-      formatoActaCumplimientoConocimientoFiles;
-  }
-
-  experienciaLaboralFiles: FileItem[] = [];
-
-  setExperienciaLaboralFiles(experienciaLaboralFiles: FileItem[]) {
-    this.experienciaLaboralFiles = experienciaLaboralFiles;
   }
 
   hojaVidaFiles: FileItem[] = [];
@@ -178,39 +149,10 @@ export class FormsJuridicaComponent implements OnInit {
     this.hojaVidaFiles = hojaVidaFiles;
   }
 
-  certificadoARLFiles: FileItem[] = [];
+  soportesHojaVidaFiles: FileItem[] = [];
 
-  setCertificadoARLFiles(certificadoARLFiles: FileItem[]) {
-    this.certificadoARLFiles = certificadoARLFiles;
-  }
-
-  camaraComercioFiles: FileItem[] = [];
-
-  setCamaraComercioFiles(camaraComercioFiles: FileItem[]) {
-    this.camaraComercioFiles = camaraComercioFiles;
-  }
-
-  cedulaCiudadaniaRepresentanteLegalFiles: FileItem[] = [];
-
-  setCedulaCiudadaniaRepresentanteLegalFiles(
-    cedulaCiudadaniaRepresentanteLegalFiles: FileItem[]
-  ) {
-    this.cedulaCiudadaniaRepresentanteLegalFiles =
-      cedulaCiudadaniaRepresentanteLegalFiles;
-  }
-
-  seguridadSocialParafiscalesFiles: FileItem[] = [];
-
-  setSeguridadSocialParafiscalesFiles(
-    seguridadSocialParafiscalesFiles: FileItem[]
-  ) {
-    this.seguridadSocialParafiscalesFiles = seguridadSocialParafiscalesFiles;
-  }
-
-  solicitudContratacionFiles: FileItem[] = [];
-
-  setSolicitudContratacionFiles(solicitudContratacionFiles: FileItem[]) {
-    this.solicitudContratacionFiles = solicitudContratacionFiles;
+  setSoportesHojaVidaFiles(soportesHojaVidaFiles: FileItem[]) {
+    this.soportesHojaVidaFiles = soportesHojaVidaFiles;
   }
 
   justificacionContratacionFiles: FileItem[] = [];
@@ -226,6 +168,20 @@ export class FormsJuridicaComponent implements OnInit {
   setCotizacionOfertaFiles(cotizacionOfertaFiles: FileItem[]) {
     this.cotizacionOfertaFiles = cotizacionOfertaFiles;
   }
+
+  informeTecnicoFiles: FileItem[] = [];
+
+  setInformeTecnicoFiles(informeTecnicoFiles: FileItem[]) {
+    this.informeTecnicoFiles = informeTecnicoFiles;
+  }
+
+  cuadroComparativoFiles: FileItem[] = [];
+
+  setCuadroComparativoFiles(cuadroComparativoFiles: FileItem[]) {
+    this.cuadroComparativoFiles = cuadroComparativoFiles;
+  }
+
+  informacionAdicional: string = '';
 
   @Output() onWaitTasksChange = new EventEmitter<WaitTask[]>();
   @Output() onToastMessagesChange = new EventEmitter<ToastMessage>();
@@ -257,7 +213,7 @@ export class FormsJuridicaComponent implements OnInit {
         // Reset form index 1 values
         this.tipoAdquisicion = '';
         this.tipoAdquisicionOtro = '';
-        this.tipoPersona = this.tipoProceso === 'Directa' ? 'Natural' : '';
+        this.tipoPersona = '';
         this.convenioResponsable = '';
         this.email = '';
         this.justificacionContratacion = '';
@@ -410,16 +366,20 @@ export class FormsJuridicaComponent implements OnInit {
       Requestor: {},
     };
 
-    for (let i = 0; this.Files.length > i; i++) {
+    // Cedula de ciudadania
+    for (let i = 0; this.cedulaCiudadaniaFiles.length > i; i++) {
       let postUploadFileTaskId: string;
       await this.formsService
-        .postUploadFile(this.Files[i].Name, this.Files[i].Bytes as ArrayBuffer)
+        .postUploadFile(
+          this.cedulaCiudadaniaFiles[i].Name,
+          this.cedulaCiudadaniaFiles[i].Bytes as ArrayBuffer
+        )
         .pipe(
           map((httpEvent) => {
             switch (httpEvent.type) {
               case HttpEventType.Sent:
                 postUploadFileTaskId = this.sharedService.pushWaitTask({
-                  description: `Subiendo archivos...`,
+                  description: `Subiendo archivos cedula de ciudadania...`,
                   progress: 0,
                 }) as string;
                 break;
@@ -432,8 +392,563 @@ export class FormsJuridicaComponent implements OnInit {
                 });
                 break;
               case HttpEventType.Response:
-                delete this.Files[i].Bytes;
-                this.Files[i].ServerPath = httpEvent.body;
+                delete this.cedulaCiudadaniaFiles[i].Bytes;
+                this.cedulaCiudadaniaFiles[i].ServerPath = httpEvent.body;
+
+                this.sharedService.removeWaitTask({
+                  id: postUploadFileTaskId,
+                });
+                break;
+            }
+          }),
+          catchError((httpEventError) => {
+            this.sharedService.removeWaitTask({
+              id: postUploadFileTaskId,
+            });
+
+            return throwError(httpEventError);
+          })
+        )
+        .toPromise();
+    }
+
+    // rut
+    for (let i = 0; this.RUTFiles.length > i; i++) {
+      let postUploadFileTaskId: string;
+      await this.formsService
+        .postUploadFile(
+          this.RUTFiles[i].Name,
+          this.RUTFiles[i].Bytes as ArrayBuffer
+        )
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postUploadFileTaskId = this.sharedService.pushWaitTask({
+                  description: `Subiendo archivos rut...`,
+                  progress: 0,
+                }) as string;
+                break;
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postUploadFileTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.RUTFiles[i].Bytes;
+                this.RUTFiles[i].ServerPath = httpEvent.body;
+
+                this.sharedService.removeWaitTask({
+                  id: postUploadFileTaskId,
+                });
+                break;
+            }
+          }),
+          catchError((httpEventError) => {
+            this.sharedService.removeWaitTask({
+              id: postUploadFileTaskId,
+            });
+
+            return throwError(httpEventError);
+          })
+        )
+        .toPromise();
+    }
+
+    // certificacion bancaria
+    for (let i = 0; this.certificacionBancariaFiles.length > i; i++) {
+      let postUploadFileTaskId: string;
+      await this.formsService
+        .postUploadFile(
+          this.certificacionBancariaFiles[i].Name,
+          this.certificacionBancariaFiles[i].Bytes as ArrayBuffer
+        )
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postUploadFileTaskId = this.sharedService.pushWaitTask({
+                  description: `Subiendo archivos certificacion bancaria...`,
+                  progress: 0,
+                }) as string;
+                break;
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postUploadFileTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.certificacionBancariaFiles[i].Bytes;
+                this.certificacionBancariaFiles[i].ServerPath = httpEvent.body;
+
+                this.sharedService.removeWaitTask({
+                  id: postUploadFileTaskId,
+                });
+                break;
+            }
+          }),
+          catchError((httpEventError) => {
+            this.sharedService.removeWaitTask({
+              id: postUploadFileTaskId,
+            });
+
+            return throwError(httpEventError);
+          })
+        )
+        .toPromise();
+    }
+
+    //constancia de afiliacion a salud
+    for (let i = 0; this.constanciaAfiliacionSaludFiles.length > i; i++) {
+      let postUploadFileTaskId: string;
+      await this.formsService
+        .postUploadFile(
+          this.constanciaAfiliacionSaludFiles[i].Name,
+          this.constanciaAfiliacionSaludFiles[i].Bytes as ArrayBuffer
+        )
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postUploadFileTaskId = this.sharedService.pushWaitTask({
+                  description: `Subiendo archivos constancia de afiliacion a salud...`,
+                  progress: 0,
+                }) as string;
+                break;
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postUploadFileTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.constanciaAfiliacionSaludFiles[i].Bytes;
+                this.constanciaAfiliacionSaludFiles[i].ServerPath =
+                  httpEvent.body;
+
+                this.sharedService.removeWaitTask({
+                  id: postUploadFileTaskId,
+                });
+                break;
+            }
+          }),
+          catchError((httpEventError) => {
+            this.sharedService.removeWaitTask({
+              id: postUploadFileTaskId,
+            });
+
+            return throwError(httpEventError);
+          })
+        )
+        .toPromise();
+    }
+
+    // constancia de afiliacion a pension
+    for (let i = 0; this.constanciaAfiliacionPensionFiles.length > i; i++) {
+      let postUploadFileTaskId: string;
+      await this.formsService
+        .postUploadFile(
+          this.constanciaAfiliacionPensionFiles[i].Name,
+          this.constanciaAfiliacionPensionFiles[i].Bytes as ArrayBuffer
+        )
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postUploadFileTaskId = this.sharedService.pushWaitTask({
+                  description: `Subiendo archivos constancia de afiliacion a pension...`,
+                  progress: 0,
+                }) as string;
+                break;
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postUploadFileTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.constanciaAfiliacionPensionFiles[i].Bytes;
+                this.constanciaAfiliacionPensionFiles[i].ServerPath =
+                  httpEvent.body;
+
+                this.sharedService.removeWaitTask({
+                  id: postUploadFileTaskId,
+                });
+                break;
+            }
+          }),
+          catchError((httpEventError) => {
+            this.sharedService.removeWaitTask({
+              id: postUploadFileTaskId,
+            });
+
+            return throwError(httpEventError);
+          })
+        )
+        .toPromise();
+    }
+
+    // constancia de afiliacion a arl
+    for (let i = 0; this.constanciaArlFiles.length > i; i++) {
+      let postUploadFileTaskId: string;
+      await this.formsService
+        .postUploadFile(
+          this.constanciaArlFiles[i].Name,
+          this.constanciaArlFiles[i].Bytes as ArrayBuffer
+        )
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postUploadFileTaskId = this.sharedService.pushWaitTask({
+                  description: `Subiendo archivos constancia de afiliacion a arl...`,
+                  progress: 0,
+                }) as string;
+                break;
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postUploadFileTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.constanciaArlFiles[i].Bytes;
+                this.constanciaArlFiles[i].ServerPath = httpEvent.body;
+
+                this.sharedService.removeWaitTask({
+                  id: postUploadFileTaskId,
+                });
+                break;
+            }
+          }),
+          catchError((httpEventError) => {
+            this.sharedService.removeWaitTask({
+              id: postUploadFileTaskId,
+            });
+
+            return throwError(httpEventError);
+          })
+        )
+        .toPromise();
+    }
+
+    // tarjeta profesional
+    for (let i = 0; this.tarjetaProfesionalFiles.length > i; i++) {
+      let postUploadFileTaskId: string;
+      await this.formsService
+        .postUploadFile(
+          this.tarjetaProfesionalFiles[i].Name,
+          this.tarjetaProfesionalFiles[i].Bytes as ArrayBuffer
+        )
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postUploadFileTaskId = this.sharedService.pushWaitTask({
+                  description: `Subiendo archivos tarjeta profesional...`,
+                  progress: 0,
+                }) as string;
+                break;
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postUploadFileTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.tarjetaProfesionalFiles[i].Bytes;
+                this.tarjetaProfesionalFiles[i].ServerPath = httpEvent.body;
+
+                this.sharedService.removeWaitTask({
+                  id: postUploadFileTaskId,
+                });
+                break;
+            }
+          }),
+          catchError((httpEventError) => {
+            this.sharedService.removeWaitTask({
+              id: postUploadFileTaskId,
+            });
+
+            return throwError(httpEventError);
+          })
+        )
+        .toPromise();
+    }
+
+    // hoja de vida
+    for (let i = 0; this.hojaVidaFiles.length > i; i++) {
+      let postUploadFileTaskId: string;
+      await this.formsService
+        .postUploadFile(
+          this.hojaVidaFiles[i].Name,
+          this.hojaVidaFiles[i].Bytes as ArrayBuffer
+        )
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postUploadFileTaskId = this.sharedService.pushWaitTask({
+                  description: `Subiendo archivos hoja de vida...`,
+                  progress: 0,
+                }) as string;
+                break;
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postUploadFileTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.hojaVidaFiles[i].Bytes;
+                this.hojaVidaFiles[i].ServerPath = httpEvent.body;
+
+                this.sharedService.removeWaitTask({
+                  id: postUploadFileTaskId,
+                });
+                break;
+            }
+          }),
+          catchError((httpEventError) => {
+            this.sharedService.removeWaitTask({
+              id: postUploadFileTaskId,
+            });
+
+            return throwError(httpEventError);
+          })
+        )
+        .toPromise();
+    }
+
+    // soportes hoja de vida
+    for (let i = 0; this.soportesHojaVidaFiles.length > i; i++) {
+      let postUploadFileTaskId: string;
+      await this.formsService
+        .postUploadFile(
+          this.soportesHojaVidaFiles[i].Name,
+          this.soportesHojaVidaFiles[i].Bytes as ArrayBuffer
+        )
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postUploadFileTaskId = this.sharedService.pushWaitTask({
+                  description: `Subiendo archivos soportes de la hoja de vida...`,
+                  progress: 0,
+                }) as string;
+                break;
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postUploadFileTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.soportesHojaVidaFiles[i].Bytes;
+                this.soportesHojaVidaFiles[i].ServerPath = httpEvent.body;
+
+                this.sharedService.removeWaitTask({
+                  id: postUploadFileTaskId,
+                });
+                break;
+            }
+          }),
+          catchError((httpEventError) => {
+            this.sharedService.removeWaitTask({
+              id: postUploadFileTaskId,
+            });
+
+            return throwError(httpEventError);
+          })
+        )
+        .toPromise();
+    }
+
+    // justificacion contratacion
+    for (let i = 0; this.justificacionContratacionFiles.length > i; i++) {
+      let postUploadFileTaskId: string;
+      await this.formsService
+        .postUploadFile(
+          this.justificacionContratacionFiles[i].Name,
+          this.justificacionContratacionFiles[i].Bytes as ArrayBuffer
+        )
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postUploadFileTaskId = this.sharedService.pushWaitTask({
+                  description: `Subiendo archivos justificacion contratacion...`,
+                  progress: 0,
+                }) as string;
+                break;
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postUploadFileTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.justificacionContratacionFiles[i].Bytes;
+                this.justificacionContratacionFiles[i].ServerPath =
+                  httpEvent.body;
+
+                this.sharedService.removeWaitTask({
+                  id: postUploadFileTaskId,
+                });
+                break;
+            }
+          }),
+          catchError((httpEventError) => {
+            this.sharedService.removeWaitTask({
+              id: postUploadFileTaskId,
+            });
+
+            return throwError(httpEventError);
+          })
+        )
+        .toPromise();
+    }
+
+    // cotizacion oferta
+    for (let i = 0; this.cotizacionOfertaFiles.length > i; i++) {
+      let postUploadFileTaskId: string;
+      await this.formsService
+        .postUploadFile(
+          this.cotizacionOfertaFiles[i].Name,
+          this.cotizacionOfertaFiles[i].Bytes as ArrayBuffer
+        )
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postUploadFileTaskId = this.sharedService.pushWaitTask({
+                  description: `Subiendo archivos cotizacion u oferta...`,
+                  progress: 0,
+                }) as string;
+                break;
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postUploadFileTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.cotizacionOfertaFiles[i].Bytes;
+                this.cotizacionOfertaFiles[i].ServerPath = httpEvent.body;
+
+                this.sharedService.removeWaitTask({
+                  id: postUploadFileTaskId,
+                });
+                break;
+            }
+          }),
+          catchError((httpEventError) => {
+            this.sharedService.removeWaitTask({
+              id: postUploadFileTaskId,
+            });
+
+            return throwError(httpEventError);
+          })
+        )
+        .toPromise();
+    }
+
+    // informe tecnico
+    for (let i = 0; this.informeTecnicoFiles.length > i; i++) {
+      let postUploadFileTaskId: string;
+      await this.formsService
+        .postUploadFile(
+          this.informeTecnicoFiles[i].Name,
+          this.informeTecnicoFiles[i].Bytes as ArrayBuffer
+        )
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postUploadFileTaskId = this.sharedService.pushWaitTask({
+                  description: `Subiendo archivos informe tecnico...`,
+                  progress: 0,
+                }) as string;
+                break;
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postUploadFileTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.informeTecnicoFiles[i].Bytes;
+                this.informeTecnicoFiles[i].ServerPath = httpEvent.body;
+
+                this.sharedService.removeWaitTask({
+                  id: postUploadFileTaskId,
+                });
+                break;
+            }
+          }),
+          catchError((httpEventError) => {
+            this.sharedService.removeWaitTask({
+              id: postUploadFileTaskId,
+            });
+
+            return throwError(httpEventError);
+          })
+        )
+        .toPromise();
+    }
+
+    // cuadro comparativo
+    for (let i = 0; this.cuadroComparativoFiles.length > i; i++) {
+      let postUploadFileTaskId: string;
+      await this.formsService
+        .postUploadFile(
+          this.cuadroComparativoFiles[i].Name,
+          this.cuadroComparativoFiles[i].Bytes as ArrayBuffer
+        )
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postUploadFileTaskId = this.sharedService.pushWaitTask({
+                  description: `Subiendo archivos cuadro comparativo...`,
+                  progress: 0,
+                }) as string;
+                break;
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postUploadFileTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.cuadroComparativoFiles[i].Bytes;
+                this.cuadroComparativoFiles[i].ServerPath = httpEvent.body;
 
                 this.sharedService.removeWaitTask({
                   id: postUploadFileTaskId,
@@ -453,11 +968,35 @@ export class FormsJuridicaComponent implements OnInit {
     }
 
     formJuridica = Object.assign(formJuridica, {
-      Files: this.Files,
+      cedulaCiudadaniaFiles: this.cedulaCiudadaniaFiles,
+      RUTFiles: this.RUTFiles,
+      certificacionBancariaFiles: this.certificacionBancariaFiles,
+      constanciaAfiliacionSaludFiles: this.RUTFiles,
+      constanciaAfiliacionPensionFiles: this.constanciaAfiliacionPensionFiles,
+      constanciaArlFiles: this.constanciaArlFiles,
+      tarjetaProfesionalFiles: this.tarjetaProfesionalFiles,
+      hojaVidaFiles: this.hojaVidaFiles,
+      soportesHojaVidaFiles: this.soportesHojaVidaFiles,
+      justificacionContratacionFiles: this.justificacionContratacionFiles,
+      cotizacionOfertaFiles: this.cotizacionOfertaFiles,
+      informeTecnicoFiles: this.informeTecnicoFiles,
+      cuadroComparativoFiles: this.cuadroComparativoFiles,
     });
 
     // Cleaning fields because information has been saved
-    this.Files = [];
+    this.cedulaCiudadaniaFiles = [];
+    this.RUTFiles = [];
+    this.certificacionBancariaFiles = [];
+    this.constanciaAfiliacionSaludFiles = [];
+    this.constanciaAfiliacionPensionFiles = [];
+    this.constanciaArlFiles = [];
+    this.tarjetaProfesionalFiles = [];
+    this.hojaVidaFiles = [];
+    this.soportesHojaVidaFiles = [];
+    this.justificacionContratacionFiles = [];
+    this.cotizacionOfertaFiles = [];
+    this.informeTecnicoFiles = [];
+    this.cuadroComparativoFiles = [];
 
     // Cleaning fields because information has been saved
     this.informacionAdicional = '';

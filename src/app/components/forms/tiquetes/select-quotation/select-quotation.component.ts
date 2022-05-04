@@ -2,19 +2,17 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from 'src/app/classes/utils';
-import { FormsCoordinacionLogisticaFillQuotations } from 'src/app/interfaces/forms-coordinacionlogistica-fillquotations';
+import { FormsTiquetesFillQuotations } from 'src/app/interfaces/forms-tiquetes-fillquotations';
 import { FormsService } from 'src/app/services/forms.service';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
-  selector: 'app-forms-coordinacionlogistica-selectquotation',
+  selector: 'app-forms-tiquetes-selectquotation',
   templateUrl: './select-quotation.component.html',
   styleUrls: ['./select-quotation.component.css'],
 })
-export class FormsCoordinacionLogisticaSelectQuotationComponent
-  implements OnInit
-{
-  quotations: FormsCoordinacionLogisticaFillQuotations[] = [];
+export class FormsTiquetesSelectQuotationComponent implements OnInit {
+  quotations: FormsTiquetesFillQuotations[] = [];
 
   Id: string = '';
   formsCoordinacionLogistica: any;
@@ -116,7 +114,7 @@ export class FormsCoordinacionLogisticaSelectQuotationComponent
   }
 
   setSelectedQuotation(
-    selectedQuotation: FormsCoordinacionLogisticaFillQuotations
+    selectedQuotation: FormsTiquetesFillQuotations
   ) {
     this.formsService
       .putFormsCoordinacionLogistica(this.Id, {

@@ -15,10 +15,10 @@ import { FormsFinancieraInvoiceComponent } from './components/forms/financiera/i
 import { GlobalHttpInterceptorService } from './services/global-http-interceptor.service';
 import { UploadFilesComponent } from './components/upload-files/upload-files.component';
 import { HomeComponent } from './components/home/home.component';
-import { FormsCoordinacionLogisticaComponent } from './components/forms/coordinacionlogistica/coordinacionlogistica.component';
+import { FormsTiquetesComponent } from './components/forms/tiquetes/tiquetes.component';
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
-import { FormsCoordinacionLogisticaFillQuotationsComponent } from './components/forms/coordinacionlogistica/fill-quotations/fill-quotations.component';
-import { FormsCoordinacionLogisticaSelectQuotationComponent } from './components/forms/coordinacionlogistica/select-quotation/select-quotation.component';
+import { FormsTiquetesFillQuotationsComponent } from './components/forms/tiquetes/fill-quotations/fill-quotations.component';
+import { FormsTiquetesSelectQuotationComponent } from './components/forms/tiquetes/select-quotation/select-quotation.component';
 import { TestsComponent } from './components/forms/tests/tests.component';
 import { MsalModule, MsalService, MSAL_INSTANCE } from '@azure/msal-angular';
 import {
@@ -32,7 +32,7 @@ import { MaxOnlyPriceNumbersDirective } from './directives/max-only-price-number
 import { MinOnlyPriceNumbersDirective } from './directives/min-only-price-numbers.directive';
 import { FormsJuridicaEulaComponent } from './components/forms/juridica/eula/eula.component';
 import { FormsJuridicaMinutaComponent } from './components/forms/juridica/minuta/minuta.component';
-import { AdquisicionComponent } from './components/forms/adquisicion/adquisicion.component';
+import { ComprasComponent } from './components/forms/compras/compras.component';
 
 let msalInstance: IPublicClientApplication | undefined = undefined;
 
@@ -66,17 +66,17 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FormsFinancieraInvoiceComponent,
     UploadFilesComponent,
     HomeComponent,
-    FormsCoordinacionLogisticaComponent,
+    FormsTiquetesComponent,
     DatePickerComponent,
-    FormsCoordinacionLogisticaFillQuotationsComponent,
-    FormsCoordinacionLogisticaSelectQuotationComponent,
+    FormsTiquetesFillQuotationsComponent,
+    FormsTiquetesSelectQuotationComponent,
     TestsComponent,
     FormsCertificadosIngresosRetencionesComponent,
     MaxOnlyPriceNumbersDirective,
     MinOnlyPriceNumbersDirective,
     FormsJuridicaEulaComponent,
     FormsJuridicaMinutaComponent,
-    AdquisicionComponent,
+    ComprasComponent,
   ],
   imports: [
     BrowserModule,

@@ -27,7 +27,19 @@ export interface FormsJuridica {
   CategoriaDatosCaracteristicasCircunstanciasSociales?: boolean;
   CategoriaDatosCaracteristicasDetallesEmpleo?: boolean;
   CategoriaDatosEconomicosFinancierosSeguros?: boolean;
-  Files?: FileItem[];
+  cedulaCiudadaniaFiles?: FileItem[];
+  RUTFiles?: FileItem[];
+  certificacionBancariaFiles?: FileItem[];
+  constanciaAfiliacionSaludFiles?: FileItem[];
+  constanciaAfiliacionPensionFiles?: FileItem[];
+  constanciaArlFiles?: FileItem[];
+  tarjetaProfesionalFiles?: FileItem[];
+  hojaVidaFiles?: FileItem[];
+  soportesHojaVidaFiles?: FileItem[];
+  justificacionContratacionFiles?: FileItem[];
+  cotizacionOfertaFiles?: FileItem[];
+  informeTecnicoFiles?: FileItem[];
+  cuadroComparativoFiles?: FileItem[];
   InformacionAdicional: string;
   Requestor: any;
 }

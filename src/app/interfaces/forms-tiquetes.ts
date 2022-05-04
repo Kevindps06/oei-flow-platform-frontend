@@ -1,7 +1,7 @@
 import { FileItem } from './FileItem';
 import { Tramo } from './tramo';
 
-export interface FormsCoordinacionLogistica {
+export interface FormsTiquetes {
   Id: string;
   Nombre: string;
   Convenio: string;

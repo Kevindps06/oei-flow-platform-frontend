@@ -10,9 +10,7 @@
           </div>
           <div class="col-12">
             <div
-              *ngFor="
-                let mapItem of juridicaMap | keyvalue: originalOrder
-              "
+              *ngFor="let mapItem of juridicaMap | keyvalue: originalOrder"
               class="form-check"
             >
               <input
@@ -203,7 +201,6 @@
           </div>
           <div class="form-check">
             <input
-              [disabled]="tipoProceso === 'Directa'"
               [(ngModel)]="tipoPersona"
               class="form-check-input"
               type="radio"
@@ -267,7 +264,7 @@
           <div class="col-12">
             <div class="col-12">
               <label class="form-label" for="inputEmail"
-                >Correo electronico personal y privado<strong
+                >Correo electronico personal y privado del tercero<strong
                   class="text-danger"
                   >*</strong
                 ><button
@@ -656,9 +653,7 @@
                   !presupuestoEstimado ||
                   parseInt(presupuestoEstimado) < presupuestoEstimadoMin
               }"
-              [MaxOnlyPriceNumbers]="
-                juridicaMap.get(tipoProceso)?.get('Max')
-              "
+              [MaxOnlyPriceNumbers]="juridicaMap.get(tipoProceso)?.get('Max')"
             />
             <div class="invalid-feedback">
               Este campo es (*) obligatorio, rellenelo.
@@ -1009,13 +1004,165 @@
               </div>
             </div>
           </div>
+          <!--cedula de ciudadania-->
           <div class="col-12">
-            <label for="uploadFiles" class="form-label">Files</label>
+            <label for="uploadFilesCedulaCiudadania" class="form-label"
+              >Cedula de ciudadania
+            </label>
             <app-upload-files
-              name="uploadFiles"
-              id="uploadFiles"
+              name="uploadFilesCedulaCiudadania"
+              id="uploadFilesCedulaCiudadania"
               [contentAsArrayBuffer]="true"
-              (onFilesChange)="setFiles($event)"
+              (onFilesChange)="setCedulaCiudadaniaFiles($event)"
+            ></app-upload-files>
+          </div>
+          <!--rut-->
+          <div class="col-12">
+            <label for="uploadFilesRUT" class="form-label"
+              >RUT actualizado</label
+            >
+            <app-upload-files
+              name="uploadFilesRUT"
+              id="uploadFilesRUT"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setRUTFiles($event)"
+            ></app-upload-files>
+          </div>
+          <!--certificacion bancaria-->
+          <div class="col-12">
+            <label for="uploadFilesCertificacionBancaria" class="form-label"
+              >Certificacion bancaria
+            </label>
+            <app-upload-files
+              name="uploadFilesCertificacionBancaria"
+              id="uploadFilesCertificacionBancaria"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setCertificacionBancariaFiles($event)"
+            ></app-upload-files>
+          </div>
+          <!--constancia de afiliacion a salud-->
+          <div class="col-12">
+            <label for="uploadFilesConstanciaAfiliacionSalud" class="form-label"
+              >Constancia de afiliacion a salud (Fechas no superiores a 1 mes)
+              (Contributivo - Independiente - Activo)
+            </label>
+            <app-upload-files
+              name="uploadFilesConstanciaAfiliacionSalud"
+              id="uploadFilesConstanciaAfiliacionSalud"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setConstanciaAfiliacionSaludFiles($event)"
+            ></app-upload-files>
+          </div>
+          <!--constancia de afiliacion a pension-->
+          <div class="col-12">
+            <label
+              for="uploadFilesConstanciaAfiliacionPension"
+              class="form-label"
+              >Constancia de afiliacion a pension (Fechas no superiores a 1 mes)
+            </label>
+            <app-upload-files
+              name="uploadFilesConstanciaAfiliacionPension"
+              id="uploadFilesConstanciaAfiliacionPension"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setConstanciaAfiliacionPensionFiles($event)"
+            ></app-upload-files>
+          </div>
+          <!--constancia de afiliacion arl-->
+          <div class="col-12">
+            <label for="uploadFilesConstanciaARL" class="form-label"
+              >Constancia de afiliacion ARL
+            </label>
+            <app-upload-files
+              name="uploadFilesConstanciaARL"
+              id="uploadFilesConstanciaARL"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setConstanciaArlFiles($event)"
+            ></app-upload-files>
+          </div>
+          <!--tarjeta profesional-->
+          <div class="col-12">
+            <label for="uploadFilesTarjetaProfesional" class="form-label"
+              >Tarjeta profesional (Cuando aplique)
+            </label>
+            <app-upload-files
+              name="uploadFilesTarjetaProfesional"
+              id="uploadFilesTarjetaProfesional"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setTarjetaProfesionalFiles($event)"
+            ></app-upload-files>
+          </div>
+          <!--hoja de vida-->
+          <div class="col-12">
+            <label for="uploadFilesHojaVida" class="form-label"
+              >Hoja de vida (Debidamente soportada)
+            </label>
+            <app-upload-files
+              name="uploadFilesHojaVida"
+              id="uploadFilesHojaVida"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setHojaVidaFiles($event)"
+            ></app-upload-files>
+          </div>
+          <!--soportes hoja de vida-->
+          <div class="col-12">
+            <label for="uploadFilesSoportesHojaVida" class="form-label"
+              >Soportes hoja de vida
+            </label>
+            <app-upload-files
+              name="uploadFilesSoportesHojaVida"
+              id="uploadFilesSoportesHojaVida"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setSoportesHojaVidaFiles($event)"
+            ></app-upload-files>
+          </div>
+          <!--justificacion de la contratacion-->
+          <div class="col-12">
+            <label for="uploadFilesJustificacionContratacion" class="form-label"
+              >Soporte justificacion de la seleccion del contratista
+            </label>
+            <app-upload-files
+              name="uploadFilesJustificacionContratacion"
+              id="uploadFilesJustificacionContratacion"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setJustificacionContratacionFiles($event)"
+            ></app-upload-files>
+          </div>
+          <!--cotizacion u oferta-->
+          <div class="col-12">
+            <label for="uploadFilesCotizacionOferta" class="form-label"
+              >Cotizacion u Oferta
+            </label>
+            <app-upload-files
+              name="uploadFilesCotizacionOferta"
+              id="uploadFilesCotizacionOferta"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setCotizacionOfertaFiles($event)"
+            ></app-upload-files>
+          </div>
+          <!--informe tecnico-->
+          <div class="col-12">
+            <label for="uploadFilesInformeTecnico" class="form-label"
+              >Informe tecnico (cuando aplique modalidad 14.1.1. contratacion
+              directa por excepcion)
+            </label>
+            <app-upload-files
+              name="uploadFilesInformeTecnico"
+              id="uploadFilesInformeTecnico"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setInformeTecnicoFiles($event)"
+            ></app-upload-files>
+          </div>
+          <!--cuadro comparativo-->
+          <div class="col-12">
+            <label for="uploadFilesCuadroComparativo" class="form-label"
+              >Cuadro comparativo (caundo aplique modalidad 14.2 contratacion
+              por comparativa de precios)
+            </label>
+            <app-upload-files
+              name="uploadFilesCuadroComparativo"
+              id="uploadFilesCuadroComparativo"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setCuadroComparativoFiles($event)"
             ></app-upload-files>
           </div>
           <div class="col-12">
@@ -1265,61 +1412,6 @@
                   ></app-upload-files>
                 </div>
                 <div class="col-12">
-                  <label
-                    for="uploadFilesCertificacionBancaria"
-                    class="form-label"
-                    >Certificacion bancaria<span class="text-danger">*</span>
-                  </label>
-                  <app-upload-files
-                    name="uploadFilesCertificacionBancaria"
-                    id="uploadFilesCertificacionBancaria"
-                    [contentAsArrayBuffer]="true"
-                    [requiredFeedback]="
-                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
-                    "
-                    (onFilesChange)="setCertificacionBancariaFiles($event)"
-                  ></app-upload-files>
-                </div>
-                <div class="col-12">
-                  <label
-                    for="uploadFilesConstanciaAfiliacionSalud"
-                    class="form-label"
-                    >Constancia de afiliacion a salud (Fechas no superiores a 1
-                    mes) (Contributivo - Independiente - Activo)<span
-                      class="text-danger"
-                      >*</span
-                    >
-                  </label>
-                  <app-upload-files
-                    name="uploadFilesConstanciaAfiliacionSalud"
-                    id="uploadFilesConstanciaAfiliacionSalud"
-                    [contentAsArrayBuffer]="true"
-                    [requiredFeedback]="
-                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
-                    "
-                    (onFilesChange)="setConstanciaAfiliacionSaludFiles($event)"
-                  ></app-upload-files>
-                </div>
-                <div class="col-12">
-                  <label
-                    for="uploadFilesConstanciaAfiliacionPension"
-                    class="form-label"
-                    >Constancia de afiliacion a pension (Fechas no superiores a
-                    1 mes)<span class="text-danger">*</span>
-                  </label>
-                  <app-upload-files
-                    name="uploadFilesConstanciaAfiliacionPension"
-                    id="uploadFilesConstanciaAfiliacionPension"
-                    [contentAsArrayBuffer]="true"
-                    [requiredFeedback]="
-                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
-                    "
-                    (onFilesChange)="
-                      setConstanciaAfiliacionPensionFiles($event)
-                    "
-                  ></app-upload-files>
-                </div>
-                <div class="col-12">
                   <label for="uploadFilesTarjetaProfesional" class="form-label"
                     >Tarjeta profesional (Cuando aplique)
                   </label>
@@ -1382,37 +1474,6 @@
                       'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
                     "
                     (onFilesChange)="setExperienciaLaboralFiles($event)"
-                  ></app-upload-files>
-                </div>
-                <div class="col-12">
-                  <label for="uploadFilesHojaVida" class="form-label"
-                    >Hoja de vida (Debidamente soportada)<span
-                      class="text-danger"
-                      >*</span
-                    >
-                  </label>
-                  <app-upload-files
-                    name="uploadFilesHojaVida"
-                    id="uploadFilesHojaVida"
-                    [contentAsArrayBuffer]="true"
-                    [requiredFeedback]="
-                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
-                    "
-                    (onFilesChange)="setHojaVidaFiles($event)"
-                  ></app-upload-files>
-                </div>
-                <div class="col-12">
-                  <label for="uploadFilesHojaVida" class="form-label"
-                    >Certificado ARL<span class="text-danger">*</span>
-                  </label>
-                  <app-upload-files
-                    name="uploadFilesHojaVida"
-                    id="uploadFilesHojaVida"
-                    [contentAsArrayBuffer]="true"
-                    [requiredFeedback]="
-                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
-                    "
-                    (onFilesChange)="setCertificadoARLFiles($event)"
                   ></app-upload-files>
                 </div>
               </div>
@@ -1585,39 +1646,6 @@
                       'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
                     "
                     (onFilesChange)="setSolicitudContratacionFiles($event)"
-                  ></app-upload-files>
-                </div>
-                <div class="col-12">
-                  <label
-                    for="uploadFilesJustificacionContratacion"
-                    class="form-label"
-                    >Soporte justificacion de la seleccion del contratista<span
-                      class="text-danger"
-                      >*</span
-                    >
-                  </label>
-                  <app-upload-files
-                    name="uploadFilesJustificacionContratacion"
-                    id="uploadFilesJustificacionContratacion"
-                    [contentAsArrayBuffer]="true"
-                    [requiredFeedback]="
-                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
-                    "
-                    (onFilesChange)="setJustificacionContratacionFiles($event)"
-                  ></app-upload-files>
-                </div>
-                <div class="col-12">
-                  <label for="uploadFilesCotizacionOferta" class="form-label"
-                    >Cotizacion / Oferta<span class="text-danger">*</span>
-                  </label>
-                  <app-upload-files
-                    name="uploadFilesCotizacionOferta"
-                    id="uploadFilesCotizacionOferta"
-                    [contentAsArrayBuffer]="true"
-                    [requiredFeedback]="
-                      'Este campo es (*) obligatorio, cargue almenos 1 archivo.'
-                    "
-                    (onFilesChange)="setCotizacionOfertaFiles($event)"
                   ></app-upload-files>
                 </div>
               </div>
