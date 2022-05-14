@@ -33,6 +33,7 @@ import { MinOnlyPriceNumbersDirective } from './directives/min-only-price-number
 import { FormsJuridicaEulaComponent } from './components/forms/juridica/eula/eula.component';
 import { FormsJuridicaMinutaComponent } from './components/forms/juridica/minuta/minuta.component';
 import { ComprasComponent } from './components/forms/compras/compras.component';
+import { FormsJuridicaPliegosComponent } from './components/forms/juridica/pliegos/pliegos.component';
 
 let msalInstance: IPublicClientApplication | undefined = undefined;
 
@@ -77,6 +78,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FormsJuridicaEulaComponent,
     FormsJuridicaMinutaComponent,
     ComprasComponent,
+    FormsJuridicaPliegosComponent,
   ],
   imports: [
     BrowserModule,
