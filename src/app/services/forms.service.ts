@@ -213,6 +213,21 @@ export class FormsService {
     );
   }
 
+  getFormJuridicaPliegosAvailability(_id: string): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/pliegos/availability`,
+        {
+          params: new HttpParams().appendAll({
+            _id,
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
   getFormJuridicaMinutaVerifyEncargado(
     _id: string,
     encargado: string
@@ -221,6 +236,25 @@ export class FormsService {
       new HttpRequest(
         'GET',
         `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/minuta/verifyencargado`,
+        {
+          params: new HttpParams().appendAll({
+            _id,
+            encargado,
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  getFormJuridicaPliegosVerifyEncargado(
+    _id: string,
+    encargado: string
+  ): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/pliegos/verifyencargado`,
         {
           params: new HttpParams().appendAll({
             _id,

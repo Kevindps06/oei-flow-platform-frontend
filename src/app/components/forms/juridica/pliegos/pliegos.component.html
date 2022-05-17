@@ -1,1 +1,242 @@
-<p>pliegos works!</p>
+<div *ngIf="formJuridica" class="row g-3">
+  <div class="col-12">
+    <div class="card card-body">
+      <div class="row g-3">
+        <div class="col-12">
+          <h5 class="card-title text-center">
+            {{
+              formJuridica
+                ? formJuridica.TipoProceso +
+                  " - " +
+                  formJuridica.TipoPersona +
+                  " - " +
+                  (formJuridica.TipoAdquisicion === "Otro"
+                    ? formJuridica.TipoAdquisicionOtro
+                    : formJuridica.TipoAdquisicion)
+                : ""
+            }}
+          </h5>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <textarea
+              [(ngModel)]="field1"
+              name="floatingTextareaField1"
+              id="floatingTextareaField1"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': field1,
+                'is-invalid': !field1
+              }"
+              placeholder="\0"
+            ></textarea>
+            <label for="floatingTextareaField1">Field 1</label>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <textarea
+              [(ngModel)]="field2"
+              (input)="invalidatePreview()"
+              name="floatingTextareaField2"
+              id="floatingTextareaField2"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': field2,
+                'is-invalid': !field2
+              }"
+              placeholder="\0"
+            ></textarea>
+            <label for="floatingTextareaField2">Field 2</label>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <textarea
+              [(ngModel)]="field3"
+              (input)="invalidatePreview()"
+              name="floatingTextareaField3"
+              id="floatingTextareaField3"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': field3,
+                'is-invalid': !field3
+              }"
+              placeholder="\0"
+            ></textarea>
+            <label for="floatingTextareaField3">Field 3</label>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <textarea
+              [(ngModel)]="field4"
+              (input)="invalidatePreview()"
+              name="floatingTextareaField4"
+              id="floatingTextareaField4"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': field4,
+                'is-invalid': !field4
+              }"
+              placeholder="\0"
+            ></textarea>
+            <label for="floatingTextareaField4">Field 4</label>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <textarea
+              [(ngModel)]="field5"
+              (input)="invalidatePreview()"
+              name="floatingTextareaField5"
+              id="floatingTextareaField5"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': field5,
+                'is-invalid': !field5
+              }"
+              placeholder="\0"
+            ></textarea>
+            <label for="floatingTextareaField5">Field 5</label>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <textarea
+              [(ngModel)]="field6"
+              (input)="invalidatePreview()"
+              name="floatingTextareaField6"
+              id="floatingTextareaField6"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': field6,
+                'is-invalid': !field6
+              }"
+              placeholder="\0"
+            ></textarea>
+            <label for="floatingTextareaField6">Field 6</label>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <textarea
+              [(ngModel)]="field7"
+              (input)="invalidatePreview()"
+              name="floatingTextareaField7"
+              id="floatingTextareaField7"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': field7,
+                'is-invalid': !field7
+              }"
+              placeholder="\0"
+            ></textarea>
+            <label for="floatingTextareaField7">Field 7</label>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <textarea
+              [(ngModel)]="field8"
+              (input)="invalidatePreview()"
+              name="floatingTextareaField8"
+              id="floatingTextareaField8"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': field8,
+                'is-invalid': !field8
+              }"
+              placeholder="\0"
+            ></textarea>
+            <label for="floatingTextareaField8">Field 8</label>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <textarea
+              [(ngModel)]="field9"
+              (input)="invalidatePreview()"
+              name="floatingTextareaField9"
+              id="floatingTextareaField9"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': field9,
+                'is-invalid': !field9
+              }"
+              placeholder="\0"
+            ></textarea>
+            <label for="floatingTextareaField9">Field 9</label>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <textarea
+              [(ngModel)]="field10"
+              (input)="invalidatePreview()"
+              name="floatingTextareaField10"
+              id="floatingTextareaField10"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': field10,
+                'is-invalid': !field10
+              }"
+              placeholder="\0"
+            ></textarea>
+            <label for="floatingTextareaField10">Field 10</label>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div class="d-grid gap-2 col-6 mx-auto mb-2">
+          <button
+            class="btn btn-primary"
+            (click)="btnPreviewClick()"
+            role="button"
+            [disabled]="!isValidPreview()"
+          >
+            Pre visualizar
+          </button>
+        </div>
+        <div class="d-grid gap-2 col-6 mx-auto mb-2">
+          <button
+            class="btn btn-primary"
+            (click)="btnSubmitClick()"
+            role="button"
+            [disabled]="!isValid()"
+          >
+            Generar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
