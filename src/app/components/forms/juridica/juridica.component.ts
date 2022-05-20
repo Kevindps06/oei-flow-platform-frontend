@@ -25,7 +25,7 @@ export class FormsJuridicaComponent implements OnInit {
         ['Max', 40000000],
       ]),
     ],
-    ['Directa por extencion', undefined],
+    ['Directa por excepcion', undefined],
     ['Comparativa de precios', undefined],
     [
       'Procedimiento super simplificado',
@@ -37,7 +37,7 @@ export class FormsJuridicaComponent implements OnInit {
     [
       'Procedimiento simplificado',
       new Map([
-        ['Min', 80000000],
+        ['Min', 80000001],
         ['Max', 400000000],
       ]),
     ],
