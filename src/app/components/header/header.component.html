@@ -74,10 +74,7 @@
         <li *ngIf="isLoggedIn()" class="nav-item dropdown">
           <a
             [ngClass]="{
-              active:
-                isRoute('/forms/juridica') ||
-                isRoute('/forms/adquisicion') ||
-                isRoute('/forms/coordinacionlogistica')
+              active: isRoute('/forms/juridica') || isRoute('/forms/compras')
             }"
             class="nav-link dropdown-toggle text-white"
             id="navbarScrollingDropdownGestion"

@@ -242,7 +242,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   }
 
   btnPreviewClick() {
-    let formsJuridicaRequestMinutaGenerate = {
+    let formsJuridicaMinutaGenerate = {
       tipoInmueble: this.tipoInmueble,
       nombreArrendador: this.nombreArrendador,
       numeroNit: this.numeroNit,
@@ -291,18 +291,18 @@ export class FormsJuridicaMinutaComponent implements OnInit {
       field25: this.field25,
     };
 
-    let postFormsJuridicaRequestMinutaGenerateTaskId!: string;
+    let postFormsJuridicaMinutaGenerateTaskId!: string;
     this.formsService
       .postFormJuridicaMinutaGenerate(
         this.formJuridica.TipoAdquisicion,
         this.formJuridica.TipoPersona,
-        formsJuridicaRequestMinutaGenerate
+        formsJuridicaMinutaGenerate
       )
       .subscribe(
         async (httpEvent) => {
           switch (httpEvent.type) {
             case HttpEventType.Sent:
-              postFormsJuridicaRequestMinutaGenerateTaskId =
+              postFormsJuridicaMinutaGenerateTaskId =
                 this.sharedService.pushWaitTask({
                   description:
                     'Validando certificado de ingresos y retenciones...',
@@ -311,7 +311,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               break;
             case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
-                id: postFormsJuridicaRequestMinutaGenerateTaskId,
+                id: postFormsJuridicaMinutaGenerateTaskId,
                 progress: Math.round(
                   (httpEvent.loaded * 100) / httpEvent.total
                 ),
@@ -329,12 +329,12 @@ export class FormsJuridicaMinutaComponent implements OnInit {
         },
         (httpEventError) => {
           this.sharedService.removeWaitTask({
-            id: postFormsJuridicaRequestMinutaGenerateTaskId,
+            id: postFormsJuridicaMinutaGenerateTaskId,
           });
         },
         () => {
           this.sharedService.removeWaitTask({
-            id: postFormsJuridicaRequestMinutaGenerateTaskId,
+            id: postFormsJuridicaMinutaGenerateTaskId,
           });
         }
       );

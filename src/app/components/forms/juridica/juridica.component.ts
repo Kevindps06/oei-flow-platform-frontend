@@ -21,8 +21,8 @@ export class FormsJuridicaComponent implements OnInit {
     [
       'Directa',
       new Map([
-        ['Min', 0],
-        ['Max', 40000000],
+        ['Min', 10000001],
+        ['Max', 40000001],
       ]),
     ],
     ['Directa por excepcion', undefined],
@@ -30,28 +30,28 @@ export class FormsJuridicaComponent implements OnInit {
     [
       'Procedimiento super simplificado',
       new Map([
-        ['Min', 40000000],
-        ['Max', 80000000],
+        ['Min', 40000001],
+        ['Max', 80000001],
       ]),
     ],
     [
       'Procedimiento simplificado',
       new Map([
         ['Min', 80000001],
-        ['Max', 400000000],
+        ['Max', 400000001],
       ]),
     ],
     [
       'Contrato marco',
       new Map([
         ['Min', 0],
-        ['Max', 5000000000],
+        ['Max', 5000000001],
       ]),
     ],
     [
       'Licitacion',
       new Map([
-        ['Min', 400000000],
+        ['Min', 400000001],
         ['Max', NaN],
       ]),
     ],
@@ -1083,6 +1083,15 @@ export class FormsJuridicaComponent implements OnInit {
     );
   }
 
+  isConvocatorias(): boolean {
+    return (
+      this.tipoProceso === 'Procedimiento super simplificado' ||
+      this.tipoProceso === 'Procedimiento simplificado' ||
+      this.tipoProceso === 'Contrato marco' ||
+      this.tipoProceso === 'Licitacion'
+    );
+  }
+
   isValid() {
     switch (this.formIndex) {
       case 0:
@@ -1093,7 +1102,7 @@ export class FormsJuridicaComponent implements OnInit {
           (this.tipoAdquisicion === 'Otro' ? this.tipoAdquisicionOtro : true) &&
           this.tipoPersona &&
           this.convenioResponsable &&
-          Utils.validateEmail(this.email) &&
+          (this.isConvocatorias() ? true : Utils.validateEmail(this.email)) &&
           this.justificacionContratacion &&
           this.objetivoContratacion &&
           this.objeto &&

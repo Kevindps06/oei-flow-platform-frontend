@@ -36,6 +36,21 @@
           <app-forms-juridica-eula
             *ngIf="startWithRoute('/forms/juridica/') && endWithRoute('/eula')"
           ></app-forms-juridica-eula>
+          <app-forms-juridica-pliegos
+            *ngIf="
+              startWithRoute('/forms/juridica/') && endWithRoute('/pliegos')
+            "
+          ></app-forms-juridica-pliegos>
+          <app-forms-juridica-postulados
+            *ngIf="
+              startWithRoute('/forms/juridica/') && endWithRoute('/postulados')
+            "
+          ></app-forms-juridica-postulados>
+          <app-forms-juridica-postulados-files-upload
+            *ngIf="
+              startWithRoute('/forms/juridica/') && endWithRoute('/upload')
+            "
+          ></app-forms-juridica-postulados-files-upload>
           <!--Compras-->
           <app-forms-compras
             *ngIf="isRoute('/forms/compras')"

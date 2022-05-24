@@ -228,6 +228,81 @@ export class FormsService {
     );
   }
 
+  getFormJuridicaPostuladosAvailability(_id: string): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/postulados/availability`,
+        {
+          params: new HttpParams().appendAll({
+            _id,
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  getFormJuridicaPostuladosVerifyEncargado(
+    _id: string,
+    encargado: string
+  ): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/postulados/verifyencargado`,
+        {
+          params: new HttpParams().appendAll({
+            _id,
+            encargado,
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  postFormJuridicaPliegosGenerate(
+    TipoAdquisicion: string,
+    TipoPersona: string,
+    formJuridicaPliegos: any
+  ): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'POST',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/pliegos/generate`,
+        formJuridicaPliegos,
+        {
+          headers: new HttpHeaders({
+            'content-type': 'application/json',
+          }),
+          params: new HttpParams().appendAll({
+            TipoAdquisicion,
+            TipoPersona,
+          }),
+          reportProgress: true,
+          responseType: 'blob',
+        }
+      )
+    );
+  }
+
+  postFormJuridicaPliegos(formJuridicaPliegos: any): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'POST',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/pliegos`,
+        formJuridicaPliegos,
+        {
+          headers: new HttpHeaders({
+            'content-type': 'application/json',
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
   getFormJuridicaMinutaVerifyEncargado(
     _id: string,
     encargado: string
@@ -295,6 +370,23 @@ export class FormsService {
         {
           params: new HttpParams().appendAll({
             _id,
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  getFormJuridicaPostuladosFilesUploadRequestCode(
+    formJuridicaId: string
+  ): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/postulados/upload-files/requestcode`,
+        {
+          params: new HttpParams().appendAll({
+            Juridica: formJuridicaId,
           }),
           reportProgress: true,
         }

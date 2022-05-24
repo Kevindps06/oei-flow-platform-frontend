@@ -14,12 +14,6 @@
               class="form-check"
             >
               <input
-                [disabled]="
-                  mapItem.key === 'Procedimiento super simplificado' ||
-                  mapItem.key === 'Procedimiento simplificado' ||
-                  mapItem.key === 'Contrato marco' ||
-                  mapItem.key === 'Licitacion'
-                "
                 [(ngModel)]="tipoProceso"
                 class="form-check-input"
                 type="radio"
@@ -261,7 +255,7 @@
               </div>
             </div>
           </div>
-          <div class="col-12">
+          <div *ngIf="!isConvocatorias()" class="col-12">
             <div class="col-12">
               <label class="form-label" for="inputEmail"
                 >Correo electronico personal y privado del tercero<strong

@@ -1,14 +1,16 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { saveAs } from 'file-saver';
 import { Utils } from 'src/app/classes/utils';
 import { FormsJuridica } from 'src/app/interfaces/forms-juridica';
 import { FormsService } from 'src/app/services/forms.service';
 import { LoginService } from 'src/app/services/login.service';
 import { SharedService } from 'src/app/services/shared.service';
+import { Buffer } from 'buffer';
 
 @Component({
-  selector: 'app-pliegos',
+  selector: 'app-forms-juridica-pliegos',
   templateUrl: './pliegos.component.html',
   styleUrls: ['./pliegos.component.css'],
 })
@@ -194,11 +196,173 @@ export class FormsJuridicaPliegosComponent implements OnInit {
       );
   }
 
-  invalidatePreview() {}
+  invalidatePreview() {
+    this.file = undefined;
+  }
 
-  btnPreviewClick() {}
+  btnPreviewClick() {
+    let formsJuridicaPliegosGenerate = {
+      field1: this.field1,
+      field2: this.field2,
+      field3: this.field3,
+      field4: this.field4,
+      field5: this.field5,
+      field6: this.field6,
+      field7: this.field7,
+      field8: this.field8,
+      field9: this.field9,
+      field10: this.field10,
+    };
 
-  btnSubmitClick() {}
+    let postFormsJuridicaPliegosGenerateTaskId!: string;
+    this.formsService
+      .postFormJuridicaPliegosGenerate(
+        this.formJuridica.TipoAdquisicion,
+        this.formJuridica.TipoPersona,
+        formsJuridicaPliegosGenerate
+      )
+      .subscribe(
+        async (httpEvent) => {
+          switch (httpEvent.type) {
+            case HttpEventType.Sent:
+              postFormsJuridicaPliegosGenerateTaskId =
+                this.sharedService.pushWaitTask({
+                  description:
+                    'Validando certificado de ingresos y retenciones...',
+                  progress: 0,
+                }) as string;
+              break;
+            case HttpEventType.DownloadProgress:
+              this.sharedService.pushWaitTask({
+                id: postFormsJuridicaPliegosGenerateTaskId,
+                progress: Math.round(
+                  (httpEvent.loaded * 100) / httpEvent.total
+                ),
+              });
+              break;
+            case HttpEventType.Response:
+              this.file = httpEvent.body;
+              const currentDate = new Date();
+              saveAs(
+                this.file!,
+                `pliegos preview ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`
+              );
+              break;
+          }
+        },
+        (httpEventError) => {
+          this.sharedService.removeWaitTask({
+            id: postFormsJuridicaPliegosGenerateTaskId,
+          });
+        },
+        () => {
+          this.sharedService.removeWaitTask({
+            id: postFormsJuridicaPliegosGenerateTaskId,
+          });
+        }
+      );
+  }
+
+  async btnSubmitClick() {
+    const formsJuridicaPliegos = {
+      Field1: this.field1,
+      Field2: this.field2,
+      Field3: this.field3,
+      Field4: this.field4,
+      Field5: this.field5,
+      Field6: this.field6,
+      Field7: this.field7,
+      Field8: this.field8,
+      Field9: this.field9,
+      Field10: this.field10,
+      File: Buffer.from(await this.file!.arrayBuffer()),
+      FormJuridica: this.formJuridicaId,
+    };
+
+    let postFormsJuridicaPliegosTaskId: string;
+    this.formsService.postFormJuridicaPliegos(formsJuridicaPliegos).subscribe(
+      (httpEvent) => {
+        switch (httpEvent.type) {
+          case HttpEventType.Sent:
+            postFormsJuridicaPliegosTaskId = this.sharedService.pushWaitTask({
+              description: 'Enviando informacion de la peticion...',
+              progress: 0,
+            }) as string;
+            break;
+          case HttpEventType.UploadProgress:
+            this.sharedService.pushWaitTask({
+              id: postFormsJuridicaPliegosTaskId,
+              progress: Math.round((httpEvent.loaded * 100) / httpEvent.total),
+            });
+            break;
+          case HttpEventType.Response:
+            let putFormsJuridicaRequestTaskId: string;
+            this.formsService
+              .putFormJuridica(this.formJuridicaId, {
+                JuridicaPliegos: httpEvent.body._id,
+              })
+              .subscribe(
+                (httpEvent) => {
+                  switch (httpEvent.type) {
+                    case HttpEventType.Sent:
+                      putFormsJuridicaRequestTaskId =
+                        this.sharedService.pushWaitTask({
+                          description:
+                            'Actualizando informacion de la peticion...',
+                          progress: 0,
+                        }) as string;
+                      break;
+                    case HttpEventType.UploadProgress:
+                      this.sharedService.pushWaitTask({
+                        id: putFormsJuridicaRequestTaskId,
+                        progress: Math.round(
+                          (httpEvent.loaded * 100) / httpEvent.total
+                        ),
+                      });
+                      break;
+                  }
+                },
+                (httpEventError) => {
+                  this.sharedService.removeWaitTask({
+                    id: putFormsJuridicaRequestTaskId,
+                  });
+                },
+                () => {
+                  this.sharedService.pushToastMessage({
+                    id: Utils.makeRandomString(4),
+                    title: `Informacion ingresada`,
+                    description: `Su respuesta ha sido correctamente ingresada, carge el archivo generado en su repositorio asignado y proceda a responder el flujo.`,
+                    autohide: 15000,
+                  });
+
+                  this.router.navigate(['/']);
+
+                  const currentDate = new Date();
+                  saveAs(
+                    this.file!,
+                    `pliegos final ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`
+                  );
+
+                  this.sharedService.removeWaitTask({
+                    id: putFormsJuridicaRequestTaskId,
+                  });
+                }
+              );
+            break;
+        }
+      },
+      (httpEventError) => {
+        this.sharedService.removeWaitTask({
+          id: postFormsJuridicaPliegosTaskId,
+        });
+      },
+      () => {
+        this.sharedService.removeWaitTask({
+          id: postFormsJuridicaPliegosTaskId,
+        });
+      }
+    );
+  }
 
   isValidPreview() {
     switch (this.formJuridica.TipoAdquisicion) {
@@ -213,8 +377,7 @@ export class FormsJuridicaPliegosComponent implements OnInit {
           this.field7 &&
           this.field8 &&
           this.field9 &&
-          this.field10 &&
-          this.file
+          this.field10
         );
       default:
         return false;

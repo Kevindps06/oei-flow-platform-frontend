@@ -49,6 +49,18 @@ export class FormsComponent implements OnInit {
         this.title = 'Gestion juridica eula';
         //this.description = 'Formulario de gestion juridica eula descripcion.';
         return;
+      case `/forms/juridica/${this.activatedRoute.snapshot.params.id}/pliegos`:
+        this.title = 'Gestion juridica pliegos';
+        //this.description = 'Formulario de gestion juridica pliegos descripcion.';
+        return;
+      case `/forms/juridica/${this.activatedRoute.snapshot.params.id}/postulados`:
+        this.title = 'Gestion juridica postulados';
+        //this.description = 'Formulario de gestion juridica postulados descripcion.';
+        return;
+      case `/forms/juridica/${this.activatedRoute.snapshot.params.id}/postulados/${this.activatedRoute.snapshot.params.idpostulado}/upload`:
+        this.title = `Gestion juridica postulado ${this.activatedRoute.snapshot.params.idpostulado} subida de documentos`;
+        //this.description = 'Formulario de gestion juridica postulados descripcion.';
+        return;
       // Compras
       case '/forms/compras':
         this.title = 'Gestion compras';

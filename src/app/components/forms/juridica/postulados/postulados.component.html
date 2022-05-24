@@ -1,0 +1,66 @@
+<div *ngIf="formJuridica" class="row g-3">
+  <div class="col-12">
+    <div class="card card-body">
+      <div class="row g-3">
+        <div *ngFor="let postulado of postulados" class="col-12">
+          <div class="card card-body">
+            <div class="row g-3">
+              <div class="col-10">
+                <h5 class="card-title">Postulado #{{ postulado.index + 1 }}</h5>
+              </div>
+              <div *ngIf="postulado.index > 0" class="col-2 d-grid gap-2">
+                <button
+                  (click)="btnRemovePostuladoClick(postulado.index)"
+                  type="button"
+                  class="btn btn-primary"
+                >
+                  Remover postulado
+                </button>
+              </div>
+              <div class="col-12">
+                <div class="form-floating">
+                  <input
+                    (change)="setPostulado(postulado.index, $event)"
+                    type="text"
+                    class="form-control"
+                    name="inputEmailPostulado{{ postulado.index }}"
+                    id="inputEmailPostulado{{ postulado.index }}"
+                    placeholder="\0"
+                    maxlength="32"
+                    [ngClass]="{
+                      'is-valid': validateEmail(
+                        postulados[postulado.index].email
+                      ),
+                      'is-invalid': !validateEmail(
+                        postulados[postulado.index].email
+                      )
+                    }"
+                  />
+                  <label for="inputEmailPostulado{{ postulado.index }}"
+                    >Correo del postulado<span class="text-danger"
+                      >*</span
+                    ></label
+                  >
+                  <div class="invalid-feedback">
+                    Este campo es (*) obligatorio, rellenelo con una opcion
+                    correcta.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-grid gap-2 col-6 mx-auto">
+          <button (click)="btnAddPostuladoClick()" class="btn btn-primary">
+            Agregar postulado
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="d-grid gap-2 col-12">
+    <button [disabled]="!allPostulados()" class="btn btn-primary">
+      Enviar
+    </button>
+  </div>
+</div>

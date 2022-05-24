@@ -34,6 +34,8 @@ import { FormsJuridicaEulaComponent } from './components/forms/juridica/eula/eul
 import { FormsJuridicaMinutaComponent } from './components/forms/juridica/minuta/minuta.component';
 import { ComprasComponent } from './components/forms/compras/compras.component';
 import { FormsJuridicaPliegosComponent } from './components/forms/juridica/pliegos/pliegos.component';
+import { FormsJuridicaPostuladosComponent } from './components/forms/juridica/postulados/postulados.component';
+import { FormsJuridicaPostuladosFilesUploadComponent } from './components/forms/juridica/postulados/files-upload/files-upload.component';
 
 let msalInstance: IPublicClientApplication | undefined = undefined;
 
@@ -79,6 +81,8 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FormsJuridicaMinutaComponent,
     ComprasComponent,
     FormsJuridicaPliegosComponent,
+    FormsJuridicaPostuladosComponent,
+    FormsJuridicaPostuladosFilesUploadComponent,
   ],
   imports: [
     BrowserModule,

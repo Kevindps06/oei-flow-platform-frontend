@@ -34,6 +34,18 @@ const routes: Routes = [
     component: FormsComponent,
   },
   {
+    path: 'forms/juridica/:id/pliegos',
+    component: FormsComponent,
+  },
+  {
+    path: 'forms/juridica/:id/postulados',
+    component: FormsComponent,
+  },
+  {
+    path: 'forms/juridica/:id/postulados/:idpostulado/upload',
+    component: FormsComponent,
+  },
+  {
     path: 'forms/compras',
     component: FormsComponent,
   },
