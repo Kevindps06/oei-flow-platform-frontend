@@ -1,7 +1,10 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Utils } from 'src/app/classes/utils';
+import { FileItem } from 'src/app/interfaces/FileItem';
 import { FormsJuridica } from 'src/app/interfaces/forms-juridica';
 import { FormsService } from 'src/app/services/forms.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -16,6 +19,7 @@ export class FormsJuridicaPostuladosFilesUploadComponent implements OnInit {
   formIndex: number = 0;
 
   formJuridicaId: string = '';
+  formJuridicaPostuladoId: string = '';
 
   formJuridica!: FormsJuridica;
 
@@ -23,6 +27,12 @@ export class FormsJuridicaPostuladosFilesUploadComponent implements OnInit {
 
   codigoVerificacionRequested: boolean = false;
   verificacionCodigoVerificacionError: boolean = false;
+
+  documentosFiles: FileItem[] = [];
+
+  setDocumentosFiles(documentosFiles: FileItem[]) {
+    this.documentosFiles = documentosFiles;
+  }
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -46,15 +56,17 @@ export class FormsJuridicaPostuladosFilesUploadComponent implements OnInit {
     }
 
     this.formJuridicaId = this.activatedRoute.snapshot.params.id;
+    this.formJuridicaPostuladoId =
+      this.activatedRoute.snapshot.params.postuladoid;
 
-    let getFormJuridicaPostuladosAvailabilityTaskId: string;
+    let getFormJuridicaPostuladosFilesUploadAvailabilityTaskId: string;
     this.formsService
-      .getFormJuridicaPostuladosAvailability(this.formJuridicaId)
+      .getFormJuridicaPostuladosFilesUploadAvailability(this.formJuridicaId)
       .subscribe(
         (httpEvent) => {
           switch (httpEvent.type) {
             case HttpEventType.Sent:
-              getFormJuridicaPostuladosAvailabilityTaskId =
+              getFormJuridicaPostuladosFilesUploadAvailabilityTaskId =
                 this.sharedService.pushWaitTask({
                   description: 'Verificando disponibilidad...',
                   progress: 0,
@@ -62,7 +74,7 @@ export class FormsJuridicaPostuladosFilesUploadComponent implements OnInit {
               break;
             case HttpEventType.DownloadProgress:
               this.sharedService.pushWaitTask({
-                id: getFormJuridicaPostuladosAvailabilityTaskId,
+                id: getFormJuridicaPostuladosFilesUploadAvailabilityTaskId,
                 progress: Math.round(
                   (httpEvent.loaded * 100) / httpEvent.total
                 ),
@@ -91,11 +103,11 @@ export class FormsJuridicaPostuladosFilesUploadComponent implements OnInit {
           }
 
           this.sharedService.removeWaitTask({
-            id: getFormJuridicaPostuladosAvailabilityTaskId,
+            id: getFormJuridicaPostuladosFilesUploadAvailabilityTaskId,
           });
         },
         () => {
-          let getFormsJuridicaPostuladosVerifyEncargadoTaskId: string;
+          let getFormsJuridicaPostuladosFilesUploadVerifyEncargadoTaskId: string;
           this.formsService
             .getFormJuridicaPostuladosVerifyEncargado(
               this.formJuridicaId,
@@ -105,7 +117,7 @@ export class FormsJuridicaPostuladosFilesUploadComponent implements OnInit {
               (httpEvent) => {
                 switch (httpEvent.type) {
                   case HttpEventType.Sent:
-                    getFormsJuridicaPostuladosVerifyEncargadoTaskId =
+                    getFormsJuridicaPostuladosFilesUploadVerifyEncargadoTaskId =
                       this.sharedService.pushWaitTask({
                         description: 'Verificando autorizacion...',
                         progress: 0,
@@ -113,7 +125,7 @@ export class FormsJuridicaPostuladosFilesUploadComponent implements OnInit {
                     break;
                   case HttpEventType.DownloadProgress:
                     this.sharedService.pushWaitTask({
-                      id: getFormsJuridicaPostuladosVerifyEncargadoTaskId,
+                      id: getFormsJuridicaPostuladosFilesUploadVerifyEncargadoTaskId,
                       progress: Math.round(
                         (httpEvent.loaded * 100) / httpEvent.total
                       ),
@@ -133,7 +145,7 @@ export class FormsJuridicaPostuladosFilesUploadComponent implements OnInit {
                 }
 
                 this.sharedService.removeWaitTask({
-                  id: getFormsJuridicaPostuladosVerifyEncargadoTaskId,
+                  id: getFormsJuridicaPostuladosFilesUploadVerifyEncargadoTaskId,
                 });
               },
               () => {
@@ -177,13 +189,13 @@ export class FormsJuridicaPostuladosFilesUploadComponent implements OnInit {
                   );
 
                 this.sharedService.removeWaitTask({
-                  id: getFormsJuridicaPostuladosVerifyEncargadoTaskId,
+                  id: getFormsJuridicaPostuladosFilesUploadVerifyEncargadoTaskId,
                 });
               }
             );
 
           this.sharedService.removeWaitTask({
-            id: getFormJuridicaPostuladosAvailabilityTaskId,
+            id: getFormJuridicaPostuladosFilesUploadAvailabilityTaskId,
           });
         }
       );
@@ -203,7 +215,10 @@ export class FormsJuridicaPostuladosFilesUploadComponent implements OnInit {
     if (this.currentAvailableAction === 'Solicitar codigo') {
       let getFormsJuridicaEulaRequestVerificationCodeTaskId: string;
       this.formsService
-        .getFormJuridicaEulaVerificationRequestCode(this.formJuridicaId)
+        .getFormJuridicaPostuladosFilesUploadVerificationRequestCode(
+          this.formJuridicaId,
+          this.formJuridicaPostuladoId
+        )
         .subscribe(
           (httpEvent) => {
             switch (httpEvent.type) {
@@ -270,9 +285,10 @@ export class FormsJuridicaPostuladosFilesUploadComponent implements OnInit {
     } else {
       let getFormsJuridicaEulaVerifyVerificationCodeTaskId: string;
       this.formsService
-        .getFormJuridicaEulaVerificationVerifyCode(
+        .getFormJuridicaPostuladosFilesUploadVerificationVerifyCode(
           this.formJuridicaEulaId,
-          this.codigoVerificacion
+          this.codigoVerificacion,
+          this.formJuridicaPostuladoId
         )
         .subscribe(
           (httpEvent) => {
@@ -401,5 +417,164 @@ export class FormsJuridicaPostuladosFilesUploadComponent implements OnInit {
           }
         );
     }
+  }
+
+  async btnSubmitClick() {
+    let juridicaUploadFiles = {
+      FormJuridica: this.formJuridicaId,
+    };
+
+    // Documentos
+    for (let i = 0; this.documentosFiles.length > i; i++) {
+      let postUploadFileTaskId: string;
+      await this.formsService
+        .postUploadFile(
+          this.documentosFiles[i].Name,
+          this.documentosFiles[i].Bytes as ArrayBuffer
+        )
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postUploadFileTaskId = this.sharedService.pushWaitTask({
+                  description: `Subiendo documentos...`,
+                  progress: 0,
+                }) as string;
+                break;
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postUploadFileTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.documentosFiles[i].Bytes;
+                this.documentosFiles[i].ServerPath = httpEvent.body;
+
+                this.sharedService.removeWaitTask({
+                  id: postUploadFileTaskId,
+                });
+                break;
+            }
+          }),
+          catchError((httpEventError) => {
+            this.sharedService.removeWaitTask({
+              id: postUploadFileTaskId,
+            });
+
+            return throwError(httpEventError);
+          })
+        )
+        .toPromise();
+    }
+
+    juridicaUploadFiles = Object.assign(juridicaUploadFiles, {
+      documentosFiles: this.documentosFiles,
+    });
+
+    let postFormsJuridicaPostuladosTaskId: string;
+    this.formsService
+      .postFormJuridicaPostuladosFilesUpload(
+        juridicaUploadFiles,
+        this.formJuridicaPostuladoId
+      )
+      .subscribe(
+        (httpEvent) => {
+          switch (httpEvent.type) {
+            case HttpEventType.Sent:
+              postFormsJuridicaPostuladosTaskId =
+                this.sharedService.pushWaitTask({
+                  description: 'Enviando informacion de la peticion...',
+                  progress: 0,
+                }) as string;
+              break;
+            case HttpEventType.UploadProgress:
+              this.sharedService.pushWaitTask({
+                id: postFormsJuridicaPostuladosTaskId,
+                progress: Math.round(
+                  (httpEvent.loaded * 100) / httpEvent.total
+                ),
+              });
+              break;
+            case HttpEventType.Response:
+              if (
+                Array.isArray(this.formJuridica.JuridicaPostuladosUploadFiles)
+              ) {
+                this.formJuridica.JuridicaPostuladosUploadFiles.push(
+                  httpEvent.body._id
+                );
+              } else {
+                this.formJuridica.JuridicaPostuladosUploadFiles = [
+                  httpEvent.body._id,
+                ];
+              }
+
+              let putFormsJuridicaTaskId: string;
+              this.formsService
+                .putFormJuridica(this.formJuridicaId, {
+                  JuridicaPostuladosUploadFiles:
+                    this.formJuridica.JuridicaPostuladosUploadFiles,
+                })
+                .subscribe(
+                  (httpEvent) => {
+                    switch (httpEvent.type) {
+                      case HttpEventType.Sent:
+                        putFormsJuridicaTaskId =
+                          this.sharedService.pushWaitTask({
+                            description:
+                              'Actualizando informacion de la peticion...',
+                            progress: 0,
+                          }) as string;
+                        break;
+                      case HttpEventType.UploadProgress:
+                        this.sharedService.pushWaitTask({
+                          id: putFormsJuridicaTaskId,
+                          progress: Math.round(
+                            (httpEvent.loaded * 100) / httpEvent.total
+                          ),
+                        });
+                        break;
+                    }
+                  },
+                  (httpEventError) => {
+                    this.sharedService.removeWaitTask({
+                      id: putFormsJuridicaTaskId,
+                    });
+                  },
+                  () => {
+                    this.sharedService.pushToastMessage({
+                      id: Utils.makeRandomString(4),
+                      title: `Informacion ingresada`,
+                      description: `Su respuesta ha sido correctamente ingresada, carge el archivo generado en su repositorio asignado y proceda a responder el flujo.`,
+                      autohide: 15000,
+                    });
+
+                    this.router.navigate(['/']);
+
+                    this.sharedService.removeWaitTask({
+                      id: putFormsJuridicaTaskId,
+                    });
+                  }
+                );
+              break;
+          }
+        },
+        (httpEventError) => {
+          this.sharedService.removeWaitTask({
+            id: postFormsJuridicaPostuladosTaskId,
+          });
+        },
+        () => {
+          this.sharedService.removeWaitTask({
+            id: postFormsJuridicaPostuladosTaskId,
+          });
+        }
+      );
+  }
+
+  isValid(): boolean {
+    return true;
   }
 }

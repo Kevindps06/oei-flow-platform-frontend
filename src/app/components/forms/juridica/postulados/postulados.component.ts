@@ -217,4 +217,90 @@ export class FormsJuridicaPostuladosComponent implements OnInit {
   btnRemovePostuladoClick(index: number) {
     this.postulados.splice(index, 1);
   }
+
+  btnSubmitClick() {
+    const juridicaPostulados = {
+      Postulados: this.postulados,
+      FormJuridica: this.formJuridicaId,
+    };
+
+    let postFormsJuridicaPostuladosTaskId: string;
+    this.formsService.postFormJuridicaPostulados(juridicaPostulados).subscribe(
+      (httpEvent) => {
+        switch (httpEvent.type) {
+          case HttpEventType.Sent:
+            postFormsJuridicaPostuladosTaskId = this.sharedService.pushWaitTask(
+              {
+                description: 'Enviando informacion de la peticion...',
+                progress: 0,
+              }
+            ) as string;
+            break;
+          case HttpEventType.UploadProgress:
+            this.sharedService.pushWaitTask({
+              id: postFormsJuridicaPostuladosTaskId,
+              progress: Math.round((httpEvent.loaded * 100) / httpEvent.total),
+            });
+            break;
+          case HttpEventType.Response:
+            let putFormsJuridicaTaskId: string;
+            this.formsService
+              .putFormJuridica(this.formJuridicaId, {
+                JuridicaPostulados: httpEvent.body._id,
+              })
+              .subscribe(
+                (httpEvent) => {
+                  switch (httpEvent.type) {
+                    case HttpEventType.Sent:
+                      putFormsJuridicaTaskId = this.sharedService.pushWaitTask({
+                        description:
+                          'Actualizando informacion de la peticion...',
+                        progress: 0,
+                      }) as string;
+                      break;
+                    case HttpEventType.UploadProgress:
+                      this.sharedService.pushWaitTask({
+                        id: putFormsJuridicaTaskId,
+                        progress: Math.round(
+                          (httpEvent.loaded * 100) / httpEvent.total
+                        ),
+                      });
+                      break;
+                  }
+                },
+                (httpEventError) => {
+                  this.sharedService.removeWaitTask({
+                    id: putFormsJuridicaTaskId,
+                  });
+                },
+                () => {
+                  this.sharedService.pushToastMessage({
+                    id: Utils.makeRandomString(4),
+                    title: `Informacion ingresada`,
+                    description: `Su respuesta ha sido correctamente ingresada, carge el archivo generado en su repositorio asignado y proceda a responder el flujo.`,
+                    autohide: 15000,
+                  });
+
+                  this.router.navigate(['/']);
+
+                  this.sharedService.removeWaitTask({
+                    id: putFormsJuridicaTaskId,
+                  });
+                }
+              );
+            break;
+        }
+      },
+      (httpEventError) => {
+        this.sharedService.removeWaitTask({
+          id: postFormsJuridicaPostuladosTaskId,
+        });
+      },
+      () => {
+        this.sharedService.removeWaitTask({
+          id: postFormsJuridicaPostuladosTaskId,
+        });
+      }
+    );
+  }
 }

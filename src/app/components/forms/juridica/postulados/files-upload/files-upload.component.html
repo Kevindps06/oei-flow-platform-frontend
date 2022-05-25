@@ -64,4 +64,25 @@
       </div>
     </div>
   </div>
+  <div *ngIf="formIndex === 1" class="col-12">
+    <!--constancia de afiliacion a salud-->
+    <div class="col-12">
+      <label for="uploadFilesDocumentos" class="form-label">Documentos </label>
+      <app-upload-files
+        name="uploadFilesDocumentos"
+        id="uploadFilesDocumentos"
+        [contentAsArrayBuffer]="true"
+        (onFilesChange)="setDocumentosFiles($event)"
+      ></app-upload-files>
+    </div>
+  </div>
+  <div *ngIf="formIndex === 1" class="d-grid gap-2 col-6 mx-auto mb-2">
+    <a
+      class="btn btn-primary"
+      (click)="btnSubmitClick()"
+      role="button"
+      [ngClass]="{ disabled: !isValid() }"
+      >Enviar</a
+    >
+  </div>
 </div>

@@ -42,4 +42,5 @@ export interface FormsJuridica {
   cuadroComparativoFiles?: FileItem[];
   InformacionAdicional: string;
   Requestor: any;
+  JuridicaPostuladosUploadFiles?: any;
 }

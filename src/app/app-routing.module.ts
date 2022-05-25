@@ -42,7 +42,7 @@ const routes: Routes = [
     component: FormsComponent,
   },
   {
-    path: 'forms/juridica/:id/postulados/:idpostulado/upload',
+    path: 'forms/juridica/:id/postulados/:postuladoid/upload',
     component: FormsComponent,
   },
   {

@@ -59,7 +59,11 @@
     </div>
   </div>
   <div class="d-grid gap-2 col-12">
-    <button [disabled]="!allPostulados()" class="btn btn-primary">
+    <button
+      (click)="btnSubmitClick()"
+      [disabled]="!allPostulados()"
+      class="btn btn-primary"
+    >
       Enviar
     </button>
   </div>
