@@ -296,6 +296,37 @@
               </div>
             </div>
           </div>
+          <div *ngIf="!isConvocatorias()" class="col-12">
+            <div class="col-12">
+              <label class="form-label" for="inputNumeroContrato"
+                >Numero de contrato<strong class="text-danger">*</strong
+                ><button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseNumeroContrato"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapseNumeroContrato"
+                name="collapseNumeroContrato"
+              >
+                <div class="card card-body"></div>
+              </div>
+              <input
+                name="inputNumeroContrato"
+                id="inputNumeroContrato"
+                type="email"
+                class="form-control"
+              />
+              <div class="invalid-feedback">
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+            </div>
+          </div>
           <div class="col-12">
             <label class="form-label" for="textareaJustificacionContratacion"
               >Justificacion de contratacion<strong class="text-danger"

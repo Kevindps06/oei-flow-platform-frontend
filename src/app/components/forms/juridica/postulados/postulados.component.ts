@@ -226,8 +226,8 @@ export class FormsJuridicaPostuladosComponent implements OnInit {
 
     let postFormsJuridicaPostuladosTaskId: string;
     this.formsService.postFormJuridicaPostulados(juridicaPostulados).subscribe(
-      (httpEvent) => {
-        switch (httpEvent.type) {
+      (httpEventPostulados) => {
+        switch (httpEventPostulados.type) {
           case HttpEventType.Sent:
             postFormsJuridicaPostuladosTaskId = this.sharedService.pushWaitTask(
               {
@@ -239,14 +239,16 @@ export class FormsJuridicaPostuladosComponent implements OnInit {
           case HttpEventType.UploadProgress:
             this.sharedService.pushWaitTask({
               id: postFormsJuridicaPostuladosTaskId,
-              progress: Math.round((httpEvent.loaded * 100) / httpEvent.total),
+              progress: Math.round(
+                (httpEventPostulados.loaded * 100) / httpEventPostulados.total
+              ),
             });
             break;
           case HttpEventType.Response:
             let putFormsJuridicaTaskId: string;
             this.formsService
               .putFormJuridica(this.formJuridicaId, {
-                JuridicaPostulados: httpEvent.body._id,
+                JuridicaPostulados: httpEventPostulados.body._id,
               })
               .subscribe(
                 (httpEvent) => {
@@ -266,6 +268,54 @@ export class FormsJuridicaPostuladosComponent implements OnInit {
                         ),
                       });
                       break;
+                    case HttpEventType.Response:
+                      let putFormsJuridicaPostuladosSendRequestTaskId: string;
+                      this.formsService
+                        .getFormJuridicaPostuladosSendRequests(
+                          httpEventPostulados.body._id
+                        )
+                        .subscribe(
+                          (httpEvent) => {
+                            switch (httpEvent.type) {
+                              case HttpEventType.Sent:
+                                putFormsJuridicaPostuladosSendRequestTaskId =
+                                  this.sharedService.pushWaitTask({
+                                    description:
+                                      'Enviando informacion de la peticion...',
+                                    progress: 0,
+                                  }) as string;
+                                break;
+                              case HttpEventType.UploadProgress:
+                                this.sharedService.pushWaitTask({
+                                  id: putFormsJuridicaPostuladosSendRequestTaskId,
+                                  progress: Math.round(
+                                    (httpEvent.loaded * 100) / httpEvent.total
+                                  ),
+                                });
+                                break;
+                            }
+                          },
+                          (httpEventError) => {
+                            this.sharedService.removeWaitTask({
+                              id: putFormsJuridicaPostuladosSendRequestTaskId,
+                            });
+                          },
+                          () => {
+                            this.sharedService.pushToastMessage({
+                              id: Utils.makeRandomString(4),
+                              title: `Informacion ingresada`,
+                              description: `Su respuesta ha sido correctamente ingresada, enviadas las peticiones de subida de documentos, puede proceder a responder el flujo.`,
+                              autohide: 15000,
+                            });
+
+                            this.router.navigate(['/']);
+
+                            this.sharedService.removeWaitTask({
+                              id: putFormsJuridicaPostuladosSendRequestTaskId,
+                            });
+                          }
+                        );
+                      break;
                   }
                 },
                 (httpEventError) => {
@@ -274,15 +324,6 @@ export class FormsJuridicaPostuladosComponent implements OnInit {
                   });
                 },
                 () => {
-                  this.sharedService.pushToastMessage({
-                    id: Utils.makeRandomString(4),
-                    title: `Informacion ingresada`,
-                    description: `Su respuesta ha sido correctamente ingresada, carge el archivo generado en su repositorio asignado y proceda a responder el flujo.`,
-                    autohide: 15000,
-                  });
-
-                  this.router.navigate(['/']);
-
                   this.sharedService.removeWaitTask({
                     id: putFormsJuridicaTaskId,
                   });

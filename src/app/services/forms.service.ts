@@ -179,12 +179,30 @@ export class FormsService {
     );
   }
 
-  postFormJuridicaPostulados(formJuridicaMinuta: any): Observable<any> {
+  getFormJuridicaPostuladosSendRequests(_id: string): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/postulados/sendrequest`,
+        {
+          headers: new HttpHeaders({
+            'content-type': 'application/json',
+          }),
+          params: new HttpParams().appendAll({
+            _id,
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  postFormJuridicaPostulados(formJuridicaPostulados: any): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'POST',
         `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/postulados`,
-        formJuridicaMinuta,
+        formJuridicaPostulados,
         {
           headers: new HttpHeaders({
             'content-type': 'application/json',

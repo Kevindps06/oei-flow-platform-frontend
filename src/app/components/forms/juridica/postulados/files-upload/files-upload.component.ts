@@ -43,18 +43,6 @@ export class FormsJuridicaPostuladosFilesUploadComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (!this.loginService.activeAccoount()) {
-      this.router.navigate(['/login']);
-
-      this.sharedService.pushToastMessage({
-        id: Utils.makeRandomString(4),
-        title: `Inautorizado`,
-        description: `El contenido al que esta intentando ingresar es de uso restringido, autentifiquese y vuelva a intentar ingresar.`,
-      });
-
-      return;
-    }
-
     this.formJuridicaId = this.activatedRoute.snapshot.params.id;
     this.formJuridicaPostuladoId =
       this.activatedRoute.snapshot.params.postuladoid;
