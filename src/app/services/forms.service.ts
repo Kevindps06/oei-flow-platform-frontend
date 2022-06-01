@@ -179,17 +179,17 @@ export class FormsService {
     );
   }
 
-  getFormJuridicaPostuladosSendRequests(_id: string): Observable<any> {
+  getFormJuridicaPostuladosSendNotification(email: string): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/postulados/sendrequest`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/postulados/sendnotification`,
         {
           headers: new HttpHeaders({
             'content-type': 'application/json',
           }),
           params: new HttpParams().appendAll({
-            _id,
+            email,
           }),
           reportProgress: true,
         }
@@ -452,7 +452,7 @@ export class FormsService {
 
   getFormJuridicaPostuladosFilesUploadVerificationRequestCode(
     formJuridicaId: string,
-    postuladoId: string
+    email: string
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
@@ -461,7 +461,7 @@ export class FormsService {
         {
           params: new HttpParams().appendAll({
             Juridica: formJuridicaId,
-            postuladoid: postuladoId,
+            email,
           }),
           reportProgress: true,
         }
@@ -489,7 +489,7 @@ export class FormsService {
   getFormJuridicaPostuladosFilesUploadVerificationVerifyCode(
     _id: string,
     VerificationCode: string,
-    postuladoId: string
+    email: string
   ): Observable<any> {
     return this.http.request(
       new HttpRequest(
@@ -499,7 +499,7 @@ export class FormsService {
           params: new HttpParams().appendAll({
             _id,
             VerificationCode,
-            postuladoid: postuladoId,
+            email,
           }),
           reportProgress: true,
         }

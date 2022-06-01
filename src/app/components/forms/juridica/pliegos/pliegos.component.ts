@@ -8,6 +8,8 @@ import { FormsService } from 'src/app/services/forms.service';
 import { LoginService } from 'src/app/services/login.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { Buffer } from 'buffer';
+import { getCurrencySymbol } from '@angular/common';
+import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'app-forms-juridica-pliegos',
@@ -27,6 +29,39 @@ export class FormsJuridicaPliegosComponent implements OnInit {
   field8: string = '';
   field9: string = '';
   field10: string = '';
+
+  fechaInicio!: Date;
+
+  setFechaInicio(fechaInicio: Date) {
+    this.fechaInicio = fechaInicio;
+
+    if (this.horaInicio) {
+      this.fechaInicio.setHours(this.horaInicio);
+    }
+  }
+
+  horaInicio!: number;
+
+  setHoraInicio() {
+    this.fechaInicio.setHours(this.horaInicio);
+  }
+
+  fechaFin!: Date;
+
+  setFechaFin(fechaFin: Date) {
+    this.fechaFin = fechaFin;
+
+    if (this.horaFin) {
+      this.fechaFin.setHours(this.horaFin);
+    }
+  }
+
+  horaFin!: number;
+
+  setHoraFin() {
+    this.fechaFin.setHours(this.horaFin);
+  }
+
   file?: Blob;
 
   formJuridica!: FormsJuridica;
@@ -264,7 +299,7 @@ export class FormsJuridicaPliegosComponent implements OnInit {
   }
 
   async btnSubmitClick() {
-    const formsJuridicaPliegos = {
+    const juridicaPliegos = {
       Field1: this.field1,
       Field2: this.field2,
       Field3: this.field3,
@@ -275,12 +310,14 @@ export class FormsJuridicaPliegosComponent implements OnInit {
       Field8: this.field8,
       Field9: this.field9,
       Field10: this.field10,
+      FechaInicio: this.fechaInicio,
+      FechaFin: this.fechaFin,
       File: Buffer.from(await this.file!.arrayBuffer()),
       FormJuridica: this.formJuridicaId,
     };
 
     let postFormsJuridicaPliegosTaskId: string;
-    this.formsService.postFormJuridicaPliegos(formsJuridicaPliegos).subscribe(
+    this.formsService.postFormJuridicaPliegos(juridicaPliegos).subscribe(
       (httpEvent) => {
         switch (httpEvent.type) {
           case HttpEventType.Sent:
@@ -364,6 +401,38 @@ export class FormsJuridicaPliegosComponent implements OnInit {
     );
   }
 
+  ifEndDateIsGreaterThatStartDateInicio(): boolean {
+    if (this.horaInicio && !this.fechaFin) return true;
+
+    return this.fechaFin > this.fechaInicio && this.horaInicio != undefined;
+  }
+
+  ifEndDateIsGreaterThatStartDateFin(): boolean {
+    if (!this.fechaFin || !this.fechaInicio) return false;
+
+    return this.fechaFin > this.fechaInicio && this.horaFin != undefined;
+  }
+
+  ifEndDateEqualsStartDate(): boolean {
+    if (!this.fechaInicio || !this.fechaFin) return false;
+
+    let startDate = this.fechaInicio;
+
+    startDate.setHours(0, 0, 0, 0);
+
+    let endDate = this.fechaFin;
+
+    endDate.setHours(0, 0, 0, 0);
+
+    return startDate === endDate;
+  }
+
+  isStartDateHoursGreaterThat(hour: number): boolean {
+    let currentDate = new Date();
+
+    return hour >= currentDate.getHours();
+  }
+
   isValidPreview() {
     switch (this.formJuridica.TipoAdquisicion) {
       case 'Bienes':
@@ -377,7 +446,11 @@ export class FormsJuridicaPliegosComponent implements OnInit {
           this.field7 &&
           this.field8 &&
           this.field9 &&
-          this.field10
+          this.field10 &&
+          this.fechaInicio &&
+          this.horaInicio &&
+          this.fechaFin &&
+          this.horaFin
         );
       default:
         return false;
@@ -398,6 +471,10 @@ export class FormsJuridicaPliegosComponent implements OnInit {
           this.field8 &&
           this.field9 &&
           this.field10 &&
+          this.fechaInicio &&
+          this.horaInicio &&
+          this.fechaFin &&
+          this.horaFin &&
           this.file
         );
       default:
