@@ -39,42 +39,44 @@
           </div>
           <div class="col-12">
             <div class="col-12">
-              <label class="form-label" for="inputEmail"
-                >Correo electronico personal y privado<strong
-                  class="text-danger"
-                  >*</strong
+              <label class="form-label" for="inputNumeroSolicitud"
+                >Numero de solicitud<strong class="text-danger">*</strong
                 ><button
                   type="button"
                   class="btn btn-sm btn-outline-info ms-2 rounded-pill"
                   data-bs-toggle="collapse"
-                  data-bs-target="#collapseEmail"
+                  data-bs-target="#collapseNumeroSolicitud"
                 >
                   ?
                 </button></label
               >
               <div
                 class="collapse mb-2"
-                id="collapseEmail"
-                name="collapseEmail"
+                id="collapseNumeroSolicitud"
+                name="collapseNumeroSolicitud"
               >
-                <div class="card card-body">
-                  Este correo electronico sera utilizado durante el proceso
-                  actual para validacion de identidad, notificacion.
-                </div>
+                <div class="card card-body"></div>
               </div>
               <input
-                [(ngModel)]="email"
-                name="inputEmail"
-                id="inputEmail"
+                [(ngModel)]="numeroSolicitud"
+                (input)="validateNumeroSolicitud()"
+                name="inputNumeroSolicitud"
+                id="inputNumeroSolicitud"
                 type="email"
                 class="form-control"
                 [ngClass]="{
-                  'is-valid': validateEmail(email),
-                  'is-invalid': !validateEmail(email)
+                  'is-valid': isValidNumeroSolicitud,
+                  'is-invalid': !isValidNumeroSolicitud
                 }"
               />
-              <div class="invalid-feedback">
+              <div
+                *ngIf="!numeroSolicitudAlreadyExist"
+                class="invalid-feedback"
+              >
                 Este campo es (*) obligatorio, rellenelo.
+              </div>
+              <div *ngIf="numeroSolicitudAlreadyExist" class="invalid-feedback">
+                Este numero de solicitud ya existe.
               </div>
             </div>
           </div>
@@ -165,7 +167,9 @@
             <label
               class="form-label"
               for="textareaEspecificacionesTecnicasMinimas"
-              >Especificaciones tecnicas minimas (Si aplica)<button
+              >Especificaciones tecnicas minimas<strong class="text-danger"
+                >*</strong
+              ><button
                 type="button"
                 class="btn btn-sm btn-outline-info ms-2 rounded-pill"
                 data-bs-toggle="collapse"
@@ -193,7 +197,14 @@
               name="textareaEspecificacionesTecnicasMinimas"
               id="textareaEspecificacionesTecnicasMinimas"
               class="form-control"
+              [ngClass]="{
+                'is-valid': especificacionesTecnicasMinimas,
+                'is-invalid': !especificacionesTecnicasMinimas
+              }"
             ></textarea>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
           </div>
           <div class="col-12">
             <label class="form-label" for="textareaPerfilRequerido"
@@ -613,6 +624,24 @@
             </div>
           </div>
           <div *ngIf="manejoDatos === 'Si'" class="col-12">
+            <label class="form-label" for="textareaCategoriaDatos"
+              >Categoria de datos<strong class="text-danger">*</strong></label
+            >
+            <textarea
+              [(ngModel)]="categoriaDatos"
+              name="textareaCategoriaDatos"
+              id="textareaCategoriaDatos"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': categoriaDatos,
+                'is-invalid': !categoriaDatos
+              }"
+            ></textarea>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+          <div *ngIf="manejoDatos === 'Si'" class="col-12">
             <div class="card">
               <div class="card-body">
                 <div class="row g-3">
@@ -766,12 +795,32 @@
             </div>
           </div>
           <div class="col-12">
-            <label for="uploadFiles" class="form-label">Files</label>
+            <label for="uploadFiles" class="form-label">Documentos</label>
             <app-upload-files
               name="uploadFiles"
               id="uploadFiles"
               [contentAsArrayBuffer]="true"
-              (onFilesChange)="setFiles($event)"
+              (onFilesChange)="setDocumentosFiles($event)"
+            ></app-upload-files>
+          </div>
+          <div class="col-12">
+            <label for="uploadFilesArtes" class="form-label">Artes</label>
+            <app-upload-files
+              name="uploadFilesArtes"
+              id="uploadFilesArtes"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setArtesFiles($event)"
+            ></app-upload-files>
+          </div>
+          <div class="col-12">
+            <label for="uploadFilesArtes" class="form-label"
+              >Solicitud de adquisicion</label
+            >
+            <app-upload-files
+              name="uploadFilesSolicitudAdquisicion"
+              id="uploadFilesSolicitudAdquisicion"
+              [contentAsArrayBuffer]="true"
+              (onFilesChange)="setSolicitudAdquisicionFiles($event)"
             ></app-upload-files>
           </div>
           <div class="col-12">
@@ -793,5 +842,14 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="d-grid gap-2 col-6 mx-auto mb-2">
+    <a
+      class="btn btn-primary"
+      (click)="btnSubmitClick()"
+      role="button"
+      [ngClass]="{ disabled: !isValid() }"
+      >Enviar</a
+    >
   </div>
 </div>

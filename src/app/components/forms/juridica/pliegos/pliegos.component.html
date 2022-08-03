@@ -1,18 +1,18 @@
-<div *ngIf="formJuridica" class="row g-3">
+<div *ngIf="juridica" class="row g-3">
   <div class="col-12">
     <div class="card card-body">
       <div class="row g-3">
         <div class="col-12">
           <h5 class="card-title text-center">
             {{
-              formJuridica
-                ? formJuridica.TipoProceso +
+              juridica
+                ? juridica.TipoProceso +
                   " - " +
-                  formJuridica.TipoPersona +
+                  juridica.TipoPersona +
                   " - " +
-                  (formJuridica.TipoAdquisicion === "Otro"
-                    ? formJuridica.TipoAdquisicionOtro
-                    : formJuridica.TipoAdquisicion)
+                  (juridica.TipoAdquisicion === "Otro"
+                    ? juridica.TipoAdquisicionOtro
+                    : juridica.TipoAdquisicion)
                 : ""
             }}
           </h5>
@@ -236,13 +236,12 @@
           <div class="form-floating">
             <select
               [(ngModel)]="horaInicio"
-              (change)="setHoraInicio()"
               class="form-select"
               id="selectHoraInicio"
               name="selectHoraInicio"
               [ngClass]="{
-                'is-valid': ifEndDateIsGreaterThatStartDateInicio(),
-                'is-invalid': !ifEndDateIsGreaterThatStartDateInicio()
+                'is-valid': horaInicio && ifEndDateIsGreaterThatStartDate(),
+                'is-invalid': !horaInicio || !ifEndDateIsGreaterThatStartDate()
               }"
             >
               <option selected disabled></option>
@@ -277,17 +276,17 @@
               ></label
             >
             <div
-              *ngIf="ifEndDateIsGreaterThatStartDateInicio()"
+              *ngIf="ifEndDateIsGreaterThatStartDate()"
               class="invalid-feedback"
             >
               Este campo es (*) obligatorio, seleccione una opcion.
             </div>
             <div
-              *ngIf="!ifEndDateIsGreaterThatStartDateInicio()"
+              *ngIf="!ifEndDateIsGreaterThatStartDate()"
               class="invalid-feedback"
             >
-              La fecha de finalizacion de la convocatoria debe ser menor a la
-              fecha de inicio.
+              La fecha de inicio de la convocatoria debe ser menor a la fecha de
+              finalizacion.
             </div>
           </div>
         </div>
@@ -309,13 +308,12 @@
           <div class="form-floating">
             <select
               [(ngModel)]="horaFin"
-              (change)="setHoraFin()"
               class="form-select"
               id="selectHoraFin"
               name="selectHoraFin"
               [ngClass]="{
-                'is-valid': ifEndDateIsGreaterThatStartDateFin(),
-                'is-invalid': !ifEndDateIsGreaterThatStartDateFin()
+                'is-valid': horaFin && ifEndDateIsGreaterThatStartDate(),
+                'is-invalid': !horaFin || !ifEndDateIsGreaterThatStartDate()
               }"
             >
               <option selected disabled></option>
@@ -516,20 +514,21 @@
               >Hora de fin convocatoria<span class="text-danger">*</span></label
             >
             <div
-              *ngIf="ifEndDateIsGreaterThatStartDateFin()"
+              *ngIf="ifEndDateIsGreaterThatStartDate()"
               class="invalid-feedback"
             >
               Este campo es (*) obligatorio, seleccione una opcion.
             </div>
             <div
-              *ngIf="!ifEndDateIsGreaterThatStartDateFin()"
+              *ngIf="!ifEndDateIsGreaterThatStartDate()"
               class="invalid-feedback"
             >
-              La fecha de finalizacion de la convocatoria debe ser menor a la
+              La fecha de finalizacion de la convocatoria debe ser mayor a la
               fecha de inicio.
             </div>
           </div>
         </div>
+        <div class="col-12"></div>
         <div class="d-grid gap-2 col-6 mx-auto mb-2">
           <button
             class="btn btn-primary"

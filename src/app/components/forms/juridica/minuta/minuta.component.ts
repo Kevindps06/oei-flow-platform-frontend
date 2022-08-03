@@ -5,9 +5,12 @@ import { Utils } from 'src/app/classes/utils';
 import { FormsService } from 'src/app/services/forms.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { LoginService } from 'src/app/services/login.service';
-import { FormsJuridica } from 'src/app/interfaces/forms-juridica';
+import { IJuridica } from 'src/app/interfaces/forms-juridica';
 import { saveAs } from 'file-saver';
-import { Buffer } from 'buffer';
+import { FileItem } from 'src/app/interfaces/FileItem';
+import { IJuridicaMinuta } from 'src/app/interfaces/juridica-minuta';
+import { catchError, map } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-forms-juridica-minuta',
@@ -15,7 +18,8 @@ import { Buffer } from 'buffer';
   styleUrls: ['./minuta.component.css'],
 })
 export class FormsJuridicaMinutaComponent implements OnInit {
-  formJuridicaId!: string;
+  juridicaId!: string;
+  juridica!: IJuridica;
 
   // Bienes
   tipoInmueble: string = '';
@@ -44,6 +48,65 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   // field3
   // field4
 
+  // Suministro
+  numerodecontrato1: string = '';
+  numerodeconvenio2: string = '';
+  nombrecontratista: string = '';
+  numerodenit4: string = '';
+  objetodelcontrato7: string = '';
+  terminodelcontrato8: string = '';
+  valordelcontrato9: string = '';
+  formadepago10: string = '';
+  // field11
+  obligacionesespecificas12: string = '';
+  productos13: string = '';
+  // field15
+  // field16
+  // field17
+  // field18
+  // field19
+
+  // Servicios - Natural
+  // numerodecontrato1
+  // numerodeconvenio2
+  entidadaliada3: string = '';
+  // nombrecontratista
+  numerodecedulad5: string = '';
+  objetodelcontrato6: string = '';
+  terminodeejecucipon7: string = '';
+  valordelcontrato8: string = '';
+  formadepago9: string = '';
+  // field10
+  // field11
+  // field12
+  // field13
+  obligacionesespecificas14: string = '';
+  productosaentregar15: string = '';
+  fechadefirma: string = '';
+
+  // Servicios - Juridica
+  // numerodecontrato1
+  // numerodeconvenio2
+  // nombrecontratista
+  nombrerepresentantelegal4: string = '';
+  // field5
+  // objetodelcontrato6
+  // field7
+  // field8
+  terminodeejecuciondelcontrato9: string = '';
+  // formadepago10
+  // obligacionesespecificas12
+  productosaentregar13: string = '';
+  tipodeamparo1: string = '';
+  porcentajedelamparo15: string = '';
+  vigenciadelamparo16: string = '';
+  tipodeamparo2: string = '';
+  porcentajedelamparo: string = '';
+  vigenciadelamparo19: string = '';
+  fechadefirmadelcontrato: string = '';
+
+  obligacionesadicionales: string = '';
+
   field1: string = '';
   field2: string = '';
   field3: string = '';
@@ -69,8 +132,10 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   field23: string = '';
   field24: string = '';
   field25: string = '';
-  file?: Blob;
-  formJuridica!: FormsJuridica;
+  docxBlob!: Blob;
+  pdfUint8Array?: Uint8Array;
+  pdfBlob!: Blob;
+  files: FileItem[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -93,11 +158,11 @@ export class FormsJuridicaMinutaComponent implements OnInit {
       return;
     }
 
-    this.formJuridicaId = this.activatedRoute.snapshot.params.id;
+    this.juridicaId = this.activatedRoute.snapshot.params.id;
 
     let getFormJuridicaMinutaAvailabilityTaskId: string;
     this.formsService
-      .getFormJuridicaMinutaAvailability(this.formJuridicaId)
+      .getFormJuridicaMinutaAvailability(this.juridicaId)
       .subscribe(
         (httpEvent) => {
           switch (httpEvent.type) {
@@ -146,7 +211,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
           let getFormsJuridicaMinutaVerifyEncargadoTaskId: string;
           this.formsService
             .getFormJuridicaMinutaVerifyEncargado(
-              this.formJuridicaId,
+              this.juridicaId,
               this.loginService.activeAccoount()?.username as string
             )
             .subscribe(
@@ -186,43 +251,42 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               },
               () => {
                 let getFormJuridicaTaskId: string;
-                this.formsService
-                  .getFormJuridica(this.formJuridicaId)
-                  .subscribe(
-                    (httpEvent) => {
-                      switch (httpEvent.type) {
-                        case HttpEventType.Sent:
-                          getFormJuridicaTaskId =
-                            this.sharedService.pushWaitTask({
-                              description:
-                                'Obteniendo informacion de la peticion...',
-                              progress: 0,
-                            }) as string;
-                          break;
-                        case HttpEventType.DownloadProgress:
-                          this.sharedService.pushWaitTask({
-                            id: getFormJuridicaTaskId,
-                            progress: Math.round(
-                              (httpEvent.loaded * 100) / httpEvent.total
-                            ),
-                          });
-                          break;
-                        case HttpEventType.Response:
-                          this.formJuridica = httpEvent.body[0];
-                          break;
-                      }
-                    },
-                    (httpEventError) => {
-                      this.sharedService.removeWaitTask({
-                        id: getFormJuridicaTaskId,
-                      });
-                    },
-                    () => {
-                      this.sharedService.removeWaitTask({
-                        id: getFormJuridicaTaskId,
-                      });
+                this.formsService.getFormJuridica(this.juridicaId).subscribe(
+                  (httpEvent) => {
+                    switch (httpEvent.type) {
+                      case HttpEventType.Sent:
+                        getFormJuridicaTaskId = this.sharedService.pushWaitTask(
+                          {
+                            description:
+                              'Obteniendo informacion de la peticion...',
+                            progress: 0,
+                          }
+                        ) as string;
+                        break;
+                      case HttpEventType.DownloadProgress:
+                        this.sharedService.pushWaitTask({
+                          id: getFormJuridicaTaskId,
+                          progress: Math.round(
+                            (httpEvent.loaded * 100) / httpEvent.total
+                          ),
+                        });
+                        break;
+                      case HttpEventType.Response:
+                        this.juridica = httpEvent.body[0];
+                        break;
                     }
-                  );
+                  },
+                  (httpEventError) => {
+                    this.sharedService.removeWaitTask({
+                      id: getFormJuridicaTaskId,
+                    });
+                  },
+                  () => {
+                    this.sharedService.removeWaitTask({
+                      id: getFormJuridicaTaskId,
+                    });
+                  }
+                );
 
                 this.sharedService.removeWaitTask({
                   id: getFormsJuridicaMinutaVerifyEncargadoTaskId,
@@ -238,65 +302,145 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   }
 
   invalidatePreview() {
-    this.file = undefined;
+    this.pdfUint8Array = undefined;
+    this.files = [];
   }
 
   btnPreviewClick() {
-    let formsJuridicaMinutaGenerate = {
-      tipoInmueble: this.tipoInmueble,
-      nombreArrendador: this.nombreArrendador,
-      numeroNit: this.numeroNit,
-      nombreRepresentanteLegal: this.nombreRepresentanteLegal,
-      ciudadDondeReside: this.ciudadDondeReside,
-      numeroCedula: this.numeroCedula,
-      ciudadExpedicion: this.ciudadExpedicion,
-      detalleInmueble: this.detalleInmueble,
-      ubicacionInmueble: this.ubicacionInmueble,
-      barrio: this.barrio,
-      ciudadInmueble: this.ciudadInmueble,
-      inmueble: this.inmueble,
-      mesesContrato: this.mesesContrato,
-      diaInicio: this.diaInicio,
-      mesInicio: this.mesInicio,
-      anoInicio: this.anoInicio,
-      diaFin: this.diaFin,
-      mesFin: this.mesFin,
-      anoFin: this.anoFin,
-      valorContrato: this.valorContrato,
-      valorCanonMensual: this.valorCanonMensual,
-      field1: this.field1,
-      field2: this.field2,
-      field3: this.field3,
-      field4: this.field4,
-      field5: this.field5,
-      field6: this.field6,
-      field7: this.field7,
-      field8: this.field8,
-      field9: this.field9,
-      field10: this.field10,
-      field11: this.field11,
-      field12: this.field12,
-      field13: this.field13,
-      field14: this.field14,
-      field15: this.field15,
-      field16: this.field16,
-      field17: this.field17,
-      field18: this.field18,
-      field19: this.field19,
-      field20: this.field20,
-      field21: this.field21,
-      field22: this.field22,
-      field23: this.field23,
-      field24: this.field24,
-      field25: this.field25,
-    };
+    let juridicaMinutaGenerate;
+
+    switch (this.juridica.TipoAdquisicion) {
+      case 'Bienes':
+        juridicaMinutaGenerate = {
+          tipoInmueble: this.tipoInmueble,
+          numeroContrato: this.juridica.NumeroContrato,
+          nombreArrendador: this.nombreArrendador,
+          numeroNit: this.numeroNit,
+          nombreRepresentanteLegal: this.nombreRepresentanteLegal,
+          ciudadDondeReside: this.ciudadDondeReside,
+          numeroCedula: this.numeroCedula,
+          ciudadExpedicion: this.ciudadExpedicion,
+          detalleInmueble: this.detalleInmueble,
+          ubicacionInmueble: this.ubicacionInmueble,
+          barrio: this.barrio,
+          ciudadInmueble: this.ciudadInmueble,
+          inmueble: this.inmueble,
+          mesesContrato: this.mesesContrato,
+          diaInicio: this.diaInicio,
+          mesInicio: this.mesInicio,
+          anoInicio: this.anoInicio,
+          diaFin: this.diaFin,
+          mesFin: this.mesFin,
+          anoFin: this.anoFin,
+          valorContrato: this.valorContrato,
+          valorCanonMensual: this.valorCanonMensual,
+          field1: this.field1,
+          field2: this.field2,
+          field3: this.field3,
+          field4: this.field4,
+          field5: this.field5,
+          field6: this.field6,
+          field7: this.field7,
+          field8: this.field8,
+          field9: this.field9,
+          field10: this.field10,
+          field11: this.field11,
+          field12: this.field12,
+          field13: this.field13,
+          field14: this.field14,
+          field15: this.field15,
+          field16: this.field16,
+          field17: this.field17,
+          field18: this.field18,
+          field19: this.field19,
+          field20: this.field20,
+          field21: this.field21,
+          field22: this.field22,
+          field23: this.field23,
+          field24: this.field24,
+          field25: this.field25,
+          obligacionesadicionales: this.obligacionesadicionales,
+        };
+        break;
+      case 'Suministro':
+        juridicaMinutaGenerate = {
+          numerodecontrato1: this.juridica.NumeroContrato,
+          numerodeconvenio2: this.numerodeconvenio2,
+          nombrecontratista: this.nombrecontratista,
+          numerodenit4: this.numerodenit4,
+          objetodelcontrato7: this.objetodelcontrato7,
+          terminodelcontrato8: this.terminodelcontrato8,
+          valordelcontrato9: this.valordelcontrato9,
+          formadepago10: this.formadepago10,
+          field11: this.field11,
+          obligacionesespecificas12: this.obligacionesespecificas12,
+          productos13: this.productos13,
+          field15: this.field15,
+          field16: this.field16,
+          fiield17: this.field17,
+          field18: this.field18,
+          field19: this.field19,
+          obligacionesadicionales: this.obligacionesadicionales,
+        };
+        break;
+      case 'Servicios':
+        switch (this.juridica.TipoPersona) {
+          case 'Natural':
+            juridicaMinutaGenerate = {
+              numerodecontrato1: this.juridica.NumeroContrato,
+              numerodeconvenio2: this.numerodeconvenio2,
+              entidadaliada3: this.entidadaliada3,
+              nombrecontratista: this.nombrecontratista,
+              numerodecedulad5: this.numerodecedulad5,
+              objetodelcontrato6: this.objetodelcontrato6,
+              terminodeejecucipon7: this.terminodeejecucipon7,
+              valordelcontrato8: this.valordelcontrato8,
+              formadepago9: this.formadepago9,
+              field10: this.field10,
+              field11: this.field11,
+              field12: this.field12,
+              field13: this.field13,
+              obligacionesespecificas14: this.obligacionesespecificas14,
+              productosaentregar15: this.productosaentregar15,
+              fechadefirma: this.fechadefirma,
+              obligacionesadicionales: this.obligacionesadicionales,
+            };
+            break;
+          case 'Juridica':
+            juridicaMinutaGenerate = {
+              numerodecontrato1: this.juridica.NumeroContrato,
+              numerodeconvenio2: this.numerodeconvenio2,
+              nombrecontratista: this.nombrecontratista,
+              nombrerepresentantelegal4: this.nombrerepresentantelegal4,
+              field5: this.field5,
+              objetodelcontrato6: this.objetodelcontrato6,
+              field7: this.field7,
+              field8: this.field8,
+              terminodeejecuciondelcontrato9:
+                this.terminodeejecuciondelcontrato9,
+              formadepago10: this.formadepago10,
+              obligacionesespecificas12: this.obligacionesespecificas12,
+              productosaentregar13: this.productosaentregar13,
+              tipodeamparo1: this.tipodeamparo1,
+              porcentajedelamparo15: this.porcentajedelamparo15,
+              vigenciadelamparo16: this.vigenciadelamparo16,
+              tipodeamparo2: this.tipodeamparo2,
+              porcentajedelamparo: this.porcentajedelamparo,
+              vigenciadelamparo19: this.vigenciadelamparo19,
+              fechadefirmadelcontrato: this.fechadefirmadelcontrato,
+              obligacionesadicionales: this.obligacionesadicionales,
+            };
+            break;
+        }
+        break;
+    }
 
     let postFormsJuridicaMinutaGenerateTaskId!: string;
     this.formsService
       .postFormJuridicaMinutaGenerate(
-        this.formJuridica.TipoAdquisicion,
-        this.formJuridica.TipoPersona,
-        formsJuridicaMinutaGenerate
+        this.juridica.TipoAdquisicion,
+        this.juridica.TipoPersona,
+        juridicaMinutaGenerate
       )
       .subscribe(
         async (httpEvent) => {
@@ -304,8 +448,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
             case HttpEventType.Sent:
               postFormsJuridicaMinutaGenerateTaskId =
                 this.sharedService.pushWaitTask({
-                  description:
-                    'Validando certificado de ingresos y retenciones...',
+                  description: 'Generando pre visualizacion...',
                   progress: 0,
                 }) as string;
               break;
@@ -318,12 +461,35 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               });
               break;
             case HttpEventType.Response:
-              this.file = httpEvent.body;
               const currentDate = new Date();
-              saveAs(
-                this.file!,
-                `minuta preview ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`
-              );
+
+              this.docxBlob = new Blob([
+                new Uint8Array(httpEvent.body.docxBuf.data),
+              ]);
+
+              this.pdfUint8Array = new Uint8Array(httpEvent.body.pdfBuf.data);
+
+              this.pdfBlob = new Blob([this.pdfUint8Array]);
+
+              this.files = [];
+
+              this.files.push({
+                Index: 0,
+                Name: `minuta ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`,
+                Size: this.docxBlob.size,
+                Type: this.docxBlob.type,
+                Bytes: await this.docxBlob.arrayBuffer(),
+                Uploaded: true,
+              });
+
+              this.files.push({
+                Index: 1,
+                Name: `minuta ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.pdf`,
+                Size: this.pdfBlob.size,
+                Type: this.pdfBlob.type,
+                Bytes: await this.pdfBlob.arrayBuffer(),
+                Uploaded: true,
+              });
               break;
           }
         },
@@ -341,149 +507,265 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   }
 
   async btnSubmitClick() {
-    const formsJuridicaRequestMinuta = {
-      tipoInmueble: this.tipoInmueble,
-      nombreArrendador: this.nombreArrendador,
-      numeroNit: this.numeroNit,
-      nombreRepresentanteLegal: this.nombreRepresentanteLegal,
-      ciudadDondeReside: this.ciudadDondeReside,
-      numeroCedula: this.numeroCedula,
-      ciudadExpedicion: this.ciudadExpedicion,
-      detalleInmueble: this.detalleInmueble,
-      ubicacionInmueble: this.ubicacionInmueble,
-      barrio: this.barrio,
-      ciudadInmueble: this.ciudadInmueble,
-      inmueble: this.inmueble,
-      mesesContrato: this.mesesContrato,
-      diaInicio: this.diaInicio,
-      mesInicio: this.mesInicio,
-      anoInicio: this.anoInicio,
-      diaFin: this.diaFin,
-      mesFin: this.mesFin,
-      anoFin: this.anoFin,
-      valorContrato: this.valorContrato,
-      valorCanonMensual: this.valorCanonMensual,
-      Field1: this.field1,
-      Field2: this.field2,
-      Field3: this.field3,
-      Field4: this.field4,
-      Field5: this.field5,
-      Field6: this.field6,
-      Field7: this.field7,
-      Field8: this.field8,
-      Field9: this.field9,
-      Field10: this.field10,
-      Field11: this.field11,
-      Field12: this.field12,
-      Field13: this.field13,
-      Field14: this.field14,
-      Field15: this.field15,
-      Field16: this.field16,
-      Field17: this.field17,
-      Field18: this.field18,
-      Field19: this.field19,
-      Field20: this.field20,
-      Field21: this.field21,
-      Field22: this.field22,
-      Field23: this.field23,
-      Field24: this.field24,
-      Field25: this.field25,
-      File: Buffer.from(await this.file!.arrayBuffer()),
-      FormJuridica: this.formJuridicaId,
-    };
+    let juridicaMinuta!: IJuridicaMinuta;
 
-    let postFormsJuridicaRequestMinutaTaskId: string;
-    this.formsService
-      .postFormJuridicaMinuta(formsJuridicaRequestMinuta)
-      .subscribe(
-        (httpEvent) => {
-          switch (httpEvent.type) {
-            case HttpEventType.Sent:
-              postFormsJuridicaRequestMinutaTaskId =
-                this.sharedService.pushWaitTask({
-                  description: 'Enviando informacion de la peticion...',
+    switch (this.juridica.TipoAdquisicion) {
+      case 'Bienes':
+        juridicaMinuta = {
+          TipoInmueble: this.tipoInmueble,
+          NombreArrendador: this.nombreArrendador,
+          NumeroNit: this.numeroNit,
+          NombreRepresentanteLegal: this.nombreRepresentanteLegal,
+          CiudadDondeReside: this.ciudadDondeReside,
+          NumeroCedula: this.numeroCedula,
+          CiudadExpedicion: this.ciudadExpedicion,
+          DetalleInmueble: this.detalleInmueble,
+          UbicacionInmueble: this.ubicacionInmueble,
+          Barrio: this.barrio,
+          CiudadInmueble: this.ciudadInmueble,
+          Inmueble: this.inmueble,
+          MesesContrato: this.mesesContrato,
+          DiaInicio: this.diaInicio,
+          MesInicio: this.mesInicio,
+          AnoInicio: this.anoInicio,
+          DiaFin: this.diaFin,
+          MesFin: this.mesFin,
+          AnoFin: this.anoFin,
+          ValorContrato: this.valorContrato,
+          ValorCanonMensual: this.valorCanonMensual,
+          Field1: this.field1,
+          Field2: this.field2,
+          Field3: this.field3,
+          Field4: this.field4,
+          Field5: this.field5,
+          Field6: this.field6,
+          Field7: this.field7,
+          Field8: this.field8,
+          Field9: this.field9,
+          Field10: this.field10,
+          Field11: this.field11,
+          Field12: this.field12,
+          Field13: this.field13,
+          Field14: this.field14,
+          Field15: this.field15,
+          Field16: this.field16,
+          Field17: this.field17,
+          Field18: this.field18,
+          Field19: this.field19,
+          Field20: this.field20,
+          Field21: this.field21,
+          Field22: this.field22,
+          Field23: this.field23,
+          Field24: this.field24,
+          Field25: this.field25,
+        };
+        break;
+      case 'Suministro':
+        juridicaMinuta = {
+          NumeroContrato: this.numerodecontrato1,
+          NumeroConvenio: this.numerodeconvenio2,
+          NombreContratista: this.nombrecontratista,
+          NumeroNit: this.numerodenit4,
+          ObjetoContrato: this.objetodelcontrato7,
+          TerminoContrato: this.terminodelcontrato8,
+          ValorContrato: this.valordelcontrato9,
+          FormaPago: this.formadepago10,
+          Field1: this.field11,
+          ObligacionesEspecificas: this.obligacionesespecificas12,
+          ProductosEntregar: this.productos13,
+          Field15: this.field15,
+          Field16: this.field16,
+          Field17: this.field17,
+          Field18: this.field18,
+          Field19: this.field19,
+        };
+        break;
+      case 'Servicios':
+        switch (this.juridica.TipoPersona) {
+          case 'Natural':
+            juridicaMinuta = {
+              NumeroContrato: this.numerodecontrato1,
+              NumeroConvenio: this.numerodeconvenio2,
+              EntidadAliada: this.entidadaliada3,
+              NombreContratista: this.nombrecontratista,
+              NumeroCedula: this.numerodecedulad5,
+              ObjetoContrato: this.objetodelcontrato6,
+              TerminoEjecucion: this.terminodeejecucipon7,
+              ValorContrato: this.valordelcontrato8,
+              FormaPago: this.formadepago9,
+              Field10: this.field10,
+              Field11: this.field11,
+              Field12: this.field12,
+              Field13: this.field13,
+              ObligacionesEspecificas: this.obligacionesespecificas14,
+              ProductosEntregar: this.productosaentregar15,
+              FechaFirma: this.fechadefirma,
+            };
+            break;
+          case 'Juridica':
+            juridicaMinuta = {
+              NumeroContrato: this.numerodecontrato1,
+              NumeroConvenio: this.numerodeconvenio2,
+              NombreContratista: this.nombrecontratista,
+              NombreRepresentanteLegal: this.nombrerepresentantelegal4,
+              Field5: this.field5,
+              ObjetoContrato: this.objetodelcontrato6,
+              Field7: this.field7,
+              Field8: this.field8,
+              TerminoEjecucion: this.terminodeejecuciondelcontrato9,
+              FormaPago: this.formadepago10,
+              ObligacionesEspecificas: this.obligacionesespecificas12,
+              ProductosEntregar: this.productosaentregar13,
+              TipoAmparo1: this.tipodeamparo1,
+              PorcentajeAmparo1: this.porcentajedelamparo15,
+              VigenciaAmparo1: this.vigenciadelamparo16,
+              TipoAmparo2: this.tipodeamparo2,
+              PorcentajeAmparo2: this.porcentajedelamparo,
+              VigenciaAmparo2: this.vigenciadelamparo19,
+              FechaFirma: this.fechadefirmadelcontrato,
+            };
+            break;
+        }
+        break;
+    }
+
+    // Minuta
+    for (let i = 0; this.files.length > i; i++) {
+      let postUploadFileTaskId: string;
+      await this.formsService
+        .postUploadFile(this.files[i].Name, this.files[i].Bytes as ArrayBuffer)
+        .pipe(
+          map((httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postUploadFileTaskId = this.sharedService.pushWaitTask({
+                  description: `Subiendo archivos...`,
                   progress: 0,
                 }) as string;
-              break;
-            case HttpEventType.UploadProgress:
+                break;
+              case HttpEventType.UploadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postUploadFileTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                delete this.files[i].Bytes;
+                this.files[i].ServerPath = httpEvent.body;
+
+                this.sharedService.removeWaitTask({
+                  id: postUploadFileTaskId,
+                });
+                break;
+            }
+          }),
+          catchError((httpEventError) => {
+            this.sharedService.removeWaitTask({
+              id: postUploadFileTaskId,
+            });
+
+            return throwError(httpEventError);
+          })
+        )
+        .toPromise();
+    }
+
+    juridicaMinuta = Object.assign(juridicaMinuta, {
+      MinutaFiles: this.files,
+      Juridica: this.juridicaId,
+    });
+
+    let postFormsJuridicaRequestMinutaTaskId: string;
+    this.formsService.postFormJuridicaMinuta(juridicaMinuta).subscribe(
+      (httpEvent) => {
+        switch (httpEvent.type) {
+          case HttpEventType.Sent:
+            postFormsJuridicaRequestMinutaTaskId =
               this.sharedService.pushWaitTask({
-                id: postFormsJuridicaRequestMinutaTaskId,
-                progress: Math.round(
-                  (httpEvent.loaded * 100) / httpEvent.total
-                ),
-              });
-              break;
-            case HttpEventType.Response:
-              let putFormsJuridicaRequestTaskId: string;
-              this.formsService
-                .putFormJuridica(this.formJuridicaId, {
-                  JuridicaMinuta: httpEvent.body._id,
-                })
-                .subscribe(
-                  (httpEvent) => {
-                    switch (httpEvent.type) {
-                      case HttpEventType.Sent:
-                        putFormsJuridicaRequestTaskId =
-                          this.sharedService.pushWaitTask({
-                            description:
-                              'Actualizando informacion de la peticion...',
-                            progress: 0,
-                          }) as string;
-                        break;
-                      case HttpEventType.UploadProgress:
+                description: 'Enviando informacion de la peticion...',
+                progress: 0,
+              }) as string;
+            break;
+          case HttpEventType.UploadProgress:
+            this.sharedService.pushWaitTask({
+              id: postFormsJuridicaRequestMinutaTaskId,
+              progress: Math.round((httpEvent.loaded * 100) / httpEvent.total),
+            });
+            break;
+          case HttpEventType.Response:
+            let putFormsJuridicaRequestTaskId: string;
+            this.formsService
+              .putFormJuridica(this.juridicaId, {
+                JuridicaMinuta: httpEvent.body._id,
+              })
+              .subscribe(
+                (httpEvent) => {
+                  switch (httpEvent.type) {
+                    case HttpEventType.Sent:
+                      putFormsJuridicaRequestTaskId =
                         this.sharedService.pushWaitTask({
-                          id: putFormsJuridicaRequestTaskId,
-                          progress: Math.round(
-                            (httpEvent.loaded * 100) / httpEvent.total
-                          ),
-                        });
-                        break;
-                    }
-                  },
-                  (httpEventError) => {
-                    this.sharedService.removeWaitTask({
-                      id: putFormsJuridicaRequestTaskId,
-                    });
-                  },
-                  () => {
-                    this.sharedService.pushToastMessage({
-                      id: Utils.makeRandomString(4),
-                      title: `Informacion ingresada`,
-                      description: `Su respuesta ha sido correctamente ingresada, carge el archivo generado en su repositorio asignado y proceda a responder el flujo.`,
-                      autohide: 15000,
-                    });
-
-                    this.router.navigate(['/']);
-
-                    const currentDate = new Date();
-                    saveAs(
-                      this.file!,
-                      `minuta final ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`
-                    );
-
-                    this.sharedService.removeWaitTask({
-                      id: putFormsJuridicaRequestTaskId,
-                    });
+                          description:
+                            'Actualizando informacion de la peticion...',
+                          progress: 0,
+                        }) as string;
+                      break;
+                    case HttpEventType.UploadProgress:
+                      this.sharedService.pushWaitTask({
+                        id: putFormsJuridicaRequestTaskId,
+                        progress: Math.round(
+                          (httpEvent.loaded * 100) / httpEvent.total
+                        ),
+                      });
+                      break;
                   }
-                );
-              break;
-          }
-        },
-        (httpEventError) => {
-          this.sharedService.removeWaitTask({
-            id: postFormsJuridicaRequestMinutaTaskId,
-          });
-        },
-        () => {
-          this.sharedService.removeWaitTask({
-            id: postFormsJuridicaRequestMinutaTaskId,
-          });
+                },
+                (httpEventError) => {
+                  this.sharedService.removeWaitTask({
+                    id: putFormsJuridicaRequestTaskId,
+                  });
+                },
+                () => {
+                  this.sharedService.pushToastMessage({
+                    id: Utils.makeRandomString(4),
+                    title: `Informacion ingresada`,
+                    description: `Su respuesta ha sido correctamente ingresada, carge el archivo generado en su repositorio asignado y proceda a responder el flujo.`,
+                    autohide: 15000,
+                  });
+
+                  this.router.navigate(['/']);
+
+                  const currentDate = new Date();
+
+                  saveAs(
+                    this.docxBlob,
+                    `minuta ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`
+                  );
+
+                  this.sharedService.removeWaitTask({
+                    id: putFormsJuridicaRequestTaskId,
+                  });
+                }
+              );
+            break;
         }
-      );
+      },
+      (httpEventError) => {
+        this.sharedService.removeWaitTask({
+          id: postFormsJuridicaRequestMinutaTaskId,
+        });
+      },
+      () => {
+        this.sharedService.removeWaitTask({
+          id: postFormsJuridicaRequestMinutaTaskId,
+        });
+      }
+    );
   }
 
   isValidPreview() {
-    switch (this.formJuridica.TipoAdquisicion) {
+    switch (this.juridica.TipoAdquisicion) {
       case 'Bienes':
         return (
           this.tipoInmueble &&
@@ -512,44 +794,72 @@ export class FormsJuridicaMinutaComponent implements OnInit {
           this.field3 &&
           this.field4
         );
+      case 'Suministro':
+        return (
+          this.nombrecontratista &&
+          this.numerodenit4 &&
+          this.objetodelcontrato7 &&
+          this.terminodelcontrato8 &&
+          this.valordelcontrato9 &&
+          this.formadepago10 &&
+          this.field11 &&
+          this.obligacionesespecificas12 &&
+          this.productos13 &&
+          this.field15 &&
+          this.field16 &&
+          this.field17 &&
+          this.field18 &&
+          this.field19
+        );
+      case 'Servicios':
+        switch (this.juridica.TipoPersona) {
+          case 'Natural':
+            return (
+              this.entidadaliada3 &&
+              this.nombrecontratista &&
+              this.numerodecedulad5 &&
+              this.objetodelcontrato6 &&
+              this.terminodeejecucipon7 &&
+              this.valordelcontrato8 &&
+              this.formadepago9 &&
+              this.field10 &&
+              this.field11 &&
+              this.field12 &&
+              this.field13 &&
+              this.obligacionesespecificas14 &&
+              this.productosaentregar15 &&
+              this.fechadefirma
+            );
+          case 'Juridica':
+            return (
+              this.nombrecontratista &&
+              this.nombrerepresentantelegal4 &&
+              this.field5 &&
+              this.objetodelcontrato6 &&
+              this.field7 &&
+              this.field8 &&
+              this.terminodeejecuciondelcontrato9 &&
+              this.formadepago10 &&
+              this.obligacionesespecificas12 &&
+              this.productosaentregar13 &&
+              this.tipodeamparo1 &&
+              this.porcentajedelamparo15 &&
+              this.vigenciadelamparo16 &&
+              this.tipodeamparo2 &&
+              this.porcentajedelamparo &&
+              this.vigenciadelamparo19 &&
+              this.fechadefirmadelcontrato
+            );
+          default:
+            return false;
+        }
+        break;
       default:
         return false;
     }
   }
 
   isValid() {
-    switch (this.formJuridica.TipoAdquisicion) {
-      case 'Bienes':
-        return (
-          this.tipoInmueble &&
-          this.nombreArrendador &&
-          this.numeroNit &&
-          this.nombreRepresentanteLegal &&
-          this.ciudadDondeReside &&
-          this.numeroCedula &&
-          this.ciudadExpedicion &&
-          this.detalleInmueble &&
-          this.ubicacionInmueble &&
-          this.barrio &&
-          this.ciudadInmueble &&
-          this.inmueble &&
-          this.mesesContrato &&
-          this.diaInicio &&
-          this.mesInicio &&
-          this.anoInicio &&
-          this.diaFin &&
-          this.mesFin &&
-          this.anoFin &&
-          this.valorContrato &&
-          this.valorCanonMensual &&
-          this.field1 &&
-          this.field2 &&
-          this.field3 &&
-          this.field4 &&
-          this.file
-        );
-      default:
-        return false;
-    }
+    return this.isValidPreview() && this.files.length !== 0;
   }
 }

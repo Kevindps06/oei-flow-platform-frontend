@@ -10,6 +10,7 @@ import { Utils } from 'src/app/classes/utils';
 export class UploadFilesComponent implements OnInit {
   @Input() contentAsArrayBuffer: boolean = false;
   @Input() requiredFeedback: string = '';
+  @Input() accept: string = '';
 
   constructor() {}
 

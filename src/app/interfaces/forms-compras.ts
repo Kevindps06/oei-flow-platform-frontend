@@ -1,15 +1,10 @@
 import { FileItem } from './FileItem';
 
-export interface IJuridica {
+export interface ICompras {
   _id?: string;
   Id: string;
   TipoProceso: string;
-  TipoAdquisicion: string;
-  TipoAdquisicionOtro?: string;
-  TipoPersona: string;
   ConvenioResponsable: string;
-  Email: string;
-  NumeroSolicitud: string;
   NumeroContrato: string;
   JustificacionContratacion: string;
   ObjetivoContratacion: string;
@@ -31,19 +26,9 @@ export interface IJuridica {
   CategoriaDatosCaracteristicasCircunstanciasSociales?: boolean;
   CategoriaDatosCaracteristicasDetallesEmpleo?: boolean;
   CategoriaDatosEconomicosFinancierosSeguros?: boolean;
-  cedulaCiudadaniaFiles?: FileItem[];
-  RUTFiles?: FileItem[];
-  certificacionBancariaFiles?: FileItem[];
-  constanciaAfiliacionSaludFiles?: FileItem[];
-  constanciaAfiliacionPensionFiles?: FileItem[];
-  constanciaArlFiles?: FileItem[];
-  tarjetaProfesionalFiles?: FileItem[];
-  hojaVidaFiles?: FileItem[];
-  soportesHojaVidaFiles?: FileItem[];
-  justificacionContratacionFiles?: FileItem[];
-  cotizacionOfertaFiles?: FileItem[];
-  informeTecnicoFiles?: FileItem[];
-  cuadroComparativoFiles?: FileItem[];
+  DocumentosFiles?: FileItem[];
+  ArtesFiles?: FileItem[];
+  SolicitudAdquisicionFiles?: FileItem[];
   InformacionAdicional: string;
   Requestor: any;
   JuridicaPostuladosUploadFiles?: any;

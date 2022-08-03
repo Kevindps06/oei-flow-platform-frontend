@@ -32,7 +32,7 @@ export class Utils {
     });
   }
 
-  static getBuffer(file: File) {
+  static getBuffer(file: File): Promise<string | ArrayBuffer | null> {
     const reader = new FileReader();
     return new Promise((resolve) => {
       reader.onload = function (e) {

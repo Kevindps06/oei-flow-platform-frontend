@@ -1,6 +1,10 @@
 <input
   (change)="whenUploadFiles($event)"
-  accept="text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml"
+  [accept]="
+    accept === ''
+      ? 'text/csv, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpeg, image/png, application/pdf, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/vnd.visio, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/xml, text/xml'
+      : accept
+  "
   class="form-control"
   type="file"
   id="Files"
@@ -17,13 +21,7 @@
 <div *ngIf="Files.length > 0" class="container">
   <div
     *ngFor="let File of Files"
-    class="
-      row
-      justify-content-center
-      align-items-center
-      mt-3
-      border-start border-top border-primary border-1
-    "
+    class="row justify-content-center align-items-center mt-3 border-start border-top border-primary border-1"
   >
     <div *ngIf="false" class="col-1">
       <img
@@ -46,9 +44,7 @@
     <div class="col-1 gx-0">
       <a href="javascript:;">
         <img
-          (click)="
-            whenRemoveFiles(File.Index)
-          "
+          (click)="whenRemoveFiles(File.Index)"
           width="50px"
           height="50px"
           src="{{

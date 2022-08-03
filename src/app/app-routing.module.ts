@@ -38,11 +38,15 @@ const routes: Routes = [
     component: FormsComponent,
   },
   {
-    path: 'forms/juridica/:id/postulados',
+    path: 'forms/juridica/:id/oferentes',
     component: FormsComponent,
   },
   {
-    path: 'forms/juridica/:id/postulados/:postuladoid/upload',
+    path: 'forms/juridica/:id/evaluadores',
+    component: FormsComponent,
+  },
+  {
+    path: 'forms/juridica/:id/evaluaciones',
     component: FormsComponent,
   },
   {

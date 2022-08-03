@@ -88,15 +88,55 @@
     </div>
   </div>
   <div *ngIf="formIndex === 1" class="col-12">
-    <!--constancia de afiliacion a salud-->
-    <div class="col-12">
-      <label for="uploadFilesDocumentos" class="form-label">Documentos </label>
-      <app-upload-files
-        name="uploadFilesDocumentos"
-        id="uploadFilesDocumentos"
-        [contentAsArrayBuffer]="true"
-        (onFilesChange)="setDocumentosFiles($event)"
-      ></app-upload-files>
+    <div class="row g-3">
+      <!--Documentos tecnicos-->
+      <div class="col-12">
+        <label for="uploadFilesDocumentosTecnicos" class="form-label"
+          >Documentos Tecnicos</label
+        >
+        <app-upload-files
+          name="uploadFilesDocumentosTecnicos"
+          id="uploadFilesDocumentosTecnicos"
+          [contentAsArrayBuffer]="true"
+          (onFilesChange)="setDocumentosTecnicosFiles($event)"
+        ></app-upload-files>
+      </div>
+      <!--Documento financieros-->
+      <div class="col-12">
+        <label for="uploadFilesDocumentosFinancieros" class="form-label"
+          >Documentos Financieros
+        </label>
+        <app-upload-files
+          name="uploadFilesDocumentosFinancieros"
+          id="uploadFilesDocumentosFinancieros"
+          [contentAsArrayBuffer]="true"
+          (onFilesChange)="setDocumentosFinancierosFiles($event)"
+        ></app-upload-files>
+      </div>
+      <!--Documento juridicos-->
+      <div class="col-12">
+        <label for="uploadFilesDocumentosJuridicos" class="form-label"
+          >Documentos Juridicos
+        </label>
+        <app-upload-files
+          name="uploadFilesDocumentosJuridicos"
+          id="uploadFilesDocumentosJuridicos"
+          [contentAsArrayBuffer]="true"
+          (onFilesChange)="setDocumentosJuridicosFiles($event)"
+        ></app-upload-files>
+      </div>
+      <!--Propuesta economica-->
+      <div class="col-12">
+        <label for="uploadFilesPropuestaEconomica" class="form-label"
+          >Propuesta Economica
+        </label>
+        <app-upload-files
+          name="uploadFilesPropuestaEconomica"
+          id="uploadFilesPropuestaEconomica"
+          [contentAsArrayBuffer]="true"
+          (onFilesChange)="setPropuestaEconomicaFiles($event)"
+        ></app-upload-files>
+      </div>
     </div>
   </div>
   <div *ngIf="formIndex === 1" class="d-grid gap-2 col-6 mx-auto mb-2">

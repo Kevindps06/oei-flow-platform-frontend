@@ -1,11 +1,11 @@
-import { HttpEventType } from '@angular/common/http';
+import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Utils } from 'src/app/classes/utils';
 import { Convenio } from 'src/app/interfaces/Convenio';
 import { FileItem } from 'src/app/interfaces/FileItem';
-import { FormsJuridica } from 'src/app/interfaces/forms-juridica';
+import { IJuridica } from 'src/app/interfaces/forms-juridica';
 import { ToastMessage } from 'src/app/interfaces/toast-message';
 import { WaitTask } from 'src/app/interfaces/WaitTask';
 import { FormsService } from 'src/app/services/forms.service';
@@ -19,25 +19,38 @@ import { SharedService } from 'src/app/services/shared.service';
 export class FormsJuridicaComponent implements OnInit {
   juridicaMap: Map<string, Map<string, number> | undefined> = new Map([
     [
+      'Pago directo',
+      new Map([
+        ['Min', 10000000],
+        ['Max', 40000001],
+      ]),
+    ],
+    [
       'Directa',
       new Map([
-        ['Min', 10000001],
+        ['Min', 10000000],
         ['Max', 40000001],
       ]),
     ],
     ['Directa por excepcion', undefined],
-    ['Comparativa de precios', undefined],
+    [
+      'Comparativa de precios',
+      new Map([
+        ['Min', 40000000],
+        ['Max', 80000001],
+      ]),
+    ],
     [
       'Procedimiento super simplificado',
       new Map([
-        ['Min', 40000001],
+        ['Min', 40000000],
         ['Max', 80000001],
       ]),
     ],
     [
       'Procedimiento simplificado',
       new Map([
-        ['Min', 80000001],
+        ['Min', 80000000],
         ['Max', 400000001],
       ]),
     ],
@@ -51,7 +64,7 @@ export class FormsJuridicaComponent implements OnInit {
     [
       'Licitacion',
       new Map([
-        ['Min', 400000001],
+        ['Min', 400000000],
         ['Max', NaN],
       ]),
     ],
@@ -76,6 +89,8 @@ export class FormsJuridicaComponent implements OnInit {
 
   convenioResponsable: string = '';
   email: string = '';
+  numeroSolicitud: string = '';
+  numeroContrato: string = '';
   justificacionContratacion: string = '';
   objetivoContratacion: string = '';
   especificacionesTecnicasMinimas: string = '';
@@ -90,6 +105,7 @@ export class FormsJuridicaComponent implements OnInit {
   plazo: string = '';
   manejoDatos: string = '';
   categoriaInteresado: string = '';
+  categoriaDatos: string = '';
   categoriaDatosSensibles: boolean = false;
   categoriaDatosIdentificativos: boolean = false;
   categoriaDatosCaracteristicasPersonales: boolean = false;
@@ -216,6 +232,8 @@ export class FormsJuridicaComponent implements OnInit {
         this.tipoPersona = '';
         this.convenioResponsable = '';
         this.email = '';
+        this.numeroSolicitud = '';
+        this.numeroContrato = '';
         this.justificacionContratacion = '';
         this.objetivoContratacion = '';
         this.especificacionesTecnicasMinimas = '';
@@ -241,6 +259,7 @@ export class FormsJuridicaComponent implements OnInit {
         this.plazo = '';
         this.manejoDatos = '';
         this.categoriaInteresado = '';
+        this.categoriaDatos = '';
         this.categoriaDatosSensibles = false;
         this.categoriaDatosIdentificativos = false;
         this.categoriaDatosCaracteristicasPersonales = false;
@@ -313,7 +332,7 @@ export class FormsJuridicaComponent implements OnInit {
       behavior: 'smooth',
     });
 
-    let formJuridica: FormsJuridica = {
+    let formJuridica: IJuridica = {
       Id: Utils.makeRandomString(32),
       TipoProceso: this.tipoProceso,
       TipoAdquisicion: this.tipoAdquisicion,
@@ -322,6 +341,14 @@ export class FormsJuridicaComponent implements OnInit {
       TipoPersona: this.tipoPersona,
       ConvenioResponsable: this.convenioResponsable,
       Email: this.email,
+      NumeroSolicitud: this.numeroSolicitud
+        .replace('/', '-')
+        .trimStart()
+        .trimEnd(),
+      NumeroContrato: this.numeroContrato
+        .replace('/', '-')
+        .trimStart()
+        .trimEnd(),
       JustificacionContratacion: this.justificacionContratacion,
       ObjetivoContratacion: this.objetivoContratacion,
       EspecificacionesTecnicasMinimas: this.especificacionesTecnicasMinimas,
@@ -336,6 +363,8 @@ export class FormsJuridicaComponent implements OnInit {
       ManejoDatos: this.manejoDatos,
       CategoriaInteresado:
         this.manejoDatos === 'Si' ? this.categoriaInteresado : undefined,
+      CategoriaDatos:
+        this.manejoDatos === 'Si' ? this.categoriaDatos : undefined,
       CategoriaDatosSensibles:
         this.manejoDatos === 'Si' ? this.categoriaDatosSensibles : undefined,
       CategoriaDatosIdentificativos:
@@ -971,7 +1000,7 @@ export class FormsJuridicaComponent implements OnInit {
       cedulaCiudadaniaFiles: this.cedulaCiudadaniaFiles,
       RUTFiles: this.RUTFiles,
       certificacionBancariaFiles: this.certificacionBancariaFiles,
-      constanciaAfiliacionSaludFiles: this.RUTFiles,
+      constanciaAfiliacionSaludFiles: this.constanciaAfiliacionSaludFiles,
       constanciaAfiliacionPensionFiles: this.constanciaAfiliacionPensionFiles,
       constanciaArlFiles: this.constanciaArlFiles,
       tarjetaProfesionalFiles: this.tarjetaProfesionalFiles,
@@ -1006,6 +1035,7 @@ export class FormsJuridicaComponent implements OnInit {
     this.categoriaDatosCaracteristicasDetallesEmpleo = false;
     this.categoriaDatosEconomicosFinancierosSeguros = false;
     this.categoriaDatosSensibles = false;
+    this.categoriaDatos = '';
     this.categoriaInteresado = '';
     this.manejoDatos = '';
     this.plazo = '';
@@ -1019,6 +1049,8 @@ export class FormsJuridicaComponent implements OnInit {
     this.especificacionesTecnicasMinimas = '';
     this.objetivoContratacion = '';
     this.justificacionContratacion = '';
+    this.numeroContrato = '';
+    this.numeroSolicitud = '';
     this.email = '';
     this.convenioResponsable = '';
     this.tipoPersona = '';
@@ -1092,6 +1124,70 @@ export class FormsJuridicaComponent implements OnInit {
     );
   }
 
+  isValidNumeroSolicitud: boolean = false;
+
+  numeroSolicitudAlreadyExist: boolean = false;
+
+  validateNumeroSolicitud() {
+    if (!this.numeroSolicitud) {
+      return;
+    }
+
+    this.formsService
+      .getJuridicaValidateNumeroSolicitud(this.numeroSolicitud)
+      .subscribe(
+        (event) => {},
+        (httpEventError: HttpErrorResponse) => {
+          if (httpEventError.status === 404) {
+            this.numeroSolicitudAlreadyExist = false;
+
+            this.isValidNumeroSolicitud = true;
+          } else {
+            this.numeroSolicitudAlreadyExist = false;
+
+            this.isValidNumeroSolicitud = false;
+          }
+        },
+        () => {
+          this.numeroSolicitudAlreadyExist = true;
+
+          this.isValidNumeroSolicitud = false;
+        }
+      );
+  }
+
+  isValidNumeroContrato: boolean = false;
+
+  numeroContratoAlreadyExist: boolean = false;
+
+  validateNumeroContrato() {
+    if (!this.numeroContrato) {
+      return;
+    }
+
+    this.formsService
+      .getJuridicaValidateNumeroContrato(this.numeroContrato)
+      .subscribe(
+        (event) => {},
+        (httpEventError: HttpErrorResponse) => {
+          if (httpEventError.status === 404) {
+            this.numeroContratoAlreadyExist = false;
+
+            this.isValidNumeroContrato = true;
+          } else {
+            this.numeroContratoAlreadyExist = false;
+
+            this.isValidNumeroContrato = false;
+          }
+        },
+        () => {
+          this.numeroContratoAlreadyExist = true;
+
+          this.isValidNumeroContrato = false;
+        }
+      );
+  }
+
   isValid() {
     switch (this.formIndex) {
       case 0:
@@ -1102,7 +1198,12 @@ export class FormsJuridicaComponent implements OnInit {
           (this.tipoAdquisicion === 'Otro' ? this.tipoAdquisicionOtro : true) &&
           this.tipoPersona &&
           this.convenioResponsable &&
-          (this.isConvocatorias() ? true : Utils.validateEmail(this.email)) &&
+          this.numeroSolicitud &&
+          this.isValidNumeroSolicitud &&
+          (this.isConvocatorias()
+            ? true
+            : Utils.validateEmail(this.email) && this.numeroContrato) &&
+          this.isValidNumeroContrato &&
           this.justificacionContratacion &&
           this.objetivoContratacion &&
           this.objeto &&
@@ -1114,6 +1215,9 @@ export class FormsJuridicaComponent implements OnInit {
           this.manejoDatos &&
           (this.manejoDatos === 'Si'
             ? this.categoriaInteresado && this.isValidCategoriaDatos()
+            : true) &&
+          (this.manejoDatos === 'Si'
+            ? this.categoriaDatos && this.isValidCategoriaDatos()
             : true)
         );
     }

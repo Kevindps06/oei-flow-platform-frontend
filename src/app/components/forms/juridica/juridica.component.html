@@ -32,11 +32,15 @@
                 {{ mapItem.key }}
                 {{
                   mapItem.value
-                    ? "- Min: " +
-                      numberWithPriceSpaces(mapItem.value.get("Min")) +
-                      " - Max: " +
-                      numberWithPriceSpaces(mapItem.value.get("Max"))
-                    : "- Limite no definido"
+                    ? (numberWithPriceSpaces(mapItem.value.get("Min")) !== "NaN"
+                        ? "- Mayor de $" +
+                          numberWithPriceSpaces(mapItem.value.get("Min"))
+                        : "") +
+                      (numberWithPriceSpaces(mapItem.value.get("Max")) !== "NaN"
+                        ? " - Menor de $" +
+                          numberWithPriceSpaces(mapItem.value.get("Max"))
+                        : "")
+                    : "- Sin limite"
                 }}
               </label>
             </div>
@@ -296,6 +300,49 @@
               </div>
             </div>
           </div>
+          <div class="col-12">
+            <div class="col-12">
+              <label class="form-label" for="inputNumeroSolicitud"
+                >Numero de solicitud<strong class="text-danger">*</strong
+                ><button
+                  type="button"
+                  class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseNumeroSolicitud"
+                >
+                  ?
+                </button></label
+              >
+              <div
+                class="collapse mb-2"
+                id="collapseNumeroSolicitud"
+                name="collapseNumeroSolicitud"
+              >
+                <div class="card card-body"></div>
+              </div>
+              <input
+                [(ngModel)]="numeroSolicitud"
+                (input)="validateNumeroSolicitud()"
+                name="inputNumeroSolicitud"
+                id="inputNumeroSolicitud"
+                type="email"
+                class="form-control"
+                [ngClass]="{
+                  'is-valid': isValidNumeroSolicitud,
+                  'is-invalid': !isValidNumeroSolicitud
+                }"
+              />
+              <div
+                *ngIf="!numeroSolicitudAlreadyExist"
+                class="invalid-feedback"
+              >
+                Este campo es (*) obligatorio, rellenelo.
+              </div>
+              <div *ngIf="numeroSolicitudAlreadyExist" class="invalid-feedback">
+                Este numero de solicitud ya existe.
+              </div>
+            </div>
+          </div>
           <div *ngIf="!isConvocatorias()" class="col-12">
             <div class="col-12">
               <label class="form-label" for="inputNumeroContrato"
@@ -317,13 +364,22 @@
                 <div class="card card-body"></div>
               </div>
               <input
+                [(ngModel)]="numeroContrato"
+                (input)="validateNumeroContrato()"
                 name="inputNumeroContrato"
                 id="inputNumeroContrato"
                 type="email"
                 class="form-control"
+                [ngClass]="{
+                  'is-valid': isValidNumeroContrato,
+                  'is-invalid': !isValidNumeroContrato
+                }"
               />
-              <div class="invalid-feedback">
+              <div *ngIf="!numeroContratoAlreadyExist" class="invalid-feedback">
                 Este campo es (*) obligatorio, rellenelo.
+              </div>
+              <div *ngIf="numeroContratoAlreadyExist" class="invalid-feedback">
+                Este numero de contrato ya existe.
               </div>
             </div>
           </div>
@@ -636,15 +692,23 @@
               >Presupuesto estimado
               {{
                 juridicaMap.get(tipoProceso)
-                  ? "- Min: " +
-                    numberWithPriceSpaces(
+                  ? (numberWithPriceSpaces(
                       juridicaMap?.get(tipoProceso)?.get("Min")
-                    ) +
-                    " - Max: " +
-                    numberWithPriceSpaces(
+                    ) !== "NaN"
+                      ? "- Mayor de $" +
+                        numberWithPriceSpaces(
+                          juridicaMap?.get(tipoProceso)?.get("Min")
+                        )
+                      : "") +
+                    (numberWithPriceSpaces(
                       juridicaMap?.get(tipoProceso)?.get("Max")
-                    )
-                  : "- Limite no definido"
+                    ) !== "NaN"
+                      ? " - Menor de $" +
+                        numberWithPriceSpaces(
+                          juridicaMap?.get(tipoProceso)?.get("Max")
+                        )
+                      : "")
+                  : "- Sin limite"
               }}<strong class="text-danger">*</strong
               ><button
                 type="button"
@@ -877,6 +941,24 @@
             </div>
           </div>
           <div *ngIf="manejoDatos === 'Si'" class="col-12">
+            <label class="form-label" for="textareaCategoriaDatos"
+              >Categoria de datos<strong class="text-danger">*</strong></label
+            >
+            <textarea
+              [(ngModel)]="categoriaDatos"
+              name="textareaCategoriaDatos"
+              id="textareaCategoriaDatos"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': categoriaDatos,
+                'is-invalid': !categoriaDatos
+              }"
+            ></textarea>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+          <div *ngIf="manejoDatos === 'Si'" class="col-12">
             <div class="card">
               <div class="card-body">
                 <div class="row g-3">
@@ -1038,6 +1120,7 @@
               name="uploadFilesCedulaCiudadania"
               id="uploadFilesCedulaCiudadania"
               [contentAsArrayBuffer]="true"
+              accept="application/pdf"
               (onFilesChange)="setCedulaCiudadaniaFiles($event)"
             ></app-upload-files>
           </div>
@@ -1051,6 +1134,7 @@
               id="uploadFilesRUT"
               [contentAsArrayBuffer]="true"
               (onFilesChange)="setRUTFiles($event)"
+              accept="application/pdf"
             ></app-upload-files>
           </div>
           <!--certificacion bancaria-->
@@ -1063,6 +1147,7 @@
               id="uploadFilesCertificacionBancaria"
               [contentAsArrayBuffer]="true"
               (onFilesChange)="setCertificacionBancariaFiles($event)"
+              accept="application/pdf"
             ></app-upload-files>
           </div>
           <!--constancia de afiliacion a salud-->
@@ -1076,6 +1161,7 @@
               id="uploadFilesConstanciaAfiliacionSalud"
               [contentAsArrayBuffer]="true"
               (onFilesChange)="setConstanciaAfiliacionSaludFiles($event)"
+              accept="application/pdf"
             ></app-upload-files>
           </div>
           <!--constancia de afiliacion a pension-->
@@ -1090,6 +1176,7 @@
               id="uploadFilesConstanciaAfiliacionPension"
               [contentAsArrayBuffer]="true"
               (onFilesChange)="setConstanciaAfiliacionPensionFiles($event)"
+              accept="application/pdf"
             ></app-upload-files>
           </div>
           <!--constancia de afiliacion arl-->
@@ -1102,6 +1189,7 @@
               id="uploadFilesConstanciaARL"
               [contentAsArrayBuffer]="true"
               (onFilesChange)="setConstanciaArlFiles($event)"
+              accept="application/pdf"
             ></app-upload-files>
           </div>
           <!--tarjeta profesional-->
@@ -1114,6 +1202,7 @@
               id="uploadFilesTarjetaProfesional"
               [contentAsArrayBuffer]="true"
               (onFilesChange)="setTarjetaProfesionalFiles($event)"
+              accept="application/pdf"
             ></app-upload-files>
           </div>
           <!--hoja de vida-->
@@ -1126,6 +1215,7 @@
               id="uploadFilesHojaVida"
               [contentAsArrayBuffer]="true"
               (onFilesChange)="setHojaVidaFiles($event)"
+              accept="application/pdf"
             ></app-upload-files>
           </div>
           <!--soportes hoja de vida-->
@@ -1138,6 +1228,7 @@
               id="uploadFilesSoportesHojaVida"
               [contentAsArrayBuffer]="true"
               (onFilesChange)="setSoportesHojaVidaFiles($event)"
+              accept="application/pdf"
             ></app-upload-files>
           </div>
           <!--justificacion de la contratacion-->
@@ -1150,6 +1241,7 @@
               id="uploadFilesJustificacionContratacion"
               [contentAsArrayBuffer]="true"
               (onFilesChange)="setJustificacionContratacionFiles($event)"
+              accept="application/pdf"
             ></app-upload-files>
           </div>
           <!--cotizacion u oferta-->
@@ -1162,6 +1254,7 @@
               id="uploadFilesCotizacionOferta"
               [contentAsArrayBuffer]="true"
               (onFilesChange)="setCotizacionOfertaFiles($event)"
+              accept="application/pdf"
             ></app-upload-files>
           </div>
           <!--informe tecnico-->
@@ -1175,6 +1268,7 @@
               id="uploadFilesInformeTecnico"
               [contentAsArrayBuffer]="true"
               (onFilesChange)="setInformeTecnicoFiles($event)"
+              accept="application/pdf"
             ></app-upload-files>
           </div>
           <!--cuadro comparativo-->
@@ -1188,6 +1282,7 @@
               id="uploadFilesCuadroComparativo"
               [contentAsArrayBuffer]="true"
               (onFilesChange)="setCuadroComparativoFiles($event)"
+              accept="application/pdf"
             ></app-upload-files>
           </div>
           <div class="col-12">

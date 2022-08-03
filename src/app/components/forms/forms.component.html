@@ -41,16 +41,22 @@
               startWithRoute('/forms/juridica/') && endWithRoute('/pliegos')
             "
           ></app-forms-juridica-pliegos>
-          <app-forms-juridica-postulados
+          <app-forms-juridica-oferentes
             *ngIf="
-              startWithRoute('/forms/juridica/') && endWithRoute('/postulados')
+              startWithRoute('/forms/juridica/') && endWithRoute('/oferentes')
             "
-          ></app-forms-juridica-postulados>
-          <app-forms-juridica-postulados-files-upload
+          ></app-forms-juridica-oferentes>
+          <app-forms-juridica-evaluadores
             *ngIf="
-              startWithRoute('/forms/juridica/') && endWithRoute('/upload')
+              startWithRoute('/forms/juridica/') && endWithRoute('/evaluadores')
             "
-          ></app-forms-juridica-postulados-files-upload>
+          ></app-forms-juridica-evaluadores>
+          <app-forms-juridica-evaluaciones
+            *ngIf="
+              startWithRoute('/forms/juridica/') &&
+              endWithRoute('/evaluaciones')
+            "
+          ></app-forms-juridica-evaluaciones>
           <!--Compras-->
           <app-forms-compras
             *ngIf="isRoute('/forms/compras')"

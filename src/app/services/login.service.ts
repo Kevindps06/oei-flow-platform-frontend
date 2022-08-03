@@ -15,6 +15,7 @@ import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 import { OAuthSettings } from 'src/oauth';
 import { User } from '../interfaces/user';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Location } from '@angular/common';
 
 export interface idTokenClaims {
   exp: number;
@@ -30,7 +31,8 @@ export class LoginService {
     private router: Router,
     private sharedService: SharedService,
     private msalService: MsalService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private location: Location
   ) {}
 
   activeAccoount() {
@@ -54,7 +56,12 @@ export class LoginService {
         description: `Su anterior sesion ha expirado, vuelva a iniciar sesion.`,
       });
 
-      this.router.navigate(['/']);
+      if (
+        this.router.url.split('?')[0] !== '/login' &&
+        this.router.url.split('?')[0] !== '/'
+      ) {
+        this.router.navigate(['/login']);
+      }
 
       return false;
     }
@@ -85,7 +92,7 @@ export class LoginService {
           description: `Hola ${this.user?.givenName}, esperamos tengas la mejor de las estancias.`,
         });
 
-        this.router.navigate(['/']);
+        this.location.back();
 
         this.sharedService.removeWaitTask({
           id: taskId,

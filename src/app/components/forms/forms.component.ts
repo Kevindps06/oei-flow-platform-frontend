@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsService } from 'src/app/services/forms.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+  Event,
+} from '@angular/router';
 import { Convenio } from 'src/app/interfaces/Convenio';
 import { AuthService } from 'src/app/services/auth.service';
-import { mergeMap } from 'rxjs/operators';
-import { from, of } from 'rxjs';
 
 @Component({
   selector: 'app-forms',
@@ -15,11 +19,33 @@ export class FormsComponent implements OnInit {
   title!: string;
   description!: string;
 
+  currentRoute: string = '';
+
   constructor(
     private authService: AuthService,
     private router: Router,
     private activatedRoute: ActivatedRoute
-  ) {}
+  ) {
+    this.router.events.subscribe((event: Event) => {
+      if (event instanceof NavigationStart) {
+        // Show progress spinner or progress bar
+        console.log('Route change detected');
+      }
+
+      if (event instanceof NavigationEnd) {
+        // Hide progress spinner or progress bar
+        this.currentRoute = event.url;
+        console.log(event);
+      }
+
+      if (event instanceof NavigationError) {
+        // Hide progress spinner or progress bar
+
+        // Present error to user
+        console.log(event.error);
+      }
+    });
+  }
 
   convenios: Convenio[] = [];
 
@@ -53,13 +79,17 @@ export class FormsComponent implements OnInit {
         this.title = 'Gestion juridica pliegos';
         //this.description = 'Formulario de gestion juridica pliegos descripcion.';
         return;
-      case `/forms/juridica/${this.activatedRoute.snapshot.params.id}/postulados`:
-        this.title = 'Gestion juridica postulados';
-        //this.description = 'Formulario de gestion juridica postulados descripcion.';
+      case `/forms/juridica/${this.activatedRoute.snapshot.params.id}/oferentes`:
+        this.title = 'Gestion juridica oferentes';
+        //this.description = 'Formulario de gestion juridica oferentes descripcion.';
         return;
-      case `/forms/juridica/${this.activatedRoute.snapshot.params.id}/postulados/${this.activatedRoute.snapshot.params.idpostulado}/upload`:
-        this.title = `Gestion juridica postulado ${this.activatedRoute.snapshot.params.idpostulado} subida de documentos`;
-        //this.description = 'Formulario de gestion juridica postulados descripcion.';
+      case `/forms/juridica/${this.activatedRoute.snapshot.params.id}/evaluadores`:
+        this.title = 'Gestion juridica evaluadores';
+        //this.description = 'Formulario de gestion juridica evaluadores descripcion.';
+        return;
+      case `/forms/juridica/${this.activatedRoute.snapshot.params.id}/evaluaciones`:
+        this.title = 'Gestion juridica evaluaciones';
+        //this.description = 'Formulario de gestion juridica evaluaciones descripcion.';
         return;
       // Compras
       case '/forms/compras':

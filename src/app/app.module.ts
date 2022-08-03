@@ -34,8 +34,14 @@ import { FormsJuridicaEulaComponent } from './components/forms/juridica/eula/eul
 import { FormsJuridicaMinutaComponent } from './components/forms/juridica/minuta/minuta.component';
 import { ComprasComponent } from './components/forms/compras/compras.component';
 import { FormsJuridicaPliegosComponent } from './components/forms/juridica/pliegos/pliegos.component';
-import { FormsJuridicaPostuladosComponent } from './components/forms/juridica/postulados/postulados.component';
-import { FormsJuridicaPostuladosFilesUploadComponent } from './components/forms/juridica/postulados/files-upload/files-upload.component';
+import { FormsJuridicaOferentesComponent } from './components/forms/juridica/oferentes/oferentes.component';
+import { FormsJuridicaEvaluacionesComponent } from './components/forms/juridica/evaluaciones/evaluaciones.component';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { FormsJuridicaEvaluadoresComponent } from './components/forms/juridica/evaluadores/evaluadores.component';
+import {
+  DEFAULT_TIMEOUT,
+  TimeoutInterceptor,
+} from './services/timeout-interceptor.service';
 
 let msalInstance: IPublicClientApplication | undefined = undefined;
 
@@ -81,8 +87,9 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FormsJuridicaMinutaComponent,
     ComprasComponent,
     FormsJuridicaPliegosComponent,
-    FormsJuridicaPostuladosComponent,
-    FormsJuridicaPostuladosFilesUploadComponent,
+    FormsJuridicaOferentesComponent,
+    FormsJuridicaEvaluacionesComponent,
+    FormsJuridicaEvaluadoresComponent,
   ],
   imports: [
     BrowserModule,
@@ -91,8 +98,11 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     HttpClientModule,
     MsalModule,
     ReactiveFormsModule,
+    PdfViewerModule,
   ],
   providers: [
+    [{ provide: HTTP_INTERCEPTORS, useClass: TimeoutInterceptor, multi: true }],
+    [{ provide: DEFAULT_TIMEOUT, useValue: 30000 }],
     {
       provide: HTTP_INTERCEPTORS,
       useClass: GlobalHttpInterceptorService,

@@ -1,0 +1,92 @@
+<div *ngIf="juridica" class="row g-3">
+  <div class="col-12">
+    <div class="card card-body">
+      <div class="row g-3">
+        <div class="col-12">
+          <h5 class="card-title text-center">Evaluadores</h5>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <input
+              [(ngModel)]="emailEvaluadorJuridico"
+              type="text"
+              class="form-control"
+              name="floatingTextInputEmailEvaluadorJuridico"
+              id="floatingTextInputEmailEvaluadorJuridico"
+              placeholder="\0"
+              [ngClass]="{
+                'is-valid': validateEmail(emailEvaluadorJuridico),
+                'is-invalid': !validateEmail(emailEvaluadorJuridico)
+              }"
+            />
+            <label for="floatingTextInputEmailEvaluadorJuridico"
+              >Email evaluador juridico<strong class="text-danger"
+                >*</strong
+              ></label
+            >
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <input
+              [(ngModel)]="emailEvaluadorFinanciero"
+              type="text"
+              class="form-control"
+              name="floatingTextInputEmailEvaluadorFinanciero"
+              id="floatingTextInputEmailEvaluadorFinanciero"
+              placeholder="\0"
+              [ngClass]="{
+                'is-valid': validateEmail(emailEvaluadorFinanciero),
+                'is-invalid': !validateEmail(emailEvaluadorFinanciero)
+              }"
+            />
+            <label for="floatingTextInputEmailEvaluadorFinanciero"
+              >Email evaluador financiero<strong class="text-danger"
+                >*</strong
+              ></label
+            >
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <input
+              [(ngModel)]="emailEvaluadorTecnico"
+              type="text"
+              class="form-control"
+              name="floatingTextInputEmailEvaluadorTecnico"
+              id="floatingTextInputEmailEvaluadorTecnico"
+              placeholder="\0"
+              [ngClass]="{
+                'is-valid': validateEmail(emailEvaluadorTecnico),
+                'is-invalid': !validateEmail(emailEvaluadorTecnico)
+              }"
+            />
+            <label for="floatingTextInputEmailEvaluadorTecnico"
+              >Email evaluador tecnico<strong class="text-danger"
+                >*</strong
+              ></label
+            >
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+        </div>
+        <div class="d-grid gap-2 col-6 mx-auto mb-2">
+          <a
+            class="btn btn-primary"
+            (click)="btnSubmitClick()"
+            role="button"
+            [ngClass]="{ disabled: !isValid() }"
+            >Enviar</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
