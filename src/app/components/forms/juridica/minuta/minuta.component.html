@@ -1704,6 +1704,197 @@
           </div>
         </div>
         <!---->
+        <div *ngIf="pdfUint8Array1" class="col-12">
+          <pdf-viewer
+            [src]="pdfUint8Array1"
+            [render-text]="true"
+            style="height: 500px"
+          ></pdf-viewer>
+        </div>
+        <!--Anexo-->
+        <div *ngIf="juridica.ManejoDatos === 'Si'" class="col-12">
+          <h5 class="card-title text-center">Anexo contrato de encargo</h5>
+        </div>
+        <div *ngIf="juridica.ManejoDatos === 'Si'" class="col-12">
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="fechasuperior"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaFechaSuperior"
+                  id="floatingTextareaFechaSuperior"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': fechasuperior,
+                    'is-invalid': !fechasuperior
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaFechaSuperior"
+                  >Fecha superior<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="direccionaefectosdenotificaciones"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaDireccionEfectosNotificaciones"
+                  id="floatingTextareaDireccionEfectosNotificaciones"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': direccionaefectosdenotificaciones,
+                    'is-invalid': !direccionaefectosdenotificaciones
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaDireccionEfectosNotificaciones"
+                  >Direccion a efectos de notificaciones<strong
+                    class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="perfilprofesionaluobjetosocial"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaPerfilProfesionalObjetoSocial"
+                  id="floatingTextareaPerfilProfesionalObjetoSocial"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': perfilprofesionaluobjetosocial,
+                    'is-invalid': !perfilprofesionaluobjetosocial
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaPerfilProfesionalObjetoSocial"
+                  >Perfil profesional u objeto social<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="caracteristicaspersonaleseidentificativos"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaCaracteristicasPersonalesIdentificativos"
+                  id="floatingTextareaCaracteristicasPersonalesIdentificativos"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': caracteristicaspersonaleseidentificativos,
+                    'is-invalid': !caracteristicaspersonaleseidentificativos
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label
+                  for="floatingTextareaCaracteristicasPersonalesIdentificativos"
+                  >Caracteristicas personales e identificativos<strong
+                    class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="categoriadelinteresado"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaCategoriaInteresado"
+                  id="floatingTextareaCategoriaInteresado"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': categoriadelinteresado,
+                    'is-invalid': !categoriadelinteresado
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaCategoriaInteresado"
+                  >Categoria del interesado<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="categoriadedatos"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaCategoriaDatos"
+                  id="floatingTextareaCategoriaDatos"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': categoriadedatos,
+                    'is-invalid': !categoriadedatos
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaCategoriaDatos"
+                  >Categoria de datos<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="fechaantefirma"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaFechaAnteFirma"
+                  id="floatingTextareaFechaAnteFirma"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': fechaantefirma,
+                    'is-invalid': !fechaantefirma
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaFechaAnteFirma"
+                  >Fecha ante firma<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!---->
+        <div *ngIf="pdfUint8Array2" class="col-12">
+          <pdf-viewer
+            [src]="pdfUint8Array2"
+            [render-text]="true"
+            style="height: 500px"
+          ></pdf-viewer>
+        </div>
+        <!---->
         <div *ngIf="false" class="col-12">
           <div class="row g-3">
             <div class="col-12">
@@ -2257,13 +2448,6 @@
               </div>
             </div>
           </div>
-        </div>
-        <div *ngIf="pdfUint8Array" class="col-12">
-          <pdf-viewer
-            [src]="pdfUint8Array"
-            [render-text]="true"
-            style="height: 500px"
-          ></pdf-viewer>
         </div>
         <div class="d-grid gap-2 col-6 mx-auto mb-2">
           <button

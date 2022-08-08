@@ -292,7 +292,7 @@ export class FormsService {
         juridicaMinutaGenerate,
         {
           headers: new HttpHeaders({
-            timeout: `${60000}`,
+            /*timeout: `${480000}`,*/
             'content-type': 'application/json',
           }),
           params: new HttpParams().appendAll({
@@ -300,7 +300,25 @@ export class FormsService {
             TipoPersona,
           }),
           reportProgress: true,
-          responseType: 'json',
+        }
+      )
+    );
+  }
+
+  postFormJuridicaMinutaGenerateAnexo(
+    juridicaMinutaAnexoGenerate: any
+  ): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'POST',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/minuta/generate/anexo`,
+        juridicaMinutaAnexoGenerate,
+        {
+          headers: new HttpHeaders({
+            /*timeout: `${60000}`,*/
+            'content-type': 'application/json',
+          }),
+          reportProgress: true,
         }
       )
     );

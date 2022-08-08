@@ -105,6 +105,16 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   vigenciadelamparo19: string = '';
   fechadefirmadelcontrato: string = '';
 
+  // Anexo
+  fechasuperior: string = '';
+  direccionaefectosdenotificaciones: string = '';
+  perfilprofesionaluobjetosocial: string = '';
+  caracteristicaspersonaleseidentificativos: string = '';
+  categoriadelinteresado: string = '';
+  categoriadedatos: string = '';
+  fechaantefirma: string = '';
+  // nombrecontratista
+
   obligacionesadicionales: string = '';
 
   field1: string = '';
@@ -132,9 +142,15 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   field23: string = '';
   field24: string = '';
   field25: string = '';
-  docxBlob!: Blob;
-  pdfUint8Array?: Uint8Array;
-  pdfBlob!: Blob;
+
+  docxBlob1!: Blob;
+  pdfUint8Array1?: Uint8Array;
+  pdfBlob1!: Blob;
+
+  docxBlob2!: Blob;
+  pdfUint8Array2?: Uint8Array;
+  pdfBlob2!: Blob;
+
   files: FileItem[] = [];
 
   constructor(
@@ -302,7 +318,8 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   }
 
   invalidatePreview() {
-    this.pdfUint8Array = undefined;
+    this.pdfUint8Array1 = undefined;
+    this.pdfUint8Array2 = undefined;
     this.files = [];
   }
 
@@ -435,6 +452,18 @@ export class FormsJuridicaMinutaComponent implements OnInit {
         break;
     }
 
+    const juridicaMinutaGenerateAnexo = {
+      fechasuperior: this.fechasuperior,
+      direccionaefectosdenotificaciones: this.direccionaefectosdenotificaciones,
+      perfilprofesionaluobjetosocial: this.perfilprofesionaluobjetosocial,
+      caracteristicaspersonaleseidentificativos:
+        this.caracteristicaspersonaleseidentificativos,
+      categoriadelinteresado: this.categoriadelinteresado,
+      categoriadedatos: this.categoriadedatos,
+      fechaantefirma: this.fechaantefirma,
+      nombrecontratista: this.nombrecontratista,
+    };
+
     let postFormsJuridicaMinutaGenerateTaskId!: string;
     this.formsService
       .postFormJuridicaMinutaGenerate(
@@ -444,6 +473,8 @@ export class FormsJuridicaMinutaComponent implements OnInit {
       )
       .subscribe(
         async (httpEvent) => {
+          console.log(httpEvent);
+
           switch (httpEvent.type) {
             case HttpEventType.Sent:
               postFormsJuridicaMinutaGenerateTaskId =
@@ -463,37 +494,39 @@ export class FormsJuridicaMinutaComponent implements OnInit {
             case HttpEventType.Response:
               const currentDate = new Date();
 
-              this.docxBlob = new Blob([
+              this.docxBlob1 = new Blob([
                 new Uint8Array(httpEvent.body.docxBuf.data),
               ]);
 
-              this.pdfUint8Array = new Uint8Array(httpEvent.body.pdfBuf.data);
+              this.pdfUint8Array1 = new Uint8Array(httpEvent.body.pdfBuf.data);
 
-              this.pdfBlob = new Blob([this.pdfUint8Array]);
+              this.pdfBlob1 = new Blob([this.pdfUint8Array1]);
 
               this.files = [];
 
               this.files.push({
                 Index: 0,
                 Name: `minuta ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`,
-                Size: this.docxBlob.size,
-                Type: this.docxBlob.type,
-                Bytes: await this.docxBlob.arrayBuffer(),
+                Size: this.docxBlob1.size,
+                Type: this.docxBlob1.type,
+                Bytes: await this.docxBlob1.arrayBuffer(),
                 Uploaded: true,
               });
 
               this.files.push({
                 Index: 1,
                 Name: `minuta ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.pdf`,
-                Size: this.pdfBlob.size,
-                Type: this.pdfBlob.type,
-                Bytes: await this.pdfBlob.arrayBuffer(),
+                Size: this.pdfBlob1.size,
+                Type: this.pdfBlob1.type,
+                Bytes: await this.pdfBlob1.arrayBuffer(),
                 Uploaded: true,
               });
               break;
           }
         },
         (httpEventError) => {
+          console.log(httpEventError);
+
           this.sharedService.removeWaitTask({
             id: postFormsJuridicaMinutaGenerateTaskId,
           });
@@ -501,6 +534,76 @@ export class FormsJuridicaMinutaComponent implements OnInit {
         () => {
           this.sharedService.removeWaitTask({
             id: postFormsJuridicaMinutaGenerateTaskId,
+          });
+        }
+      );
+
+    let postFormsJuridicaMinutaGenerateAnexoTaskId!: string;
+    this.formsService
+      .postFormJuridicaMinutaGenerateAnexo(juridicaMinutaGenerateAnexo)
+      .subscribe(
+        async (httpEvent) => {
+          console.log(httpEvent);
+
+          switch (httpEvent.type) {
+            case HttpEventType.Sent:
+              postFormsJuridicaMinutaGenerateAnexoTaskId =
+                this.sharedService.pushWaitTask({
+                  description: 'Generando pre visualizacion...',
+                  progress: 0,
+                }) as string;
+              break;
+            case HttpEventType.DownloadProgress:
+              this.sharedService.pushWaitTask({
+                id: postFormsJuridicaMinutaGenerateAnexoTaskId,
+                progress: Math.round(
+                  (httpEvent.loaded * 100) / httpEvent.total
+                ),
+              });
+              break;
+            case HttpEventType.Response:
+              const currentDate = new Date();
+
+              this.docxBlob2 = new Blob([
+                new Uint8Array(httpEvent.body.docxBuf.data),
+              ]);
+
+              this.pdfUint8Array2 = new Uint8Array(httpEvent.body.pdfBuf.data);
+
+              this.pdfBlob2 = new Blob([this.pdfUint8Array2]);
+
+              this.files = [];
+
+              this.files.push({
+                Index: 0,
+                Name: `anexo ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`,
+                Size: this.docxBlob2.size,
+                Type: this.docxBlob2.type,
+                Bytes: await this.docxBlob2.arrayBuffer(),
+                Uploaded: true,
+              });
+
+              this.files.push({
+                Index: 1,
+                Name: `anexo ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.pdf`,
+                Size: this.pdfBlob2.size,
+                Type: this.pdfBlob2.type,
+                Bytes: await this.pdfBlob2.arrayBuffer(),
+                Uploaded: true,
+              });
+              break;
+          }
+        },
+        (httpEventError) => {
+          console.log(httpEventError);
+
+          this.sharedService.removeWaitTask({
+            id: postFormsJuridicaMinutaGenerateAnexoTaskId,
+          });
+        },
+        () => {
+          this.sharedService.removeWaitTask({
+            id: postFormsJuridicaMinutaGenerateAnexoTaskId,
           });
         }
       );
@@ -739,8 +842,13 @@ export class FormsJuridicaMinutaComponent implements OnInit {
                   const currentDate = new Date();
 
                   saveAs(
-                    this.docxBlob,
+                    this.docxBlob1,
                     `minuta ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`
+                  );
+
+                  saveAs(
+                    this.docxBlob2,
+                    `anexo ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`
                   );
 
                   this.sharedService.removeWaitTask({
@@ -792,7 +900,10 @@ export class FormsJuridicaMinutaComponent implements OnInit {
           this.field1 &&
           this.field2 &&
           this.field3 &&
-          this.field4
+          this.field4 &&
+          (this.juridica.ManejoDatos === 'Si'
+            ? this.isValidPreviewAnexo()
+            : true)
         );
       case 'Suministro':
         return (
@@ -809,7 +920,10 @@ export class FormsJuridicaMinutaComponent implements OnInit {
           this.field16 &&
           this.field17 &&
           this.field18 &&
-          this.field19
+          this.field19 &&
+          (this.juridica.ManejoDatos === 'Si'
+            ? this.isValidPreviewAnexo()
+            : true)
         );
       case 'Servicios':
         switch (this.juridica.TipoPersona) {
@@ -828,7 +942,10 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               this.field13 &&
               this.obligacionesespecificas14 &&
               this.productosaentregar15 &&
-              this.fechadefirma
+              this.fechadefirma &&
+              (this.juridica.ManejoDatos === 'Si'
+                ? this.isValidPreviewAnexo()
+                : true)
             );
           case 'Juridica':
             return (
@@ -848,18 +965,47 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               this.tipodeamparo2 &&
               this.porcentajedelamparo &&
               this.vigenciadelamparo19 &&
-              this.fechadefirmadelcontrato
+              this.fechadefirmadelcontrato &&
+              (this.juridica.ManejoDatos === 'Si'
+                ? this.isValidPreviewAnexo()
+                : true)
             );
           default:
             return false;
         }
-        break;
       default:
         return false;
     }
   }
 
+  isValidPreviewAnexo() {
+    /*console.log(this.fechasuperior);
+    console.log(this.direccionaefectosdenotificaciones);
+    console.log(this.perfilprofesionaluobjetosocial);
+    console.log(this.caracteristicaspersonaleseidentificativos);
+    console.log(this.categoriadelinteresado);
+    console.log(this.categoriadedatos);
+    console.log(this.fechaantefirma);
+    console.log('---------------------------------------------');*/
+
+    return (
+      this.fechasuperior &&
+      this.direccionaefectosdenotificaciones &&
+      this.perfilprofesionaluobjetosocial &&
+      this.caracteristicaspersonaleseidentificativos &&
+      this.categoriadelinteresado &&
+      this.categoriadedatos &&
+      this.fechaantefirma
+    );
+  }
+
   isValid() {
-    return this.isValidPreview() && this.files.length !== 0;
+    return (
+      this.isValidPreview() &&
+      (this.juridica.ManejoDatos === 'Si'
+        ? this.isValidPreviewAnexo()
+        : true) &&
+      this.files.length !== 0
+    );
   }
 }
