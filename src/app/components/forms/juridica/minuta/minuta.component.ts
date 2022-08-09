@@ -21,7 +21,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   juridicaId!: string;
   juridica!: IJuridica;
 
-  // Biene
+  // Bienes
   tipoInmueble: string = '';
   nombreArrendador: string = '';
   numeroNit: string = '';
@@ -53,7 +53,9 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   numerodeconvenio2: string = '';
   nombrecontratista: string = '';
   numerodenit4: string = '';
-  objetodelcontrato7: string = '';
+  nombrerepresentantelegal: string = '';
+  // numeroCedula
+  objetoContrato: string = '';
   terminodelcontrato8: string = '';
   valordelcontrato9: string = '';
   formadepago10: string = '';
@@ -65,14 +67,15 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   // field17
   // field18
   // field19
+  fechaFirma: string = '';
 
   // Servicios - Natural
   // numerodecontrato1
   // numerodeconvenio2
   entidadaliada3: string = '';
   // nombrecontratista
-  numerodecedulad5: string = '';
-  objetodelcontrato6: string = '';
+  // numeroCedula
+  // objetoContrato
   terminodeejecucipon7: string = '';
   valordelcontrato8: string = '';
   formadepago9: string = '';
@@ -82,15 +85,15 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   // field13
   obligacionesespecificas14: string = '';
   productosaentregar15: string = '';
-  fechadefirma: string = '';
+  // fechaFirma
 
   // Servicios - Juridica
   // numerodecontrato1
   // numerodeconvenio2
   // nombrecontratista
   nombrerepresentantelegal4: string = '';
-  // field5
-  // objetodelcontrato6
+  // numeroCedula
+  // objetoContrato
   // field7
   // field8
   terminodeejecuciondelcontrato9: string = '';
@@ -103,7 +106,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   tipodeamparo2: string = '';
   porcentajedelamparo: string = '';
   vigenciadelamparo19: string = '';
-  fechadefirmadelcontrato: string = '';
+  // fechaFirma
 
   // Anexo
   fechasuperior: string = '';
@@ -114,8 +117,6 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   categoriadedatos: string = '';
   fechaantefirma: string = '';
   // nombrecontratista
-
-  obligacionesadicionales: string = '';
 
   field1: string = '';
   field2: string = '';
@@ -376,7 +377,6 @@ export class FormsJuridicaMinutaComponent implements OnInit {
           field23: this.field23,
           field24: this.field24,
           field25: this.field25,
-          obligacionesadicionales: this.obligacionesadicionales,
         };
         break;
       case 'Suministro':
@@ -385,7 +385,9 @@ export class FormsJuridicaMinutaComponent implements OnInit {
           numerodeconvenio2: this.numerodeconvenio2,
           nombrecontratista: this.nombrecontratista,
           numerodenit4: this.numerodenit4,
-          objetodelcontrato7: this.objetodelcontrato7,
+          nombrerepresentantelegal: this.nombrerepresentantelegal,
+          numeroCedula: this.numeroCedula,
+          objetoContrato: this.objetoContrato,
           terminodelcontrato8: this.terminodelcontrato8,
           valordelcontrato9: this.valordelcontrato9,
           formadepago10: this.formadepago10,
@@ -397,7 +399,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
           fiield17: this.field17,
           field18: this.field18,
           field19: this.field19,
-          obligacionesadicionales: this.obligacionesadicionales,
+          fechaFirma: this.fechaFirma,
         };
         break;
       case 'Servicios':
@@ -408,8 +410,8 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               numerodeconvenio2: this.numerodeconvenio2,
               entidadaliada3: this.entidadaliada3,
               nombrecontratista: this.nombrecontratista,
-              numerodecedulad5: this.numerodecedulad5,
-              objetodelcontrato6: this.objetodelcontrato6,
+              numeroCedula: this.numeroCedula,
+              objetoContrato: this.objetoContrato,
               terminodeejecucipon7: this.terminodeejecucipon7,
               valordelcontrato8: this.valordelcontrato8,
               formadepago9: this.formadepago9,
@@ -419,8 +421,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               field13: this.field13,
               obligacionesespecificas14: this.obligacionesespecificas14,
               productosaentregar15: this.productosaentregar15,
-              fechadefirma: this.fechadefirma,
-              obligacionesadicionales: this.obligacionesadicionales,
+              fechaFirma: this.fechaFirma,
             };
             break;
           case 'Juridica':
@@ -429,8 +430,8 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               numerodeconvenio2: this.numerodeconvenio2,
               nombrecontratista: this.nombrecontratista,
               nombrerepresentantelegal4: this.nombrerepresentantelegal4,
-              field5: this.field5,
-              objetodelcontrato6: this.objetodelcontrato6,
+              numeroCedula: this.numeroCedula,
+              objetoContrato: this.objetoContrato,
               field7: this.field7,
               field8: this.field8,
               terminodeejecuciondelcontrato9:
@@ -444,8 +445,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               tipodeamparo2: this.tipodeamparo2,
               porcentajedelamparo: this.porcentajedelamparo,
               vigenciadelamparo19: this.vigenciadelamparo19,
-              fechadefirmadelcontrato: this.fechadefirmadelcontrato,
-              obligacionesadicionales: this.obligacionesadicionales,
+              fechaFirma: this.fechaFirma,
             };
             break;
         }
@@ -454,14 +454,16 @@ export class FormsJuridicaMinutaComponent implements OnInit {
 
     const juridicaMinutaGenerateAnexo = {
       fechasuperior: this.fechasuperior,
+      nombrecontratista: this.nombrecontratista,
+      numeroCedula: this.numeroCedula,
       direccionaefectosdenotificaciones: this.direccionaefectosdenotificaciones,
       perfilprofesionaluobjetosocial: this.perfilprofesionaluobjetosocial,
+      objetoContrato: this.objetoContrato,
       caracteristicaspersonaleseidentificativos:
         this.caracteristicaspersonaleseidentificativos,
       categoriadelinteresado: this.categoriadelinteresado,
       categoriadedatos: this.categoriadedatos,
       fechaantefirma: this.fechaantefirma,
-      nombrecontratista: this.nombrecontratista,
     };
 
     this.files = [];
@@ -659,7 +661,9 @@ export class FormsJuridicaMinutaComponent implements OnInit {
           NumeroConvenio: this.numerodeconvenio2,
           NombreContratista: this.nombrecontratista,
           NumeroNit: this.numerodenit4,
-          ObjetoContrato: this.objetodelcontrato7,
+          NombreRepresentanteLegal: this.nombrerepresentantelegal,
+          NumeroCedula: this.numeroCedula,
+          ObjetoContrato: this.objetoContrato,
           TerminoContrato: this.terminodelcontrato8,
           ValorContrato: this.valordelcontrato9,
           FormaPago: this.formadepago10,
@@ -681,8 +685,8 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               NumeroConvenio: this.numerodeconvenio2,
               EntidadAliada: this.entidadaliada3,
               NombreContratista: this.nombrecontratista,
-              NumeroCedula: this.numerodecedulad5,
-              ObjetoContrato: this.objetodelcontrato6,
+              NumeroCedula: this.numeroCedula,
+              ObjetoContrato: this.objetoContrato,
               TerminoEjecucion: this.terminodeejecucipon7,
               ValorContrato: this.valordelcontrato8,
               FormaPago: this.formadepago9,
@@ -692,7 +696,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               Field13: this.field13,
               ObligacionesEspecificas: this.obligacionesespecificas14,
               ProductosEntregar: this.productosaentregar15,
-              FechaFirma: this.fechadefirma,
+              FechaFirma: this.fechaFirma,
             };
             break;
           case 'Juridica':
@@ -701,8 +705,8 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               NumeroConvenio: this.numerodeconvenio2,
               NombreContratista: this.nombrecontratista,
               NombreRepresentanteLegal: this.nombrerepresentantelegal4,
-              Field5: this.field5,
-              ObjetoContrato: this.objetodelcontrato6,
+              NumeroCedula: this.numeroCedula,
+              ObjetoContrato: this.objetoContrato,
               Field7: this.field7,
               Field8: this.field8,
               TerminoEjecucion: this.terminodeejecuciondelcontrato9,
@@ -715,7 +719,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               TipoAmparo2: this.tipodeamparo2,
               PorcentajeAmparo2: this.porcentajedelamparo,
               VigenciaAmparo2: this.vigenciadelamparo19,
-              FechaFirma: this.fechadefirmadelcontrato,
+              FechaFirma: this.fechaFirma,
             };
             break;
         }
@@ -901,7 +905,9 @@ export class FormsJuridicaMinutaComponent implements OnInit {
         return (
           this.nombrecontratista &&
           this.numerodenit4 &&
-          this.objetodelcontrato7 &&
+          this.nombrerepresentantelegal &&
+          this.numeroCedula &&
+          this.objetoContrato &&
           this.terminodelcontrato8 &&
           this.valordelcontrato9 &&
           this.formadepago10 &&
@@ -923,8 +929,8 @@ export class FormsJuridicaMinutaComponent implements OnInit {
             return (
               this.entidadaliada3 &&
               this.nombrecontratista &&
-              this.numerodecedulad5 &&
-              this.objetodelcontrato6 &&
+              this.numeroCedula &&
+              this.objetoContrato &&
               this.terminodeejecucipon7 &&
               this.valordelcontrato8 &&
               this.formadepago9 &&
@@ -934,7 +940,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               this.field13 &&
               this.obligacionesespecificas14 &&
               this.productosaentregar15 &&
-              this.fechadefirma &&
+              this.fechaFirma &&
               (this.juridica.ManejoDatos === 'Si'
                 ? this.isValidPreviewAnexo()
                 : true)
@@ -943,8 +949,8 @@ export class FormsJuridicaMinutaComponent implements OnInit {
             return (
               this.nombrecontratista &&
               this.nombrerepresentantelegal4 &&
-              this.field5 &&
-              this.objetodelcontrato6 &&
+              this.numeroCedula &&
+              this.objetoContrato &&
               this.field7 &&
               this.field8 &&
               this.terminodeejecuciondelcontrato9 &&
@@ -957,7 +963,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               this.tipodeamparo2 &&
               this.porcentajedelamparo &&
               this.vigenciadelamparo19 &&
-              this.fechadefirmadelcontrato &&
+              this.fechaFirma &&
               (this.juridica.ManejoDatos === 'Si'
                 ? this.isValidPreviewAnexo()
                 : true)

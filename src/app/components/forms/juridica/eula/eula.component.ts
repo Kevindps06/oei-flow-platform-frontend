@@ -24,7 +24,7 @@ export class FormsJuridicaEulaComponent implements OnInit {
   verificacionCodigoVerificacionError: boolean = false;
 
   minutaUrl: string = '';
-  loginService: any;
+  anexoUrl: string = '';
 
   constructor(
     private formsService: FormsService,
@@ -327,6 +327,45 @@ export class FormsJuridicaEulaComponent implements OnInit {
                 () => {
                   this.sharedService.removeWaitTask({
                     id: getJuridicaEulaMinutaTaskId,
+                  });
+                }
+              );
+
+            let getJuridicaEulaAnexoTaskId: string;
+            this.formsService
+              .getFormJuridicaEulaAnexo(this.juridicaId)
+              .subscribe(
+                (httpEvent) => {
+                  switch (httpEvent.type) {
+                    case HttpEventType.Sent:
+                      getJuridicaEulaAnexoTaskId =
+                        this.sharedService.pushWaitTask({
+                          description: 'Obteniendo documento...',
+                          progress: 0,
+                        }) as string;
+                      break;
+                    case HttpEventType.DownloadProgress:
+                      this.sharedService.pushWaitTask({
+                        id: getJuridicaEulaAnexoTaskId,
+                        progress: Math.round(
+                          (httpEvent.loaded * 100) / httpEvent.total
+                        ),
+                      });
+                      break;
+                    case HttpEventType.Response:
+                      this.anexoUrl =
+                        httpEvent.body['@microsoft.graph.downloadUrl'];
+                      break;
+                  }
+                },
+                (err) => {
+                  this.sharedService.removeWaitTask({
+                    id: getJuridicaEulaAnexoTaskId,
+                  });
+                },
+                () => {
+                  this.sharedService.removeWaitTask({
+                    id: getJuridicaEulaAnexoTaskId,
                   });
                 }
               );

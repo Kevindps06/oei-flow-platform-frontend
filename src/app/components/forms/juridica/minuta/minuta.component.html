@@ -658,19 +658,21 @@
             <div class="col-12">
               <div class="form-floating">
                 <textarea
-                  [(ngModel)]="numeroNit"
+                  [(ngModel)]="nombrerepresentantelegal"
                   (input)="invalidatePreview()"
-                  name="floatingTextareaNumeroNit"
-                  id="floatingTextareaNumeroNit"
+                  name="floatingTextareaNombreRepresentanteLegal"
+                  id="floatingTextareaNombreRepresentanteLegal"
                   class="form-control"
                   [ngClass]="{
-                    'is-valid': numeroNit,
-                    'is-invalid': !numeroNit
+                    'is-valid': nombrerepresentantelegal,
+                    'is-invalid': !nombrerepresentantelegal
                   }"
                   placeholder="\0"
                 ></textarea>
-                <label for="floatingTextareaNumeroNit"
-                  >Numero de NIT<strong class="text-danger">*</strong></label
+                <label for="floatingTextareaNombreRepresentanteLegal"
+                  >Nombre del representante legal<strong class="text-danger"
+                    >*</strong
+                  ></label
                 >
                 <div class="invalid-feedback">
                   Este campo es (*) obligatorio, rellenelo.
@@ -680,14 +682,39 @@
             <div class="col-12">
               <div class="form-floating">
                 <textarea
-                  [(ngModel)]="objetodelcontrato7"
+                  [(ngModel)]="numeroCedula"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaCedula"
+                  id="floatingTextareaCedula"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': numeroCedula,
+                    'is-invalid': !numeroCedula
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaCedula"
+                  >Numero de cedula representante legal<strong
+                    class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="objetoContrato"
                   (input)="invalidatePreview()"
                   name="floatingTextareaObjetoContrato"
                   id="floatingTextareaObjetoContrato"
                   class="form-control"
                   [ngClass]="{
-                    'is-valid': objetodelcontrato7,
-                    'is-invalid': !objetodelcontrato7
+                    'is-valid': objetoContrato,
+                    'is-invalid': !objetoContrato
                   }"
                   placeholder="\0"
                 ></textarea>
@@ -1009,14 +1036,14 @@
             <div class="col-12">
               <div class="form-floating">
                 <textarea
-                  [(ngModel)]="numerodecedulad5"
+                  [(ngModel)]="numeroCedula"
                   (input)="invalidatePreview()"
                   name="floatingTextareaNumeroCedula"
                   id="floatingTextareaNumeroCedula"
                   class="form-control"
                   [ngClass]="{
-                    'is-valid': numerodecedulad5,
-                    'is-invalid': !numerodecedulad5
+                    'is-valid': numeroCedula,
+                    'is-invalid': !numeroCedula
                   }"
                   placeholder="\0"
                 ></textarea>
@@ -1031,14 +1058,14 @@
             <div class="col-12">
               <div class="form-floating">
                 <textarea
-                  [(ngModel)]="objetodelcontrato6"
+                  [(ngModel)]="objetoContrato"
                   (input)="invalidatePreview()"
                   name="floatingTextareaObjetoContrato"
                   id="floatingTextareaObjetoContrato"
                   class="form-control"
                   [ngClass]="{
-                    'is-valid': objetodelcontrato6,
-                    'is-invalid': !objetodelcontrato6
+                    'is-valid': objetoContrato,
+                    'is-invalid': !objetoContrato
                   }"
                   placeholder="\0"
                 ></textarea>
@@ -1261,14 +1288,14 @@
             <div class="col-12">
               <div class="form-floating">
                 <textarea
-                  [(ngModel)]="fechadefirma"
+                  [(ngModel)]="fechaFirma"
                   (input)="invalidatePreview()"
                   name="floatingTextareaFechaFirma"
                   id="floatingTextareaFechaFirma"
                   class="form-control"
                   [ngClass]="{
-                    'is-valid': fechadefirma,
-                    'is-invalid': !fechadefirma
+                    'is-valid': fechaFirma,
+                    'is-invalid': !fechaFirma
                   }"
                   placeholder="\0"
                 ></textarea>
@@ -1342,19 +1369,22 @@
             <div class="col-12">
               <div class="form-floating">
                 <textarea
-                  [(ngModel)]="field5"
+                  [(ngModel)]="numeroCedula"
                   (input)="invalidatePreview()"
-                  name="floatingTextareaField5"
-                  id="floatingTextareaField5"
+                  name="floatingTextareaCedula"
+                  id="floatingTextareaCedula"
                   class="form-control"
                   [ngClass]="{
-                    'is-valid': field5,
-                    'is-invalid': !field5
+                    'is-valid': numeroCedula,
+                    'is-invalid': !numeroCedula
                   }"
                   placeholder="\0"
                 ></textarea>
-                <label for="floatingTextareaField5"
-                  >Campo 5<strong class="text-danger">*</strong></label
+                <label for="floatingTextareaCedula"
+                  >Numero de cedula representante legal<strong
+                    class="text-danger"
+                    >*</strong
+                  ></label
                 >
                 <div class="invalid-feedback">
                   Este campo es (*) obligatorio, rellenelo.
@@ -1364,14 +1394,14 @@
             <div class="col-12">
               <div class="form-floating">
                 <textarea
-                  [(ngModel)]="objetodelcontrato6"
+                  [(ngModel)]="objetoContrato"
                   (input)="invalidatePreview()"
                   name="floatingTextareaObjetoContrato"
                   id="floatingTextareaObjetoContrato"
                   class="form-control"
                   [ngClass]="{
-                    'is-valid': objetodelcontrato6,
-                    'is-invalid': !objetodelcontrato6
+                    'is-valid': objetoContrato,
+                    'is-invalid': !objetoContrato
                   }"
                   placeholder="\0"
                 ></textarea>
@@ -1666,14 +1696,14 @@
             <div class="col-12">
               <div class="form-floating">
                 <textarea
-                  [(ngModel)]="fechadefirmadelcontrato"
+                  [(ngModel)]="fechaFirma"
                   (input)="invalidatePreview()"
                   name="floatingTextareaFechaFirmaContrato"
                   id="floatingTextareaFechaFirmaContrato"
                   class="form-control"
                   [ngClass]="{
-                    'is-valid': fechadefirmadelcontrato,
-                    'is-invalid': !fechadefirmadelcontrato
+                    'is-valid': fechaFirma,
+                    'is-invalid': !fechaFirma
                   }"
                   placeholder="\0"
                 ></textarea>
@@ -1687,20 +1717,6 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <textarea
-              [(ngModel)]="obligacionesadicionales"
-              name="floatingTextareaObligacionesAdicionales"
-              id="floatingTextareaObligacionesAdicionales"
-              class="form-control"
-              placeholder="\0"
-            ></textarea>
-            <label for="floatingTextareaObligacionesAdicionales"
-              >Obligaciones adicionales</label
-            >
           </div>
         </div>
         <!---->

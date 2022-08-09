@@ -77,6 +77,13 @@
             style="height: 500px"
           ></pdf-viewer>
         </div>
+        <div *ngIf="anexoUrl" class="col-12">
+          <pdf-viewer
+            [src]="anexoUrl"
+            [render-text]="true"
+            style="height: 500px"
+          ></pdf-viewer>
+        </div>
       </div>
     </div>
   </div>

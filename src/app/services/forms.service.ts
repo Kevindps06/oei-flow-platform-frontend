@@ -607,6 +607,21 @@ export class FormsService {
     );
   }
 
+  getFormJuridicaEulaAnexo(_id: string): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/eula/anexo`,
+        {
+          params: new HttpParams().appendAll({
+            _id,
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
   getFormJuridicaOferentesVerificationRequestCode(
     formJuridicaId: string,
     email: string
