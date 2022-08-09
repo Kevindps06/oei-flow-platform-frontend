@@ -30,18 +30,13 @@
                 for="checkInputTipoProceso{{ mapItem.key }}"
               >
                 {{ mapItem.key }}
-                {{
-                  mapItem.value
-                    ? (numberWithPriceSpaces(mapItem.value.get("Min")) !== "NaN"
-                        ? "- Mayor de $" +
-                          numberWithPriceSpaces(mapItem.value.get("Min"))
-                        : "") +
-                      (numberWithPriceSpaces(mapItem.value.get("Max")) !== "NaN"
-                        ? " - Menor de $" +
-                          numberWithPriceSpaces(mapItem.value.get("Max"))
-                        : "")
-                    : "- Sin limite"
-                }}
+                {{ mapItem.value ?
+                (numberWithPriceSpaces(mapItem.value.get("Min")) !== "NaN" ? "-
+                Mayor de $" + numberWithPriceSpaces(mapItem.value.get("Min")) :
+                "") + (numberWithPriceSpaces(mapItem.value.get("Max")) !== "NaN"
+                ? " - Menor de $" +
+                numberWithPriceSpaces(mapItem.value.get("Max")) : "") : "- Sin
+                limite" } }
               </label>
             </div>
           </div>

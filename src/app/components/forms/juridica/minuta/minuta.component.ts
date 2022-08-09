@@ -21,7 +21,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   juridicaId!: string;
   juridica!: IJuridica;
 
-  // Bienes
+  // Biene
   tipoInmueble: string = '';
   nombreArrendador: string = '';
   numeroNit: string = '';
@@ -464,6 +464,8 @@ export class FormsJuridicaMinutaComponent implements OnInit {
       nombrecontratista: this.nombrecontratista,
     };
 
+    this.files = [];
+
     let postFormsJuridicaMinutaGenerateTaskId!: string;
     this.formsService
       .postFormJuridicaMinutaGenerate(
@@ -473,8 +475,6 @@ export class FormsJuridicaMinutaComponent implements OnInit {
       )
       .subscribe(
         async (httpEvent) => {
-          console.log(httpEvent);
-
           switch (httpEvent.type) {
             case HttpEventType.Sent:
               postFormsJuridicaMinutaGenerateTaskId =
@@ -502,8 +502,6 @@ export class FormsJuridicaMinutaComponent implements OnInit {
 
               this.pdfBlob1 = new Blob([this.pdfUint8Array1]);
 
-              this.files = [];
-
               this.files.push({
                 Index: 0,
                 Name: `minuta ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`,
@@ -525,8 +523,6 @@ export class FormsJuridicaMinutaComponent implements OnInit {
           }
         },
         (httpEventError) => {
-          console.log(httpEventError);
-
           this.sharedService.removeWaitTask({
             id: postFormsJuridicaMinutaGenerateTaskId,
           });
@@ -543,8 +539,6 @@ export class FormsJuridicaMinutaComponent implements OnInit {
       .postFormJuridicaMinutaGenerateAnexo(juridicaMinutaGenerateAnexo)
       .subscribe(
         async (httpEvent) => {
-          console.log(httpEvent);
-
           switch (httpEvent.type) {
             case HttpEventType.Sent:
               postFormsJuridicaMinutaGenerateAnexoTaskId =
@@ -572,10 +566,8 @@ export class FormsJuridicaMinutaComponent implements OnInit {
 
               this.pdfBlob2 = new Blob([this.pdfUint8Array2]);
 
-              this.files = [];
-
               this.files.push({
-                Index: 0,
+                Index: 2,
                 Name: `anexo ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`,
                 Size: this.docxBlob2.size,
                 Type: this.docxBlob2.type,
@@ -584,7 +576,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               });
 
               this.files.push({
-                Index: 1,
+                Index: 3,
                 Name: `anexo ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.pdf`,
                 Size: this.pdfBlob2.size,
                 Type: this.pdfBlob2.type,
@@ -595,8 +587,6 @@ export class FormsJuridicaMinutaComponent implements OnInit {
           }
         },
         (httpEventError) => {
-          console.log(httpEventError);
-
           this.sharedService.removeWaitTask({
             id: postFormsJuridicaMinutaGenerateAnexoTaskId,
           });
@@ -846,10 +836,12 @@ export class FormsJuridicaMinutaComponent implements OnInit {
                     `minuta ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`
                   );
 
-                  saveAs(
-                    this.docxBlob2,
-                    `anexo ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`
-                  );
+                  if (this.docxBlob2) {
+                    saveAs(
+                      this.docxBlob2,
+                      `anexo ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`
+                    );
+                  }
 
                   this.sharedService.removeWaitTask({
                     id: putFormsJuridicaRequestTaskId,
