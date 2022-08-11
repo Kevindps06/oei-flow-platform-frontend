@@ -143,6 +143,8 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   field23: string = '';
   field24: string = '';
   field25: string = '';
+  minuta: any;
+  anexo: any;
 
   docxBlob1!: Blob;
   pdfUint8Array1?: Uint8Array;
@@ -325,11 +327,9 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   }
 
   btnPreviewClick() {
-    let juridicaMinutaGenerate;
-
     switch (this.juridica.TipoAdquisicion) {
       case 'Bienes':
-        juridicaMinutaGenerate = {
+        this.minuta = {
           tipoInmueble: this.tipoInmueble,
           numeroContrato: this.juridica.NumeroContrato,
           nombreArrendador: this.nombreArrendador,
@@ -380,7 +380,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
         };
         break;
       case 'Suministro':
-        juridicaMinutaGenerate = {
+        this.minuta = {
           numerodecontrato1: this.juridica.NumeroContrato,
           numerodeconvenio2: this.numerodeconvenio2,
           nombrecontratista: this.nombrecontratista,
@@ -405,7 +405,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
       case 'Servicios':
         switch (this.juridica.TipoPersona) {
           case 'Natural':
-            juridicaMinutaGenerate = {
+            this.minuta = {
               numerodecontrato1: this.juridica.NumeroContrato,
               numerodeconvenio2: this.numerodeconvenio2,
               entidadaliada3: this.entidadaliada3,
@@ -425,7 +425,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
             };
             break;
           case 'Juridica':
-            juridicaMinutaGenerate = {
+            this.minuta = {
               numerodecontrato1: this.juridica.NumeroContrato,
               numerodeconvenio2: this.numerodeconvenio2,
               nombrecontratista: this.nombrecontratista,
@@ -452,7 +452,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
         break;
     }
 
-    const juridicaMinutaGenerateAnexo = {
+    this.anexo = {
       fechasuperior: this.fechasuperior,
       nombrecontratista: this.nombrecontratista,
       numeroCedula: this.numeroCedula,
@@ -473,7 +473,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
       .postFormJuridicaMinutaGenerate(
         this.juridica.TipoAdquisicion,
         this.juridica.TipoPersona,
-        juridicaMinutaGenerate
+        this.minuta
       )
       .subscribe(
         async (httpEvent) => {
@@ -506,7 +506,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
 
               this.files.push({
                 Index: 0,
-                Name: `minuta ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`,
+                Name: `minuta.docx`,
                 Size: this.docxBlob1.size,
                 Type: this.docxBlob1.type,
                 Bytes: await this.docxBlob1.arrayBuffer(),
@@ -515,7 +515,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
 
               this.files.push({
                 Index: 1,
-                Name: `minuta ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.pdf`,
+                Name: `minuta.pdf`,
                 Size: this.pdfBlob1.size,
                 Type: this.pdfBlob1.type,
                 Bytes: await this.pdfBlob1.arrayBuffer(),
@@ -537,68 +537,64 @@ export class FormsJuridicaMinutaComponent implements OnInit {
       );
 
     let postFormsJuridicaMinutaGenerateAnexoTaskId!: string;
-    this.formsService
-      .postFormJuridicaMinutaGenerateAnexo(juridicaMinutaGenerateAnexo)
-      .subscribe(
-        async (httpEvent) => {
-          switch (httpEvent.type) {
-            case HttpEventType.Sent:
-              postFormsJuridicaMinutaGenerateAnexoTaskId =
-                this.sharedService.pushWaitTask({
-                  description: 'Generando pre visualizacion...',
-                  progress: 0,
-                }) as string;
-              break;
-            case HttpEventType.DownloadProgress:
+    this.formsService.postFormJuridicaMinutaGenerateAnexo(this.anexo).subscribe(
+      async (httpEvent) => {
+        switch (httpEvent.type) {
+          case HttpEventType.Sent:
+            postFormsJuridicaMinutaGenerateAnexoTaskId =
               this.sharedService.pushWaitTask({
-                id: postFormsJuridicaMinutaGenerateAnexoTaskId,
-                progress: Math.round(
-                  (httpEvent.loaded * 100) / httpEvent.total
-                ),
-              });
-              break;
-            case HttpEventType.Response:
-              const currentDate = new Date();
+                description: 'Generando pre visualizacion...',
+                progress: 0,
+              }) as string;
+            break;
+          case HttpEventType.DownloadProgress:
+            this.sharedService.pushWaitTask({
+              id: postFormsJuridicaMinutaGenerateAnexoTaskId,
+              progress: Math.round((httpEvent.loaded * 100) / httpEvent.total),
+            });
+            break;
+          case HttpEventType.Response:
+            const currentDate = new Date();
 
-              this.docxBlob2 = new Blob([
-                new Uint8Array(httpEvent.body.docxBuf.data),
-              ]);
+            this.docxBlob2 = new Blob([
+              new Uint8Array(httpEvent.body.docxBuf.data),
+            ]);
 
-              this.pdfUint8Array2 = new Uint8Array(httpEvent.body.pdfBuf.data);
+            this.pdfUint8Array2 = new Uint8Array(httpEvent.body.pdfBuf.data);
 
-              this.pdfBlob2 = new Blob([this.pdfUint8Array2]);
+            this.pdfBlob2 = new Blob([this.pdfUint8Array2]);
 
-              this.files.push({
-                Index: 2,
-                Name: `anexo ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`,
-                Size: this.docxBlob2.size,
-                Type: this.docxBlob2.type,
-                Bytes: await this.docxBlob2.arrayBuffer(),
-                Uploaded: true,
-              });
+            this.files.push({
+              Index: 2,
+              Name: `anexo.docx`,
+              Size: this.docxBlob2.size,
+              Type: this.docxBlob2.type,
+              Bytes: await this.docxBlob2.arrayBuffer(),
+              Uploaded: true,
+            });
 
-              this.files.push({
-                Index: 3,
-                Name: `anexo ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.pdf`,
-                Size: this.pdfBlob2.size,
-                Type: this.pdfBlob2.type,
-                Bytes: await this.pdfBlob2.arrayBuffer(),
-                Uploaded: true,
-              });
-              break;
-          }
-        },
-        (httpEventError) => {
-          this.sharedService.removeWaitTask({
-            id: postFormsJuridicaMinutaGenerateAnexoTaskId,
-          });
-        },
-        () => {
-          this.sharedService.removeWaitTask({
-            id: postFormsJuridicaMinutaGenerateAnexoTaskId,
-          });
+            this.files.push({
+              Index: 3,
+              Name: `anexo.pdf`,
+              Size: this.pdfBlob2.size,
+              Type: this.pdfBlob2.type,
+              Bytes: await this.pdfBlob2.arrayBuffer(),
+              Uploaded: true,
+            });
+            break;
         }
-      );
+      },
+      (httpEventError) => {
+        this.sharedService.removeWaitTask({
+          id: postFormsJuridicaMinutaGenerateAnexoTaskId,
+        });
+      },
+      () => {
+        this.sharedService.removeWaitTask({
+          id: postFormsJuridicaMinutaGenerateAnexoTaskId,
+        });
+      }
+    );
   }
 
   async btnSubmitClick() {
@@ -770,8 +766,10 @@ export class FormsJuridicaMinutaComponent implements OnInit {
     }
 
     juridicaMinuta = Object.assign(juridicaMinuta, {
-      MinutaFiles: this.files,
+      Minuta: this.minuta,
+      Anexo: this.anexo,
       Juridica: this.juridicaId,
+      MinutaFiles: this.files,
     });
 
     let postFormsJuridicaRequestMinutaTaskId: string;
@@ -832,20 +830,6 @@ export class FormsJuridicaMinutaComponent implements OnInit {
                   });
 
                   this.router.navigate(['/']);
-
-                  const currentDate = new Date();
-
-                  saveAs(
-                    this.docxBlob1,
-                    `minuta ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`
-                  );
-
-                  if (this.docxBlob2) {
-                    saveAs(
-                      this.docxBlob2,
-                      `anexo ${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()} at ${currentDate.getHours()}.${currentDate.getMinutes()}.${currentDate.getSeconds()}.docx`
-                    );
-                  }
 
                   this.sharedService.removeWaitTask({
                     id: putFormsJuridicaRequestTaskId,
