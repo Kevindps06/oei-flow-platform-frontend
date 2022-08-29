@@ -17,518 +17,465 @@
             }}
           </h5>
         </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <textarea
-              [(ngModel)]="field1"
-              name="floatingTextareaField1"
-              id="floatingTextareaField1"
-              class="form-control"
-              [ngClass]="{
-                'is-valid': field1,
-                'is-invalid': !field1
-              }"
-              placeholder="\0"
-            ></textarea>
-            <label for="floatingTextareaField1">Field 1</label>
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, rellenelo.
+        <!--Natural-->
+        <div *ngIf="juridica.TipoPersona === 'Natural'" class="col-12">
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="dia"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaDia"
+                  id="floatingTextareaDia"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': dia,
+                    'is-invalid': !dia
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaDia"
+                  >Dia<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <textarea
-              [(ngModel)]="field2"
-              (input)="invalidatePreview()"
-              name="floatingTextareaField2"
-              id="floatingTextareaField2"
-              class="form-control"
-              [ngClass]="{
-                'is-valid': field2,
-                'is-invalid': !field2
-              }"
-              placeholder="\0"
-            ></textarea>
-            <label for="floatingTextareaField2">Field 2</label>
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, rellenelo.
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="numeroPliego"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNumeroPliego"
+                  id="floatingTextareaNumeroPliego"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': numeroPliego,
+                    'is-invalid': !numeroPliego
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaDia"
+                  >Numero de pliego<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <textarea
-              [(ngModel)]="field3"
-              (input)="invalidatePreview()"
-              name="floatingTextareaField3"
-              id="floatingTextareaField3"
-              class="form-control"
-              [ngClass]="{
-                'is-valid': field3,
-                'is-invalid': !field3
-              }"
-              placeholder="\0"
-            ></textarea>
-            <label for="floatingTextareaField3">Field 3</label>
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, rellenelo.
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="numeroConvenio"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNumeroConvenio"
+                  id="floatingTextareaNumeroConvenio"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': numeroConvenio,
+                    'is-invalid': !numeroConvenio
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNumeroConvenio"
+                  >Numero de convenio<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <textarea
-              [(ngModel)]="field4"
-              (input)="invalidatePreview()"
-              name="floatingTextareaField4"
-              id="floatingTextareaField4"
-              class="form-control"
-              [ngClass]="{
-                'is-valid': field4,
-                'is-invalid': !field4
-              }"
-              placeholder="\0"
-            ></textarea>
-            <label for="floatingTextareaField4">Field 4</label>
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, rellenelo.
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="fechaConvenio"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaFechaConvenio"
+                  id="floatingTextareaFechaConvenio"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': fechaConvenio,
+                    'is-invalid': !fechaConvenio
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaFechaConvenio"
+                  >Fecha de convenio<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <textarea
-              [(ngModel)]="field5"
-              (input)="invalidatePreview()"
-              name="floatingTextareaField5"
-              id="floatingTextareaField5"
-              class="form-control"
-              [ngClass]="{
-                'is-valid': field5,
-                'is-invalid': !field5
-              }"
-              placeholder="\0"
-            ></textarea>
-            <label for="floatingTextareaField5">Field 5</label>
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, rellenelo.
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="nombreEntidad"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNombreEntidad"
+                  id="floatingTextareaNombreEntidad"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': nombreEntidad,
+                    'is-invalid': !nombreEntidad
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNombreEntidad"
+                  >Nombre entidad<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <textarea
-              [(ngModel)]="field6"
-              (input)="invalidatePreview()"
-              name="floatingTextareaField6"
-              id="floatingTextareaField6"
-              class="form-control"
-              [ngClass]="{
-                'is-valid': field6,
-                'is-invalid': !field6
-              }"
-              placeholder="\0"
-            ></textarea>
-            <label for="floatingTextareaField6">Field 6</label>
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, rellenelo.
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="objetoContrato"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaObjetoContrato"
+                  id="floatingTextareaObjetoContrato"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': objetoContrato,
+                    'is-invalid': !objetoContrato
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaObjetoContrato"
+                  >Objeto del contrato<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <textarea
-              [(ngModel)]="field7"
-              (input)="invalidatePreview()"
-              name="floatingTextareaField7"
-              id="floatingTextareaField7"
-              class="form-control"
-              [ngClass]="{
-                'is-valid': field7,
-                'is-invalid': !field7
-              }"
-              placeholder="\0"
-            ></textarea>
-            <label for="floatingTextareaField7">Field 7</label>
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, rellenelo.
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <textarea
-              [(ngModel)]="field8"
-              (input)="invalidatePreview()"
-              name="floatingTextareaField8"
-              id="floatingTextareaField8"
-              class="form-control"
-              [ngClass]="{
-                'is-valid': field8,
-                'is-invalid': !field8
-              }"
-              placeholder="\0"
-            ></textarea>
-            <label for="floatingTextareaField8">Field 8</label>
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, rellenelo.
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <textarea
-              [(ngModel)]="field9"
-              (input)="invalidatePreview()"
-              name="floatingTextareaField9"
-              id="floatingTextareaField9"
-              class="form-control"
-              [ngClass]="{
-                'is-valid': field9,
-                'is-invalid': !field9
-              }"
-              placeholder="\0"
-            ></textarea>
-            <label for="floatingTextareaField9">Field 9</label>
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, rellenelo.
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <textarea
-              [(ngModel)]="field10"
-              (input)="invalidatePreview()"
-              name="floatingTextareaField10"
-              id="floatingTextareaField10"
-              class="form-control"
-              [ngClass]="{
-                'is-valid': field10,
-                'is-invalid': !field10
-              }"
-              placeholder="\0"
-            ></textarea>
-            <label for="floatingTextareaField10">Field 10</label>
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, rellenelo.
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <label for="datePickerFechaInicio" class="form-label"
-            >Fecha de inicio convocatoria<span class="text-danger"
-              >*</span
-            ></label
-          >
-          <app-date-picker
-            [allowPass]="false"
-            (onDateChange)="setFechaInicio($event)"
-            name="datePickerFechaInicio"
-            id="datePickerFechaInicio"
-            requiredFeedbackYear="Este campo es (*) obligatorio, seleccione el año de inicio."
-            requiredFeedbackMonth="Este campo es (*) obligatorio, seleccione el mes de inicio."
-            requiredFeedbackDay="Este campo es (*) obligatorio, seleccione el dia de inicio."
-          ></app-date-picker>
-        </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <select
-              [(ngModel)]="horaInicio"
-              class="form-select"
-              id="selectHoraInicio"
-              name="selectHoraInicio"
-              [ngClass]="{
-                'is-valid': horaInicio && ifEndDateIsGreaterThatStartDate(),
-                'is-invalid': !horaInicio || !ifEndDateIsGreaterThatStartDate()
-              }"
-            >
-              <option selected disabled></option>
-              <option value="0">12 AM</option>
-              <option value="1">1 AM</option>
-              <option value="2">2 AM</option>
-              <option value="3">3 AM</option>
-              <option value="4">4 AM</option>
-              <option value="5">5 AM</option>
-              <option value="6">6 AM</option>
-              <option value="7">7 AM</option>
-              <option value="8">8 AM</option>
-              <option value="9">9 AM</option>
-              <option value="10">10 AM</option>
-              <option value="11">11 AM</option>
-              <option value="12">12 PM</option>
-              <option value="13">1 PM</option>
-              <option value="14">2 PM</option>
-              <option value="15">3 PM</option>
-              <option value="16">4 PM</option>
-              <option value="17">5 PM</option>
-              <option value="18">6 PM</option>
-              <option value="19">7 PM</option>
-              <option value="20">8 PM</option>
-              <option value="21">9 PM</option>
-              <option value="22">10 PM</option>
-              <option value="23">11 PM</option>
-            </select>
-            <label for="selectHoraInicio"
-              >Hora de inicio convocatoria<span class="text-danger"
-                >*</span
-              ></label
-            >
-            <div
-              *ngIf="ifEndDateIsGreaterThatStartDate()"
-              class="invalid-feedback"
-            >
-              Este campo es (*) obligatorio, seleccione una opcion.
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="objetoGeneral"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaObjetoGeneral"
+                  id="floatingTextareaObjetoGeneral"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': objetoGeneral,
+                    'is-invalid': !objetoGeneral
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaObjetoGeneral"
+                  >Objeto general<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
             </div>
             <div
-              *ngIf="!ifEndDateIsGreaterThatStartDate()"
-              class="invalid-feedback"
+              [ngClass]="{ 'col-xl-6': tablaPerfiles.length > 0 }"
+              class="col-12"
             >
-              La fecha de inicio de la convocatoria debe ser menor a la fecha de
-              finalizacion.
+              <div class="card">
+                <div class="card-body">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <h5 class="card-title text-center">
+                        Actualizar perfiles del pliego
+                      </h5>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-floating">
+                        <input
+                          [(ngModel)]="tablaPerfilesNombrePerfil"
+                          type="text"
+                          class="form-control"
+                          name="inputNombrePerfil"
+                          id="inputNombrePerfil"
+                          placeholder="\0"
+                          maxlength="255"
+                          [ngClass]="{
+                            'is-valid': tablaPerfilesNombrePerfil,
+                            'is-invalid': !tablaPerfilesNombrePerfil
+                          }"
+                        />
+                        <label for="inputNombrePerfil"
+                          >Nombre del perfil<span class="text-danger"
+                            >*</span
+                          ></label
+                        >
+                        <div class="invalid-feedback">
+                          Este campo es (*) obligatorio, rellenelo.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-floating">
+                        <input
+                          [(ngModel)]="tablaPerfilesNumeroVacantes"
+                          type="text"
+                          class="form-control"
+                          name="inputNumeroVacantes"
+                          id="inputNumeroVacantes"
+                          placeholder="\0"
+                          maxlength="255"
+                          [ngClass]="{
+                            'is-valid': tablaPerfilesNumeroVacantes,
+                            'is-invalid': !tablaPerfilesNumeroVacantes
+                          }"
+                        />
+                        <label for="inputNumeroVacantes"
+                          >Numero de vacantes<span class="text-danger"
+                            >*</span
+                          ></label
+                        >
+                        <div class="invalid-feedback">
+                          Este campo es (*) obligatorio, rellenelo.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-floating">
+                        <input
+                          [(ngModel)]="tablaPerfilesRequisitosPerfil"
+                          type="text"
+                          class="form-control"
+                          name="inputRequisitosPerfil"
+                          id="inputRequisitosPerfil"
+                          placeholder="\0"
+                          maxlength="255"
+                          [ngClass]="{
+                            'is-valid': tablaPerfilesRequisitosPerfil,
+                            'is-invalid': !tablaPerfilesRequisitosPerfil
+                          }"
+                        />
+                        <label for="inputRequisitosPerfil"
+                          >Requisitos del perfil<span class="text-danger"
+                            >*</span
+                          ></label
+                        >
+                        <div class="invalid-feedback">
+                          Este campo es (*) obligatorio, rellenelo.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-grid gap-2 col-6 mx-auto mb-2">
+                      <button
+                        (click)="addPerfil()"
+                        class="btn btn-primary"
+                        [disabled]="!isValidPerfil()"
+                      >
+                        Añadir
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              *ngIf="tablaPerfiles.length > 0"
+              class="table-responsive col-12 col-xl-6"
+            >
+              <div class="card">
+                <div class="card-body">
+                  <table
+                    class="table table-borderless table-striped table-hover caption-top"
+                  >
+                    <caption>
+                      Perfiles, puede eliminar alguno haciendo doble click sobre
+                      el.
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Rol a desempeñar</th>
+                        <th scope="col">No. de vacantes</th>
+                        <th scope="col">Perfil requerido</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="let tablaPerfil of tablaPerfiles"
+                        (dblclick)="removePerfil(tablaPerfil.numeroPerfil)"
+                      >
+                        <th scope="row">{{ tablaPerfil.numeroPerfil }}</th>
+                        <td>{{ tablaPerfil.nombrePerfil }}</td>
+                        <td>{{ tablaPerfil.numeroVacantes }}</td>
+                        <td>{{ tablaPerfil.requisitosPerfil }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div
+              [ngClass]="{ 'col-xl-6': tablaObjetosObligaciones.length > 0 }"
+              class="col-12"
+            >
+              <div class="card">
+                <div class="card-body">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <h5 class="card-title text-center">
+                        Actualizar objetos y obligaciones especificas
+                      </h5>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-floating">
+                        <input
+                          [(ngModel)]="tablaObjetosObligacionesNombrePerfil"
+                          type="text"
+                          class="form-control"
+                          name="inputObjetosObligacionesNombrePerfil"
+                          id="inputObjetosObligacionesNombrePerfil"
+                          placeholder="\0"
+                          maxlength="255"
+                          [ngClass]="{
+                            'is-valid': tablaObjetosObligacionesNombrePerfil,
+                            'is-invalid': !tablaObjetosObligacionesNombrePerfil
+                          }"
+                        />
+                        <label for="inputNombrePerfil"
+                          >Nombre del perfil<span class="text-danger"
+                            >*</span
+                          ></label
+                        >
+                        <div class="invalid-feedback">
+                          Este campo es (*) obligatorio, rellenelo.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-floating">
+                        <input
+                          [(ngModel)]="
+                            tablaObjetosObligacionesObjetoContratacion
+                          "
+                          type="text"
+                          class="form-control"
+                          name="inputObjetosObligacionesObjetoContratacion"
+                          id="inputObjetosObligacionesObjetoContratacion"
+                          placeholder="\0"
+                          maxlength="255"
+                          [ngClass]="{
+                            'is-valid':
+                              tablaObjetosObligacionesObjetoContratacion,
+                            'is-invalid':
+                              !tablaObjetosObligacionesObjetoContratacion
+                          }"
+                        />
+                        <label for="inputObjetosObligacionesObjetoContratacion"
+                          >Objeto de contratacion<span class="text-danger"
+                            >*</span
+                          ></label
+                        >
+                        <div class="invalid-feedback">
+                          Este campo es (*) obligatorio, rellenelo.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-floating">
+                        <input
+                          [(ngModel)]="tablaObjetosObligacionesObligaciones"
+                          type="text"
+                          class="form-control"
+                          name="inputObjetosObligacionesObligaciones"
+                          id="inputObjetosObligacionesObligaciones"
+                          placeholder="\0"
+                          maxlength="255"
+                          [ngClass]="{
+                            'is-valid': tablaObjetosObligacionesObligaciones,
+                            'is-invalid': !tablaObjetosObligacionesObligaciones
+                          }"
+                        />
+                        <label for="inputObjetosObligacionesObligaciones"
+                          >Obligaciones<span class="text-danger">*</span></label
+                        >
+                        <div class="invalid-feedback">
+                          Este campo es (*) obligatorio, rellenelo.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-grid gap-2 col-6 mx-auto mb-2">
+                      <button
+                        (click)="addObjetoObligacion()"
+                        class="btn btn-primary"
+                        [disabled]="!isValidObjetoObligacion()"
+                      >
+                        Añadir
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              *ngIf="tablaObjetosObligaciones.length > 0"
+              class="table-responsive col-12 col-xl-6"
+            >
+              <div class="card">
+                <div class="card-body">
+                  <table
+                    class="table table-borderless table-striped table-hover caption-top"
+                  >
+                    <caption>
+                      Objetos y obligaciones, puede eliminar alguno haciendo
+                      doble click sobre el.
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Rol a desempeñar</th>
+                        <th scope="col">Objeto</th>
+                        <th scope="col">Obligaciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let tablaObjetoObligacion of tablaObjetosObligaciones
+                        "
+                        (dblclick)="
+                          removeObjetoObligacion(
+                            tablaObjetoObligacion.numeroObjetoObligacion
+                          )
+                        "
+                      >
+                        <th scope="row">
+                          {{ tablaObjetoObligacion.numeroObjetoObligacion }}
+                        </th>
+                        <td>{{ tablaObjetoObligacion.nombrePerfil }}</td>
+                        <td>{{ tablaObjetoObligacion.objetoContratacion }}</td>
+                        <td>{{ tablaObjetoObligacion.obligaciones }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-12">
-          <label for="datePickerFechaFin" class="form-label"
-            >Fecha de fin convocatoria<span class="text-danger">*</span></label
-          >
-          <app-date-picker
-            [allowPass]="false"
-            (onDateChange)="setFechaFin($event)"
-            name="datePickerFechaFin"
-            id="datePickerFechaFin"
-            requiredFeedbackYear="Este campo es (*) obligatorio, seleccione el año de fin."
-            requiredFeedbackMonth="Este campo es (*) obligatorio, seleccione el mes de fin."
-            requiredFeedbackDay="Este campo es (*) obligatorio, seleccione el dia de fin."
-          ></app-date-picker>
+        <!--Juridica-->
+        <div *ngIf="juridica.TipoPersona === 'Juridica'" class="col-12">
+          <div class="row g-3"></div>
         </div>
-        <div class="col-12">
-          <div class="form-floating">
-            <select
-              [(ngModel)]="horaFin"
-              class="form-select"
-              id="selectHoraFin"
-              name="selectHoraFin"
-              [ngClass]="{
-                'is-valid': horaFin && ifEndDateIsGreaterThatStartDate(),
-                'is-invalid': !horaFin || !ifEndDateIsGreaterThatStartDate()
-              }"
-            >
-              <option selected disabled></option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(0)
-                "
-                value="0"
-              >
-                12 AM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(1)
-                "
-                value="1"
-              >
-                1 AM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(2)
-                "
-                value="2"
-              >
-                2 AM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(3)
-                "
-                value="3"
-              >
-                3 AM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(4)
-                "
-                value="4"
-              >
-                4 AM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(5)
-                "
-                value="5"
-              >
-                5 AM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(6)
-                "
-                value="6"
-              >
-                6 AM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(7)
-                "
-                value="7"
-              >
-                7 AM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(8)
-                "
-                value="8"
-              >
-                8 AM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(9)
-                "
-                value="9"
-              >
-                9 AM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(10)
-                "
-                value="10"
-              >
-                10 AM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(11)
-                "
-                value="11"
-              >
-                11 AM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(12)
-                "
-                value="12"
-              >
-                12 PM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(13)
-                "
-                value="13"
-              >
-                1 PM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(14)
-                "
-                value="14"
-              >
-                2 PM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(15)
-                "
-                value="15"
-              >
-                3 PM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(16)
-                "
-                value="16"
-              >
-                4 PM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(17)
-                "
-                value="17"
-              >
-                5 PM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(18)
-                "
-                value="18"
-              >
-                6 PM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(19)
-                "
-                value="19"
-              >
-                7 PM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(20)
-                "
-                value="20"
-              >
-                8 PM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(21)
-                "
-                value="21"
-              >
-                9 PM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(22)
-                "
-                value="22"
-              >
-                10 PM
-              </option>
-              <option
-                [disabled]="
-                  ifEndDateEqualsStartDate() && isStartDateHoursGreaterThat(23)
-                "
-                value="23"
-              >
-                11 PM
-              </option>
-            </select>
-            <label for="selectHoraFin"
-              >Hora de fin convocatoria<span class="text-danger">*</span></label
-            >
-            <div
-              *ngIf="ifEndDateIsGreaterThatStartDate()"
-              class="invalid-feedback"
-            >
-              Este campo es (*) obligatorio, seleccione una opcion.
-            </div>
-            <div
-              *ngIf="!ifEndDateIsGreaterThatStartDate()"
-              class="invalid-feedback"
-            >
-              La fecha de finalizacion de la convocatoria debe ser mayor a la
-              fecha de inicio.
-            </div>
-          </div>
+        <!---->
+        <div *ngIf="pdfUint8ArrayPliegos" class="col-12">
+          <pdf-viewer
+            [src]="pdfUint8ArrayPliegos"
+            [render-text]="true"
+            style="height: 500px"
+          ></pdf-viewer>
         </div>
-        <div class="col-12"></div>
         <div class="d-grid gap-2 col-6 mx-auto mb-2">
           <button
             class="btn btn-primary"

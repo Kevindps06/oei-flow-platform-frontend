@@ -42,6 +42,10 @@ const routes: Routes = [
     component: FormsComponent,
   },
   {
+    path: 'forms/juridica/:id/oferentes/configuration',
+    component: FormsComponent,
+  },
+  {
     path: 'forms/juridica/:id/evaluadores',
     component: FormsComponent,
   },

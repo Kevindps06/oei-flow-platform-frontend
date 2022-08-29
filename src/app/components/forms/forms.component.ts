@@ -83,6 +83,10 @@ export class FormsComponent implements OnInit {
         this.title = 'Gestion juridica oferentes';
         //this.description = 'Formulario de gestion juridica oferentes descripcion.';
         return;
+      case `/forms/juridica/${this.activatedRoute.snapshot.params.id}/oferentes/configuration`:
+        this.title = 'Gestion juridica oferentes configuracion';
+        //this.description = 'Formulario de gestion juridica oferentes configuracion descripcion.';
+        return;
       case `/forms/juridica/${this.activatedRoute.snapshot.params.id}/evaluadores`:
         this.title = 'Gestion juridica evaluadores';
         //this.description = 'Formulario de gestion juridica evaluadores descripcion.';

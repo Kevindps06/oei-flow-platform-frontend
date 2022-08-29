@@ -42,6 +42,8 @@ import {
   DEFAULT_TIMEOUT,
   TimeoutInterceptor,
 } from './services/timeout-interceptor.service';
+import { FormsJuridicaConvocatoriaComponent } from './components/forms/juridica/convocatoria/convocatoria.component';
+import { FormsJuridicaOferentesConfigurationComponent } from './components/forms/juridica/oferentes/configuration/configuration.component';
 
 let msalInstance: IPublicClientApplication | undefined = undefined;
 
@@ -90,6 +92,8 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FormsJuridicaOferentesComponent,
     FormsJuridicaEvaluacionesComponent,
     FormsJuridicaEvaluadoresComponent,
+    FormsJuridicaConvocatoriaComponent,
+    FormsJuridicaOferentesConfigurationComponent,
   ],
   imports: [
     BrowserModule,

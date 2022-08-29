@@ -41,13 +41,17 @@ export class FormsService {
     );
   }
 
-  getJuridicaValidateNumeroSolicitud(NumeroSolicitud: string): Observable<any> {
+  getJuridicaValidateNumeroSolicitud(
+    ConvenioResponsable: string,
+    NumeroSolicitud: string
+  ): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
         `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/validate/numerosolicitud`,
         {
           params: new HttpParams().appendAll({
+            ConvenioResponsable,
             NumeroSolicitud,
           }),
           reportProgress: true,
@@ -56,13 +60,17 @@ export class FormsService {
     );
   }
 
-  getJuridicaValidateNumeroContrato(NumeroContrato: string): Observable<any> {
+  getJuridicaValidateNumeroContrato(
+    ConvenioResponsable: string,
+    NumeroContrato: string
+  ): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
         `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/validate/numerocontrato`,
         {
           params: new HttpParams().appendAll({
+            ConvenioResponsable,
             NumeroContrato,
           }),
           reportProgress: true,
@@ -292,7 +300,6 @@ export class FormsService {
         juridicaMinutaGenerate,
         {
           headers: new HttpHeaders({
-            /*timeout: `${480000}`,*/
             'content-type': 'application/json',
           }),
           params: new HttpParams().appendAll({
@@ -421,7 +428,6 @@ export class FormsService {
   }
 
   postFormJuridicaPliegosGenerate(
-    TipoAdquisicion: string,
     TipoPersona: string,
     formJuridicaPliegos: any
   ): Observable<any> {
@@ -435,11 +441,9 @@ export class FormsService {
             'content-type': 'application/json',
           }),
           params: new HttpParams().appendAll({
-            TipoAdquisicion,
             TipoPersona,
           }),
           reportProgress: true,
-          responseType: 'blob',
         }
       )
     );
@@ -469,6 +473,25 @@ export class FormsService {
       new HttpRequest(
         'GET',
         `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/minuta/verify/encargado`,
+        {
+          params: new HttpParams().appendAll({
+            _id,
+            encargado,
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  getFormJuridicaOferentesConfigurationVerifyEncargado(
+    _id: string,
+    encargado: string
+  ): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/oferentes/verify/encargado`,
         {
           params: new HttpParams().appendAll({
             _id,

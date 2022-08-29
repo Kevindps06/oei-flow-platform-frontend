@@ -419,12 +419,15 @@ export class ComprasComponent implements OnInit {
   numeroSolicitudAlreadyExist: boolean = false;
 
   validateNumeroSolicitud() {
-    if (!this.numeroSolicitud) {
+    if (!this.convenioResponsable && !this.numeroSolicitud) {
       return;
     }
 
     this.formsService
-      .getJuridicaValidateNumeroSolicitud(this.numeroSolicitud)
+      .getJuridicaValidateNumeroSolicitud(
+        this.convenioResponsable,
+        this.numeroSolicitud
+      )
       .subscribe(
         (event) => {},
         (httpEventError: HttpErrorResponse) => {

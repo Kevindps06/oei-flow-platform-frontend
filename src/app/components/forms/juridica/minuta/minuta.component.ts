@@ -494,8 +494,6 @@ export class FormsJuridicaMinutaComponent implements OnInit {
               });
               break;
             case HttpEventType.Response:
-              const currentDate = new Date();
-
               this.docxBlob1 = new Blob([
                 new Uint8Array(httpEvent.body.docxBuf.data),
               ]);

@@ -21,8 +21,8 @@ export class FormsJuridicaComponent implements OnInit {
     [
       'Pago directo',
       new Map([
-        ['Min', 10000000],
-        ['Max', 40000001],
+        ['Min', 0],
+        ['Max', 10000001],
       ]),
     ],
     [
@@ -1129,12 +1129,15 @@ export class FormsJuridicaComponent implements OnInit {
   numeroSolicitudAlreadyExist: boolean = false;
 
   validateNumeroSolicitud() {
-    if (!this.numeroSolicitud) {
+    if (!this.convenioResponsable && !this.numeroSolicitud) {
       return;
     }
 
     this.formsService
-      .getJuridicaValidateNumeroSolicitud(this.numeroSolicitud)
+      .getJuridicaValidateNumeroSolicitud(
+        this.convenioResponsable,
+        this.numeroSolicitud
+      )
       .subscribe(
         (event) => {},
         (httpEventError: HttpErrorResponse) => {
@@ -1161,12 +1164,15 @@ export class FormsJuridicaComponent implements OnInit {
   numeroContratoAlreadyExist: boolean = false;
 
   validateNumeroContrato() {
-    if (!this.numeroContrato) {
+    if (!this.convenioResponsable && !this.numeroContrato) {
       return;
     }
 
     this.formsService
-      .getJuridicaValidateNumeroContrato(this.numeroContrato)
+      .getJuridicaValidateNumeroContrato(
+        this.convenioResponsable,
+        this.numeroContrato
+      )
       .subscribe(
         (event) => {},
         (httpEventError: HttpErrorResponse) => {
@@ -1202,8 +1208,9 @@ export class FormsJuridicaComponent implements OnInit {
           this.isValidNumeroSolicitud &&
           (this.isConvocatorias()
             ? true
-            : Utils.validateEmail(this.email) && this.numeroContrato) &&
-          this.isValidNumeroContrato &&
+            : Utils.validateEmail(this.email) &&
+              this.numeroContrato &&
+              this.isValidNumeroContrato) &&
           this.justificacionContratacion &&
           this.objetivoContratacion &&
           this.objeto &&

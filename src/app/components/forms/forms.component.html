@@ -46,6 +46,12 @@
               startWithRoute('/forms/juridica/') && endWithRoute('/oferentes')
             "
           ></app-forms-juridica-oferentes>
+          <app-forms-juridica-oferentes-configuration
+            *ngIf="
+              startWithRoute('/forms/juridica/') &&
+              endWithRoute('/oferentes/configuration')
+            "
+          ></app-forms-juridica-oferentes-configuration>
           <app-forms-juridica-evaluadores
             *ngIf="
               startWithRoute('/forms/juridica/') && endWithRoute('/evaluadores')
