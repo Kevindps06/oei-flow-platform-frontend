@@ -30,13 +30,20 @@
                 for="checkInputTipoProceso{{ mapItem.key }}"
               >
                 {{ mapItem.key }}
-                {{ mapItem.value ?
-                (numberWithPriceSpaces(mapItem.value.get("Min")) !== "NaN" ? "-
-                Mayor de $" + numberWithPriceSpaces(mapItem.value.get("Min")) :
-                "") + (numberWithPriceSpaces(mapItem.value.get("Max")) !== "NaN"
-                ? " - Menor de $" +
-                numberWithPriceSpaces(mapItem.value.get("Max")) : "") : "- Sin
-                limite" }}
+                {{
+                  mapItem.value
+                    ? (numberWithPriceSpaces(mapItem.value.get("Min")) !== "NaN"
+                        ? "-
+                Mayor de $" +
+                          numberWithPriceSpaces(mapItem.value.get("Min"))
+                        : "") +
+                      (numberWithPriceSpaces(mapItem.value.get("Max")) !== "NaN"
+                        ? " - Menor de $" +
+                          numberWithPriceSpaces(mapItem.value.get("Max"))
+                        : "")
+                    : "- Sin
+                limite"
+                }}
               </label>
             </div>
           </div>
@@ -897,63 +904,6 @@
             </div>
           </div>
           <div *ngIf="manejoDatos === 'Si'" class="col-12">
-            <label class="form-label" for="textareaCategoriaInteresado"
-              >Categoria del interesado<strong class="text-danger">*</strong
-              ><button
-                type="button"
-                class="btn btn-sm btn-outline-info ms-2 rounded-pill"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseCategoriaInteresado"
-              >
-                ?
-              </button></label
-            >
-            <div
-              class="collapse mb-2"
-              id="collapseCategoriaInteresado"
-              name="collapseCategoriaInteresado"
-            >
-              <div class="card card-body">
-                Debe especificarse los datos de que tipo de personas se
-                manejarán, por ejemplo, victimas del conflicto armado,
-                contratistas de la OEI, niños, niñas, mujeres, jóvenes
-                pertenecientes a colectivos sociales, lideres sociales, personal
-                de las fuerzas armadas de Colombia, estudiantes, etc...
-              </div>
-            </div>
-            <textarea
-              [(ngModel)]="categoriaInteresado"
-              name="textareaCategoriaInteresado"
-              id="textareaCategoriaInteresado"
-              class="form-control"
-              [ngClass]="{
-                'is-valid': categoriaInteresado,
-                'is-invalid': !categoriaInteresado
-              }"
-            ></textarea>
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, rellenelo.
-            </div>
-          </div>
-          <div *ngIf="manejoDatos === 'Si'" class="col-12">
-            <label class="form-label" for="textareaCategoriaDatos"
-              >Categoria de datos<strong class="text-danger">*</strong></label
-            >
-            <textarea
-              [(ngModel)]="categoriaDatos"
-              name="textareaCategoriaDatos"
-              id="textareaCategoriaDatos"
-              class="form-control"
-              [ngClass]="{
-                'is-valid': categoriaDatos,
-                'is-invalid': !categoriaDatos
-              }"
-            ></textarea>
-            <div class="invalid-feedback">
-              Este campo es (*) obligatorio, rellenelo.
-            </div>
-          </div>
-          <div *ngIf="manejoDatos === 'Si'" class="col-12">
             <div class="card">
               <div class="card-body">
                 <div class="row g-3">
@@ -1106,6 +1056,63 @@
               </div>
             </div>
           </div>
+          <div *ngIf="manejoDatos === 'Si'" class="col-12">
+            <label class="form-label" for="textareaCategoriaInteresado"
+              >Categoria del interesado<strong class="text-danger">*</strong
+              ><button
+                type="button"
+                class="btn btn-sm btn-outline-info ms-2 rounded-pill"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseCategoriaInteresado"
+              >
+                ?
+              </button></label
+            >
+            <div
+              class="collapse mb-2"
+              id="collapseCategoriaInteresado"
+              name="collapseCategoriaInteresado"
+            >
+              <div class="card card-body">
+                Debe especificarse los datos de que tipo de personas se
+                manejarán, por ejemplo, victimas del conflicto armado,
+                contratistas de la OEI, niños, niñas, mujeres, jóvenes
+                pertenecientes a colectivos sociales, lideres sociales, personal
+                de las fuerzas armadas de Colombia, estudiantes, etc...
+              </div>
+            </div>
+            <textarea
+              [(ngModel)]="categoriaInteresado"
+              name="textareaCategoriaInteresado"
+              id="textareaCategoriaInteresado"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': categoriaInteresado,
+                'is-invalid': !categoriaInteresado
+              }"
+            ></textarea>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
+          <div *ngIf="manejoDatos === 'Si'" class="col-12">
+            <label class="form-label" for="textareaCategoriaDatos"
+              >Categoria de datos<strong class="text-danger">*</strong></label
+            >
+            <textarea
+              [(ngModel)]="categoriaDatos"
+              name="textareaCategoriaDatos"
+              id="textareaCategoriaDatos"
+              class="form-control"
+              [ngClass]="{
+                'is-valid': categoriaDatos,
+                'is-invalid': !categoriaDatos
+              }"
+            ></textarea>
+            <div class="invalid-feedback">
+              Este campo es (*) obligatorio, rellenelo.
+            </div>
+          </div>
           <!--cedula de ciudadania-->
           <div class="col-12">
             <label for="uploadFilesCedulaCiudadania" class="form-label"
@@ -1229,7 +1236,8 @@
           <!--justificacion de la contratacion-->
           <div class="col-12">
             <label for="uploadFilesJustificacionContratacion" class="form-label"
-              >Soporte justificacion de la seleccion del contratista y solicitud de adquisicion
+              >Soporte justificacion de la seleccion del contratista y solicitud
+              de adquisicion
             </label>
             <app-upload-files
               name="uploadFilesJustificacionContratacion"
