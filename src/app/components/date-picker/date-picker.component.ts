@@ -6,6 +6,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./date-picker.component.css'],
 })
 export class DatePickerComponent implements OnInit {
+  @Input() allowPresent: boolean = false;
   @Input() allowPass: boolean = true;
   @Input() requiredFeedbackDay: string = '';
   @Input() requiredFeedbackMonth: string = '';
@@ -30,14 +31,14 @@ export class DatePickerComponent implements OnInit {
 
   daysOfMonth: number[] = [];
 
-  year: number | undefined;
+  @Input() year: number | undefined;
 
   onYearChange() {
     this.month = undefined;
     this.day = undefined;
   }
 
-  month: number | undefined;
+  @Input() month: number | undefined;
 
   onMonthChange() {
     if (!this.year || !this.month) {
@@ -53,7 +54,7 @@ export class DatePickerComponent implements OnInit {
     }
   }
 
-  day: number | undefined;
+  @Input() day: number | undefined;
 
   onDayChange() {
     if (!this.year || !this.month) {
@@ -83,6 +84,12 @@ export class DatePickerComponent implements OnInit {
         this.years.push(i);
       }
     }
+
+    const currentDay = this.day;
+
+    this.onMonthChange();
+
+    this.day = currentDay;
   }
 
   yearIsInThePast(year: number) {
@@ -133,7 +140,7 @@ export class DatePickerComponent implements OnInit {
         (this.year == date.getFullYear() && this.month - 1 > date.getMonth()) ||
         (this.year == date.getFullYear() &&
           this.month - 1 == date.getMonth() &&
-          day > date.getDate())
+          (this.allowPresent ? day >= date.getDate() : day > date.getDate()))
       ) {
         return false;
       }

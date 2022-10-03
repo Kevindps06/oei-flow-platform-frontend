@@ -289,6 +289,7 @@ export class FormsService {
   }
 
   postFormJuridicaMinutaGenerate(
+    TipoProceso: string,
     TipoAdquisicion: string,
     TipoPersona: string,
     juridicaMinutaGenerate: any
@@ -303,6 +304,7 @@ export class FormsService {
             'content-type': 'application/json',
           }),
           params: new HttpParams().appendAll({
+            TipoProceso,
             TipoAdquisicion,
             TipoPersona,
           }),
@@ -408,18 +410,37 @@ export class FormsService {
     );
   }
 
-  getFormJuridicaPostuladosVerifyEncargado(
-    _id: string,
-    encargado: string
-  ): Observable<any> {
+  getFormJuridicaOferentesGetFechas(_id: string): Observable<any> {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/postulados/verifyencargado`,
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/oferentes/getfechas`,
         {
           params: new HttpParams().appendAll({
             _id,
-            encargado,
+          }),
+          reportProgress: true,
+        }
+      )
+    );
+  }
+
+  putFormJuridicaOferentesSetFechas(
+    _id: string,
+    FechaInicio: Date,
+    FechaFin: Date
+  ): Observable<any> {
+    return this.http.request(
+      new HttpRequest(
+        'PUT',
+        `${environment.backendProtocol}://${environment.backendAddress}/api/forms/juridica/oferentes/setfechas`,
+        {
+          FechaInicio,
+          FechaFin,
+        },
+        {
+          params: new HttpParams().appendAll({
+            _id,
           }),
           reportProgress: true,
         }

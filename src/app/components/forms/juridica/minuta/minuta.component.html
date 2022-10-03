@@ -981,6 +981,7 @@
         <!--Servicios - Natural-->
         <div
           *ngIf="
+            juridica.TipoProceso !== 'Licitacion' &&
             juridica.TipoAdquisicion === 'Servicios' &&
             juridica.TipoPersona === 'Natural'
           "
@@ -1312,6 +1313,7 @@
         <!--Servicios - Juridica-->
         <div
           *ngIf="
+            juridica.TipoProceso !== 'Licitacion' &&
             juridica.TipoAdquisicion === 'Servicios' &&
             juridica.TipoPersona === 'Juridica'
           "
@@ -1711,6 +1713,1023 @@
                   >Fecha de firma del contrato<strong class="text-danger"
                     >*</strong
                   ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Convocatoria - Natural-->
+        <div
+          *ngIf="
+            juridica.TipoProceso === 'Licitacion' &&
+            juridica.TipoPersona === 'Natural'
+          "
+          class="col-12"
+        >
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="fecha"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaFecha"
+                  id="floatingTextareaFecha"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': fecha,
+                    'is-invalid': !fecha
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaFecha"
+                  >Fecha<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="nombreConvenio"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNombreConvenio"
+                  id="floatingTextareaNombreConvenio"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': nombreConvenio,
+                    'is-invalid': !nombreConvenio
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNombreConvenio"
+                  >Nombre del convenio<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="numeroConvenio"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNumeroConvenio"
+                  id="floatingTextareaNumeroConvenio"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': numeroConvenio,
+                    'is-invalid': !numeroConvenio
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNumeroConvenio"
+                  >Numero del convenio<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="entidad"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaEntidad"
+                  id="floatingTextareaEntidad"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': entidad,
+                    'is-invalid': !entidad
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaEntidad"
+                  >Entidad<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="nombrePersonaNatural"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNombrePersonaNatural"
+                  id="floatingTextareaNombrePersonaNatural"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': nombrePersonaNatural,
+                    'is-invalid': !nombrePersonaNatural
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNombrePersonaNatural"
+                  >Nombre persona natural<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="objetoContrato"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaObjetoContrato"
+                  id="floatingTextareaObjetoContrato"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': objetoContrato,
+                    'is-invalid': !objetoContrato
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaObjetoContrato"
+                  >Objeto del contrato<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="modalidadConvocatoria"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaModalidadConvocatoria"
+                  id="floatingTextareaModalidadConvocatoria"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': modalidadConvocatoria,
+                    'is-invalid': !modalidadConvocatoria
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaModalidadConvocatoria"
+                  >Modalidad de la convocatoria<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="numeroConvocatoria"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNumeroConvocatoria"
+                  id="floatingTextareaNumeroConvocatoria"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': numeroConvocatoria,
+                    'is-invalid': !numeroConvocatoria
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNumeroConvocatoria"
+                  >Numero de la convocatoria<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="fechaConvocatoria"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaFechaConvocatoria"
+                  id="floatingTextareaFechaConvocatoria"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': fechaConvocatoria,
+                    'is-invalid': !fechaConvocatoria
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaFechaConvocatoria"
+                  >Fecha convocatoria<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="plazoContrato"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaPlazoContrato"
+                  id="floatingTextareaPlazoContrato"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': plazoContrato,
+                    'is-invalid': !plazoContrato
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaPlazoContrato"
+                  >Plazo del contrato<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="fechaInicio"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaFechaInicio"
+                  id="floatingTextareaFechaInicio"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': fechaInicio,
+                    'is-invalid': !fechaInicio
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaFechaInicio"
+                  >Fecha inicio del contrato<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="fechaTerminacion"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaFechaTerminacion"
+                  id="floatingTextareaFechaTerminacion"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': fechaTerminacion,
+                    'is-invalid': !fechaTerminacion
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaFechaTerminacion"
+                  >Fecha terminacion del contrato<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="valorContratoLetras"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaValorContratoLetras"
+                  id="floatingTextareaValorContratoLetras"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': valorContratoLetras,
+                    'is-invalid': !valorContratoLetras
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaValorContratoLetras"
+                  >Valor del contrato en letras<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="valorContratoNumeros"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaValorContratoNumeros"
+                  id="floatingTextareaValorContratoNumeros"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': valorContratoNumeros,
+                    'is-invalid': !valorContratoNumeros
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaValorContratoNumeros"
+                  >Valor del contrato en numeros<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="primerPagoValorLetras"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaPrimerPagoValorLetras"
+                  id="floatingTextareaPrimerPagoValorLetras"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': primerPagoValorLetras,
+                    'is-invalid': !primerPagoValorLetras
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaPrimerPagoValorLetras"
+                  >Valor del primer pago en letras<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="primerPagoValorNumeros"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaPrimerPagoValorNumeros"
+                  id="floatingTextareaPrimerPagoValorNumeros"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': primerPagoValorNumeros,
+                    'is-invalid': !primerPagoValorNumeros
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaPrimerPagoValorNumeros"
+                  >Valor del primero pago en numeros<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="primerPagoDescripcionEntregables"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaPrimerPagoDescripcionEntregables"
+                  id="floatingTextareaPrimerPagoDescripcionEntregables"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': primerPagoDescripcionEntregables,
+                    'is-invalid': !primerPagoDescripcionEntregables
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaPrimerPagoDescripcionEntregables"
+                  >Descripcion de los entregables del primer pago<strong
+                    class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="segundoPagoValorLetras"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaSegundoPagoValorLetras"
+                  id="floatingTextareaSegundoPagoValorLetras"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': segundoPagoValorLetras,
+                    'is-invalid': !segundoPagoValorLetras
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaSegundoPagoValorLetras"
+                  >Valor del segundo pago en letras<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="segundoPagoValorNumeros"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaSegundoPagoValorNumeros"
+                  id="floatingTextareaSegundoPagoValorNumeros"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': segundoPagoValorNumeros,
+                    'is-invalid': !segundoPagoValorNumeros
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaSegundoPagoValorNumeros"
+                  >Valor del segundo pago en numeros<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="segundoPagoDescripcionEntregables"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaSegundoPagoDescripcionEntregables"
+                  id="floatingTextareaSegundoPagoDescripcionEntregables"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': segundoPagoDescripcionEntregables,
+                    'is-invalid': !segundoPagoDescripcionEntregables
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaSegundoPagoDescripcionEntregables"
+                  >Descripcion de los entregables del segundo pago<strong
+                    class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="obligacionesEspecificasContratista"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaObligacionesEspecificasContratista"
+                  id="floatingTextareaObligacionesEspecificasContratista"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': obligacionesEspecificasContratista,
+                    'is-invalid': !obligacionesEspecificasContratista
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaObligacionesEspecificasContratista"
+                  >Obligaciones especificas del contratista<strong
+                    class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="descripcionEntregables"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaDescripcionEntregables"
+                  id="floatingTextareaDescripcionEntregables"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': descripcionEntregables,
+                    'is-invalid': !descripcionEntregables
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaDescripcionEntregables"
+                  >Descripcion de los entregables<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="dia"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaDia"
+                  id="floatingTextareaDia"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': dia,
+                    'is-invalid': !dia
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaDia"
+                  >Dia<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="mes"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaMes"
+                  id="floatingTextareaMes"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': mes,
+                    'is-invalid': !mes
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaMes"
+                  >Mes<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="ano"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaAno"
+                  id="floatingTextareaAno"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': ano,
+                    'is-invalid': !ano
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaAno"
+                  >Año<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Convocatoria - Juridica-->
+        <div
+          *ngIf="
+            juridica.TipoProceso === 'Licitacion' &&
+            juridica.TipoPersona === 'Juridica'
+          "
+          class="col-12"
+        >
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="numeroConvenio"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNumeroConvenio"
+                  id="floatingTextareaNumeroConvenio"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': numeroConvenio,
+                    'is-invalid': !numeroConvenio
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNumeroConvenio"
+                  >Numero del convenio<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="ano"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaAno"
+                  id="floatingTextareaAno"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': ano,
+                    'is-invalid': !ano
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaAno"
+                  >Año<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="nombrePersonaJuridicaNatural"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNombrePersonaJuridicaNatural"
+                  id="floatingTextareaNombrePersonaJuridicaNatural"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': nombrePersonaJuridicaNatural,
+                    'is-invalid': !nombrePersonaJuridicaNatural
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNombrePersonaJuridicaNatural"
+                  >Nombre de la persona juridica o natural<strong
+                    class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="nit"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNit"
+                  id="floatingTextareaNit"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': nit,
+                    'is-invalid': !nit
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNit"
+                  >Nit<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="nombreRepresentanteLegal"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNombreRepresentanteLegal"
+                  id="floatingTextareaNombreRepresentanteLegal"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': nombreRepresentanteLegal,
+                    'is-invalid': !nombreRepresentanteLegal
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNombreRepresentanteLegal"
+                  >Nombre del representante legal
+                  <strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="numeroCedula"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNumeroCedula"
+                  id="floatingTextareaNumeroCedula"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': numeroCedula,
+                    'is-invalid': !numeroCedula
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNumeroCedula"
+                  >Numero de cedula<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="objetoContrato"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaObjetoContrato"
+                  id="floatingTextareaObjetoContrato"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': objetoContrato,
+                    'is-invalid': !objetoContrato
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaObjetoContrato"
+                  >Objeto del contrato<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="duracionContrato"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaDuracionContrato"
+                  id="floatingTextareaDuracionContrato"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': duracionContrato,
+                    'is-invalid': !duracionContrato
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaDuracionContrato"
+                  >Duracion del contrato<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="nombreConvocatoria"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNombreConvocatoria"
+                  id="floatingTextareaNombreConvocatoria"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': nombreConvocatoria,
+                    'is-invalid': !nombreConvocatoria
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNombreConvocatoria"
+                  >Nombre de la convocatoria<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="numeroConvocatoria"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaNumeroConvocatoria"
+                  id="floatingTextareaNumeroConvocatoria"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': numeroConvocatoria,
+                    'is-invalid': !numeroConvocatoria
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaNumeroConvocatoria"
+                  >Numero de la convocatoria<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="anoConvocatoria"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaAnoConvocatoria"
+                  id="floatingTextareaAnoConvocatoria"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': anoConvocatoria,
+                    'is-invalid': !anoConvocatoria
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaAnoConvocatoria"
+                  >Año de la convocatoria<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="valorContratoLetras"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaValorContratoLetras"
+                  id="floatingTextareaValorContratoLetras"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': valorContratoLetras,
+                    'is-invalid': !valorContratoLetras
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaValorContratoLetras"
+                  >Valor del contrato en letras<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="valorContratoNumeros"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaValorContratoNumeros"
+                  id="floatingTextareaValorContratoNumeros"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': valorContratoNumeros,
+                    'is-invalid': !valorContratoNumeros
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaValorContratoNumeros"
+                  >Valor del contrato en numeros<strong class="text-danger"
+                    >*</strong
+                  ></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="plazo"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaPlazo"
+                  id="floatingTextareaPlazo"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': plazo,
+                    'is-invalid': !plazo
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaPlazo"
+                  >Plazo<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="valorAseguradoEstablecidoPliegoCondiciones"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaValorAseguradoEstablecidoPliegoCondiciones"
+                  id="floatingTextareaValorAseguradoEstablecidoPliegoCondiciones"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': valorAseguradoEstablecidoPliegoCondiciones,
+                    'is-invalid': !valorAseguradoEstablecidoPliegoCondiciones
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label
+                  for="floatingTextareaValorAseguradoEstablecidoPliegoCondiciones"
+                  >Valor asegurado establecido en el pliego de
+                  condiciones<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="
+                    obligacionesEspecificasEstablecidasPliegoCondiciones
+                  "
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaObligacionesEspecificasEstablecidasPliegoCondiciones"
+                  id="floatingTextareaObligacionesEspecificasEstablecidasPliegoCondiciones"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid':
+                      obligacionesEspecificasEstablecidasPliegoCondiciones,
+                    'is-invalid':
+                      !obligacionesEspecificasEstablecidasPliegoCondiciones
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label
+                  for="floatingTextareaObligacionesEspecificasEstablecidasPliegoCondiciones"
+                  >Obligaciones especificas establecidas en el pliego de
+                  condiciones<strong class="text-danger">*</strong></label
+                >
+                <div class="invalid-feedback">
+                  Este campo es (*) obligatorio, rellenelo.
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  [(ngModel)]="fecha"
+                  (input)="invalidatePreview()"
+                  name="floatingTextareaFecha"
+                  id="floatingTextareaFecha"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-valid': fecha,
+                    'is-invalid': !fecha
+                  }"
+                  placeholder="\0"
+                ></textarea>
+                <label for="floatingTextareaFecha"
+                  >Fecha<strong class="text-danger">*</strong></label
                 >
                 <div class="invalid-feedback">
                   Este campo es (*) obligatorio, rellenelo.

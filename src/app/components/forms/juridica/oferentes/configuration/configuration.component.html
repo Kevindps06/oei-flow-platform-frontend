@@ -24,7 +24,11 @@
             ></label
           >
           <app-date-picker
+            [year]="fechaInicio.getFullYear()"
+            [month]="fechaInicio.getMonth() + 1"
+            [day]="fechaInicio.getDate()"
             [allowPass]="false"
+            [allowPresent]="true"
             (onDateChange)="setFechaInicio($event)"
             name="datePickerFechaInicio"
             id="datePickerFechaInicio"
@@ -96,7 +100,11 @@
             >Fecha de fin convocatoria<span class="text-danger">*</span></label
           >
           <app-date-picker
+            [year]="fechaFin.getFullYear()"
+            [month]="fechaFin.getMonth() + 1"
+            [day]="fechaFin.getDate()"
             [allowPass]="false"
+            [allowPresent]="true"
             (onDateChange)="setFechaFin($event)"
             name="datePickerFechaFin"
             id="datePickerFechaFin"
@@ -329,16 +337,16 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="d-grid gap-2 col-6 mx-auto mb-2">
-        <button
-          class="btn btn-primary"
-          (click)="save()"
-          role="button"
-          [disabled]="!isValid()"
-        >
-          Guardar
-        </button>
+        <div class="d-grid gap-2 col-6 mx-auto mb-2">
+          <button
+            class="btn btn-primary"
+            (click)="save()"
+            role="button"
+            [disabled]="!isValid()"
+          >
+            Guardar
+          </button>
+        </div>
       </div>
     </div>
   </div>

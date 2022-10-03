@@ -6,11 +6,11 @@ import { FormsService } from 'src/app/services/forms.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { LoginService } from 'src/app/services/login.service';
 import { IJuridica } from 'src/app/interfaces/forms-juridica';
-import { saveAs } from 'file-saver';
 import { FileItem } from 'src/app/interfaces/FileItem';
 import { IJuridicaMinuta } from 'src/app/interfaces/juridica-minuta';
 import { catchError, map } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-forms-juridica-minuta',
@@ -107,6 +107,55 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   porcentajedelamparo: string = '';
   vigenciadelamparo19: string = '';
   // fechaFirma
+
+  // Convocatoria - Natural
+  numeroContrato: string = '';
+  fecha: string = '';
+  nombreConvenio: string = '';
+  numeroConvenio: string = '';
+  entidad: string = '';
+  nombrePersonaNatural: string = '';
+  // numeroCedula
+  // objetoContrato
+  modalidadConvocatoria: string = '';
+  numeroConvocatoria: string = '';
+  fechaConvocatoria: string = '';
+  plazoContrato: string = '';
+  fechaInicio: string = '';
+  fechaTerminacion: string = '';
+  valorContratoLetras: string = '';
+  valorContratoNumeros: string = '';
+  primerPagoValorLetras: string = '';
+  primerPagoValorNumeros: string = '';
+  primerPagoDescripcionEntregables: string = '';
+  segundoPagoValorLetras: string = '';
+  segundoPagoValorNumeros: string = '';
+  segundoPagoDescripcionEntregables: string = '';
+  obligacionesEspecificasContratista: string = '';
+  descripcionEntregables: string = '';
+  dia: string = '';
+  mes: string = '';
+  ano: string = '';
+
+  // Convocatoria - Juridica
+  // numeroContrato
+  // numeroConvenio
+  // ano
+  nombrePersonaJuridicaNatural: string = '';
+  nit: string = '';
+  // nombreRepresentanteLegal
+  // numeroCedula
+  // objetoContrato
+  duracionContrato: string = '';
+  nombreConvocatoria: string = '';
+  // numeroConvocatoria
+  anoConvocatoria: string = '';
+  // valorContratoLetras
+  // valorContratoNumeros
+  plazo: string = '';
+  valorAseguradoEstablecidoPliegoCondiciones: string = '';
+  obligacionesEspecificasEstablecidasPliegoCondiciones: string = '';
+  // fecha
 
   // Anexo
   fechasuperior: string = '';
@@ -327,129 +376,192 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   }
 
   btnPreviewClick() {
-    switch (this.juridica.TipoAdquisicion) {
-      case 'Bienes':
-        this.minuta = {
-          tipoInmueble: this.tipoInmueble,
-          numeroContrato: this.juridica.NumeroContrato,
-          nombreArrendador: this.nombreArrendador,
-          numeroNit: this.numeroNit,
-          nombreRepresentanteLegal: this.nombreRepresentanteLegal,
-          ciudadDondeReside: this.ciudadDondeReside,
-          numeroCedula: this.numeroCedula,
-          ciudadExpedicion: this.ciudadExpedicion,
-          detalleInmueble: this.detalleInmueble,
-          ubicacionInmueble: this.ubicacionInmueble,
-          barrio: this.barrio,
-          ciudadInmueble: this.ciudadInmueble,
-          inmueble: this.inmueble,
-          mesesContrato: this.mesesContrato,
-          diaInicio: this.diaInicio,
-          mesInicio: this.mesInicio,
-          anoInicio: this.anoInicio,
-          diaFin: this.diaFin,
-          mesFin: this.mesFin,
-          anoFin: this.anoFin,
-          valorContrato: this.valorContrato,
-          valorCanonMensual: this.valorCanonMensual,
-          field1: this.field1,
-          field2: this.field2,
-          field3: this.field3,
-          field4: this.field4,
-          field5: this.field5,
-          field6: this.field6,
-          field7: this.field7,
-          field8: this.field8,
-          field9: this.field9,
-          field10: this.field10,
-          field11: this.field11,
-          field12: this.field12,
-          field13: this.field13,
-          field14: this.field14,
-          field15: this.field15,
-          field16: this.field16,
-          field17: this.field17,
-          field18: this.field18,
-          field19: this.field19,
-          field20: this.field20,
-          field21: this.field21,
-          field22: this.field22,
-          field23: this.field23,
-          field24: this.field24,
-          field25: this.field25,
-        };
-        break;
-      case 'Suministro':
-        this.minuta = {
-          numerodecontrato1: this.juridica.NumeroContrato,
-          numerodeconvenio2: this.numerodeconvenio2,
-          nombrecontratista: this.nombrecontratista,
-          numerodenit4: this.numerodenit4,
-          nombrerepresentantelegal: this.nombrerepresentantelegal,
-          numeroCedula: this.numeroCedula,
-          objetoContrato: this.objetoContrato,
-          terminodelcontrato8: this.terminodelcontrato8,
-          valordelcontrato9: this.valordelcontrato9,
-          formadepago10: this.formadepago10,
-          field11: this.field11,
-          obligacionesespecificas12: this.obligacionesespecificas12,
-          productos13: this.productos13,
-          field15: this.field15,
-          field16: this.field16,
-          fiield17: this.field17,
-          field18: this.field18,
-          field19: this.field19,
-          fechaFirma: this.fechaFirma,
-        };
-        break;
-      case 'Servicios':
-        switch (this.juridica.TipoPersona) {
-          case 'Natural':
-            this.minuta = {
-              numerodecontrato1: this.juridica.NumeroContrato,
-              numerodeconvenio2: this.numerodeconvenio2,
-              entidadaliada3: this.entidadaliada3,
-              nombrecontratista: this.nombrecontratista,
-              numeroCedula: this.numeroCedula,
-              objetoContrato: this.objetoContrato,
-              terminodeejecucipon7: this.terminodeejecucipon7,
-              valordelcontrato8: this.valordelcontrato8,
-              formadepago9: this.formadepago9,
-              field10: this.field10,
-              field11: this.field11,
-              field12: this.field12,
-              field13: this.field13,
-              obligacionesespecificas14: this.obligacionesespecificas14,
-              productosaentregar15: this.productosaentregar15,
-              fechaFirma: this.fechaFirma,
-            };
-            break;
-          case 'Juridica':
-            this.minuta = {
-              numerodecontrato1: this.juridica.NumeroContrato,
-              numerodeconvenio2: this.numerodeconvenio2,
-              nombrecontratista: this.nombrecontratista,
-              nombrerepresentantelegal4: this.nombrerepresentantelegal4,
-              numeroCedula: this.numeroCedula,
-              objetoContrato: this.objetoContrato,
-              field7: this.field7,
-              field8: this.field8,
-              terminodeejecuciondelcontrato9:
-                this.terminodeejecuciondelcontrato9,
-              formadepago10: this.formadepago10,
-              obligacionesespecificas12: this.obligacionesespecificas12,
-              productosaentregar13: this.productosaentregar13,
-              tipodeamparo1: this.tipodeamparo1,
-              porcentajedelamparo15: this.porcentajedelamparo15,
-              vigenciadelamparo16: this.vigenciadelamparo16,
-              tipodeamparo2: this.tipodeamparo2,
-              porcentajedelamparo: this.porcentajedelamparo,
-              vigenciadelamparo19: this.vigenciadelamparo19,
-              fechaFirma: this.fechaFirma,
-            };
-            break;
-        }
-        break;
+    if (this.juridica.TipoProceso === 'Licitacion') {
+      switch (this.juridica.TipoPersona) {
+        case 'Natural':
+          this.minuta = {
+            numeroContrato: this.juridica.NumeroContrato,
+            fecha: this.fecha,
+            nombreConvenio: this.nombreConvenio,
+            numeroConvenio: this.numeroConvenio,
+            entidad: this.entidad,
+            nombrePersonaNatural: this.nombrePersonaNatural,
+            numeroCedula: this.numeroCedula,
+            objetoContrato: this.objetoContrato,
+            modalidadConvocatoria: this.modalidadConvocatoria,
+            numeroConvocatoria: this.numeroConvocatoria,
+            fechaConvocatoria: this.fechaConvocatoria,
+            plazoContrato: this.plazoContrato,
+            fechaInicio: this.fechaInicio,
+            fechaTerminacion: this.fechaTerminacion,
+            valorContratoLetras: this.valorContratoLetras,
+            valorContratoNumeros: this.valorContratoNumeros,
+            primerPagoValorLetras: this.primerPagoValorLetras,
+            primerPagoValorNumeros: this.primerPagoValorNumeros,
+            primerPagoDescripcionEntregables:
+              this.primerPagoDescripcionEntregables,
+            segundoPagoValorLetras: this.segundoPagoValorLetras,
+            segundoPagoValorNumeros: this.segundoPagoValorNumeros,
+            segundoPagoDescripcionEntregables:
+              this.segundoPagoDescripcionEntregables,
+            obligacionesEspecificasContratista:
+              this.obligacionesEspecificasContratista,
+            descripcionEntregables: this.descripcionEntregables,
+            dia: this.dia,
+            mes: this.mes,
+            ano: this.ano,
+          };
+          break;
+        case 'Juridica':
+          this.minuta = {
+            numeroContrato: this.juridica.NumeroContrato,
+            numeroConvenio: this.numeroConvenio,
+            ano: this.ano,
+            nombrePersonaJuridicaNatural: this.nombrePersonaJuridicaNatural,
+            nit: this.nit,
+            nombreRepresentanteLegal: this.nombreRepresentanteLegal,
+            numeroCedula: this.numeroCedula,
+            objetoContrato: this.objetoContrato,
+            duracionContrato: this.duracionContrato,
+            nombreConvocatoria: this.nombreConvocatoria,
+            numeroConvocatoria: this.numeroConvocatoria,
+            anoConvocatoria: this.anoConvocatoria,
+            valorContratoLetras: this.valorContratoLetras,
+            valorContratoNumeros: this.valorContratoNumeros,
+            plazo: this.plazo,
+            valorAseguradoEstablecidoPliegoCondiciones:
+              this.valorAseguradoEstablecidoPliegoCondiciones,
+            obligacionesEspecificasEstablecidasPliegoCondiciones:
+              this.obligacionesEspecificasEstablecidasPliegoCondiciones,
+            fecha: this.fecha,
+          };
+          break;
+      }
+    } else {
+      switch (this.juridica.TipoAdquisicion) {
+        case 'Bienes':
+          this.minuta = {
+            tipoInmueble: this.tipoInmueble,
+            numeroContrato: this.juridica.NumeroContrato,
+            nombreArrendador: this.nombreArrendador,
+            numeroNit: this.numeroNit,
+            nombreRepresentanteLegal: this.nombreRepresentanteLegal,
+            ciudadDondeReside: this.ciudadDondeReside,
+            numeroCedula: this.numeroCedula,
+            ciudadExpedicion: this.ciudadExpedicion,
+            detalleInmueble: this.detalleInmueble,
+            ubicacionInmueble: this.ubicacionInmueble,
+            barrio: this.barrio,
+            ciudadInmueble: this.ciudadInmueble,
+            inmueble: this.inmueble,
+            mesesContrato: this.mesesContrato,
+            diaInicio: this.diaInicio,
+            mesInicio: this.mesInicio,
+            anoInicio: this.anoInicio,
+            diaFin: this.diaFin,
+            mesFin: this.mesFin,
+            anoFin: this.anoFin,
+            valorContrato: this.valorContrato,
+            valorCanonMensual: this.valorCanonMensual,
+            field1: this.field1,
+            field2: this.field2,
+            field3: this.field3,
+            field4: this.field4,
+            field5: this.field5,
+            field6: this.field6,
+            field7: this.field7,
+            field8: this.field8,
+            field9: this.field9,
+            field10: this.field10,
+            field11: this.field11,
+            field12: this.field12,
+            field13: this.field13,
+            field14: this.field14,
+            field15: this.field15,
+            field16: this.field16,
+            field17: this.field17,
+            field18: this.field18,
+            field19: this.field19,
+            field20: this.field20,
+            field21: this.field21,
+            field22: this.field22,
+            field23: this.field23,
+            field24: this.field24,
+            field25: this.field25,
+          };
+          break;
+        case 'Suministro':
+          this.minuta = {
+            numerodecontrato1: this.juridica.NumeroContrato,
+            numerodeconvenio2: this.numerodeconvenio2,
+            nombrecontratista: this.nombrecontratista,
+            numerodenit4: this.numerodenit4,
+            nombrerepresentantelegal: this.nombrerepresentantelegal,
+            numeroCedula: this.numeroCedula,
+            objetoContrato: this.objetoContrato,
+            terminodelcontrato8: this.terminodelcontrato8,
+            valordelcontrato9: this.valordelcontrato9,
+            formadepago10: this.formadepago10,
+            field11: this.field11,
+            obligacionesespecificas12: this.obligacionesespecificas12,
+            productos13: this.productos13,
+            field15: this.field15,
+            field16: this.field16,
+            fiield17: this.field17,
+            field18: this.field18,
+            field19: this.field19,
+            fechaFirma: this.fechaFirma,
+          };
+          break;
+        case 'Servicios':
+          switch (this.juridica.TipoPersona) {
+            case 'Natural':
+              this.minuta = {
+                numerodecontrato1: this.juridica.NumeroContrato,
+                numerodeconvenio2: this.numerodeconvenio2,
+                entidadaliada3: this.entidadaliada3,
+                nombrecontratista: this.nombrecontratista,
+                numeroCedula: this.numeroCedula,
+                objetoContrato: this.objetoContrato,
+                terminodeejecucipon7: this.terminodeejecucipon7,
+                valordelcontrato8: this.valordelcontrato8,
+                formadepago9: this.formadepago9,
+                field10: this.field10,
+                field11: this.field11,
+                field12: this.field12,
+                field13: this.field13,
+                obligacionesespecificas14: this.obligacionesespecificas14,
+                productosaentregar15: this.productosaentregar15,
+                fechaFirma: this.fechaFirma,
+              };
+              break;
+            case 'Juridica':
+              this.minuta = {
+                numerodecontrato1: this.juridica.NumeroContrato,
+                numerodeconvenio2: this.numerodeconvenio2,
+                nombrecontratista: this.nombrecontratista,
+                nombrerepresentantelegal4: this.nombrerepresentantelegal4,
+                numeroCedula: this.numeroCedula,
+                objetoContrato: this.objetoContrato,
+                field7: this.field7,
+                field8: this.field8,
+                terminodeejecuciondelcontrato9:
+                  this.terminodeejecuciondelcontrato9,
+                formadepago10: this.formadepago10,
+                obligacionesespecificas12: this.obligacionesespecificas12,
+                productosaentregar13: this.productosaentregar13,
+                tipodeamparo1: this.tipodeamparo1,
+                porcentajedelamparo15: this.porcentajedelamparo15,
+                vigenciadelamparo16: this.vigenciadelamparo16,
+                tipodeamparo2: this.tipodeamparo2,
+                porcentajedelamparo: this.porcentajedelamparo,
+                vigenciadelamparo19: this.vigenciadelamparo19,
+                fechaFirma: this.fechaFirma,
+              };
+              break;
+          }
+          break;
+      }
     }
 
     this.anexo = {
@@ -471,6 +583,7 @@ export class FormsJuridicaMinutaComponent implements OnInit {
     let postFormsJuridicaMinutaGenerateTaskId!: string;
     this.formsService
       .postFormJuridicaMinutaGenerate(
+        this.juridica.TipoProceso,
         this.juridica.TipoAdquisicion,
         this.juridica.TipoPersona,
         this.minuta
@@ -534,65 +647,73 @@ export class FormsJuridicaMinutaComponent implements OnInit {
         }
       );
 
-    let postFormsJuridicaMinutaGenerateAnexoTaskId!: string;
-    this.formsService.postFormJuridicaMinutaGenerateAnexo(this.anexo).subscribe(
-      async (httpEvent) => {
-        switch (httpEvent.type) {
-          case HttpEventType.Sent:
-            postFormsJuridicaMinutaGenerateAnexoTaskId =
-              this.sharedService.pushWaitTask({
-                description: 'Generando pre visualizacion...',
-                progress: 0,
-              }) as string;
-            break;
-          case HttpEventType.DownloadProgress:
-            this.sharedService.pushWaitTask({
+    if (this.juridica.ManejoDatos === 'Si') {
+      let postFormsJuridicaMinutaGenerateAnexoTaskId!: string;
+      this.formsService
+        .postFormJuridicaMinutaGenerateAnexo(this.anexo)
+        .subscribe(
+          async (httpEvent) => {
+            switch (httpEvent.type) {
+              case HttpEventType.Sent:
+                postFormsJuridicaMinutaGenerateAnexoTaskId =
+                  this.sharedService.pushWaitTask({
+                    description: 'Generando pre visualizacion...',
+                    progress: 0,
+                  }) as string;
+                break;
+              case HttpEventType.DownloadProgress:
+                this.sharedService.pushWaitTask({
+                  id: postFormsJuridicaMinutaGenerateAnexoTaskId,
+                  progress: Math.round(
+                    (httpEvent.loaded * 100) / httpEvent.total
+                  ),
+                });
+                break;
+              case HttpEventType.Response:
+                const currentDate = new Date();
+
+                this.docxBlob2 = new Blob([
+                  new Uint8Array(httpEvent.body.docxBuf.data),
+                ]);
+
+                this.pdfUint8Array2 = new Uint8Array(
+                  httpEvent.body.pdfBuf.data
+                );
+
+                this.pdfBlob2 = new Blob([this.pdfUint8Array2]);
+
+                this.files.push({
+                  Index: 2,
+                  Name: `anexo.docx`,
+                  Size: this.docxBlob2.size,
+                  Type: this.docxBlob2.type,
+                  Bytes: await this.docxBlob2.arrayBuffer(),
+                  Uploaded: true,
+                });
+
+                this.files.push({
+                  Index: 3,
+                  Name: `anexo.pdf`,
+                  Size: this.pdfBlob2.size,
+                  Type: this.pdfBlob2.type,
+                  Bytes: await this.pdfBlob2.arrayBuffer(),
+                  Uploaded: true,
+                });
+                break;
+            }
+          },
+          (httpEventError) => {
+            this.sharedService.removeWaitTask({
               id: postFormsJuridicaMinutaGenerateAnexoTaskId,
-              progress: Math.round((httpEvent.loaded * 100) / httpEvent.total),
             });
-            break;
-          case HttpEventType.Response:
-            const currentDate = new Date();
-
-            this.docxBlob2 = new Blob([
-              new Uint8Array(httpEvent.body.docxBuf.data),
-            ]);
-
-            this.pdfUint8Array2 = new Uint8Array(httpEvent.body.pdfBuf.data);
-
-            this.pdfBlob2 = new Blob([this.pdfUint8Array2]);
-
-            this.files.push({
-              Index: 2,
-              Name: `anexo.docx`,
-              Size: this.docxBlob2.size,
-              Type: this.docxBlob2.type,
-              Bytes: await this.docxBlob2.arrayBuffer(),
-              Uploaded: true,
+          },
+          () => {
+            this.sharedService.removeWaitTask({
+              id: postFormsJuridicaMinutaGenerateAnexoTaskId,
             });
-
-            this.files.push({
-              Index: 3,
-              Name: `anexo.pdf`,
-              Size: this.pdfBlob2.size,
-              Type: this.pdfBlob2.type,
-              Bytes: await this.pdfBlob2.arrayBuffer(),
-              Uploaded: true,
-            });
-            break;
-        }
-      },
-      (httpEventError) => {
-        this.sharedService.removeWaitTask({
-          id: postFormsJuridicaMinutaGenerateAnexoTaskId,
-        });
-      },
-      () => {
-        this.sharedService.removeWaitTask({
-          id: postFormsJuridicaMinutaGenerateAnexoTaskId,
-        });
-      }
-    );
+          }
+        );
+    }
   }
 
   async btnSubmitClick() {
@@ -851,110 +972,131 @@ export class FormsJuridicaMinutaComponent implements OnInit {
   }
 
   isValidPreview() {
-    switch (this.juridica.TipoAdquisicion) {
-      case 'Bienes':
-        return (
-          this.tipoInmueble &&
-          this.nombreArrendador &&
-          this.numeroNit &&
-          this.nombreRepresentanteLegal &&
-          this.ciudadDondeReside &&
-          this.numeroCedula &&
-          this.ciudadExpedicion &&
-          this.detalleInmueble &&
-          this.ubicacionInmueble &&
-          this.barrio &&
-          this.ciudadInmueble &&
-          this.inmueble &&
-          this.mesesContrato &&
-          this.diaInicio &&
-          this.mesInicio &&
-          this.anoInicio &&
-          this.diaFin &&
-          this.mesFin &&
-          this.anoFin &&
-          this.valorContrato &&
-          this.valorCanonMensual &&
-          this.field1 &&
-          this.field2 &&
-          this.field3 &&
-          this.field4 &&
-          (this.juridica.ManejoDatos === 'Si'
-            ? this.isValidPreviewAnexo()
-            : true)
-        );
-      case 'Suministro':
-        return (
-          this.nombrecontratista &&
-          this.numerodenit4 &&
-          this.nombrerepresentantelegal &&
-          this.numeroCedula &&
-          this.objetoContrato &&
-          this.terminodelcontrato8 &&
-          this.valordelcontrato9 &&
-          this.formadepago10 &&
-          this.field11 &&
-          this.obligacionesespecificas12 &&
-          this.productos13 &&
-          this.field15 &&
-          this.field16 &&
-          this.field17 &&
-          this.field18 &&
-          this.field19 &&
-          (this.juridica.ManejoDatos === 'Si'
-            ? this.isValidPreviewAnexo()
-            : true)
-        );
-      case 'Servicios':
-        switch (this.juridica.TipoPersona) {
-          case 'Natural':
-            return (
-              this.entidadaliada3 &&
-              this.nombrecontratista &&
-              this.numeroCedula &&
-              this.objetoContrato &&
-              this.terminodeejecucipon7 &&
-              this.valordelcontrato8 &&
-              this.formadepago9 &&
-              this.field10 &&
-              this.field11 &&
-              this.field12 &&
-              this.field13 &&
-              this.obligacionesespecificas14 &&
-              this.productosaentregar15 &&
-              this.fechaFirma &&
-              (this.juridica.ManejoDatos === 'Si'
-                ? this.isValidPreviewAnexo()
-                : true)
-            );
-          case 'Juridica':
-            return (
-              this.nombrecontratista &&
-              this.nombrerepresentantelegal4 &&
-              this.numeroCedula &&
-              this.objetoContrato &&
-              this.field7 &&
-              this.field8 &&
-              this.terminodeejecuciondelcontrato9 &&
-              this.formadepago10 &&
-              this.obligacionesespecificas12 &&
-              this.productosaentregar13 &&
-              this.tipodeamparo1 &&
-              this.porcentajedelamparo15 &&
-              this.vigenciadelamparo16 &&
-              this.tipodeamparo2 &&
-              this.porcentajedelamparo &&
-              this.vigenciadelamparo19 &&
-              this.fechaFirma &&
-              (this.juridica.ManejoDatos === 'Si'
-                ? this.isValidPreviewAnexo()
-                : true)
-            );
-          default:
-            return false;
-        }
-      default:
-        return false;
+    if (this.juridica.TipoProceso === 'Licitacion') {
+      switch (this.juridica.TipoPersona) {
+        case 'Natural':
+          return (
+            this.fecha &&
+            (this.juridica.ManejoDatos === 'Si'
+              ? this.isValidPreviewAnexo()
+              : true)
+          );
+        case 'Juridica':
+          return (
+            this.fecha &&
+            (this.juridica.ManejoDatos === 'Si'
+              ? this.isValidPreviewAnexo()
+              : true)
+          );
+      }
+      
+      return true;
+    } else {
+      switch (this.juridica.TipoAdquisicion) {
+        case 'Bienes':
+          return (
+            this.tipoInmueble &&
+            this.nombreArrendador &&
+            this.numeroNit &&
+            this.nombreRepresentanteLegal &&
+            this.ciudadDondeReside &&
+            this.numeroCedula &&
+            this.ciudadExpedicion &&
+            this.detalleInmueble &&
+            this.ubicacionInmueble &&
+            this.barrio &&
+            this.ciudadInmueble &&
+            this.inmueble &&
+            this.mesesContrato &&
+            this.diaInicio &&
+            this.mesInicio &&
+            this.anoInicio &&
+            this.diaFin &&
+            this.mesFin &&
+            this.anoFin &&
+            this.valorContrato &&
+            this.valorCanonMensual &&
+            this.field1 &&
+            this.field2 &&
+            this.field3 &&
+            this.field4 &&
+            (this.juridica.ManejoDatos === 'Si'
+              ? this.isValidPreviewAnexo()
+              : true)
+          );
+        case 'Suministro':
+          return (
+            this.nombrecontratista &&
+            this.numerodenit4 &&
+            this.nombrerepresentantelegal &&
+            this.numeroCedula &&
+            this.objetoContrato &&
+            this.terminodelcontrato8 &&
+            this.valordelcontrato9 &&
+            this.formadepago10 &&
+            this.field11 &&
+            this.obligacionesespecificas12 &&
+            this.productos13 &&
+            this.field15 &&
+            this.field16 &&
+            this.field17 &&
+            this.field18 &&
+            this.field19 &&
+            (this.juridica.ManejoDatos === 'Si'
+              ? this.isValidPreviewAnexo()
+              : true)
+          );
+        case 'Servicios':
+          switch (this.juridica.TipoPersona) {
+            case 'Natural':
+              return (
+                this.entidadaliada3 &&
+                this.nombrecontratista &&
+                this.numeroCedula &&
+                this.objetoContrato &&
+                this.terminodeejecucipon7 &&
+                this.valordelcontrato8 &&
+                this.formadepago9 &&
+                this.field10 &&
+                this.field11 &&
+                this.field12 &&
+                this.field13 &&
+                this.obligacionesespecificas14 &&
+                this.productosaentregar15 &&
+                this.fechaFirma &&
+                (this.juridica.ManejoDatos === 'Si'
+                  ? this.isValidPreviewAnexo()
+                  : true)
+              );
+            case 'Juridica':
+              return (
+                this.nombrecontratista &&
+                this.nombrerepresentantelegal4 &&
+                this.numeroCedula &&
+                this.objetoContrato &&
+                this.field7 &&
+                this.field8 &&
+                this.terminodeejecuciondelcontrato9 &&
+                this.formadepago10 &&
+                this.obligacionesespecificas12 &&
+                this.productosaentregar13 &&
+                this.tipodeamparo1 &&
+                this.porcentajedelamparo15 &&
+                this.vigenciadelamparo16 &&
+                this.tipodeamparo2 &&
+                this.porcentajedelamparo &&
+                this.vigenciadelamparo19 &&
+                this.fechaFirma &&
+                (this.juridica.ManejoDatos === 'Si'
+                  ? this.isValidPreviewAnexo()
+                  : true)
+              );
+            default:
+              return false;
+          }
+        default:
+          return false;
+      }
     }
   }
 
